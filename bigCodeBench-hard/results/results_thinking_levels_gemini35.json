@@ -1,0 +1,812 @@
+{
+  "off": {
+    "level": "off",
+    "passed": 5,
+    "n": 10,
+    "pass_rate": 0.5,
+    "total_as_run_usd": 0.069,
+    "avg_candidate_tokens": 699.1,
+    "avg_thought_tokens": 0.0,
+    "avg_seconds": 4.3,
+    "tasks": [
+      {
+        "task_id": "BigCodeBench/13",
+        "passed": false,
+        "usage": {
+          "input": 487,
+          "candidate_output": 994,
+          "thoughts_output": 0,
+          "total_output": 994,
+          "total_tokens": 1481,
+          "as_run_usd": 0.009677,
+          "thinking_level": "off"
+        },
+        "seconds": 6.9,
+        "error": "======================================================================\nFAIL: test_case_2 (__main__.TestCases.test_case_2)\nTest with an invalid FTP server by raising an exception on connect.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 1426, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/var/folders/4m/5k_x4jdj2ps4znfd_dnw5jbh01clx4/T/bcb_qy4a6ikm/prog.py\", line 128, in test_case_2\n    self.assertEqual(str(context.exception), f'Failed to connect to FTP server invalid_server: {error_message}')\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 'Fail[13 chars] to FTP server' != 'Fail[13 chars] to FTP server invalid_server: Failed to connect to FTP server'\n- Failed to connect to FTP server\n+ Failed to connect to FTP server invalid_server: Failed to connect to FTP server\n\n\n----------------------------------------------------------------------\nRan 5 tests in 2.487s\n\nFAILED (failures=1)"
+      },
+      {
+        "task_id": "BigCodeBench/15",
+        "passed": false,
+        "usage": {
+          "input": 419,
+          "candidate_output": 807,
+          "thoughts_output": 0,
+          "total_output": 807,
+          "total_tokens": 1226,
+          "as_run_usd": 0.007892,
+          "thinking_level": "off"
+        },
+        "seconds": 4.4,
+        "error": "======================================================================\nFAIL: test_command_failure_with_specific_exit_code (__main__.TestCases.test_command_failure_with_specific_exit_code)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/var/folders/4m/5k_x4jdj2ps4znfd_dnw5jbh01clx4/T/bcb_6ulk8t6d/prog.py\", line 153, in test_command_failure_with_specific_exit_code\n    self.assertIn(\"Error executing command\", content)\n    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 'Error executing command' not found in '\\nCommand failed with exit code 1\\nError message:\\n'\n\n----------------------------------------------------------------------\nRan 6 tests in 0.114s\n\nFAILED (failures=1)"
+      },
+      {
+        "task_id": "BigCodeBench/17",
+        "passed": false,
+        "usage": {
+          "input": 306,
+          "candidate_output": 524,
+          "thoughts_output": 0,
+          "total_output": 524,
+          "total_tokens": 830,
+          "as_run_usd": 0.005175,
+          "thinking_level": "off"
+        },
+        "seconds": 3.1,
+        "error": "======================================================================\nFAIL: test_process_found_restarts_process (__main__.TestCases.test_process_found_restarts_process)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 1426, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/var/folders/4m/5k_x4jdj2ps4znfd_dnw5jbh01clx4/T/bcb_8wu5xa_t/prog.py\", line 75, in test_process_found_restarts_process\n    self.assertEqual(result, \"Process found. Restarting notepad.\")\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 'Process not found. Starting notepad.' != 'Process found. Restarting notepad.'\n- Process not found. Starting notepad.\n?         ----       ^\n+ Process found. Restarting notepad.\n?                ^^^\n\n\n======================================================================\nFAIL: test_process_not_found_starts_process (__main__.TestCases.test_process_not_found_starts_process)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 1426, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/var/folders/4m/5k_x4jdj2ps4znfd_dnw5jbh01clx4/T/bcb_8wu5xa_t/prog.py\", line 66, in test_process_not_found_starts_process\n    mock_popen.assert_called_once_with('random_non_existent_process')\n    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 991, in assert_called_once_with\n    return self.assert_called_with(*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 979, in assert_called_with\n    raise AssertionError(_error_message()) from cause\nAssertionError: expected call not found.\nExpected: Popen('random_non_existent_process')\n  Actual: Popen('random_non_existent_process', shell=True)\n\n======================================================================\nFAIL: test_process_terminates_and_restarts_multiple_instances (__main__.TestCases.test_process_terminates_and_restarts_multiple_instances)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 1426, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/var/folders/4m/5k_x4jdj2ps4znfd_dnw5jbh01clx4/T/bcb_8wu5xa_t/prog.py\", line 89, in test_process_terminates_and_restarts_multiple_instances\n    self.assertEqual(result, \"Process found. Restarting multi_instance.\")\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 'Process not found. Starting multi_instance.' != 'Process found. Restarting multi_instance.'\n- Process not found. Starting multi_instance.\n?         ----       ^\n+ Process found. Restarting multi_instance.\n?                ^^^\n\n\n----------------------------------------------------------------------\nRan 3 tests in 0.004s\n\nFAILED (failures=3)"
+      },
+      {
+        "task_id": "BigCodeBench/19",
+        "passed": true,
+        "usage": {
+          "input": 270,
+          "candidate_output": 464,
+          "thoughts_output": 0,
+          "total_output": 464,
+          "total_tokens": 734,
+          "as_run_usd": 0.004581,
+          "thinking_level": "off"
+        },
+        "seconds": 3.1,
+        "error": ""
+      },
+      {
+        "task_id": "BigCodeBench/34",
+        "passed": true,
+        "usage": {
+          "input": 370,
+          "candidate_output": 494,
+          "thoughts_output": 0,
+          "total_output": 494,
+          "total_tokens": 864,
+          "as_run_usd": 0.005001,
+          "thinking_level": "off"
+        },
+        "seconds": 3.3,
+        "error": ""
+      },
+      {
+        "task_id": "BigCodeBench/37",
+        "passed": true,
+        "usage": {
+          "input": 462,
+          "candidate_output": 573,
+          "thoughts_output": 0,
+          "total_output": 573,
+          "total_tokens": 1035,
+          "as_run_usd": 0.00585,
+          "thinking_level": "off"
+        },
+        "seconds": 3.6,
+        "error": ""
+      },
+      {
+        "task_id": "BigCodeBench/82",
+        "passed": false,
+        "usage": {
+          "input": 499,
+          "candidate_output": 892,
+          "thoughts_output": 0,
+          "total_output": 892,
+          "total_tokens": 1391,
+          "as_run_usd": 0.008776,
+          "thinking_level": "off"
+        },
+        "seconds": 4.7,
+        "error": "app\n    app_rv = app(environ, start_response)\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/flask/app.py\", line 1536, in __call__\n    return self.wsgi_app(environ, start_response)\n           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/flask/app.py\", line 1514, in wsgi_app\n    response = self.handle_exception(e)\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/flask/app.py\", line 1511, in wsgi_app\n    response = self.full_dispatch_request()\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/flask/app.py\", line 919, in full_dispatch_request\n    rv = self.handle_user_exception(e)\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/flask/app.py\", line 917, in full_dispatch_request\n    rv = self.dispatch_request()\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/flask/app.py\", line 902, in dispatch_request\n    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/flask_login/utils.py\", line 290, in decorated_view\n    return current_app.ensure_sync(func)(*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/var/folders/4m/5k_x4jdj2ps4znfd_dnw5jbh01clx4/T/bcb_ca_9zak7/prog.py\", line 100, in protected\n    return render_template('protected.html')\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/flask/templating.py\", line 150, in render_template\n    template = app.jinja_env.get_or_select_template(template_name_or_list)\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/jinja2/environment.py\", line 1087, in get_or_select_template\n    return self.get_template(template_name_or_list, parent, globals)\n           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/jinja2/environment.py\", line 1016, in get_template\n    return self._load_template(name, globals)\n           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/jinja2/environment.py\", line 975, in _load_template\n    template = self.loader.load(self, name, self.make_globals(globals))\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/jinja2/loaders.py\", line 126, in load\n    source, filename, uptodate = self.get_source(environment, name)\n                                 ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/flask/templating.py\", line 66, in get_source\n    return self._get_source_fast(environment, template)\n           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/flask/templating.py\", line 100, in _get_source_fast\n    raise TemplateNotFound(template)\njinja2.exceptions.TemplateNotFound: protected.html\n\n----------------------------------------------------------------------\nRan 6 tests in 0.022s\n\nFAILED (errors=1)"
+      },
+      {
+        "task_id": "BigCodeBench/89",
+        "passed": true,
+        "usage": {
+          "input": 516,
+          "candidate_output": 904,
+          "thoughts_output": 0,
+          "total_output": 904,
+          "total_tokens": 1420,
+          "as_run_usd": 0.00891,
+          "thinking_level": "off"
+        },
+        "seconds": 5.9,
+        "error": ""
+      },
+      {
+        "task_id": "BigCodeBench/92",
+        "passed": true,
+        "usage": {
+          "input": 391,
+          "candidate_output": 774,
+          "thoughts_output": 0,
+          "total_output": 774,
+          "total_tokens": 1165,
+          "as_run_usd": 0.007553,
+          "thinking_level": "off"
+        },
+        "seconds": 4.6,
+        "error": ""
+      },
+      {
+        "task_id": "BigCodeBench/93",
+        "passed": false,
+        "usage": {
+          "input": 318,
+          "candidate_output": 565,
+          "thoughts_output": 0,
+          "total_output": 565,
+          "total_tokens": 883,
+          "as_run_usd": 0.005562,
+          "thinking_level": "off"
+        },
+        "seconds": 3.3,
+        "error": "======================================================================\nFAIL: test_values (__main__.TestCases.test_values)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/var/folders/4m/5k_x4jdj2ps4znfd_dnw5jbh01clx4/T/bcb_q9iufxl1/prog.py\", line 94, in test_values\n    self.assertAlmostEqual(actual[0], expected[0], places=7, msg=\"DataFrame contents should match the expected output\")\n    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: -0.11031725206399748 != -0.36270132751314693 within 7 places (0.2523840754491494 difference) : DataFrame contents should match the expected output\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/var/folders/4m/5k_x4jdj2ps4znfd_dnw5jbh01clx4/T/bcb_q9iufxl1/prog.py\", line 97, in test_values\n    self.assertAlmostEqual(actual[0], -expected[0], places=7, msg=\"DataFrame contents should match the expected output\")\n    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: -0.11031725206399748 != 0.36270132751314693 within 7 places (0.47301857957714444 difference) : DataFrame contents should match the expected output\n\n----------------------------------------------------------------------\nRan 5 tests in 0.024s\n\nFAILED (failures=1)"
+      }
+    ]
+  },
+  "minimal": {
+    "level": "minimal",
+    "passed": 5,
+    "n": 10,
+    "pass_rate": 0.5,
+    "total_as_run_usd": 0.0689,
+    "avg_candidate_tokens": 698.0,
+    "avg_thought_tokens": 0.0,
+    "avg_seconds": 4.1,
+    "tasks": [
+      {
+        "task_id": "BigCodeBench/13",
+        "passed": false,
+        "usage": {
+          "input": 487,
+          "candidate_output": 1056,
+          "thoughts_output": 0,
+          "total_output": 1056,
+          "total_tokens": 1543,
+          "as_run_usd": 0.010235,
+          "thinking_level": "minimal"
+        },
+        "seconds": 5.6,
+        "error": "======================================================================\nFAIL: test_case_2 (__main__.TestCases.test_case_2)\nTest with an invalid FTP server by raising an exception on connect.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 1426, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/var/folders/4m/5k_x4jdj2ps4znfd_dnw5jbh01clx4/T/bcb_o816l7m3/prog.py\", line 126, in test_case_2\n    self.assertEqual(str(context.exception), f'Failed to connect to FTP server invalid_server: {error_message}')\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 'Fail[13 chars] to FTP server' != 'Fail[13 chars] to FTP server invalid_server: Failed to connect to FTP server'\n- Failed to connect to FTP server\n+ Failed to connect to FTP server invalid_server: Failed to connect to FTP server\n\n\n----------------------------------------------------------------------\nRan 5 tests in 2.639s\n\nFAILED (failures=1)"
+      },
+      {
+        "task_id": "BigCodeBench/15",
+        "passed": false,
+        "usage": {
+          "input": 419,
+          "candidate_output": 852,
+          "thoughts_output": 0,
+          "total_output": 852,
+          "total_tokens": 1271,
+          "as_run_usd": 0.008297,
+          "thinking_level": "minimal"
+        },
+        "seconds": 4.6,
+        "error": "======================================================================\nFAIL: test_command_failure_with_specific_exit_code (__main__.TestCases.test_command_failure_with_specific_exit_code)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/var/folders/4m/5k_x4jdj2ps4znfd_dnw5jbh01clx4/T/bcb_d5id8_p4/prog.py\", line 153, in test_command_failure_with_specific_exit_code\n    self.assertIn(\"Error executing command\", content)\n    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 'Error executing command' not found in 'Command failed with exit code: 1\\nError Message:\\n'\n\n----------------------------------------------------------------------\nRan 6 tests in 0.096s\n\nFAILED (failures=1)"
+      },
+      {
+        "task_id": "BigCodeBench/17",
+        "passed": false,
+        "usage": {
+          "input": 306,
+          "candidate_output": 530,
+          "thoughts_output": 0,
+          "total_output": 530,
+          "total_tokens": 836,
+          "as_run_usd": 0.005229,
+          "thinking_level": "minimal"
+        },
+        "seconds": 3.7,
+        "error": "======================================================================\nFAIL: test_process_found_restarts_process (__main__.TestCases.test_process_found_restarts_process)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 1426, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/var/folders/4m/5k_x4jdj2ps4znfd_dnw5jbh01clx4/T/bcb_27rdgjgh/prog.py\", line 76, in test_process_found_restarts_process\n    self.assertEqual(result, \"Process found. Restarting notepad.\")\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 'Process not found. Starting notepad.' != 'Process found. Restarting notepad.'\n- Process not found. Starting notepad.\n?         ----       ^\n+ Process found. Restarting notepad.\n?                ^^^\n\n\n======================================================================\nFAIL: test_process_not_found_starts_process (__main__.TestCases.test_process_not_found_starts_process)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 1426, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/var/folders/4m/5k_x4jdj2ps4znfd_dnw5jbh01clx4/T/bcb_27rdgjgh/prog.py\", line 67, in test_process_not_found_starts_process\n    mock_popen.assert_called_once_with('random_non_existent_process')\n    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 991, in assert_called_once_with\n    return self.assert_called_with(*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 979, in assert_called_with\n    raise AssertionError(_error_message()) from cause\nAssertionError: expected call not found.\nExpected: Popen('random_non_existent_process')\n  Actual: Popen('random_non_existent_process', shell=True)\n\n======================================================================\nFAIL: test_process_terminates_and_restarts_multiple_instances (__main__.TestCases.test_process_terminates_and_restarts_multiple_instances)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 1426, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/var/folders/4m/5k_x4jdj2ps4znfd_dnw5jbh01clx4/T/bcb_27rdgjgh/prog.py\", line 90, in test_process_terminates_and_restarts_multiple_instances\n    self.assertEqual(result, \"Process found. Restarting multi_instance.\")\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 'Process not found. Starting multi_instance.' != 'Process found. Restarting multi_instance.'\n- Process not found. Starting multi_instance.\n?         ----       ^\n+ Process found. Restarting multi_instance.\n?                ^^^\n\n\n----------------------------------------------------------------------\nRan 3 tests in 0.004s\n\nFAILED (failures=3)"
+      },
+      {
+        "task_id": "BigCodeBench/19",
+        "passed": true,
+        "usage": {
+          "input": 270,
+          "candidate_output": 430,
+          "thoughts_output": 0,
+          "total_output": 430,
+          "total_tokens": 700,
+          "as_run_usd": 0.004275,
+          "thinking_level": "minimal"
+        },
+        "seconds": 2.9,
+        "error": ""
+      },
+      {
+        "task_id": "BigCodeBench/34",
+        "passed": true,
+        "usage": {
+          "input": 370,
+          "candidate_output": 521,
+          "thoughts_output": 0,
+          "total_output": 521,
+          "total_tokens": 891,
+          "as_run_usd": 0.005244,
+          "thinking_level": "minimal"
+        },
+        "seconds": 2.9,
+        "error": ""
+      },
+      {
+        "task_id": "BigCodeBench/37",
+        "passed": true,
+        "usage": {
+          "input": 462,
+          "candidate_output": 601,
+          "thoughts_output": 0,
+          "total_output": 601,
+          "total_tokens": 1063,
+          "as_run_usd": 0.006102,
+          "thinking_level": "minimal"
+        },
+        "seconds": 5.4,
+        "error": ""
+      },
+      {
+        "task_id": "BigCodeBench/82",
+        "passed": false,
+        "usage": {
+          "input": 499,
+          "candidate_output": 770,
+          "thoughts_output": 0,
+          "total_output": 770,
+          "total_tokens": 1269,
+          "as_run_usd": 0.007678,
+          "thinking_level": "minimal"
+        },
+        "seconds": 4.1,
+        "error": "_app\n    app_rv = app(environ, start_response)\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/flask/app.py\", line 1536, in __call__\n    return self.wsgi_app(environ, start_response)\n           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/flask/app.py\", line 1514, in wsgi_app\n    response = self.handle_exception(e)\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/flask/app.py\", line 1511, in wsgi_app\n    response = self.full_dispatch_request()\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/flask/app.py\", line 919, in full_dispatch_request\n    rv = self.handle_user_exception(e)\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/flask/app.py\", line 917, in full_dispatch_request\n    rv = self.dispatch_request()\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/flask/app.py\", line 902, in dispatch_request\n    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/flask_login/utils.py\", line 290, in decorated_view\n    return current_app.ensure_sync(func)(*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/var/folders/4m/5k_x4jdj2ps4znfd_dnw5jbh01clx4/T/bcb_g49q6j5c/prog.py\", line 79, in protected\n    return render_template('protected.html')\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/flask/templating.py\", line 150, in render_template\n    template = app.jinja_env.get_or_select_template(template_name_or_list)\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/jinja2/environment.py\", line 1087, in get_or_select_template\n    return self.get_template(template_name_or_list, parent, globals)\n           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/jinja2/environment.py\", line 1016, in get_template\n    return self._load_template(name, globals)\n           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/jinja2/environment.py\", line 975, in _load_template\n    template = self.loader.load(self, name, self.make_globals(globals))\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/jinja2/loaders.py\", line 126, in load\n    source, filename, uptodate = self.get_source(environment, name)\n                                 ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/flask/templating.py\", line 66, in get_source\n    return self._get_source_fast(environment, template)\n           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/flask/templating.py\", line 100, in _get_source_fast\n    raise TemplateNotFound(template)\njinja2.exceptions.TemplateNotFound: protected.html\n\n----------------------------------------------------------------------\nRan 6 tests in 0.023s\n\nFAILED (errors=1)"
+      },
+      {
+        "task_id": "BigCodeBench/89",
+        "passed": true,
+        "usage": {
+          "input": 516,
+          "candidate_output": 938,
+          "thoughts_output": 0,
+          "total_output": 938,
+          "total_tokens": 1454,
+          "as_run_usd": 0.009216,
+          "thinking_level": "minimal"
+        },
+        "seconds": 5.7,
+        "error": ""
+      },
+      {
+        "task_id": "BigCodeBench/92",
+        "passed": true,
+        "usage": {
+          "input": 391,
+          "candidate_output": 743,
+          "thoughts_output": 0,
+          "total_output": 743,
+          "total_tokens": 1134,
+          "as_run_usd": 0.007273,
+          "thinking_level": "minimal"
+        },
+        "seconds": 3.6,
+        "error": ""
+      },
+      {
+        "task_id": "BigCodeBench/93",
+        "passed": false,
+        "usage": {
+          "input": 318,
+          "candidate_output": 539,
+          "thoughts_output": 0,
+          "total_output": 539,
+          "total_tokens": 857,
+          "as_run_usd": 0.005328,
+          "thinking_level": "minimal"
+        },
+        "seconds": 2.9,
+        "error": "======================================================================\nFAIL: test_values (__main__.TestCases.test_values)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/var/folders/4m/5k_x4jdj2ps4znfd_dnw5jbh01clx4/T/bcb_8xmhf0s7/prog.py\", line 92, in test_values\n    self.assertAlmostEqual(actual[0], expected[0], places=7, msg=\"DataFrame contents should match the expected output\")\n    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: -0.6779989916501338 != -0.36270132751314693 within 7 places (0.31529766413698684 difference) : DataFrame contents should match the expected output\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/var/folders/4m/5k_x4jdj2ps4znfd_dnw5jbh01clx4/T/bcb_8xmhf0s7/prog.py\", line 95, in test_values\n    self.assertAlmostEqual(actual[0], -expected[0], places=7, msg=\"DataFrame contents should match the expected output\")\n    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: -0.6779989916501338 != 0.36270132751314693 within 7 places (1.0407003191632807 difference) : DataFrame contents should match the expected output\n\n----------------------------------------------------------------------\nRan 5 tests in 0.024s\n\nFAILED (failures=1)"
+      }
+    ]
+  },
+  "low": {
+    "level": "low",
+    "passed": 6,
+    "n": 10,
+    "pass_rate": 0.6,
+    "total_as_run_usd": 0.1733,
+    "avg_candidate_tokens": 629.9,
+    "avg_thought_tokens": 1228.8,
+    "avg_seconds": 10.7,
+    "tasks": [
+      {
+        "task_id": "BigCodeBench/13",
+        "passed": true,
+        "usage": {
+          "input": 487,
+          "candidate_output": 879,
+          "thoughts_output": 1795,
+          "total_output": 2674,
+          "total_tokens": 3161,
+          "as_run_usd": 0.024796,
+          "thinking_level": "low"
+        },
+        "seconds": 20.3,
+        "error": ""
+      },
+      {
+        "task_id": "BigCodeBench/15",
+        "passed": false,
+        "usage": {
+          "input": 419,
+          "candidate_output": 674,
+          "thoughts_output": 846,
+          "total_output": 1520,
+          "total_tokens": 1939,
+          "as_run_usd": 0.014309,
+          "thinking_level": "low"
+        },
+        "seconds": 7.3,
+        "error": "======================================================================\nFAIL: test_command_failure_with_specific_exit_code (__main__.TestCases.test_command_failure_with_specific_exit_code)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/var/folders/4m/5k_x4jdj2ps4znfd_dnw5jbh01clx4/T/bcb_vd27z_0x/prog.py\", line 137, in test_command_failure_with_specific_exit_code\n    self.assertIn(\"Error executing command\", content)\n    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 'Error executing command' not found in '\\nCommand failed with exit code: 1\\nError: '\n\n----------------------------------------------------------------------\nRan 6 tests in 0.092s\n\nFAILED (failures=1)"
+      },
+      {
+        "task_id": "BigCodeBench/17",
+        "passed": false,
+        "usage": {
+          "input": 306,
+          "candidate_output": 486,
+          "thoughts_output": 872,
+          "total_output": 1358,
+          "total_tokens": 1664,
+          "as_run_usd": 0.012681,
+          "thinking_level": "low"
+        },
+        "seconds": 8.2,
+        "error": "======================================================================\nFAIL: test_process_found_restarts_process (__main__.TestCases.test_process_found_restarts_process)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 1426, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/var/folders/4m/5k_x4jdj2ps4znfd_dnw5jbh01clx4/T/bcb_4zrdicae/prog.py\", line 75, in test_process_found_restarts_process\n    self.assertEqual(result, \"Process found. Restarting notepad.\")\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 'Process not found. Starting notepad.' != 'Process found. Restarting notepad.'\n- Process not found. Starting notepad.\n?         ----       ^\n+ Process found. Restarting notepad.\n?                ^^^\n\n\n======================================================================\nFAIL: test_process_not_found_starts_process (__main__.TestCases.test_process_not_found_starts_process)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 1426, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/var/folders/4m/5k_x4jdj2ps4znfd_dnw5jbh01clx4/T/bcb_4zrdicae/prog.py\", line 66, in test_process_not_found_starts_process\n    mock_popen.assert_called_once_with('random_non_existent_process')\n    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 991, in assert_called_once_with\n    return self.assert_called_with(*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 979, in assert_called_with\n    raise AssertionError(_error_message()) from cause\nAssertionError: expected call not found.\nExpected: Popen('random_non_existent_process')\n  Actual: Popen('random_non_existent_process', shell=True)\n\n======================================================================\nFAIL: test_process_terminates_and_restarts_multiple_instances (__main__.TestCases.test_process_terminates_and_restarts_multiple_instances)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 1426, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/var/folders/4m/5k_x4jdj2ps4znfd_dnw5jbh01clx4/T/bcb_4zrdicae/prog.py\", line 89, in test_process_terminates_and_restarts_multiple_instances\n    self.assertEqual(result, \"Process found. Restarting multi_instance.\")\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 'Process not found. Starting multi_instance.' != 'Process found. Restarting multi_instance.'\n- Process not found. Starting multi_instance.\n?         ----       ^\n+ Process found. Restarting multi_instance.\n?                ^^^\n\n\n----------------------------------------------------------------------\nRan 3 tests in 0.004s\n\nFAILED (failures=3)"
+      },
+      {
+        "task_id": "BigCodeBench/19",
+        "passed": true,
+        "usage": {
+          "input": 270,
+          "candidate_output": 395,
+          "thoughts_output": 934,
+          "total_output": 1329,
+          "total_tokens": 1599,
+          "as_run_usd": 0.012366,
+          "thinking_level": "low"
+        },
+        "seconds": 9.4,
+        "error": ""
+      },
+      {
+        "task_id": "BigCodeBench/34",
+        "passed": true,
+        "usage": {
+          "input": 370,
+          "candidate_output": 565,
+          "thoughts_output": 1611,
+          "total_output": 2176,
+          "total_tokens": 2546,
+          "as_run_usd": 0.020139,
+          "thinking_level": "low"
+        },
+        "seconds": 11.7,
+        "error": ""
+      },
+      {
+        "task_id": "BigCodeBench/37",
+        "passed": true,
+        "usage": {
+          "input": 462,
+          "candidate_output": 537,
+          "thoughts_output": 509,
+          "total_output": 1046,
+          "total_tokens": 1508,
+          "as_run_usd": 0.010107,
+          "thinking_level": "low"
+        },
+        "seconds": 5.2,
+        "error": ""
+      },
+      {
+        "task_id": "BigCodeBench/82",
+        "passed": false,
+        "usage": {
+          "input": 499,
+          "candidate_output": 732,
+          "thoughts_output": 1696,
+          "total_output": 2428,
+          "total_tokens": 2927,
+          "as_run_usd": 0.0226,
+          "thinking_level": "low"
+        },
+        "seconds": 15.3,
+        "error": "_app\n    app_rv = app(environ, start_response)\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/flask/app.py\", line 1536, in __call__\n    return self.wsgi_app(environ, start_response)\n           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/flask/app.py\", line 1514, in wsgi_app\n    response = self.handle_exception(e)\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/flask/app.py\", line 1511, in wsgi_app\n    response = self.full_dispatch_request()\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/flask/app.py\", line 919, in full_dispatch_request\n    rv = self.handle_user_exception(e)\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/flask/app.py\", line 917, in full_dispatch_request\n    rv = self.dispatch_request()\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/flask/app.py\", line 902, in dispatch_request\n    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/flask_login/utils.py\", line 290, in decorated_view\n    return current_app.ensure_sync(func)(*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/var/folders/4m/5k_x4jdj2ps4znfd_dnw5jbh01clx4/T/bcb_ir4yff9c/prog.py\", line 69, in protected\n    return render_template('protected.html')\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/flask/templating.py\", line 150, in render_template\n    template = app.jinja_env.get_or_select_template(template_name_or_list)\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/jinja2/environment.py\", line 1087, in get_or_select_template\n    return self.get_template(template_name_or_list, parent, globals)\n           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/jinja2/environment.py\", line 1016, in get_template\n    return self._load_template(name, globals)\n           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/jinja2/environment.py\", line 975, in _load_template\n    template = self.loader.load(self, name, self.make_globals(globals))\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/jinja2/loaders.py\", line 126, in load\n    source, filename, uptodate = self.get_source(environment, name)\n                                 ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/flask/templating.py\", line 66, in get_source\n    return self._get_source_fast(environment, template)\n           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/flask/templating.py\", line 100, in _get_source_fast\n    raise TemplateNotFound(template)\njinja2.exceptions.TemplateNotFound: protected.html\n\n----------------------------------------------------------------------\nRan 6 tests in 0.547s\n\nFAILED (errors=1)"
+      },
+      {
+        "task_id": "BigCodeBench/89",
+        "passed": true,
+        "usage": {
+          "input": 516,
+          "candidate_output": 870,
+          "thoughts_output": 1773,
+          "total_output": 2643,
+          "total_tokens": 3159,
+          "as_run_usd": 0.024561,
+          "thinking_level": "low"
+        },
+        "seconds": 12.5,
+        "error": ""
+      },
+      {
+        "task_id": "BigCodeBench/92",
+        "passed": true,
+        "usage": {
+          "input": 391,
+          "candidate_output": 666,
+          "thoughts_output": 981,
+          "total_output": 1647,
+          "total_tokens": 2038,
+          "as_run_usd": 0.015409,
+          "thinking_level": "low"
+        },
+        "seconds": 9.0,
+        "error": ""
+      },
+      {
+        "task_id": "BigCodeBench/93",
+        "passed": false,
+        "usage": {
+          "input": 318,
+          "candidate_output": 495,
+          "thoughts_output": 1271,
+          "total_output": 1766,
+          "total_tokens": 2084,
+          "as_run_usd": 0.016371,
+          "thinking_level": "low"
+        },
+        "seconds": 8.5,
+        "error": "======================================================================\nFAIL: test_values (__main__.TestCases.test_values)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/var/folders/4m/5k_x4jdj2ps4znfd_dnw5jbh01clx4/T/bcb_fin18pjj/prog.py\", line 89, in test_values\n    self.assertAlmostEqual(actual[0], expected[0], places=7, msg=\"DataFrame contents should match the expected output\")\n    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 0.11545379688930715 != -0.36270132751314693 within 7 places (0.4781551244024541 difference) : DataFrame contents should match the expected output\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/var/folders/4m/5k_x4jdj2ps4znfd_dnw5jbh01clx4/T/bcb_fin18pjj/prog.py\", line 92, in test_values\n    self.assertAlmostEqual(actual[0], -expected[0], places=7, msg=\"DataFrame contents should match the expected output\")\n    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 0.11545379688930715 != 0.36270132751314693 within 7 places (0.24724753062383978 difference) : DataFrame contents should match the expected output\n\n----------------------------------------------------------------------\nRan 5 tests in 0.032s\n\nFAILED (failures=1)"
+      }
+    ]
+  },
+  "medium": {
+    "level": "medium",
+    "passed": 5,
+    "n": 10,
+    "pass_rate": 0.5,
+    "total_as_run_usd": 0.3826,
+    "avg_candidate_tokens": 642.9,
+    "avg_thought_tokens": 3541.1,
+    "avg_seconds": 22.7,
+    "tasks": [
+      {
+        "task_id": "BigCodeBench/13",
+        "passed": false,
+        "usage": {
+          "input": 487,
+          "candidate_output": 828,
+          "thoughts_output": 4903,
+          "total_output": 5731,
+          "total_tokens": 6218,
+          "as_run_usd": 0.05231,
+          "thinking_level": "medium"
+        },
+        "seconds": 30.3,
+        "error": "======================================================================\nFAIL: test_case_2 (__main__.TestCases.test_case_2)\nTest with an invalid FTP server by raising an exception on connect.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 1426, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/var/folders/4m/5k_x4jdj2ps4znfd_dnw5jbh01clx4/T/bcb_0mmbro4j/prog.py\", line 118, in test_case_2\n    self.assertEqual(str(context.exception), f'Failed to connect to FTP server invalid_server: {error_message}')\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 'Fail[13 chars] to FTP server' != 'Fail[13 chars] to FTP server invalid_server: Failed to connect to FTP server'\n- Failed to connect to FTP server\n+ Failed to connect to FTP server invalid_server: Failed to connect to FTP server\n\n\n----------------------------------------------------------------------\nRan 5 tests in 2.614s\n\nFAILED (failures=1)"
+      },
+      {
+        "task_id": "BigCodeBench/15",
+        "passed": false,
+        "usage": {
+          "input": 419,
+          "candidate_output": 750,
+          "thoughts_output": 5581,
+          "total_output": 6331,
+          "total_tokens": 6750,
+          "as_run_usd": 0.057607,
+          "thinking_level": "medium"
+        },
+        "seconds": 35.1,
+        "error": "======================================================================\nFAIL: test_command_failure_with_specific_exit_code (__main__.TestCases.test_command_failure_with_specific_exit_code)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/var/folders/4m/5k_x4jdj2ps4znfd_dnw5jbh01clx4/T/bcb_s5z4w9kk/prog.py\", line 149, in test_command_failure_with_specific_exit_code\n    self.assertIn(\"Error executing command\", content)\n    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 'Error executing command' not found in 'Exit Code: 1\\n'\n\n----------------------------------------------------------------------\nRan 6 tests in 0.106s\n\nFAILED (failures=1)"
+      },
+      {
+        "task_id": "BigCodeBench/17",
+        "passed": false,
+        "usage": {
+          "input": 306,
+          "candidate_output": 570,
+          "thoughts_output": 2374,
+          "total_output": 2944,
+          "total_tokens": 3250,
+          "as_run_usd": 0.026955,
+          "thinking_level": "medium"
+        },
+        "seconds": 19.7,
+        "error": "======================================================================\nFAIL: test_process_found_restarts_process (__main__.TestCases.test_process_found_restarts_process)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 1426, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/var/folders/4m/5k_x4jdj2ps4znfd_dnw5jbh01clx4/T/bcb_pxadfy2v/prog.py\", line 83, in test_process_found_restarts_process\n    self.assertEqual(result, \"Process found. Restarting notepad.\")\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 'Process not found. Starting notepad.' != 'Process found. Restarting notepad.'\n- Process not found. Starting notepad.\n?         ----       ^\n+ Process found. Restarting notepad.\n?                ^^^\n\n\n======================================================================\nFAIL: test_process_not_found_starts_process (__main__.TestCases.test_process_not_found_starts_process)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 1426, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/var/folders/4m/5k_x4jdj2ps4znfd_dnw5jbh01clx4/T/bcb_pxadfy2v/prog.py\", line 74, in test_process_not_found_starts_process\n    mock_popen.assert_called_once_with('random_non_existent_process')\n    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 991, in assert_called_once_with\n    return self.assert_called_with(*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 979, in assert_called_with\n    raise AssertionError(_error_message()) from cause\nAssertionError: expected call not found.\nExpected: Popen('random_non_existent_process')\n  Actual: Popen(['random_non_existent_process'])\n\n======================================================================\nFAIL: test_process_terminates_and_restarts_multiple_instances (__main__.TestCases.test_process_terminates_and_restarts_multiple_instances)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 1426, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/var/folders/4m/5k_x4jdj2ps4znfd_dnw5jbh01clx4/T/bcb_pxadfy2v/prog.py\", line 97, in test_process_terminates_and_restarts_multiple_instances\n    self.assertEqual(result, \"Process found. Restarting multi_instance.\")\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 'Process not found. Starting multi_instance.' != 'Process found. Restarting multi_instance.'\n- Process not found. Starting multi_instance.\n?         ----       ^\n+ Process found. Restarting multi_instance.\n?                ^^^\n\n\n----------------------------------------------------------------------\nRan 3 tests in 0.004s\n\nFAILED (failures=3)"
+      },
+      {
+        "task_id": "BigCodeBench/19",
+        "passed": true,
+        "usage": {
+          "input": 270,
+          "candidate_output": 445,
+          "thoughts_output": 2098,
+          "total_output": 2543,
+          "total_tokens": 2813,
+          "as_run_usd": 0.023292,
+          "thinking_level": "medium"
+        },
+        "seconds": 12.5,
+        "error": ""
+      },
+      {
+        "task_id": "BigCodeBench/34",
+        "passed": true,
+        "usage": {
+          "input": 370,
+          "candidate_output": 425,
+          "thoughts_output": 3702,
+          "total_output": 4127,
+          "total_tokens": 4497,
+          "as_run_usd": 0.037698,
+          "thinking_level": "medium"
+        },
+        "seconds": 22.2,
+        "error": ""
+      },
+      {
+        "task_id": "BigCodeBench/37",
+        "passed": true,
+        "usage": {
+          "input": 462,
+          "candidate_output": 531,
+          "thoughts_output": 2111,
+          "total_output": 2642,
+          "total_tokens": 3104,
+          "as_run_usd": 0.024471,
+          "thinking_level": "medium"
+        },
+        "seconds": 13.6,
+        "error": ""
+      },
+      {
+        "task_id": "BigCodeBench/82",
+        "passed": false,
+        "usage": {
+          "input": 499,
+          "candidate_output": 836,
+          "thoughts_output": 3173,
+          "total_output": 4009,
+          "total_tokens": 4508,
+          "as_run_usd": 0.03683,
+          "thinking_level": "medium"
+        },
+        "seconds": 22.4,
+        "error": "_app\n    app_rv = app(environ, start_response)\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/flask/app.py\", line 1536, in __call__\n    return self.wsgi_app(environ, start_response)\n           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/flask/app.py\", line 1514, in wsgi_app\n    response = self.handle_exception(e)\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/flask/app.py\", line 1511, in wsgi_app\n    response = self.full_dispatch_request()\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/flask/app.py\", line 919, in full_dispatch_request\n    rv = self.handle_user_exception(e)\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/flask/app.py\", line 917, in full_dispatch_request\n    rv = self.dispatch_request()\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/flask/app.py\", line 902, in dispatch_request\n    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/flask_login/utils.py\", line 290, in decorated_view\n    return current_app.ensure_sync(func)(*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/var/folders/4m/5k_x4jdj2ps4znfd_dnw5jbh01clx4/T/bcb_70t951ae/prog.py\", line 96, in protected\n    return render_template('protected.html')\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/flask/templating.py\", line 150, in render_template\n    template = app.jinja_env.get_or_select_template(template_name_or_list)\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/jinja2/environment.py\", line 1087, in get_or_select_template\n    return self.get_template(template_name_or_list, parent, globals)\n           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/jinja2/environment.py\", line 1016, in get_template\n    return self._load_template(name, globals)\n           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/jinja2/environment.py\", line 975, in _load_template\n    template = self.loader.load(self, name, self.make_globals(globals))\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/jinja2/loaders.py\", line 126, in load\n    source, filename, uptodate = self.get_source(environment, name)\n                                 ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/flask/templating.py\", line 66, in get_source\n    return self._get_source_fast(environment, template)\n           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/flask/templating.py\", line 100, in _get_source_fast\n    raise TemplateNotFound(template)\njinja2.exceptions.TemplateNotFound: protected.html\n\n----------------------------------------------------------------------\nRan 6 tests in 0.023s\n\nFAILED (errors=1)"
+      },
+      {
+        "task_id": "BigCodeBench/89",
+        "passed": true,
+        "usage": {
+          "input": 516,
+          "candidate_output": 872,
+          "thoughts_output": 5369,
+          "total_output": 6241,
+          "total_tokens": 6757,
+          "as_run_usd": 0.056943,
+          "thinking_level": "medium"
+        },
+        "seconds": 32.2,
+        "error": ""
+      },
+      {
+        "task_id": "BigCodeBench/92",
+        "passed": true,
+        "usage": {
+          "input": 391,
+          "candidate_output": 683,
+          "thoughts_output": 2645,
+          "total_output": 3328,
+          "total_tokens": 3719,
+          "as_run_usd": 0.030538,
+          "thinking_level": "medium"
+        },
+        "seconds": 15.7,
+        "error": ""
+      },
+      {
+        "task_id": "BigCodeBench/93",
+        "passed": false,
+        "usage": {
+          "input": 318,
+          "candidate_output": 489,
+          "thoughts_output": 3455,
+          "total_output": 3944,
+          "total_tokens": 4262,
+          "as_run_usd": 0.035973,
+          "thinking_level": "medium"
+        },
+        "seconds": 23.3,
+        "error": "======================================================================\nFAIL: test_values (__main__.TestCases.test_values)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/var/folders/4m/5k_x4jdj2ps4znfd_dnw5jbh01clx4/T/bcb_dq66arvr/prog.py\", line 88, in test_values\n    self.assertAlmostEqual(actual[0], expected[0], places=7, msg=\"DataFrame contents should match the expected output\")\n    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 0.166330497902431 != -0.36270132751314693 within 7 places (0.5290318254155779 difference) : DataFrame contents should match the expected output\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/var/folders/4m/5k_x4jdj2ps4znfd_dnw5jbh01clx4/T/bcb_dq66arvr/prog.py\", line 91, in test_values\n    self.assertAlmostEqual(actual[0], -expected[0], places=7, msg=\"DataFrame contents should match the expected output\")\n    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 0.166330497902431 != 0.36270132751314693 within 7 places (0.19637082961071592 difference) : DataFrame contents should match the expected output\n\n----------------------------------------------------------------------\nRan 5 tests in 0.027s\n\nFAILED (failures=1)"
+      }
+    ]
+  },
+  "high": {
+    "level": "high",
+    "passed": 5,
+    "n": 10,
+    "pass_rate": 0.5,
+    "total_as_run_usd": 0.4971,
+    "avg_candidate_tokens": 646.9,
+    "avg_thought_tokens": 4809.1,
+    "avg_seconds": 30.3,
+    "tasks": [
+      {
+        "task_id": "BigCodeBench/13",
+        "passed": false,
+        "usage": {
+          "input": 487,
+          "candidate_output": 899,
+          "thoughts_output": 9243,
+          "total_output": 10142,
+          "total_tokens": 10629,
+          "as_run_usd": 0.092008,
+          "thinking_level": "high"
+        },
+        "seconds": 59.4,
+        "error": "======================================================================\nFAIL: test_case_1 (__main__.TestCases.test_case_1)\nTest with default parameters and successful download.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 1426, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/var/folders/4m/5k_x4jdj2ps4znfd_dnw5jbh01clx4/T/bcb_fvg46wpq/prog.py\", line 116, in test_case_1\n    self.assertEqual(len(downloaded_files), 2)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 0 != 2\n\n======================================================================\nFAIL: test_case_2 (__main__.TestCases.test_case_2)\nTest with an invalid FTP server by raising an exception on connect.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 1426, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/var/folders/4m/5k_x4jdj2ps4znfd_dnw5jbh01clx4/T/bcb_fvg46wpq/prog.py\", line 126, in test_case_2\n    self.assertEqual(str(context.exception), f'Failed to connect to FTP server invalid_server: {error_message}')\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 'Fail[13 chars] to FTP server' != 'Fail[13 chars] to FTP server invalid_server: Failed to connect to FTP server'\n- Failed to connect to FTP server\n+ Failed to connect to FTP server invalid_server: Failed to connect to FTP server\n\n\n----------------------------------------------------------------------\nRan 5 tests in 0.004s\n\nFAILED (failures=2)"
+      },
+      {
+        "task_id": "BigCodeBench/15",
+        "passed": false,
+        "usage": {
+          "input": 419,
+          "candidate_output": 734,
+          "thoughts_output": 4919,
+          "total_output": 5653,
+          "total_tokens": 6072,
+          "as_run_usd": 0.051505,
+          "thinking_level": "high"
+        },
+        "seconds": 29.4,
+        "error": "======================================================================\nFAIL: test_command_failure_with_specific_exit_code (__main__.TestCases.test_command_failure_with_specific_exit_code)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/var/folders/4m/5k_x4jdj2ps4znfd_dnw5jbh01clx4/T/bcb_2p2md21s/prog.py\", line 147, in test_command_failure_with_specific_exit_code\n    self.assertIn(\"Error executing command\", content)\n    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 'Error executing command' not found in '\\nError: Command failed with exit code 1\\n'\n\n----------------------------------------------------------------------\nRan 6 tests in 0.083s\n\nFAILED (failures=1)"
+      },
+      {
+        "task_id": "BigCodeBench/17",
+        "passed": false,
+        "usage": {
+          "input": 306,
+          "candidate_output": 681,
+          "thoughts_output": 5110,
+          "total_output": 5791,
+          "total_tokens": 6097,
+          "as_run_usd": 0.052578,
+          "thinking_level": "high"
+        },
+        "seconds": 31.5,
+        "error": "======================================================================\nFAIL: test_process_found_restarts_process (__main__.TestCases.test_process_found_restarts_process)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 1426, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/var/folders/4m/5k_x4jdj2ps4znfd_dnw5jbh01clx4/T/bcb_8lwvf2sz/prog.py\", line 104, in test_process_found_restarts_process\n    self.assertEqual(result, \"Process found. Restarting notepad.\")\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 'Process not found. Starting notepad.' != 'Process found. Restarting notepad.'\n- Process not found. Starting notepad.\n?         ----       ^\n+ Process found. Restarting notepad.\n?                ^^^\n\n\n======================================================================\nFAIL: test_process_not_found_starts_process (__main__.TestCases.test_process_not_found_starts_process)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 1426, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/var/folders/4m/5k_x4jdj2ps4znfd_dnw5jbh01clx4/T/bcb_8lwvf2sz/prog.py\", line 95, in test_process_not_found_starts_process\n    mock_popen.assert_called_once_with('random_non_existent_process')\n    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 991, in assert_called_once_with\n    return self.assert_called_with(*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 979, in assert_called_with\n    raise AssertionError(_error_message()) from cause\nAssertionError: expected call not found.\nExpected: Popen('random_non_existent_process')\n  Actual: Popen(['random_non_existent_process'])\n\n======================================================================\nFAIL: test_process_terminates_and_restarts_multiple_instances (__main__.TestCases.test_process_terminates_and_restarts_multiple_instances)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 1426, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/var/folders/4m/5k_x4jdj2ps4znfd_dnw5jbh01clx4/T/bcb_8lwvf2sz/prog.py\", line 118, in test_process_terminates_and_restarts_multiple_instances\n    self.assertEqual(result, \"Process found. Restarting multi_instance.\")\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 'Process not found. Starting multi_instance.' != 'Process found. Restarting multi_instance.'\n- Process not found. Starting multi_instance.\n?         ----       ^\n+ Process found. Restarting multi_instance.\n?                ^^^\n\n\n----------------------------------------------------------------------\nRan 3 tests in 0.003s\n\nFAILED (failures=3)"
+      },
+      {
+        "task_id": "BigCodeBench/19",
+        "passed": true,
+        "usage": {
+          "input": 270,
+          "candidate_output": 443,
+          "thoughts_output": 2994,
+          "total_output": 3437,
+          "total_tokens": 3707,
+          "as_run_usd": 0.031338,
+          "thinking_level": "high"
+        },
+        "seconds": 19.4,
+        "error": ""
+      },
+      {
+        "task_id": "BigCodeBench/34",
+        "passed": true,
+        "usage": {
+          "input": 370,
+          "candidate_output": 428,
+          "thoughts_output": 5414,
+          "total_output": 5842,
+          "total_tokens": 6212,
+          "as_run_usd": 0.053133,
+          "thinking_level": "high"
+        },
+        "seconds": 31.2,
+        "error": ""
+      },
+      {
+        "task_id": "BigCodeBench/37",
+        "passed": true,
+        "usage": {
+          "input": 462,
+          "candidate_output": 541,
+          "thoughts_output": 2050,
+          "total_output": 2591,
+          "total_tokens": 3053,
+          "as_run_usd": 0.024012,
+          "thinking_level": "high"
+        },
+        "seconds": 14.9,
+        "error": ""
+      },
+      {
+        "task_id": "BigCodeBench/82",
+        "passed": false,
+        "usage": {
+          "input": 499,
+          "candidate_output": 798,
+          "thoughts_output": 3516,
+          "total_output": 4314,
+          "total_tokens": 4813,
+          "as_run_usd": 0.039574,
+          "thinking_level": "high"
+        },
+        "seconds": 23.6,
+        "error": "_app\n    app_rv = app(environ, start_response)\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/flask/app.py\", line 1536, in __call__\n    return self.wsgi_app(environ, start_response)\n           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/flask/app.py\", line 1514, in wsgi_app\n    response = self.handle_exception(e)\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/flask/app.py\", line 1511, in wsgi_app\n    response = self.full_dispatch_request()\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/flask/app.py\", line 919, in full_dispatch_request\n    rv = self.handle_user_exception(e)\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/flask/app.py\", line 917, in full_dispatch_request\n    rv = self.dispatch_request()\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/flask/app.py\", line 902, in dispatch_request\n    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/flask_login/utils.py\", line 290, in decorated_view\n    return current_app.ensure_sync(func)(*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/var/folders/4m/5k_x4jdj2ps4znfd_dnw5jbh01clx4/T/bcb_cvgddeyi/prog.py\", line 86, in protected\n    return render_template('protected.html')\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/flask/templating.py\", line 150, in render_template\n    template = app.jinja_env.get_or_select_template(template_name_or_list)\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/jinja2/environment.py\", line 1087, in get_or_select_template\n    return self.get_template(template_name_or_list, parent, globals)\n           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/jinja2/environment.py\", line 1016, in get_template\n    return self._load_template(name, globals)\n           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/jinja2/environment.py\", line 975, in _load_template\n    template = self.loader.load(self, name, self.make_globals(globals))\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/jinja2/loaders.py\", line 126, in load\n    source, filename, uptodate = self.get_source(environment, name)\n                                 ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/flask/templating.py\", line 66, in get_source\n    return self._get_source_fast(environment, template)\n           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/lexha/Documents/work/codes/prj/17-tokenomics/agy-mcp-server-prototype/agy-mcp-env/lib/python3.13/site-packages/flask/templating.py\", line 100, in _get_source_fast\n    raise TemplateNotFound(template)\njinja2.exceptions.TemplateNotFound: protected.html\n\n----------------------------------------------------------------------\nRan 6 tests in 0.020s\n\nFAILED (errors=1)"
+      },
+      {
+        "task_id": "BigCodeBench/89",
+        "passed": true,
+        "usage": {
+          "input": 516,
+          "candidate_output": 768,
+          "thoughts_output": 6606,
+          "total_output": 7374,
+          "total_tokens": 7890,
+          "as_run_usd": 0.06714,
+          "thinking_level": "high"
+        },
+        "seconds": 35.3,
+        "error": ""
+      },
+      {
+        "task_id": "BigCodeBench/92",
+        "passed": true,
+        "usage": {
+          "input": 391,
+          "candidate_output": 689,
+          "thoughts_output": 4605,
+          "total_output": 5294,
+          "total_tokens": 5685,
+          "as_run_usd": 0.048232,
+          "thinking_level": "high"
+        },
+        "seconds": 36.2,
+        "error": ""
+      },
+      {
+        "task_id": "BigCodeBench/93",
+        "passed": false,
+        "usage": {
+          "input": 318,
+          "candidate_output": 488,
+          "thoughts_output": 3634,
+          "total_output": 4122,
+          "total_tokens": 4440,
+          "as_run_usd": 0.037575,
+          "thinking_level": "high"
+        },
+        "seconds": 22.1,
+        "error": "======================================================================\nFAIL: test_values (__main__.TestCases.test_values)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/var/folders/4m/5k_x4jdj2ps4znfd_dnw5jbh01clx4/T/bcb_tabqep6g/prog.py\", line 89, in test_values\n    self.assertAlmostEqual(actual[0], expected[0], places=7, msg=\"DataFrame contents should match the expected output\")\n    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: -0.31461309842274693 != -0.36270132751314693 within 7 places (0.0480882290904 difference) : DataFrame contents should match the expected output\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/var/folders/4m/5k_x4jdj2ps4znfd_dnw5jbh01clx4/T/bcb_tabqep6g/prog.py\", line 92, in test_values\n    self.assertAlmostEqual(actual[0], -expected[0], places=7, msg=\"DataFrame contents should match the expected output\")\n    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: -0.31461309842274693 != 0.36270132751314693 within 7 places (0.6773144259358939 difference) : DataFrame contents should match the expected output\n\n----------------------------------------------------------------------\nRan 5 tests in 0.024s\n\nFAILED (failures=1)"
+      }
+    ]
+  }
+}

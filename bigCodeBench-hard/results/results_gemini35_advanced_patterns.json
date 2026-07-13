@@ -1,0 +1,56 @@
+[
+  {
+    "name": "Pattern 1: Dynamic Thinking Router (3.5-Flash OFF -> 3.1-Lite/3.5-Flash Medium)",
+    "n": 10,
+    "passed": 4,
+    "pass_rate": 0.4,
+    "total_as_run_usd": 0.0999,
+    "cost_per_solved_usd": 0.025,
+    "avg_output_tokens": 1299.2
+  },
+  {
+    "name": "Pattern 2: Dual-Perspective 3.5-Flash Advisors (LOW + OFF -> 3.1-Lite)",
+    "n": 10,
+    "passed": 5,
+    "pass_rate": 0.5,
+    "total_as_run_usd": 0.1235,
+    "cost_per_solved_usd": 0.0247,
+    "avg_output_tokens": 1585.0
+  },
+  {
+    "name": "Pattern 3: TDD Harness (3.5-Flash Synthetic Tests -> 3.1-Lite)",
+    "n": 10,
+    "passed": 4,
+    "pass_rate": 0.4,
+    "total_as_run_usd": 0.0933,
+    "cost_per_solved_usd": 0.0233,
+    "avg_output_tokens": 1286.8
+  },
+  {
+    "name": "Pattern 4: Frontier Escalation Shield (3.1-Lite -> 3.5-Flash LOW -> Sonnet-5)",
+    "n": 10,
+    "passed": 9,
+    "pass_rate": 0.9,
+    "total_as_run_usd": 0.1734,
+    "cost_per_solved_usd": 0.0193,
+    "avg_output_tokens": 2136.9
+  },
+  {
+    "name": "Pattern 5: Peer Reviewer (Sonnet-5 Gen -> 3.5-Flash MEDIUM Auditor)",
+    "n": 10,
+    "passed": 6,
+    "pass_rate": 0.6,
+    "total_as_run_usd": 0.4794,
+    "cost_per_solved_usd": 0.0799,
+    "avg_output_tokens": 4723.1
+  },
+  {
+    "name": "Pattern 6: Tiered Thinking Ramping (3.5-Flash OFF -> LOW -> HIGH)",
+    "n": 10,
+    "passed": 8,
+    "pass_rate": 0.8,
+    "total_as_run_usd": 0.3226,
+    "cost_per_solved_usd": 0.0403,
+    "avg_output_tokens": 3331.4
+  }
+]

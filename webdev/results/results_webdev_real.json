@@ -1,0 +1,132 @@
+[
+  {
+    "arch": "single",
+    "n": 26,
+    "passed": 8,
+    "pass_rate": 0.308,
+    "total_usd": 0.02056,
+    "cost_per_solved": 0.00257,
+    "avg_out_tok": 456.2,
+    "name": "1. Single: gemini-3.1-flash-lite"
+  },
+  {
+    "arch": "single",
+    "n": 26,
+    "passed": 8,
+    "pass_rate": 0.308,
+    "total_usd": 0.19377,
+    "cost_per_solved": 0.02422,
+    "avg_out_tok": 757.2,
+    "name": "2. Single: gemini-3.5-flash"
+  },
+  {
+    "arch": "single",
+    "n": 26,
+    "passed": 11,
+    "pass_rate": 0.423,
+    "total_usd": 0.24098,
+    "cost_per_solved": 0.02191,
+    "avg_out_tok": 805.3,
+    "name": "3. Single: claude-sonnet-5"
+  },
+  {
+    "arch": "read-write",
+    "n": 26,
+    "passed": 9,
+    "pass_rate": 0.346,
+    "total_usd": 0.11422,
+    "cost_per_solved": 0.01269,
+    "avg_out_tok": 699.2,
+    "name": "5. Adv-Exec: 3.5-Flash + 3.1-Lite"
+  },
+  {
+    "arch": "read-write",
+    "n": 26,
+    "passed": 13,
+    "pass_rate": 0.5,
+    "total_usd": 0.20414,
+    "cost_per_solved": 0.0157,
+    "avg_out_tok": 949.1,
+    "name": "6. Adv-Exec: Sonnet-5 + 3.1-Lite"
+  },
+  {
+    "arch": "cascade",
+    "n": 26,
+    "passed": 16,
+    "pass_rate": 0.615,
+    "total_usd": 0.40245,
+    "cost_per_solved": 0.02515,
+    "avg_out_tok": 1947.3,
+    "name": "8. Cascade: 3.1-Lite -> 3.5-Flash Low"
+  },
+  {
+    "arch": "cascade",
+    "n": 26,
+    "passed": 14,
+    "pass_rate": 0.538,
+    "total_usd": 0.22112,
+    "cost_per_solved": 0.01579,
+    "avg_out_tok": 978.3,
+    "name": "9. Cascade: 3.1-Lite -> Sonnet-5"
+  },
+  {
+    "arch": "hybrid",
+    "n": 26,
+    "passed": 15,
+    "pass_rate": 0.577,
+    "total_usd": 0.42464,
+    "cost_per_solved": 0.02831,
+    "avg_out_tok": 2268.0,
+    "name": "10. Sweet-Spot Hybrid"
+  },
+  {
+    "arch": "router",
+    "n": 26,
+    "passed": 9,
+    "pass_rate": 0.346,
+    "total_usd": 0.10442,
+    "cost_per_solved": 0.0116,
+    "avg_out_tok": 723.9,
+    "name": "11. Dynamic Thinking Router"
+  },
+  {
+    "arch": "dual-advisor",
+    "n": 26,
+    "passed": 9,
+    "pass_rate": 0.346,
+    "total_usd": 0.31817,
+    "cost_per_solved": 0.03535,
+    "avg_out_tok": 1572.4,
+    "name": "12. Dual-Perspective Advisor"
+  },
+  {
+    "arch": "tdd",
+    "n": 26,
+    "passed": 10,
+    "pass_rate": 0.385,
+    "total_usd": 0.21588,
+    "cost_per_solved": 0.02159,
+    "avg_out_tok": 1155.4,
+    "name": "13. TDD Harness"
+  },
+  {
+    "arch": "shield",
+    "n": 26,
+    "passed": 20,
+    "pass_rate": 0.769,
+    "total_usd": 0.4237,
+    "cost_per_solved": 0.02118,
+    "avg_out_tok": 1835.2,
+    "name": "14. Shield: 3.1-Lite -> 3.5-Low -> Sonnet-5"
+  },
+  {
+    "arch": "routed-shield",
+    "n": 26,
+    "passed": 18,
+    "pass_rate": 0.692,
+    "total_usd": 0.5153,
+    "cost_per_solved": 0.02863,
+    "avg_out_tok": 2005.2,
+    "name": "17. Routed Shield Cascade (New Proposal)"
+  }
+]

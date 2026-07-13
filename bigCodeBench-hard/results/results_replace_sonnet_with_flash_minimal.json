@@ -1,0 +1,83 @@
+[
+  {
+    "name": "1A (Baseline): 3.1-Lite -> Sonnet-5",
+    "n": 10,
+    "passed": 8,
+    "pass_rate": 0.8,
+    "total_as_run_usd": 0.0558,
+    "cost_per_solved_usd": 0.007,
+    "avg_output_tokens": 686.2
+  },
+  {
+    "name": "1B (Replaced): 3.1-Lite -> 3.5-Flash (MINIMAL)",
+    "n": 10,
+    "passed": 7,
+    "pass_rate": 0.7,
+    "total_as_run_usd": 0.0407,
+    "cost_per_solved_usd": 0.0058,
+    "avg_output_tokens": 626.9
+  },
+  {
+    "name": "1C (Replaced): 3.1-Lite -> 3.5-Flash (OFF / budget=0)",
+    "n": 10,
+    "passed": 7,
+    "pass_rate": 0.7,
+    "total_as_run_usd": 0.0494,
+    "cost_per_solved_usd": 0.0071,
+    "avg_output_tokens": 691.1
+  },
+  {
+    "name": "2A (Baseline): 3.1-Lite -> Sonnet-5 -> Opus-4.8",
+    "n": 10,
+    "passed": 8,
+    "pass_rate": 0.8,
+    "total_as_run_usd": 0.1941,
+    "cost_per_solved_usd": 0.0243,
+    "avg_output_tokens": 1236.6
+  },
+  {
+    "name": "2B (Replaced L2): 3.1-Lite -> 3.5-Flash (MINIMAL) -> Opus-4.8",
+    "n": 10,
+    "passed": 9,
+    "pass_rate": 0.9,
+    "total_as_run_usd": 0.1225,
+    "cost_per_solved_usd": 0.0136,
+    "avg_output_tokens": 894.4
+  },
+  {
+    "name": "2C (Replaced L2): 3.1-Lite -> 3.5-Flash (OFF / budget=0) -> Opus-4.8",
+    "n": 10,
+    "passed": 8,
+    "pass_rate": 0.8,
+    "total_as_run_usd": 0.1724,
+    "cost_per_solved_usd": 0.0215,
+    "avg_output_tokens": 1032.8
+  },
+  {
+    "name": "3A (Baseline): 3.1-Lite -> 3.5-Flash (LOW) -> Sonnet-5",
+    "n": 10,
+    "passed": 9,
+    "pass_rate": 0.9,
+    "total_as_run_usd": 0.122,
+    "cost_per_solved_usd": 0.0136,
+    "avg_output_tokens": 1427.3
+  },
+  {
+    "name": "3B (Replaced L3): 3.1-Lite -> 3.5-Flash (LOW) -> 3.5-Flash (MINIMAL)",
+    "n": 10,
+    "passed": 8,
+    "pass_rate": 0.8,
+    "total_as_run_usd": 0.1558,
+    "cost_per_solved_usd": 0.0195,
+    "avg_output_tokens": 1828.5
+  },
+  {
+    "name": "3C (Replaced L3): 3.1-Lite -> 3.5-Flash (LOW) -> 3.5-Flash (OFF / budget=0)",
+    "n": 10,
+    "passed": 9,
+    "pass_rate": 0.9,
+    "total_as_run_usd": 0.0911,
+    "cost_per_solved_usd": 0.0101,
+    "avg_output_tokens": 1147.5
+  }
+]

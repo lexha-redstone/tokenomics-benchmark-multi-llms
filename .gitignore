@@ -1,0 +1,16 @@
+# Virtual Environment
+tokenomics-bench-env/
+
+# Python Cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# OS files
+.DS_Store
+_instructions/
+
+# Benchmark Artifacts (Results, Reports, Downloaded Data)
+**/report/
+*.html

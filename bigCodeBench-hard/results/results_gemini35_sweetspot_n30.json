@@ -1,0 +1,65 @@
+[
+  {
+    "name": "1. Single: 3.5-Flash (OFF)",
+    "n": 30,
+    "passed": 12,
+    "pass_rate": 0.4,
+    "total_as_run_usd": 0.2043,
+    "cost_per_solved_usd": 0.017,
+    "avg_output_tokens": 695.9
+  },
+  {
+    "name": "2. Single: 3.5-Flash (LOW)",
+    "n": 30,
+    "passed": 13,
+    "pass_rate": 0.433,
+    "total_as_run_usd": 0.517,
+    "cost_per_solved_usd": 0.0398,
+    "avg_output_tokens": 1854.1
+  },
+  {
+    "name": "3. Read/Write: 3.5-Flash + 3.1-Lite",
+    "n": 30,
+    "passed": 12,
+    "pass_rate": 0.4,
+    "total_as_run_usd": 0.1039,
+    "cost_per_solved_usd": 0.0087,
+    "avg_output_tokens": 629.8
+  },
+  {
+    "name": "4. Pure Gemini 3-Tier: 3.1-Lite -> 3.5-Flash (LOW) -> 3.5-Flash (OFF)",
+    "n": 30,
+    "passed": 22,
+    "pass_rate": 0.733,
+    "total_as_run_usd": 0.6041,
+    "cost_per_solved_usd": 0.0275,
+    "avg_output_tokens": 2179.6
+  },
+  {
+    "name": "5. Escalation Shield: 3.1-Lite -> 3.5-Flash (LOW) -> Sonnet-5",
+    "n": 30,
+    "passed": 22,
+    "pass_rate": 0.733,
+    "total_as_run_usd": 0.5984,
+    "cost_per_solved_usd": 0.0272,
+    "avg_output_tokens": 2119.3
+  },
+  {
+    "name": "6. 3-Tier Frontier: 3.1-Lite -> 3.5-Flash (MINIMAL) -> Opus-4.8",
+    "n": 30,
+    "passed": 22,
+    "pass_rate": 0.733,
+    "total_as_run_usd": 0.7052,
+    "cost_per_solved_usd": 0.0321,
+    "avg_output_tokens": 1303.1
+  },
+  {
+    "name": "7. Smart Repair: 3.5-Flash + 3.1-Lite + Triage + 3.5-Flash (LOW)",
+    "n": 30,
+    "passed": 19,
+    "pass_rate": 0.633,
+    "total_as_run_usd": 0.5371,
+    "cost_per_solved_usd": 0.0283,
+    "avg_output_tokens": 2204.1
+  }
+]

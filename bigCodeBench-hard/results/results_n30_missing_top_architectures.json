@@ -1,0 +1,74 @@
+[
+  {
+    "name": "Single: claude-sonnet-5",
+    "n": 30,
+    "passed": 13,
+    "pass_rate": 0.433,
+    "total_as_run_usd": 0.1443,
+    "cost_per_solved_usd": 0.0111,
+    "avg_output_tokens": 378.4
+  },
+  {
+    "name": "Single: claude-opus-4-8",
+    "n": 30,
+    "passed": 16,
+    "pass_rate": 0.533,
+    "total_as_run_usd": 0.6502,
+    "cost_per_solved_usd": 0.0406,
+    "avg_output_tokens": 764.4
+  },
+  {
+    "name": "Single: gemini-3.1-flash-lite",
+    "n": 30,
+    "passed": 9,
+    "pass_rate": 0.3,
+    "total_as_run_usd": 0.0155,
+    "cost_per_solved_usd": 0.0017,
+    "avg_output_tokens": 284.3
+  },
+  {
+    "name": "Arch 1: Read/Write Task Router (Opus-4.8/3.1-Lite)",
+    "n": 30,
+    "passed": 17,
+    "pass_rate": 0.567,
+    "total_as_run_usd": 0.3949,
+    "cost_per_solved_usd": 0.0232,
+    "avg_output_tokens": 757.2
+  },
+  {
+    "name": "Arch 3: 3-Tier Escalation (3.1-Lite -> Sonnet-5 -> Opus-4.8)",
+    "n": 30,
+    "passed": 21,
+    "pass_rate": 0.7,
+    "total_as_run_usd": 0.8232,
+    "cost_per_solved_usd": 0.0392,
+    "avg_output_tokens": 1508.5
+  },
+  {
+    "name": "Config 1B: Ultra-Budget Cascade (3.1-Lite -> 3.5-Flash MINIMAL)",
+    "n": 30,
+    "passed": 19,
+    "pass_rate": 0.633,
+    "total_as_run_usd": 0.2246,
+    "cost_per_solved_usd": 0.0118,
+    "avg_output_tokens": 905.3
+  },
+  {
+    "name": "Config 1A: Best-Value Cascade (3.1-Lite -> Sonnet-5)",
+    "n": 30,
+    "passed": 19,
+    "pass_rate": 0.633,
+    "total_as_run_usd": 0.2491,
+    "cost_per_solved_usd": 0.0131,
+    "avg_output_tokens": 828.3
+  },
+  {
+    "name": "Pattern 6: Tiered Thinking Ramping (3.5-Flash OFF -> LOW -> HIGH)",
+    "n": 30,
+    "passed": 20,
+    "pass_rate": 0.667,
+    "total_as_run_usd": 1.0665,
+    "cost_per_solved_usd": 0.0533,
+    "avg_output_tokens": 3628.8
+  }
+]

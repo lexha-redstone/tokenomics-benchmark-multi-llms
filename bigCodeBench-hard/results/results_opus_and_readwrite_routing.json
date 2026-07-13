@@ -1,0 +1,38 @@
+[
+  {
+    "name": "Arch 1: Read/Write Task Router (Opus-4.8/3.1-Lite)",
+    "n": 10,
+    "passed": 7,
+    "pass_rate": 0.7,
+    "total_as_run_usd": 0.1279,
+    "cost_per_solved_usd": 0.0183,
+    "avg_output_tokens": 740.3
+  },
+  {
+    "name": "Arch 2: 3-Tier Escalation (3.1-Lite -> 3.5-Flash LOW -> Opus-4.8)",
+    "n": 10,
+    "passed": 9,
+    "pass_rate": 0.9,
+    "total_as_run_usd": 0.1911,
+    "cost_per_solved_usd": 0.0212,
+    "avg_output_tokens": 1533.1
+  },
+  {
+    "name": "Arch 3: 3-Tier Escalation (3.1-Lite -> Sonnet-5 -> Opus-4.8)",
+    "n": 10,
+    "passed": 9,
+    "pass_rate": 0.9,
+    "total_as_run_usd": 0.1248,
+    "cost_per_solved_usd": 0.0139,
+    "avg_output_tokens": 873.3
+  },
+  {
+    "name": "Arch 4: Opus-4.8 Advisor + 3.1-Lite Exec + 3.5-Flash LOW Repair",
+    "n": 10,
+    "passed": 8,
+    "pass_rate": 0.8,
+    "total_as_run_usd": 0.1879,
+    "cost_per_solved_usd": 0.0235,
+    "avg_output_tokens": 1327.8
+  }
+]

@@ -13,18 +13,39 @@ This comprehensive report synthesizes empirical evaluation results across three 
 
 ```mermaid
 flowchart TD
-    subgraph SingleFrontier["Traditional Single Frontier Model"]
-        A1[Single Claude Opus-5 / Sonnet-5] -->|Direct Generation| B1[High Accuracy: 70-80%]
-        A1 -->|High Cost| C1[Cost per Solved: $0.028 - $0.129]
-        A1 -->|Verbose Raw Traces| D1[Token Bloat & Triage Overhead]
-    end
+    %% Styling Classes
+    classDef singleBox fill:#2a1215,stroke:#ef4444,stroke-width:2px,color:#fecaca;
+    classDef sweetBox fill:#0f291e,stroke:#10b981,stroke-width:2px,color:#d1fae5;
+    classDef actionBox fill:#1e293b,stroke:#3b82f6,stroke-width:2px,color:#93c5fd;
+    classDef testBox fill:#172554,stroke:#60a5fa,stroke-width:2px,color:#ffffff;
+    classDef resultGood fill:#064e3b,stroke:#34d399,stroke-width:3px,color:#ffffff,font-weight:bold;
+    classDef resultBad fill:#7f1d1d,stroke:#f87171,stroke-width:2px,color:#ffffff,font-weight:bold;
 
-    subgraph SweetSpot["Straitjacket Multi-LLM Sweet-Spot"]
-        A2[Gemini 3.6-Flash Plan / Claude Sonnet-5 Contract] -->|Guidance| B2[Gemini 3.5-Flash-Lite Exec]
-        B2 -->|Test Failure| C2[Straitjacket Zero-Cost Local Triage $0.00]
-        C2 -->|Cache-Preserved Repair| D2[Gemini 3.6-Flash Low-Thinking Escalation]
-        D2 --> E2[Top Accuracy: 76.7% - 85.2%]
-        D2 --> F2[Optimal Cost per Solved: $0.0036 - $0.0076]
+    subgraph ArchitectureComparison [" 🏛️ MULTI-LLM TOKENOMICS VS. TRADITIONAL FRONTIER SINGLE MODEL "]
+
+        subgraph TraditionalPath [" ❌ Traditional Single Frontier Architecture (Brute-Force) "]
+            direction TB
+            T1["🧑‍💻 Input Prompt (Task Context)"] --> T2["🏢 Heavy Single Frontier Model\nClaude 3.5 Opus / Sonnet-5\n💰 $5.00 / $25.00 per 1M tokens"]:::singleBox
+            T2 --> T3["💥 Raw Test Failure Log Flood\n10k–300k+ tokens context overflow\nEphemeral paths (/tmp/...) bust cache"]:::singleBox
+            T3 --> T4["🤖 LLM-Based Error Triage\n+$0.0018/loop · 1-3s API latency\nRisks hallucinating line numbers"]:::singleBox
+            T4 --> T5["⚠️ Inefficient High-Cost Outcome:\n• Cost / Solved Task: $0.028 – $0.129\n• Cache Hit Rate: ~0% (Cache Drift)\n• 10x–35x Higher Total Cost"]:::resultBad
+        end
+
+        subgraph StraitjacketPath [" ✨ Straitjacket Multi-LLM Sweet-Spot Architecture (Pareto-Optimal) "]
+            direction TB
+            S1["🧑‍💻 Input Prompt (Task Context)"] --> S2["🎯 Step 1: Contract Guidance (Reasoning Advisor)\nGemini 3.6-Flash / Claude Sonnet-5\n📝 <200-word concise specification contract"]:::sweetBox
+            S2 --> S3["⚡ Step 2: High-Speed Sub-Cent Execution\nGemini 3.5-Flash-Lite ($0.30 / $2.50 per 1M)\n💻 Full Code / Unified Git Patch"]:::sweetBox
+            S3 --> S4{"🧪 Sandboxed Unit Tests"}:::testBox
+
+            S4 -->|✅ PASS (50-60% Tasks)| S5["🎉 Instant Sub-Cent Resolution\nTotal Cost: < $0.001 per task"]:::resultGood
+
+            S4 -->|❌ FAIL| S6["🛡️ Step 3: Straitjacket Local Triage\nDeterministic UnittestProfile Extraction\n💵 $0.0000 API Cost · ⏱️ 0ms Latency\n🔒 96-98% Prompt Cache Hit Rate"]:::actionBox
+
+            S6 --> S7["🔍 Step 4: Targeted Reasoning Repair\nGemini 3.6-Flash (Low/Med Thinking)\nNormalized prompt prefix preserves cache"]:::sweetBox
+
+            S7 --> S8["🏆 Pareto-Optimal Outcome:\n• Top Pass Rate: 76.7% – 85.2%\n• Cost / Solved: $0.0036 – $0.0076\n• 80% – 94% Cost Reduction vs. Frontier"]:::resultGood
+        end
+
     end
 ```
 

@@ -1,0 +1,284 @@
+{
+  "arm": "Arm 5: Straitjacket Ultra-Sweet Hybrid (Claude + Gemini)",
+  "n": 30,
+  "passed": 11,
+  "pass_rate": 36.67,
+  "total_as_run_usd": 1.31899,
+  "total_triage_usd": 0.0,
+  "cost_per_solved_usd": 0.119908,
+  "avg_output_tokens": 2196.7,
+  "seconds": 635.15,
+  "results": [
+    {
+      "task_id": "BigCodeBench/13",
+      "passed": true,
+      "as_run_usd": 0.060424,
+      "output_tokens": 3091,
+      "total_tokens": 7590,
+      "repair_loops": 1,
+      "error": ""
+    },
+    {
+      "task_id": "BigCodeBench/15",
+      "passed": true,
+      "as_run_usd": 0.00771,
+      "output_tokens": 1283,
+      "total_tokens": 2502,
+      "repair_loops": 0,
+      "error": ""
+    },
+    {
+      "task_id": "BigCodeBench/17",
+      "passed": false,
+      "as_run_usd": 0.036033,
+      "output_tokens": 1707,
+      "total_tokens": 4100,
+      "repair_loops": 1,
+      "error": "\"/usr/lib/python3.13/pkgutil.py\", line 513, in resolve_name\n    mod = importlib.import_module(modname)\n  File \"/usr/lib/python3.13/importlib/__init__.py\", line 88, in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\n           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen importlib._bootstrap>\", line 1395, in _gcd_import\n  File \"<frozen importlib._bootstrap>\", line 1360, in _find_and_load\n  File \"<frozen importlib._bootstrap>\", line 1324, in _find_and_load_unlocked\nModuleNotFoundError: No module named 'psutil'\n\n======================================================================\nERROR: test_process_not_found_starts_process (__main__.TestCases.test_process_not_found_starts_process)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1429, in patched\n    with self.decoration_helper(patched,\n         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^\n                                args,\n                                ^^^^^\n                                keywargs) as (newargs, newkeywargs):\n                                ^^^^^^^^^\n  File \"/usr/lib/python3.13/contextlib.py\", line 141, in __enter__\n    return next(self.gen)\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1411, in decoration_helper\n    arg = exit_stack.enter_context(patching)\n  File \"/usr/lib/python3.13/contextlib.py\", line 530, in enter_context\n    result = _enter(cm)\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1487, in __enter__\n    self.target = self.getter()\n                  ~~~~~~~~~~~^^\n  File \"/usr/lib/python3.13/pkgutil.py\", line 513, in resolve_name\n    mod = importlib.import_module(modname)\n  File \"/usr/lib/python3.13/importlib/__init__.py\", line 88, in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\n           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen importlib._bootstrap>\", line 1395, in _gcd_import\n  File \"<frozen importlib._bootstrap>\", line 1360, in _find_and_load\n  File \"<frozen importlib._bootstrap>\", line 1324, in _find_and_load_unlocked\nModuleNotFoundError: No module named 'psutil'\n\n======================================================================\nERROR: test_process_terminates_and_restarts_multiple_instances (__main__.TestCases.test_process_terminates_and_restarts_multiple_instances)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1429, in patched\n    with self.decoration_helper(patched,\n         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^\n                                args,\n                                ^^^^^\n                                keywargs) as (newargs, newkeywargs):\n                                ^^^^^^^^^\n  File \"/usr/lib/python3.13/contextlib.py\", line 141, in __enter__\n    return next(self.gen)\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1411, in decoration_helper\n    arg = exit_stack.enter_context(patching)\n  File \"/usr/lib/python3.13/contextlib.py\", line 530, in enter_context\n    result = _enter(cm)\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1487, in __enter__\n    self.target = self.getter()\n                  ~~~~~~~~~~~^^\n  File \"/usr/lib/python3.13/pkgutil.py\", line 513, in resolve_name\n    mod = importlib.import_module(modname)\n  File \"/usr/lib/python3.13/importlib/__init__.py\", line 88, in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\n           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen importlib._bootstrap>\", line 1395, in _gcd_import\n  File \"<frozen importlib._bootstrap>\", line 1360, in _find_and_load\n  File \"<frozen importlib._bootstrap>\", line 1324, in _find_and_load_unlocked\nModuleNotFoundError: No module named 'psutil'\n\n----------------------------------------------------------------------\nRan 3 tests in 0.005s\n\nFAILED (errors=3)"
+    },
+    {
+      "task_id": "BigCodeBench/19",
+      "passed": true,
+      "as_run_usd": 0.006755,
+      "output_tokens": 940,
+      "total_tokens": 1799,
+      "repair_loops": 0,
+      "error": ""
+    },
+    {
+      "task_id": "BigCodeBench/34",
+      "passed": false,
+      "as_run_usd": 0.043034,
+      "output_tokens": 1898,
+      "total_tokens": 4548,
+      "repair_loops": 1,
+      "error": "model response contains no `def task_func` code block"
+    },
+    {
+      "task_id": "BigCodeBench/37",
+      "passed": false,
+      "as_run_usd": 0.047545,
+      "output_tokens": 2145,
+      "total_tokens": 5484,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_acu48p9u/prog.py\", line 5, in <module>\n    from sklearn.ensemble import RandomForestClassifier\nModuleNotFoundError: No module named 'sklearn'"
+    },
+    {
+      "task_id": "BigCodeBench/82",
+      "passed": false,
+      "as_run_usd": 0.059239,
+      "output_tokens": 2755,
+      "total_tokens": 6450,
+      "repair_loops": 1,
+      "error": "ponse)\n  File \"/usr/local/google/home/lexha/Desktop/work/prj/17-tokenomics/benchmark-using-multi-LLMs/.venv/lib/python3.13/site-packages/flask/app.py\", line 1536, in __call__\n    return self.wsgi_app(environ, start_response)\n           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/google/home/lexha/Desktop/work/prj/17-tokenomics/benchmark-using-multi-LLMs/.venv/lib/python3.13/site-packages/flask/app.py\", line 1514, in wsgi_app\n    response = self.handle_exception(e)\n  File \"/usr/local/google/home/lexha/Desktop/work/prj/17-tokenomics/benchmark-using-multi-LLMs/.venv/lib/python3.13/site-packages/flask/app.py\", line 1511, in wsgi_app\n    response = self.full_dispatch_request()\n  File \"/usr/local/google/home/lexha/Desktop/work/prj/17-tokenomics/benchmark-using-multi-LLMs/.venv/lib/python3.13/site-packages/flask/app.py\", line 919, in full_dispatch_request\n    rv = self.handle_user_exception(e)\n  File \"/usr/local/google/home/lexha/Desktop/work/prj/17-tokenomics/benchmark-using-multi-LLMs/.venv/lib/python3.13/site-packages/flask/app.py\", line 917, in full_dispatch_request\n    rv = self.dispatch_request()\n  File \"/usr/local/google/home/lexha/Desktop/work/prj/17-tokenomics/benchmark-using-multi-LLMs/.venv/lib/python3.13/site-packages/flask/app.py\", line 902, in dispatch_request\n    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^\n  File \"/usr/local/google/home/lexha/Desktop/work/prj/17-tokenomics/benchmark-using-multi-LLMs/.venv/lib/python3.13/site-packages/flask_login/utils.py\", line 290, in decorated_view\n    return current_app.ensure_sync(func)(*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/tmp/bcb_3f5mpz60/prog.py\", line 80, in protected\n    return render_template('protected.html', name=current_user.username)\n  File \"/usr/local/google/home/lexha/Desktop/work/prj/17-tokenomics/benchmark-using-multi-LLMs/.venv/lib/python3.13/site-packages/flask/templating.py\", line 150, in render_template\n    template = app.jinja_env.get_or_select_template(template_name_or_list)\n  File \"/usr/local/google/home/lexha/Desktop/work/prj/17-tokenomics/benchmark-using-multi-LLMs/.venv/lib/python3.13/site-packages/jinja2/environment.py\", line 1087, in get_or_select_template\n    return self.get_template(template_name_or_list, parent, globals)\n           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/google/home/lexha/Desktop/work/prj/17-tokenomics/benchmark-using-multi-LLMs/.venv/lib/python3.13/site-packages/jinja2/environment.py\", line 1016, in get_template\n    return self._load_template(name, globals)\n           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^\n  File \"/usr/local/google/home/lexha/Desktop/work/prj/17-tokenomics/benchmark-using-multi-LLMs/.venv/lib/python3.13/site-packages/jinja2/environment.py\", line 975, in _load_template\n    template = self.loader.load(self, name, self.make_globals(globals))\n  File \"/usr/local/google/home/lexha/Desktop/work/prj/17-tokenomics/benchmark-using-multi-LLMs/.venv/lib/python3.13/site-packages/jinja2/loaders.py\", line 126, in load\n    source, filename, uptodate = self.get_source(environment, name)\n                                 ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/google/home/lexha/Desktop/work/prj/17-tokenomics/benchmark-using-multi-LLMs/.venv/lib/python3.13/site-packages/flask/templating.py\", line 66, in get_source\n    return self._get_source_fast(environment, template)\n           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/google/home/lexha/Desktop/work/prj/17-tokenomics/benchmark-using-multi-LLMs/.venv/lib/python3.13/site-packages/flask/templating.py\", line 100, in _get_source_fast\n    raise TemplateNotFound(template)\njinja2.exceptions.TemplateNotFound: protected.html\n\n----------------------------------------------------------------------\nRan 6 tests in 0.041s\n\nFAILED (errors=1)"
+    },
+    {
+      "task_id": "BigCodeBench/89",
+      "passed": false,
+      "as_run_usd": 0.072627,
+      "output_tokens": 3201,
+      "total_tokens": 6899,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_wnrflayy/prog.py\", line 5, in <module>\n    from scipy import stats\nModuleNotFoundError: No module named 'scipy'"
+    },
+    {
+      "task_id": "BigCodeBench/92",
+      "passed": false,
+      "as_run_usd": 0.063953,
+      "output_tokens": 2860,
+      "total_tokens": 6091,
+      "repair_loops": 1,
+      "error": "model response contains no `def task_func` code block"
+    },
+    {
+      "task_id": "BigCodeBench/93",
+      "passed": false,
+      "as_run_usd": 0.045528,
+      "output_tokens": 2124,
+      "total_tokens": 4952,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_6qrxb0bs/prog.py\", line 6, in <module>\n    from sklearn.decomposition import PCA\nModuleNotFoundError: No module named 'sklearn'"
+    },
+    {
+      "task_id": "BigCodeBench/99",
+      "passed": false,
+      "as_run_usd": 0.053085,
+      "output_tokens": 2361,
+      "total_tokens": 5278,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_wvnne5_j/prog.py\", line 6, in <module>\n    import seaborn as sns\nModuleNotFoundError: No module named 'seaborn'"
+    },
+    {
+      "task_id": "BigCodeBench/100",
+      "passed": true,
+      "as_run_usd": 0.046381,
+      "output_tokens": 2130,
+      "total_tokens": 5210,
+      "repair_loops": 1,
+      "error": ""
+    },
+    {
+      "task_id": "BigCodeBench/101",
+      "passed": false,
+      "as_run_usd": 0.054396,
+      "output_tokens": 2583,
+      "total_tokens": 5558,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_a71ryzjc/prog.py\", line 6, in <module>\n    import seaborn as sns\nModuleNotFoundError: No module named 'seaborn'"
+    },
+    {
+      "task_id": "BigCodeBench/108",
+      "passed": false,
+      "as_run_usd": 0.066984,
+      "output_tokens": 3232,
+      "total_tokens": 8166,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_xi745d29/prog.py\", line 3, in <module>\n    from statsmodels.tsa.seasonal import seasonal_decompose\nModuleNotFoundError: No module named 'statsmodels'"
+    },
+    {
+      "task_id": "BigCodeBench/120",
+      "passed": true,
+      "as_run_usd": 0.046417,
+      "output_tokens": 2185,
+      "total_tokens": 6313,
+      "repair_loops": 1,
+      "error": ""
+    },
+    {
+      "task_id": "BigCodeBench/123",
+      "passed": true,
+      "as_run_usd": 0.007589,
+      "output_tokens": 1183,
+      "total_tokens": 2407,
+      "repair_loops": 0,
+      "error": ""
+    },
+    {
+      "task_id": "BigCodeBench/124",
+      "passed": true,
+      "as_run_usd": 0.049318,
+      "output_tokens": 2202,
+      "total_tokens": 6163,
+      "repair_loops": 1,
+      "error": ""
+    },
+    {
+      "task_id": "BigCodeBench/129",
+      "passed": false,
+      "as_run_usd": 0.062373,
+      "output_tokens": 2980,
+      "total_tokens": 6801,
+      "repair_loops": 1,
+      "error": "model response contains no `def task_func` code block"
+    },
+    {
+      "task_id": "BigCodeBench/139",
+      "passed": true,
+      "as_run_usd": 0.007186,
+      "output_tokens": 1034,
+      "total_tokens": 2083,
+      "repair_loops": 0,
+      "error": ""
+    },
+    {
+      "task_id": "BigCodeBench/147",
+      "passed": false,
+      "as_run_usd": 0.057038,
+      "output_tokens": 2465,
+      "total_tokens": 5137,
+      "repair_loops": 1,
+      "error": "======================================================================\nFAIL: test_all_ips_checked (__main__.TestCases.test_all_ips_checked)\nTest that all IPs in the range are checked.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/tmp/bcb_gebvi4_l/prog.py\", line 72, in test_all_ips_checked\n    self.assertEqual(set(result.keys()), expected_ips, \"All IPs in the range should be checked.\")\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Items in the second set but not the first:\n'192.168.0.3'\n'192.168.0.0' : All IPs in the range should be checked.\n\n----------------------------------------------------------------------\nRan 5 tests in 1.117s\n\nFAILED (failures=1)"
+    },
+    {
+      "task_id": "BigCodeBench/161",
+      "passed": true,
+      "as_run_usd": 0.007213,
+      "output_tokens": 1112,
+      "total_tokens": 2111,
+      "repair_loops": 0,
+      "error": ""
+    },
+    {
+      "task_id": "BigCodeBench/162",
+      "passed": true,
+      "as_run_usd": 0.00687,
+      "output_tokens": 861,
+      "total_tokens": 1876,
+      "repair_loops": 0,
+      "error": ""
+    },
+    {
+      "task_id": "BigCodeBench/177",
+      "passed": false,
+      "as_run_usd": 0.042792,
+      "output_tokens": 2015,
+      "total_tokens": 4897,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_jk8tquy9/prog.py\", line 63, in <module>\n    import nltk\nModuleNotFoundError: No module named 'nltk'"
+    },
+    {
+      "task_id": "BigCodeBench/184",
+      "passed": false,
+      "as_run_usd": 0.074289,
+      "output_tokens": 3264,
+      "total_tokens": 7717,
+      "repair_loops": 1,
+      "error": "model response contains no `def task_func` code block"
+    },
+    {
+      "task_id": "BigCodeBench/187",
+      "passed": false,
+      "as_run_usd": 0.06585,
+      "output_tokens": 2969,
+      "total_tokens": 6277,
+      "repair_loops": 1,
+      "error": "model response contains no `def task_func` code block"
+    },
+    {
+      "task_id": "BigCodeBench/199",
+      "passed": false,
+      "as_run_usd": 0.070525,
+      "output_tokens": 3215,
+      "total_tokens": 8379,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_a3_zdmjq/prog.py\", line 2, in <module>\n    import pytz\nModuleNotFoundError: No module named 'pytz'"
+    },
+    {
+      "task_id": "BigCodeBench/208",
+      "passed": true,
+      "as_run_usd": 0.007636,
+      "output_tokens": 1143,
+      "total_tokens": 2446,
+      "repair_loops": 0,
+      "error": ""
+    },
+    {
+      "task_id": "BigCodeBench/211",
+      "passed": false,
+      "as_run_usd": 0.048567,
+      "output_tokens": 2172,
+      "total_tokens": 4847,
+      "repair_loops": 1,
+      "error": "=======================================\nERROR: test_2 (__main__.TestCases.test_2)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1432, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/tmp/bcb_dbrlja2f/prog.py\", line 99, in test_2\n    extracted_files = task_func(MOCK_URL, MOCK_DESTINATION_DIR)\n  File \"/tmp/bcb_dbrlja2f/prog.py\", line 32, in task_func\n    os.makedirs(destination_directory)\n    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen os>\", line 218, in makedirs\n  File \"<frozen os>\", line 218, in makedirs\n  File \"<frozen os>\", line 228, in makedirs\nPermissionError: [Errno 13] Permission denied: '/path'\n\n======================================================================\nERROR: test_3 (__main__.TestCases.test_3)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1432, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/tmp/bcb_dbrlja2f/prog.py\", line 124, in test_3\n    extracted_files = task_func(MOCK_URL, MOCK_DESTINATION_DIR)\n  File \"/tmp/bcb_dbrlja2f/prog.py\", line 32, in task_func\n    os.makedirs(destination_directory)\n    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen os>\", line 218, in makedirs\n  File \"<frozen os>\", line 218, in makedirs\n  File \"<frozen os>\", line 228, in makedirs\nPermissionError: [Errno 13] Permission denied: '/path'\n\n======================================================================\nERROR: test_4 (__main__.TestCases.test_4)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1432, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/tmp/bcb_dbrlja2f/prog.py\", line 149, in test_4\n    extracted_files = task_func(MOCK_URL, MOCK_DESTINATION_DIR)\n  File \"/tmp/bcb_dbrlja2f/prog.py\", line 32, in task_func\n    os.makedirs(destination_directory)\n    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen os>\", line 218, in makedirs\n  File \"<frozen os>\", line 218, in makedirs\n  File \"<frozen os>\", line 228, in makedirs\nPermissionError: [Errno 13] Permission denied: '/path'\n\n======================================================================\nERROR: test_5 (__main__.TestCases.test_5)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1432, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/tmp/bcb_dbrlja2f/prog.py\", line 174, in test_5\n    extracted_files = task_func(MOCK_URL, MOCK_DESTINATION_DIR)\n  File \"/tmp/bcb_dbrlja2f/prog.py\", line 32, in task_func\n    os.makedirs(destination_directory)\n    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen os>\", line 218, in makedirs\n  File \"<frozen os>\", line 218, in makedirs\n  File \"<frozen os>\", line 228, in makedirs\nPermissionError: [Errno 13] Permission denied: '/path'\n\n======================================================================\nERROR: test_download_and_extract (__main__.TestCases.test_download_and_extract)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1432, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/tmp/bcb_dbrlja2f/prog.py\", line 74, in test_download_and_extract\n    extracted_files = task_func(MOCK_URL, MOCK_DESTINATION_DIR)\n  File \"/tmp/bcb_dbrlja2f/prog.py\", line 32, in task_func\n    os.makedirs(destination_directory)\n    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen os>\", line 218, in makedirs\n  File \"<frozen os>\", line 218, in makedirs\n  File \"<frozen os>\", line 228, in makedirs\nPermissionError: [Errno 13] Permission denied: '/path'\n\n----------------------------------------------------------------------\nRan 5 tests in 0.037s\n\nFAILED (errors=5)"
+    },
+    {
+      "task_id": "BigCodeBench/214",
+      "passed": false,
+      "as_run_usd": 0.040698,
+      "output_tokens": 1908,
+      "total_tokens": 4614,
+      "repair_loops": 1,
+      "error": ", 16],\n+   [118, 147, 144],\n+   [232, 36, 119],\n+   [135, 101, 217],\n+   [58, 115, 76],\n+   [136, 72, 36],\n+   [30, 84, 157],\n+   [147, 224, 63],\n+   [239, 155, 206],\n+   [139, 252, 224],\n+   [41, 20, 221]],\n+  [[165, 128, 13],\n-   [68, 112, 104],\n?     -    ^    -\n\n+   [46, 117, 10],\n?    +     ^\n\n+   [137, 20, 89],\n+   [240, 226, 142],\n+   [92, 223, 251],\n+   [46, 240, 178],\n+   [209, 170, 164],\n+   [53, 82, 168],\n+   [210, 253, 147],\n+   [205, 18, 232],\n+   [45, 161, 129],\n+   [165, 59, 206],\n+   [0, 236, 211],\n+   [27, 96, 185],\n+   [255, 226, 26],\n+   [104, 136, 67],\n+   [147, 224, 248],\n+   [62, 14, 122],\n-   [12, 156, 1],\n?     -    ^  ^\n\n+   [81, 159, 7],\n?    +     ^  ^\n\n-   [112, 3, 250],\n+   [208, 47, 115]],\n+  [[58, 236, 60],\n+   [78, 255, 149],\n+   [139, 212, 247],\n+   [241, 124, 233],\n+   [74, 196, 97],\n+   [69, 35, 141],\n+   [212, 174, 136],\n-   [129, 146, 175],\n?     --    ^   -\n\n+   [1, 144, 152],\n?         ^    +\n\n+   [250, 76, 228],\n+   [247, 176, 170],\n+   [193, 233, 164],\n+   [96, 122, 196],\n+   [119, 210, 22],\n+   [162, 242, 195],\n+   [197, 77, 253],\n+   [18, 64, 169],\n+   [51, 225, 51],\n+   [233, 7, 73],\n+   [209, 79, 38],\n+   [240, 135, 173]],\n+  [[203, 41, 168],\n+   [194, 162, 249],\n+   [18, 35, 120],\n+   [147, 116, 46],\n+   [222, 50, 51],\n+   [227, 85, 153],\n+   [14, 23, 166],\n+   [28, 150, 183],\n+   [191, 220, 74],\n+   [125, 210, 92],\n+   [87, 89, 40],\n+   [195, 123, 254],\n+   [73, 118, 236],\n+   [130, 235, 130],\n+   [4, 238, 147],\n+   [80, 37, 226],\n+   [176, 153, 217],\n+   [128, 233, 154],\n+   [101, 196, 247],\n+   [54, 121, 195]],\n+  [[183, 151, 151],\n+   [11, 202, 140],\n+   [4, 25, 254],\n+   [146, 117, 180],\n+   [112, 97, 128],\n+   [70, 49, 20],\n+   [158, 225, 17],\n+   [186, 67, 46],\n+   [151, 167, 212],\n+   [89, 102, 67],\n-   [128, 219, 184],\n?     -   -    -\n\n+   [187, 139, 84],\n?      +   +\n\n-   [57, 105, 53],\n+   [131, 246, 151],\n+   [173, 58, 239],\n+   [38, 72, 115],\n+   [203, 187, 46],\n+   [202, 7, 135],\n+   [63, 232, 188],\n+   [134, 195, 190],\n+   [55, 119, 241],\n+   [12, 167, 113]],\n+  [[32, 237, 154],\n+   [209, 59, 71],\n+   [23, 19, 155],\n+   [252, 59, 49],\n+   [120, 69, 198],\n+   [232, 189, 214],\n+   [79, 212, 50],\n+   [250, 208, 143],\n+   [16, 189, 111],\n+   [227, 227, 120],\n+   [185, 50, 188],\n+   [183, 31, 203],\n+   [141, 97, 62],\n+   [232, 46, 108],\n+   [10, 25, 170],\n+   [124, 64, 105],\n+   [35, 106, 110],\n+   [119, 168, 75],\n+   [1, 141, 74],\n+   [66, 128, 89]],\n+  [[56, 13, 67],\n+   [7, 183, 121],\n+   [165, 8, 89],\n+   [135, 26, 64],\n+   [215, 58, 32],\n+   [243, 229, 185],\n+   [55, 231, 113],\n+   [22, 154, 234],\n+   [15, 31, 245],\n+   [205, 218, 55],\n+   [251, 227, 37],\n+   [41, 164, 75],\n+   [33, 64, 140],\n+   [166, 195, 150],\n+   [232, 220, 50],\n+   [58, 110, 220],\n+   [231, 116, 211],\n+   [173, 232, 204],\n-   [182, 45, 13],\n?     -    ^   ^\n\n+   [212, 48, 160],\n?    +     ^   ^^\n\n+   [218, 160, 130]],\n+  [[191, 78, 242],\n+   [34, 46, 43],\n+   [47, 221, 49],\n+   [190, 66, 30],\n+   [168, 62, 210],\n+   [181, 216, 26],\n+   [147, 159, 180],\n+   [53, 108, 79],\n+   [246, 114, 55],\n+   [179, 188, 58],\n+   [142, 115, 219],\n+   [13, 136, 14],\n-   [86, 3, 118],\n?    ^^      ^\n\n+   [92, 139, 158],\n?    ^^  + +   ^\n\n+   [173, 179, 3],\n+   [92, 73, 205],\n+   [35, 72, 15],\n+   [46, 110, 192],\n+   [214, 232, 174],\n+   [80, 189, 159],\n+   [166, 43, 26]],\n+  [[79, 80, 25],\n+   [41, 139, 226],\n+   [217, 248, 226],\n+   [212, 139, 110],\n+   [58, 176, 220],\n+   [56, 145, 249],\n+   [157, 23, 112],\n+   [202, 28, 3],\n+   [104, 154, 108],\n+   [70, 130, 148],\n+   [167, 61, 3],\n+   [254, 220, 89],\n+   [66, 194, 117],\n+   [181, 36, 203],\n-   [8, 228, 95],\n?    ^    ^   -\n\n+   [21, 223, 9],\n?    ^^    ^\n\n-   [85, 71, 223],\n-   [150, 86, 88]]]\n+   [235, 39, 160],\n+   [219, 207, 213],\n+   [148, 58, 207],\n+   [10, 166, 87],\n+   [235, 185, 45]]] : DataFrame contents should match the expected output\n\n----------------------------------------------------------------------\nRan 5 tests in 0.867s\n\nFAILED (failures=1)"
+    },
+    {
+      "task_id": "BigCodeBench/227",
+      "passed": false,
+      "as_run_usd": 0.060935,
+      "output_tokens": 2884,
+      "total_tokens": 6874,
+      "repair_loops": 1,
+      "error": "model response contains no `def task_func` code block"
+    }
+  ],
+  "pricing_note": "Updated pricing: gemini-3.6-flash=$1.50/$7.50, gemini-3.5-flash-lite=$0.30/$2.50"
+}

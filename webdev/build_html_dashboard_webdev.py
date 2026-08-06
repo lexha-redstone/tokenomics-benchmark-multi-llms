@@ -5,7 +5,6 @@ import glob
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 HTML_PATH_LOCAL = os.path.join(HERE, "benchmark_webdev_report.html")
-HTML_PATH_ARTIFACT = "/Users/lexha/.gemini/jetski/brain/c83356dd-a12c-472c-bb9a-fdc7a042f8bb/benchmark_webdev_report.html"
 
 SPECS = {
     "1. Single: gemini-3.1-flash-lite": {
@@ -747,14 +746,17 @@ def generate_html(results):
 </body>
 </html>
 """
-    
+
     with open(HTML_PATH_LOCAL, "w") as f:
         f.write(html)
     print(f"Local dashboard generated successfully: {HTML_PATH_LOCAL}")
-    
-    # Save copy to artifact path
-    shutil.copy(HTML_PATH_LOCAL, HTML_PATH_ARTIFACT)
-    print(f"Artifact dashboard generated successfully: {HTML_PATH_ARTIFACT}")
+
+    reports_dir = os.path.join(os.path.dirname(HERE), "reports")
+    if os.path.exists(reports_dir):
+        reports_copy = os.path.join(reports_dir, "benchmark_webdev_report.html")
+        with open(reports_copy, "w") as f:
+            f.write(html)
+        print(f"Reports dashboard generated successfully: {reports_copy}")
 
 if __name__ == "__main__":
     r = load_results()

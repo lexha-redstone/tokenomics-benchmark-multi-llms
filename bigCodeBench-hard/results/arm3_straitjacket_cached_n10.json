@@ -1,0 +1,94 @@
+{
+  "arch": "cascade-straitjacket",
+  "n": 10,
+  "passed": 4,
+  "pass_rate": 0.4,
+  "total_as_run_usd": 0.3685,
+  "avg_output_tokens": 2179.5,
+  "results": [
+    {
+      "passed": true,
+      "as_run_usd": 0.001661,
+      "output_tokens": 1026,
+      "total_tokens": 1513,
+      "repair_loops": 0,
+      "error": ""
+    },
+    {
+      "passed": true,
+      "as_run_usd": 0.002646,
+      "output_tokens": 1464,
+      "total_tokens": 3264,
+      "repair_loops": 1,
+      "error": ""
+    },
+    {
+      "passed": false,
+      "as_run_usd": 0.042894,
+      "output_tokens": 2280,
+      "total_tokens": 6049,
+      "repair_loops": 3,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_94mdbhsd/prog.py\", line 2, in <module>\n    import psutil\nModuleNotFoundError: No module named 'psutil'"
+    },
+    {
+      "passed": true,
+      "as_run_usd": 0.000816,
+      "output_tokens": 499,
+      "total_tokens": 769,
+      "repair_loops": 0,
+      "error": ""
+    },
+    {
+      "passed": false,
+      "as_run_usd": 0.052304,
+      "output_tokens": 2451,
+      "total_tokens": 6612,
+      "repair_loops": 3,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_wfhyy8z2/prog.py\", line 2, in <module>\n    from wordcloud import WordCloud\nModuleNotFoundError: No module named 'wordcloud'"
+    },
+    {
+      "passed": false,
+      "as_run_usd": 0.039256,
+      "output_tokens": 2028,
+      "total_tokens": 6571,
+      "repair_loops": 3,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_e_tru6g8/prog.py\", line 3, in <module>\n    import seaborn as sns\nModuleNotFoundError: No module named 'seaborn'"
+    },
+    {
+      "passed": true,
+      "as_run_usd": 0.041888,
+      "output_tokens": 2811,
+      "total_tokens": 7098,
+      "repair_loops": 2,
+      "error": ""
+    },
+    {
+      "passed": false,
+      "as_run_usd": 0.056025,
+      "output_tokens": 2920,
+      "total_tokens": 8457,
+      "repair_loops": 3,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_zlh409hf/prog.py\", line 3, in <module>\n    from scipy import stats\nModuleNotFoundError: No module named 'scipy'"
+    },
+    {
+      "passed": false,
+      "as_run_usd": 0.077983,
+      "output_tokens": 3796,
+      "total_tokens": 9238,
+      "repair_loops": 3,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_v2_ycot6/prog.py\", line 4, in <module>\n    from sklearn.cluster import KMeans\nModuleNotFoundError: No module named 'sklearn'"
+    },
+    {
+      "passed": false,
+      "as_run_usd": 0.053054,
+      "output_tokens": 2520,
+      "total_tokens": 6583,
+      "repair_loops": 3,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_ad5kzz4a/prog.py\", line 4, in <module>\n    from sklearn.decomposition import PCA\nModuleNotFoundError: No module named 'sklearn'"
+    }
+  ],
+  "arm_id": "arm3",
+  "arm_name": "Arm 3: Straitjacket Multi-Attempt Cache-Warmed (Arch C-SJ)",
+  "elapsed_sec": 163.8,
+  "triage_usd": 0.0
+}

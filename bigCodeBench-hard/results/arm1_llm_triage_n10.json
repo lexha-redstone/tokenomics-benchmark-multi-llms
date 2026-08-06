@@ -1,0 +1,84 @@
+{
+  "arch": "hybrid",
+  "n": 10,
+  "passed": 2,
+  "pass_rate": 0.2,
+  "total_as_run_usd": 0.1651,
+  "avg_output_tokens": 2365.3,
+  "results": [
+    {
+      "passed": false,
+      "as_run_usd": 0.022902,
+      "output_tokens": 3114,
+      "total_tokens": 8303,
+      "error": "======================================================================\nFAIL: test_case_2 (__main__.TestCases.test_case_2)\nTest with an invalid FTP server by raising an exception on connect.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1432, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/tmp/bcb_jlgdq9ny/prog.py\", line 108, in test_case_2\n    self.assertEqual(str(context.exception), f'Failed to connect to FTP server invalid_server: {error_message}')\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 'Fail[13 chars] to FTP server' != 'Fail[13 chars] to FTP server invalid_server: Failed to connect to FTP server'\n- Failed to connect to FTP server\n+ Failed to connect to FTP server invalid_server: Failed to connect to FTP server\n\n\n======================================================================\nFAIL: test_case_3 (__main__.TestCases.test_case_3)\nTest with an invalid FTP user by raising an exception on login.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1432, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/tmp/bcb_jlgdq9ny/prog.py\", line 116, in test_case_3\n    self.assertEqual(str(context.exception), f'Failed to log into FTP server ftp.dlptest.com with user invalid_user: {error_message}')\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 'Failed to login' != 'Failed to log into FTP server ftp.dlptest.com with use[27 chars]ogin'\n- Failed to login\n+ Failed to log into FTP server ftp.dlptest.com with user invalid_user: Failed to login\n\n\n======================================================================\nFAIL: test_case_4 (__main__.TestCases.test_case_4)\nTest with an invalid FTP password by raising an exception on login.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1432, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/tmp/bcb_jlgdq9ny/prog.py\", line 124, in test_case_4\n    self.assertEqual(str(context.exception), f'Failed to log into FTP server ftp.dlptest.com with user dlpuser: {error_message}')\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 'Failed to login' != 'Failed to log into FTP server ftp.dlptest.com with use[22 chars]ogin'\n- Failed to login\n+ Failed to log into FTP server ftp.dlptest.com with user dlpuser: Failed to login\n\n\n======================================================================\nFAIL: test_case_5 (__main__.TestCases.test_case_5)\nTest with an invalid FTP directory by raising an exception on cwd.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1432, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/tmp/bcb_jlgdq9ny/prog.py\", line 132, in test_case_5\n    self.assertEqual(str(context.exception), f'Failed to change to directory /invalid_directory on server ftp.dlptest.com: {error_message}')\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 'Failed to change directory' != 'Failed to change to directory /invalid_directory on server[40 chars]tory'\n- Failed to change directory\n+ Failed to change to directory /invalid_directory on server ftp.dlptest.com: Failed to change directory\n\n\n----------------------------------------------------------------------\nRan 5 tests in 1.995s\n\nFAILED (failures=4)"
+    },
+    {
+      "passed": true,
+      "as_run_usd": 0.006854,
+      "output_tokens": 1835,
+      "total_tokens": 4413,
+      "error": ""
+    },
+    {
+      "passed": false,
+      "as_run_usd": 0.015615,
+      "output_tokens": 2262,
+      "total_tokens": 5624,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_ajellcz_/prog.py\", line 5, in <module>\n    import psutil\nModuleNotFoundError: No module named 'psutil'\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/tmp/bcb_ajellcz_/prog.py\", line 8, in <module>\n    subprocess.run([\"pip\", \"install\", \"psutil\"])\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/subprocess.py\", line 554, in run\n    with Popen(*popenargs, **kwargs) as process:\n         ~~~~~^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/subprocess.py\", line 1039, in __init__\n    self._execute_child(args, executable, preexec_fn, close_fds,\n    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n                        pass_fds, cwd, env,\n                        ^^^^^^^^^^^^^^^^^^^\n    ...<5 lines>...\n                        gid, gids, uid, umask,\n                        ^^^^^^^^^^^^^^^^^^^^^^\n                        start_new_session, process_group)\n                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/subprocess.py\", line 1991, in _execute_child\n    raise child_exception_type(errno_num, err_msg, err_filename)\nFileNotFoundError: [Errno 2] No such file or directory: 'pip'"
+    },
+    {
+      "passed": true,
+      "as_run_usd": 0.004161,
+      "output_tokens": 745,
+      "total_tokens": 1633,
+      "error": ""
+    },
+    {
+      "passed": false,
+      "as_run_usd": 0.013895,
+      "output_tokens": 1833,
+      "total_tokens": 5141,
+      "error": "ERROR: Could not find a version that satisfies the requirement wordcloud (from versions: none)\nERROR: No matching distribution found for wordcloud\nTraceback (most recent call last):\n  File \"/tmp/bcb_52vtvmdg/prog.py\", line 6, in <module>\n    from wordcloud import WordCloud\nModuleNotFoundError: No module named 'wordcloud'\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/tmp/bcb_52vtvmdg/prog.py\", line 8, in <module>\n    subprocess.check_call([sys.executable, \"-m\", \"pip\", \"install\", \"wordcloud\"])\n    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/subprocess.py\", line 419, in check_call\n    raise CalledProcessError(retcode, cmd)\nsubprocess.CalledProcessError: Command '['/usr/local/google/home/lexha/Desktop/work/prj/17-tokenomics/benchmark-using-multi-LLMs/tokenomics-bench-env/bin/python', '-m', 'pip', 'install', 'wordcloud']' returned non-zero exit status 1."
+    },
+    {
+      "passed": false,
+      "as_run_usd": 0.018524,
+      "output_tokens": 2509,
+      "total_tokens": 6847,
+      "error": "ERROR: Could not find a version that satisfies the requirement scikit-learn (from versions: none)\nERROR: No matching distribution found for scikit-learn\nTraceback (most recent call last):\n  File \"/tmp/bcb_x3jowjs1/prog.py\", line 5, in <module>\n    from sklearn.ensemble import RandomForestClassifier\nModuleNotFoundError: No module named 'sklearn'\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/tmp/bcb_x3jowjs1/prog.py\", line 9, in <module>\n    subprocess.check_call([sys.executable, \"-m\", \"pip\", \"install\", \"scikit-learn\"])\n    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/subprocess.py\", line 419, in check_call\n    raise CalledProcessError(retcode, cmd)\nsubprocess.CalledProcessError: Command '['/usr/local/google/home/lexha/Desktop/work/prj/17-tokenomics/benchmark-using-multi-LLMs/tokenomics-bench-env/bin/python', '-m', 'pip', 'install', 'scikit-learn']' returned non-zero exit status 1."
+    },
+    {
+      "passed": false,
+      "as_run_usd": 0.025084,
+      "output_tokens": 3498,
+      "total_tokens": 9470,
+      "error": "======================================================================\nFAIL: test_logout_route_redirects_to_login (__main__.TestCases.test_logout_route_redirects_to_login)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/tmp/bcb_s8igbb4f/prog.py\", line 182, in test_logout_route_redirects_to_login\n    self.assertIn('Logged in as: testuser', response.data.decode())\n    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 'Logged in as: testuser' not found in '<!doctype html><html><body>Logged in as: &lt;MagicMock name=&#39;_get_user().username&#39; id=&#39;139715952309120&#39;&gt;</body></html>'\n\n----------------------------------------------------------------------\nRan 6 tests in 1.186s\n\nFAILED (failures=1)"
+    },
+    {
+      "passed": false,
+      "as_run_usd": 0.022719,
+      "output_tokens": 3199,
+      "total_tokens": 8194,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_8jsnfi43/prog.py\", line 3, in <module>\n    from sklearn.preprocessing import StandardScaler\nModuleNotFoundError: No module named 'sklearn'"
+    },
+    {
+      "passed": false,
+      "as_run_usd": 0.019383,
+      "output_tokens": 2584,
+      "total_tokens": 6540,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_pajozanf/prog.py\", line 4, in <module>\n    from sklearn.cluster import KMeans\nModuleNotFoundError: No module named 'sklearn'"
+    },
+    {
+      "passed": false,
+      "as_run_usd": 0.015962,
+      "output_tokens": 2074,
+      "total_tokens": 5272,
+      "error": "======================================================================\nERROR: test_invalid_n_components (__main__.TestCases.test_invalid_n_components)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/tmp/bcb_ke_cyoqg/prog.py\", line 75, in test_invalid_n_components\n    task_func(self.data, 0)\n    ~~~~~~~~~^^^^^^^^^^^^^^\n  File \"/tmp/bcb_ke_cyoqg/prog.py\", line 34, in task_func\n    raise ImportError(\"scikit-learn is required for this function to work.\")\nImportError: scikit-learn is required for this function to work.\n\n======================================================================\nERROR: test_invalid_n_components_type (__main__.TestCases.test_invalid_n_components_type)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/tmp/bcb_ke_cyoqg/prog.py\", line 78, in test_invalid_n_components_type\n    task_func(self.data, \"two\")\n    ~~~~~~~~~^^^^^^^^^^^^^^^^^^\n  File \"/tmp/bcb_ke_cyoqg/prog.py\", line 34, in task_func\n    raise ImportError(\"scikit-learn is required for this function to work.\")\nImportError: scikit-learn is required for this function to work.\n\n======================================================================\nERROR: test_plot_axes (__main__.TestCases.test_plot_axes)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/tmp/bcb_ke_cyoqg/prog.py\", line 80, in test_plot_axes\n    _, ax = task_func(self.data, 2)\n            ~~~~~~~~~^^^^^^^^^^^^^^\n  File \"/tmp/bcb_ke_cyoqg/prog.py\", line 34, in task_func\n    raise ImportError(\"scikit-learn is required for this function to work.\")\nImportError: scikit-learn is required for this function to work.\n\n======================================================================\nERROR: test_transformed_data_shape (__main__.TestCases.test_transformed_data_shape)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/tmp/bcb_ke_cyoqg/prog.py\", line 71, in test_transformed_data_shape\n    transformed_data, _ = task_func(self.data, 2)\n                          ~~~~~~~~~^^^^^^^^^^^^^^\n  File \"/tmp/bcb_ke_cyoqg/prog.py\", line 34, in task_func\n    raise ImportError(\"scikit-learn is required for this function to work.\")\nImportError: scikit-learn is required for this function to work.\n\n======================================================================\nERROR: test_values (__main__.TestCases.test_values)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/tmp/bcb_ke_cyoqg/prog.py\", line 84, in test_values\n    transformed_data, _ = task_func(self.data, 2)\n                          ~~~~~~~~~^^^^^^^^^^^^^^\n  File \"/tmp/bcb_ke_cyoqg/prog.py\", line 34, in task_func\n    raise ImportError(\"scikit-learn is required for this function to work.\")\nImportError: scikit-learn is required for this function to work.\n\n----------------------------------------------------------------------\nRan 5 tests in 0.004s\n\nFAILED (errors=5)"
+    }
+  ],
+  "arm_id": "arm1",
+  "arm_name": "Arm 1: Shipped LLM Triage (Arch E)",
+  "elapsed_sec": 169.5,
+  "triage_usd": 0.0024
+}

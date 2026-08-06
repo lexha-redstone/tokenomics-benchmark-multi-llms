@@ -1,0 +1,218 @@
+{
+  "dataset": "swebench",
+  "dataset_name": "SWE-bench Pro",
+  "group": "straitjacket",
+  "n": 2,
+  "summary": [
+    {
+      "id": "sj_cascade",
+      "name": "8. Straitjacket Cascade (3.5-Lite -> 3.6-Flash)",
+      "category": "3. Combination of models + straitjacket",
+      "models": "Gemini 3.5 Lite -> 3.6 Flash",
+      "triage_mode": "Straitjacket UnittestProfile ($0.00)",
+      "n": 2,
+      "passed": 2,
+      "pass_rate": 1.0,
+      "total_as_run_usd": 0.018242,
+      "total_triage_usd": 0.0,
+      "cost_per_solved_usd": 0.009121,
+      "avg_output_tokens": 1251.5,
+      "seconds": 0.2,
+      "results": [
+        {
+          "task_id": "instance_NodeBB__NodeBB-04998908ba6721d64eba79ae3b65a351dcfbc5b5-vnan",
+          "passed": true,
+          "as_run_usd": 0.000588,
+          "output_tokens": 180,
+          "total_tokens": 641,
+          "repair_loops": 0,
+          "error": ""
+        },
+        {
+          "task_id": "instance_qutebrowser__qutebrowser-f91ace96223cac8161c16dd061907e138fe85111-v059c6fdc75567943479b23ebca7c07b5e9a7f34c",
+          "passed": true,
+          "as_run_usd": 0.017654,
+          "output_tokens": 2323,
+          "total_tokens": 3028,
+          "repair_loops": 1,
+          "error": ""
+        }
+      ]
+    },
+    {
+      "id": "sj_hybrid",
+      "name": "9. Straitjacket Hybrid (Flash Plan + Lite Exec + Flash Repair)",
+      "category": "3. Combination of models + straitjacket",
+      "models": "Gemini 3.6 Flash + 3.5 Lite",
+      "triage_mode": "Straitjacket UnittestProfile ($0.00)",
+      "n": 2,
+      "passed": 2,
+      "pass_rate": 1.0,
+      "total_as_run_usd": 0.021144,
+      "total_triage_usd": 0.0,
+      "cost_per_solved_usd": 0.010572,
+      "avg_output_tokens": 1361.5,
+      "seconds": 0.0,
+      "results": [
+        {
+          "task_id": "instance_NodeBB__NodeBB-04998908ba6721d64eba79ae3b65a351dcfbc5b5-vnan",
+          "passed": true,
+          "as_run_usd": 0.002122,
+          "output_tokens": 290,
+          "total_tokens": 1258,
+          "repair_loops": 0,
+          "error": ""
+        },
+        {
+          "task_id": "instance_qutebrowser__qutebrowser-f91ace96223cac8161c16dd061907e138fe85111-v059c6fdc75567943479b23ebca7c07b5e9a7f34c",
+          "passed": true,
+          "as_run_usd": 0.019022,
+          "output_tokens": 2433,
+          "total_tokens": 3533,
+          "repair_loops": 1,
+          "error": ""
+        }
+      ]
+    },
+    {
+      "id": "sj_escalation_shield",
+      "name": "10. Straitjacket Escalation Shield (Gemini -> Claude)",
+      "category": "3. Combination of models + straitjacket",
+      "models": "Gemini Lite -> Flash -> Claude Sonnet-5",
+      "triage_mode": "Straitjacket UnittestProfile ($0.00)",
+      "n": 2,
+      "passed": 2,
+      "pass_rate": 1.0,
+      "total_as_run_usd": 0.018221,
+      "total_triage_usd": 0.0,
+      "cost_per_solved_usd": 0.009111,
+      "avg_output_tokens": 1251.5,
+      "seconds": 0.0,
+      "results": [
+        {
+          "task_id": "instance_NodeBB__NodeBB-04998908ba6721d64eba79ae3b65a351dcfbc5b5-vnan",
+          "passed": true,
+          "as_run_usd": 0.000588,
+          "output_tokens": 180,
+          "total_tokens": 641,
+          "repair_loops": 0,
+          "error": ""
+        },
+        {
+          "task_id": "instance_qutebrowser__qutebrowser-f91ace96223cac8161c16dd061907e138fe85111-v059c6fdc75567943479b23ebca7c07b5e9a7f34c",
+          "passed": true,
+          "as_run_usd": 0.017633,
+          "output_tokens": 2323,
+          "total_tokens": 3014,
+          "repair_loops": 1,
+          "error": ""
+        }
+      ]
+    },
+    {
+      "id": "sj_smart_repair",
+      "name": "11. Straitjacket Smart Repair (Pure Gemini)",
+      "category": "3. Combination of models + straitjacket",
+      "models": "Gemini 3.6 Flash -> 3.5 Lite -> Flash (Med)",
+      "triage_mode": "Straitjacket UnittestProfile ($0.00)",
+      "n": 2,
+      "passed": 2,
+      "pass_rate": 1.0,
+      "total_as_run_usd": 0.03455,
+      "total_triage_usd": 0.0,
+      "cost_per_solved_usd": 0.017275,
+      "avg_output_tokens": 2228.0,
+      "seconds": 0.0,
+      "results": [
+        {
+          "task_id": "instance_NodeBB__NodeBB-04998908ba6721d64eba79ae3b65a351dcfbc5b5-vnan",
+          "passed": true,
+          "as_run_usd": 0.017402,
+          "output_tokens": 2228,
+          "total_tokens": 2689,
+          "repair_loops": 0,
+          "error": ""
+        },
+        {
+          "task_id": "instance_qutebrowser__qutebrowser-f91ace96223cac8161c16dd061907e138fe85111-v059c6fdc75567943479b23ebca7c07b5e9a7f34c",
+          "passed": true,
+          "as_run_usd": 0.017148,
+          "output_tokens": 2228,
+          "total_tokens": 2520,
+          "repair_loops": 0,
+          "error": ""
+        }
+      ]
+    },
+    {
+      "id": "sj_ultra_sweet",
+      "name": "12. Straitjacket Ultra-Sweet Hybrid (Claude + Gemini)",
+      "category": "3. Combination of models + straitjacket",
+      "models": "Claude Sonnet-5 -> Gemini Lite -> Claude Opus-5",
+      "triage_mode": "Straitjacket UnittestProfile ($0.00)",
+      "n": 2,
+      "passed": 2,
+      "pass_rate": 1.0,
+      "total_as_run_usd": 0.011436,
+      "total_triage_usd": 0.0,
+      "cost_per_solved_usd": 0.005718,
+      "avg_output_tokens": 337.5,
+      "seconds": 0.0,
+      "results": [
+        {
+          "task_id": "instance_NodeBB__NodeBB-04998908ba6721d64eba79ae3b65a351dcfbc5b5-vnan",
+          "passed": true,
+          "as_run_usd": 0.00263,
+          "output_tokens": 290,
+          "total_tokens": 1259,
+          "repair_loops": 0,
+          "error": ""
+        },
+        {
+          "task_id": "instance_qutebrowser__qutebrowser-f91ace96223cac8161c16dd061907e138fe85111-v059c6fdc75567943479b23ebca7c07b5e9a7f34c",
+          "passed": true,
+          "as_run_usd": 0.008806,
+          "output_tokens": 385,
+          "total_tokens": 1471,
+          "repair_loops": 1,
+          "error": ""
+        }
+      ]
+    },
+    {
+      "id": "sj_dual_verifier",
+      "name": "13. Straitjacket Dual-Verifier Cascade (4-Tier Synergy)",
+      "category": "4. Next-Gen Multi-Provider + straitjacket",
+      "models": "Gemini Lite -> Flash -> Sonnet-5 -> Opus-5",
+      "triage_mode": "Straitjacket UnittestProfile ($0.00)",
+      "n": 2,
+      "passed": 2,
+      "pass_rate": 1.0,
+      "total_as_run_usd": 0.018221,
+      "total_triage_usd": 0.0,
+      "cost_per_solved_usd": 0.009111,
+      "avg_output_tokens": 1251.5,
+      "seconds": 0.0,
+      "results": [
+        {
+          "task_id": "instance_NodeBB__NodeBB-04998908ba6721d64eba79ae3b65a351dcfbc5b5-vnan",
+          "passed": true,
+          "as_run_usd": 0.000588,
+          "output_tokens": 180,
+          "total_tokens": 641,
+          "repair_loops": 0,
+          "error": ""
+        },
+        {
+          "task_id": "instance_qutebrowser__qutebrowser-f91ace96223cac8161c16dd061907e138fe85111-v059c6fdc75567943479b23ebca7c07b5e9a7f34c",
+          "passed": true,
+          "as_run_usd": 0.017633,
+          "output_tokens": 2323,
+          "total_tokens": 3014,
+          "repair_loops": 1,
+          "error": ""
+        }
+      ]
+    }
+  ]
+}

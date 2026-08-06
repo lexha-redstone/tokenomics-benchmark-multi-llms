@@ -1,0 +1,148 @@
+{
+  "dataset": "webdev",
+  "dataset_name": "WebDev",
+  "group": "single",
+  "n": 2,
+  "summary": [
+    {
+      "id": "single_flash_lite",
+      "name": "1. Single: gemini-3.5-flash-lite",
+      "category": "1. Single models",
+      "models": "Gemini 3.5 Flash-Lite",
+      "triage_mode": "None / Direct",
+      "n": 2,
+      "passed": 1,
+      "pass_rate": 0.5,
+      "total_as_run_usd": 0.005814,
+      "total_triage_usd": 0.0018,
+      "cost_per_solved_usd": 0.005814,
+      "avg_output_tokens": 1025.5,
+      "seconds": 0.5,
+      "results": [
+        {
+          "task_id": "BigCodeBench/13",
+          "passed": true,
+          "as_run_usd": 0.001709,
+          "output_tokens": 629,
+          "total_tokens": 1085,
+          "repair_loops": 0,
+          "error": ""
+        },
+        {
+          "task_id": "BigCodeBench/82",
+          "passed": false,
+          "as_run_usd": 0.004105,
+          "output_tokens": 1422,
+          "total_tokens": 3256,
+          "repair_loops": 1,
+          "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_uk7rrgnl/prog.py\", line 1, in <module>\n    from flask import Flask, render_template, redirect, url_for\nModuleNotFoundError: No module named 'flask'"
+        }
+      ]
+    },
+    {
+      "id": "single_flash36",
+      "name": "2. Single: gemini-3.6-flash",
+      "category": "1. Single models",
+      "models": "Gemini 3.6 Flash",
+      "triage_mode": "None / Direct",
+      "n": 2,
+      "passed": 1,
+      "pass_rate": 0.5,
+      "total_as_run_usd": 0.062397,
+      "total_triage_usd": 0.0018,
+      "cost_per_solved_usd": 0.062397,
+      "avg_output_tokens": 3958.5,
+      "seconds": 0.3,
+      "results": [
+        {
+          "task_id": "BigCodeBench/13",
+          "passed": true,
+          "as_run_usd": 0.020762,
+          "output_tokens": 2677,
+          "total_tokens": 3133,
+          "repair_loops": 0,
+          "error": ""
+        },
+        {
+          "task_id": "BigCodeBench/82",
+          "passed": false,
+          "as_run_usd": 0.041635,
+          "output_tokens": 5240,
+          "total_tokens": 6796,
+          "repair_loops": 1,
+          "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_8sbk0ini/prog.py\", line 1, in <module>\n    from flask import Flask, render_template, redirect, url_for\nModuleNotFoundError: No module named 'flask'"
+        }
+      ]
+    },
+    {
+      "id": "single_sonnet5",
+      "name": "3. Single: claude-sonnet-5",
+      "category": "1. Single models",
+      "models": "Claude Sonnet-5",
+      "triage_mode": "None / Direct",
+      "n": 2,
+      "passed": 1,
+      "pass_rate": 0.5,
+      "total_as_run_usd": 0.027386,
+      "total_triage_usd": 0.0036,
+      "cost_per_solved_usd": 0.027386,
+      "avg_output_tokens": 1067.5,
+      "seconds": 0.5,
+      "results": [
+        {
+          "task_id": "BigCodeBench/13",
+          "passed": true,
+          "as_run_usd": 0.012834,
+          "output_tokens": 991,
+          "total_tokens": 2453,
+          "repair_loops": 1,
+          "error": ""
+        },
+        {
+          "task_id": "BigCodeBench/82",
+          "passed": false,
+          "as_run_usd": 0.014552,
+          "output_tokens": 1144,
+          "total_tokens": 2700,
+          "repair_loops": 1,
+          "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_89g56q0j/prog.py\", line 1, in <module>\n    from flask import Flask, render_template, redirect, url_for\nModuleNotFoundError: No module named 'flask'"
+        }
+      ]
+    },
+    {
+      "id": "single_opus5",
+      "name": "4. Single: claude-opus-5",
+      "category": "1. Single models",
+      "models": "Claude Opus-5",
+      "triage_mode": "None / Direct",
+      "n": 2,
+      "passed": 1,
+      "pass_rate": 0.5,
+      "total_as_run_usd": 0.054385,
+      "total_triage_usd": 0.0018,
+      "cost_per_solved_usd": 0.054385,
+      "avg_output_tokens": 886.5,
+      "seconds": 0.3,
+      "results": [
+        {
+          "task_id": "BigCodeBench/13",
+          "passed": true,
+          "as_run_usd": 0.018005,
+          "output_tokens": 629,
+          "total_tokens": 1085,
+          "repair_loops": 0,
+          "error": ""
+        },
+        {
+          "task_id": "BigCodeBench/82",
+          "passed": false,
+          "as_run_usd": 0.03638,
+          "output_tokens": 1144,
+          "total_tokens": 2700,
+          "repair_loops": 1,
+          "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_itowxx94/prog.py\", line 1, in <module>\n    from flask import Flask, render_template, redirect, url_for\nModuleNotFoundError: No module named 'flask'"
+        }
+      ]
+    }
+  ]
+}

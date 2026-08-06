@@ -569,12 +569,13 @@ html_content = f"""<!DOCTYPE html>
 with open(HTML_PATH_1, "w") as f:
     f.write(html_content)
 
-with open(HTML_PATH_2, "w") as f:
-    f.write(html_content)
-
+os.makedirs(REPORT_DIR, exist_ok=True)
 shutil.copy(HTML_PATH_1, REPORT_FILE)
 
 print("Saved complete HTML dashboard to:")
 print("  -", HTML_PATH_1)
-print("  -", HTML_PATH_2)
 print("  -", REPORT_FILE)
+if os.path.exists(os.path.dirname(HTML_PATH_2)):
+    with open(HTML_PATH_2, "w") as f:
+        f.write(html_content)
+    print("  -", HTML_PATH_2)

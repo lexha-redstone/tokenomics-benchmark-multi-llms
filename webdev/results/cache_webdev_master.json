@@ -1,0 +1,3070 @@
+{
+  "single_flash_lite": {
+    "BigCodeBench/13": {
+      "task_id": "BigCodeBench/13",
+      "passed": true,
+      "as_run_usd": 0.001709,
+      "output_tokens": 629,
+      "total_tokens": 1085,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/82": {
+      "task_id": "BigCodeBench/82",
+      "passed": false,
+      "as_run_usd": 0.004105,
+      "output_tokens": 1422,
+      "total_tokens": 3256,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_uk7rrgnl/prog.py\", line 1, in <module>\n    from flask import Flask, render_template, redirect, url_for\nModuleNotFoundError: No module named 'flask'"
+    },
+    "BigCodeBench/129": {
+      "task_id": "BigCodeBench/129",
+      "passed": false,
+      "as_run_usd": 0.004162,
+      "output_tokens": 1444,
+      "total_tokens": 3284,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_rr8h4wq0/prog.py\", line 3, in <module>\n    import pandas as pd\nModuleNotFoundError: No module named 'pandas'"
+    },
+    "BigCodeBench/147": {
+      "task_id": "BigCodeBench/147",
+      "passed": true,
+      "as_run_usd": 0.00104,
+      "output_tokens": 376,
+      "total_tokens": 711,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/211": {
+      "task_id": "BigCodeBench/211",
+      "passed": true,
+      "as_run_usd": 0.000953,
+      "output_tokens": 343,
+      "total_tokens": 660,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/273": {
+      "task_id": "BigCodeBench/273",
+      "passed": false,
+      "as_run_usd": 0.003833,
+      "output_tokens": 1320,
+      "total_tokens": 3094,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_rdw48oul/prog.py\", line 1, in <module>\n    import cgi\nModuleNotFoundError: No module named 'cgi'"
+    },
+    "BigCodeBench/274": {
+      "task_id": "BigCodeBench/274",
+      "passed": false,
+      "as_run_usd": 0.002555,
+      "output_tokens": 840,
+      "total_tokens": 2357,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_fxlnwjxv/prog.py\", line 1, in <module>\n    import cgi\nModuleNotFoundError: No module named 'cgi'"
+    },
+    "BigCodeBench/401": {
+      "task_id": "BigCodeBench/401",
+      "passed": false,
+      "as_run_usd": 0.002301,
+      "output_tokens": 786,
+      "total_tokens": 1905,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_8q2qsj8p/prog.py\", line 1, in <module>\n    from flask import Flask\nModuleNotFoundError: No module named 'flask'"
+    },
+    "BigCodeBench/590": {
+      "task_id": "BigCodeBench/590",
+      "passed": false,
+      "as_run_usd": 0.002638,
+      "output_tokens": 892,
+      "total_tokens": 2252,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_twgv5av8/prog.py\", line 2, in <module>\n    from pyquery import PyQuery as pq\nModuleNotFoundError: No module named 'pyquery'"
+    },
+    "BigCodeBench/723": {
+      "task_id": "BigCodeBench/723",
+      "passed": false,
+      "as_run_usd": 0.000982,
+      "output_tokens": 296,
+      "total_tokens": 1101,
+      "repair_loops": 1,
+      "error": "======================================================================\nERROR: test_correct_scraping (__main__.TestCases.test_correct_scraping)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1432, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/tmp/bcb_nc_pmm4d/prog.py\", line 48, in test_correct_scraping\n    task_func('http://example.com')\n    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^"
+    },
+    "BigCodeBench/990": {
+      "task_id": "BigCodeBench/990",
+      "passed": true,
+      "as_run_usd": 0.001744,
+      "output_tokens": 639,
+      "total_tokens": 1129,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/998": {
+      "task_id": "BigCodeBench/998",
+      "passed": true,
+      "as_run_usd": 0.001029,
+      "output_tokens": 371,
+      "total_tokens": 709,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/999": {
+      "task_id": "BigCodeBench/999",
+      "passed": true,
+      "as_run_usd": 0.003018,
+      "output_tokens": 998,
+      "total_tokens": 2739,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "BigCodeBench/1003": {
+      "task_id": "BigCodeBench/1003",
+      "passed": false,
+      "as_run_usd": 0.002738,
+      "output_tokens": 930,
+      "total_tokens": 2306,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_xxzj75d5/prog.py\", line 3, in <module>\n    import pandas as pd\nModuleNotFoundError: No module named 'pandas'"
+    },
+    "BigCodeBench/1004": {
+      "task_id": "BigCodeBench/1004",
+      "passed": false,
+      "as_run_usd": 0.002744,
+      "output_tokens": 926,
+      "total_tokens": 2356,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_dt_0_is2/prog.py\", line 4, in <module>\n    import matplotlib.pyplot as plt\nModuleNotFoundError: No module named 'matplotlib'"
+    },
+    "BigCodeBench/1006": {
+      "task_id": "BigCodeBench/1006",
+      "passed": true,
+      "as_run_usd": 0.003456,
+      "output_tokens": 1171,
+      "total_tokens": 2936,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "BigCodeBench/1008": {
+      "task_id": "BigCodeBench/1008",
+      "passed": false,
+      "as_run_usd": 0.004218,
+      "output_tokens": 1432,
+      "total_tokens": 3560,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_ojvdjq48/prog.py\", line 3, in <module>\n    import pandas as pd\nModuleNotFoundError: No module named 'pandas'"
+    },
+    "BigCodeBench/1012": {
+      "task_id": "BigCodeBench/1012",
+      "passed": true,
+      "as_run_usd": 0.001384,
+      "output_tokens": 511,
+      "total_tokens": 865,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1013": {
+      "task_id": "BigCodeBench/1013",
+      "passed": true,
+      "as_run_usd": 0.001038,
+      "output_tokens": 372,
+      "total_tokens": 731,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1015": {
+      "task_id": "BigCodeBench/1015",
+      "passed": false,
+      "as_run_usd": 0.004173,
+      "output_tokens": 1444,
+      "total_tokens": 3321,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_c8pwjorw/prog.py\", line 3, in <module>\n    import pandas as pd\nModuleNotFoundError: No module named 'pandas'"
+    },
+    "BigCodeBench/1020": {
+      "task_id": "BigCodeBench/1020",
+      "passed": true,
+      "as_run_usd": 0.001618,
+      "output_tokens": 585,
+      "total_tokens": 1102,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1040": {
+      "task_id": "BigCodeBench/1040",
+      "passed": true,
+      "as_run_usd": 0.001824,
+      "output_tokens": 686,
+      "total_tokens": 1050,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1042": {
+      "task_id": "BigCodeBench/1042",
+      "passed": true,
+      "as_run_usd": 0.001121,
+      "output_tokens": 405,
+      "total_tokens": 767,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1124": {
+      "task_id": "BigCodeBench/1124",
+      "passed": true,
+      "as_run_usd": 0.001319,
+      "output_tokens": 480,
+      "total_tokens": 876,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1129": {
+      "task_id": "BigCodeBench/1129",
+      "passed": true,
+      "as_run_usd": 0.00127,
+      "output_tokens": 456,
+      "total_tokens": 891,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1137": {
+      "task_id": "BigCodeBench/1137",
+      "passed": true,
+      "as_run_usd": 0.000896,
+      "output_tokens": 324,
+      "total_tokens": 610,
+      "repair_loops": 0,
+      "error": ""
+    }
+  },
+  "single_flash36": {
+    "BigCodeBench/13": {
+      "task_id": "BigCodeBench/13",
+      "passed": true,
+      "as_run_usd": 0.020762,
+      "output_tokens": 2677,
+      "total_tokens": 3133,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/82": {
+      "task_id": "BigCodeBench/82",
+      "passed": false,
+      "as_run_usd": 0.041635,
+      "output_tokens": 5240,
+      "total_tokens": 6796,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_8sbk0ini/prog.py\", line 1, in <module>\n    from flask import Flask, render_template, redirect, url_for\nModuleNotFoundError: No module named 'flask'"
+    },
+    "BigCodeBench/129": {
+      "task_id": "BigCodeBench/129",
+      "passed": false,
+      "as_run_usd": 0.044309,
+      "output_tokens": 5540,
+      "total_tokens": 7380,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_kh88oiwp/prog.py\", line 3, in <module>\n    import pandas as pd\nModuleNotFoundError: No module named 'pandas'"
+    },
+    "BigCodeBench/147": {
+      "task_id": "BigCodeBench/147",
+      "passed": true,
+      "as_run_usd": 0.018682,
+      "output_tokens": 2424,
+      "total_tokens": 2759,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/211": {
+      "task_id": "BigCodeBench/211",
+      "passed": true,
+      "as_run_usd": 0.036539,
+      "output_tokens": 4663,
+      "total_tokens": 5708,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "BigCodeBench/273": {
+      "task_id": "BigCodeBench/273",
+      "passed": false,
+      "as_run_usd": 0.043281,
+      "output_tokens": 5416,
+      "total_tokens": 7190,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_54an8spt/prog.py\", line 1, in <module>\n    import cgi\nModuleNotFoundError: No module named 'cgi'"
+    },
+    "BigCodeBench/274": {
+      "task_id": "BigCodeBench/274",
+      "passed": false,
+      "as_run_usd": 0.042056,
+      "output_tokens": 5304,
+      "total_tokens": 6821,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb__4o7dl6s/prog.py\", line 1, in <module>\n    import cgi\nModuleNotFoundError: No module named 'cgi'"
+    },
+    "BigCodeBench/401": {
+      "task_id": "BigCodeBench/401",
+      "passed": false,
+      "as_run_usd": 0.036863,
+      "output_tokens": 4723,
+      "total_tokens": 5683,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_w_4l3kqo/prog.py\", line 1, in <module>\n    from flask import Flask\nModuleNotFoundError: No module named 'flask'"
+    },
+    "BigCodeBench/590": {
+      "task_id": "BigCodeBench/590",
+      "passed": false,
+      "as_run_usd": 0.038387,
+      "output_tokens": 4870,
+      "total_tokens": 6112,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_8z9rpc8a/prog.py\", line 2, in <module>\n    from pyquery import PyQuery as pq\nModuleNotFoundError: No module named 'pyquery'"
+    },
+    "BigCodeBench/723": {
+      "task_id": "BigCodeBench/723",
+      "passed": true,
+      "as_run_usd": 0.017755,
+      "output_tokens": 2319,
+      "total_tokens": 2561,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/990": {
+      "task_id": "BigCodeBench/990",
+      "passed": true,
+      "as_run_usd": 0.040902,
+      "output_tokens": 5132,
+      "total_tokens": 6740,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "BigCodeBench/998": {
+      "task_id": "BigCodeBench/998",
+      "passed": true,
+      "as_run_usd": 0.037057,
+      "output_tokens": 4712,
+      "total_tokens": 5857,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "BigCodeBench/999": {
+      "task_id": "BigCodeBench/999",
+      "passed": false,
+      "as_run_usd": 0.039976,
+      "output_tokens": 4982,
+      "total_tokens": 6723,
+      "repair_loops": 1,
+      "error": "======================================================================\nERROR: test_count_categories_data1 (__main__.TestCases.test_count_categories_data1)\nTest that the function counts the occurrences of each category in the CSV file.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1432, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/tmp/bcb_l6098zwu/prog.py\", line 61, in t"
+    },
+    "BigCodeBench/1003": {
+      "task_id": "BigCodeBench/1003",
+      "passed": false,
+      "as_run_usd": 0.038516,
+      "output_tokens": 4888,
+      "total_tokens": 6126,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_ylobwcf2/prog.py\", line 3, in <module>\n    import pandas as pd\nModuleNotFoundError: No module named 'pandas'"
+    },
+    "BigCodeBench/1004": {
+      "task_id": "BigCodeBench/1004",
+      "passed": false,
+      "as_run_usd": 0.039811,
+      "output_tokens": 5022,
+      "total_tokens": 6452,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_fbt3dhmd/prog.py\", line 4, in <module>\n    import matplotlib.pyplot as plt\nModuleNotFoundError: No module named 'matplotlib'"
+    },
+    "BigCodeBench/1006": {
+      "task_id": "BigCodeBench/1006",
+      "passed": true,
+      "as_run_usd": 0.04215,
+      "output_tokens": 5267,
+      "total_tokens": 7032,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "BigCodeBench/1008": {
+      "task_id": "BigCodeBench/1008",
+      "passed": false,
+      "as_run_usd": 0.043399,
+      "output_tokens": 5389,
+      "total_tokens": 7377,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_6815k7cz/prog.py\", line 3, in <module>\n    import pandas as pd\nModuleNotFoundError: No module named 'pandas'"
+    },
+    "BigCodeBench/1012": {
+      "task_id": "BigCodeBench/1012",
+      "passed": true,
+      "as_run_usd": 0.019724,
+      "output_tokens": 2559,
+      "total_tokens": 2913,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1013": {
+      "task_id": "BigCodeBench/1013",
+      "passed": true,
+      "as_run_usd": 0.018689,
+      "output_tokens": 2420,
+      "total_tokens": 2779,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1015": {
+      "task_id": "BigCodeBench/1015",
+      "passed": false,
+      "as_run_usd": 0.044365,
+      "output_tokens": 5540,
+      "total_tokens": 7417,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_s912nmnq/prog.py\", line 3, in <module>\n    import pandas as pd\nModuleNotFoundError: No module named 'pandas'"
+    },
+    "BigCodeBench/1020": {
+      "task_id": "BigCodeBench/1020",
+      "passed": true,
+      "as_run_usd": 0.020523,
+      "output_tokens": 2633,
+      "total_tokens": 3150,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1040": {
+      "task_id": "BigCodeBench/1040",
+      "passed": true,
+      "as_run_usd": 0.039742,
+      "output_tokens": 5053,
+      "total_tokens": 6283,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "BigCodeBench/1042": {
+      "task_id": "BigCodeBench/1042",
+      "passed": true,
+      "as_run_usd": 0.037623,
+      "output_tokens": 4770,
+      "total_tokens": 6002,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "BigCodeBench/1124": {
+      "task_id": "BigCodeBench/1124",
+      "passed": true,
+      "as_run_usd": 0.019554,
+      "output_tokens": 2528,
+      "total_tokens": 2924,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1129": {
+      "task_id": "BigCodeBench/1129",
+      "passed": true,
+      "as_run_usd": 0.019433,
+      "output_tokens": 2504,
+      "total_tokens": 2939,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1137": {
+      "task_id": "BigCodeBench/1137",
+      "passed": false,
+      "as_run_usd": 0.035101,
+      "output_tokens": 4482,
+      "total_tokens": 5473,
+      "repair_loops": 1,
+      "error": "======================================================================\nERROR: test_phone_numbers_page_1 (__main__.TestCases.test_phone_numbers_page_1)\nTest extraction from test_page_1 with a single phone number\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/tmp/bcb_bc1v5mma/prog.py\", line 57, in test_phone_numbers_page_1\n    self.run_test_case(filename, expected_numbers)\n    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "
+    }
+  },
+  "single_sonnet5": {
+    "BigCodeBench/13": {
+      "task_id": "BigCodeBench/13",
+      "passed": true,
+      "as_run_usd": 0.012834,
+      "output_tokens": 991,
+      "total_tokens": 2453,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "BigCodeBench/82": {
+      "task_id": "BigCodeBench/82",
+      "passed": false,
+      "as_run_usd": 0.014552,
+      "output_tokens": 1144,
+      "total_tokens": 2700,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_89g56q0j/prog.py\", line 1, in <module>\n    from flask import Flask, render_template, redirect, url_for\nModuleNotFoundError: No module named 'flask'"
+    },
+    "BigCodeBench/129": {
+      "task_id": "BigCodeBench/129",
+      "passed": false,
+      "as_run_usd": 0.01812,
+      "output_tokens": 1444,
+      "total_tokens": 3284,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_38aqkbi4/prog.py\", line 3, in <module>\n    import pandas as pd\nModuleNotFoundError: No module named 'pandas'"
+    },
+    "BigCodeBench/147": {
+      "task_id": "BigCodeBench/147",
+      "passed": true,
+      "as_run_usd": 0.00842,
+      "output_tokens": 618,
+      "total_tokens": 1738,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "BigCodeBench/211": {
+      "task_id": "BigCodeBench/211",
+      "passed": true,
+      "as_run_usd": 0.004064,
+      "output_tokens": 343,
+      "total_tokens": 660,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/273": {
+      "task_id": "BigCodeBench/273",
+      "passed": false,
+      "as_run_usd": 0.016748,
+      "output_tokens": 1320,
+      "total_tokens": 3094,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_bntraysm/prog.py\", line 1, in <module>\n    import cgi\nModuleNotFoundError: No module named 'cgi'"
+    },
+    "BigCodeBench/274": {
+      "task_id": "BigCodeBench/274",
+      "passed": false,
+      "as_run_usd": 0.01953,
+      "output_tokens": 1576,
+      "total_tokens": 3461,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_1velomd9/prog.py\", line 1, in <module>\n    import cgi\nModuleNotFoundError: No module named 'cgi'"
+    },
+    "BigCodeBench/401": {
+      "task_id": "BigCodeBench/401",
+      "passed": false,
+      "as_run_usd": 0.010098,
+      "output_tokens": 786,
+      "total_tokens": 1905,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_9h_ymxhw/prog.py\", line 1, in <module>\n    from flask import Flask\nModuleNotFoundError: No module named 'flask'"
+    },
+    "BigCodeBench/590": {
+      "task_id": "BigCodeBench/590",
+      "passed": false,
+      "as_run_usd": 0.01164,
+      "output_tokens": 892,
+      "total_tokens": 2252,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_mnjn8bep/prog.py\", line 2, in <module>\n    from pyquery import PyQuery as pq\nModuleNotFoundError: No module named 'pyquery'"
+    },
+    "BigCodeBench/723": {
+      "task_id": "BigCodeBench/723",
+      "passed": true,
+      "as_run_usd": 0.003194,
+      "output_tokens": 271,
+      "total_tokens": 513,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/990": {
+      "task_id": "BigCodeBench/990",
+      "passed": true,
+      "as_run_usd": 0.013576,
+      "output_tokens": 1036,
+      "total_tokens": 2644,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "BigCodeBench/998": {
+      "task_id": "BigCodeBench/998",
+      "passed": true,
+      "as_run_usd": 0.00845,
+      "output_tokens": 616,
+      "total_tokens": 1761,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "BigCodeBench/999": {
+      "task_id": "BigCodeBench/999",
+      "passed": true,
+      "as_run_usd": 0.006624,
+      "output_tokens": 555,
+      "total_tokens": 1092,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1003": {
+      "task_id": "BigCodeBench/1003",
+      "passed": false,
+      "as_run_usd": 0.012052,
+      "output_tokens": 930,
+      "total_tokens": 2306,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_e_zqnf3o/prog.py\", line 3, in <module>\n    import pandas as pd\nModuleNotFoundError: No module named 'pandas'"
+    },
+    "BigCodeBench/1004": {
+      "task_id": "BigCodeBench/1004",
+      "passed": false,
+      "as_run_usd": 0.01212,
+      "output_tokens": 926,
+      "total_tokens": 2356,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_g9ht7tww/prog.py\", line 4, in <module>\n    import matplotlib.pyplot as plt\nModuleNotFoundError: No module named 'matplotlib'"
+    },
+    "BigCodeBench/1006": {
+      "task_id": "BigCodeBench/1006",
+      "passed": true,
+      "as_run_usd": 0.0082,
+      "output_tokens": 709,
+      "total_tokens": 1264,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1008": {
+      "task_id": "BigCodeBench/1008",
+      "passed": false,
+      "as_run_usd": 0.018576,
+      "output_tokens": 1432,
+      "total_tokens": 3560,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_xu10q7tm/prog.py\", line 3, in <module>\n    import pandas as pd\nModuleNotFoundError: No module named 'pandas'"
+    },
+    "BigCodeBench/1012": {
+      "task_id": "BigCodeBench/1012",
+      "passed": true,
+      "as_run_usd": 0.005818,
+      "output_tokens": 511,
+      "total_tokens": 865,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1013": {
+      "task_id": "BigCodeBench/1013",
+      "passed": true,
+      "as_run_usd": 0.004438,
+      "output_tokens": 372,
+      "total_tokens": 731,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1015": {
+      "task_id": "BigCodeBench/1015",
+      "passed": false,
+      "as_run_usd": 0.018194,
+      "output_tokens": 1444,
+      "total_tokens": 3321,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_cxess0a7/prog.py\", line 3, in <module>\n    import pandas as pd\nModuleNotFoundError: No module named 'pandas'"
+    },
+    "BigCodeBench/1020": {
+      "task_id": "BigCodeBench/1020",
+      "passed": true,
+      "as_run_usd": 0.006884,
+      "output_tokens": 585,
+      "total_tokens": 1102,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1040": {
+      "task_id": "BigCodeBench/1040",
+      "passed": true,
+      "as_run_usd": 0.007588,
+      "output_tokens": 686,
+      "total_tokens": 1050,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1042": {
+      "task_id": "BigCodeBench/1042",
+      "passed": true,
+      "as_run_usd": 0.009204,
+      "output_tokens": 674,
+      "total_tokens": 1906,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "BigCodeBench/1124": {
+      "task_id": "BigCodeBench/1124",
+      "passed": true,
+      "as_run_usd": 0.005592,
+      "output_tokens": 480,
+      "total_tokens": 876,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1129": {
+      "task_id": "BigCodeBench/1129",
+      "passed": true,
+      "as_run_usd": 0.010872,
+      "output_tokens": 797,
+      "total_tokens": 2248,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "BigCodeBench/1137": {
+      "task_id": "BigCodeBench/1137",
+      "passed": true,
+      "as_run_usd": 0.007152,
+      "output_tokens": 517,
+      "total_tokens": 1508,
+      "repair_loops": 1,
+      "error": ""
+    }
+  },
+  "single_opus5": {
+    "BigCodeBench/13": {
+      "task_id": "BigCodeBench/13",
+      "passed": true,
+      "as_run_usd": 0.018005,
+      "output_tokens": 629,
+      "total_tokens": 1085,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/82": {
+      "task_id": "BigCodeBench/82",
+      "passed": false,
+      "as_run_usd": 0.03638,
+      "output_tokens": 1144,
+      "total_tokens": 2700,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_itowxx94/prog.py\", line 1, in <module>\n    from flask import Flask, render_template, redirect, url_for\nModuleNotFoundError: No module named 'flask'"
+    },
+    "BigCodeBench/129": {
+      "task_id": "BigCodeBench/129",
+      "passed": false,
+      "as_run_usd": 0.038,
+      "output_tokens": 1152,
+      "total_tokens": 2992,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_ugyuaf52/prog.py\", line 3, in <module>\n    import pandas as pd\nModuleNotFoundError: No module named 'pandas'"
+    },
+    "BigCodeBench/147": {
+      "task_id": "BigCodeBench/147",
+      "passed": true,
+      "as_run_usd": 0.011075,
+      "output_tokens": 376,
+      "total_tokens": 711,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/211": {
+      "task_id": "BigCodeBench/211",
+      "passed": true,
+      "as_run_usd": 0.01016,
+      "output_tokens": 343,
+      "total_tokens": 660,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/273": {
+      "task_id": "BigCodeBench/273",
+      "passed": false,
+      "as_run_usd": 0.04187,
+      "output_tokens": 1320,
+      "total_tokens": 3094,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_xzy3wnpt/prog.py\", line 1, in <module>\n    import cgi\nModuleNotFoundError: No module named 'cgi'"
+    },
+    "BigCodeBench/274": {
+      "task_id": "BigCodeBench/274",
+      "passed": false,
+      "as_run_usd": 0.048825,
+      "output_tokens": 1576,
+      "total_tokens": 3461,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_wwoqrifc/prog.py\", line 1, in <module>\n    import cgi\nModuleNotFoundError: No module named 'cgi'"
+    },
+    "BigCodeBench/401": {
+      "task_id": "BigCodeBench/401",
+      "passed": false,
+      "as_run_usd": 0.025245,
+      "output_tokens": 786,
+      "total_tokens": 1905,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_t4x2qjst/prog.py\", line 1, in <module>\n    from flask import Flask\nModuleNotFoundError: No module named 'flask'"
+    },
+    "BigCodeBench/590": {
+      "task_id": "BigCodeBench/590",
+      "passed": false,
+      "as_run_usd": 0.02556,
+      "output_tokens": 774,
+      "total_tokens": 2016,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_xrx1m9u4/prog.py\", line 2, in <module>\n    from pyquery import PyQuery as pq\nModuleNotFoundError: No module named 'pyquery'"
+    },
+    "BigCodeBench/723": {
+      "task_id": "BigCodeBench/723",
+      "passed": true,
+      "as_run_usd": 0.007985,
+      "output_tokens": 271,
+      "total_tokens": 513,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/990": {
+      "task_id": "BigCodeBench/990",
+      "passed": true,
+      "as_run_usd": 0.018425,
+      "output_tokens": 639,
+      "total_tokens": 1129,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/998": {
+      "task_id": "BigCodeBench/998",
+      "passed": true,
+      "as_run_usd": 0.021125,
+      "output_tokens": 616,
+      "total_tokens": 1761,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "BigCodeBench/999": {
+      "task_id": "BigCodeBench/999",
+      "passed": true,
+      "as_run_usd": 0.01656,
+      "output_tokens": 555,
+      "total_tokens": 1092,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1003": {
+      "task_id": "BigCodeBench/1003",
+      "passed": false,
+      "as_run_usd": 0.03013,
+      "output_tokens": 930,
+      "total_tokens": 2306,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_b11tn70w/prog.py\", line 3, in <module>\n    import pandas as pd\nModuleNotFoundError: No module named 'pandas'"
+    },
+    "BigCodeBench/1004": {
+      "task_id": "BigCodeBench/1004",
+      "passed": false,
+      "as_run_usd": 0.0303,
+      "output_tokens": 926,
+      "total_tokens": 2356,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_euurpynt/prog.py\", line 4, in <module>\n    import matplotlib.pyplot as plt\nModuleNotFoundError: No module named 'matplotlib'"
+    },
+    "BigCodeBench/1006": {
+      "task_id": "BigCodeBench/1006",
+      "passed": true,
+      "as_run_usd": 0.0381,
+      "output_tokens": 1171,
+      "total_tokens": 2936,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "BigCodeBench/1008": {
+      "task_id": "BigCodeBench/1008",
+      "passed": false,
+      "as_run_usd": 0.042265,
+      "output_tokens": 1293,
+      "total_tokens": 3281,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_oqq5ey_c/prog.py\", line 3, in <module>\n    import pandas as pd\nModuleNotFoundError: No module named 'pandas'"
+    },
+    "BigCodeBench/1012": {
+      "task_id": "BigCodeBench/1012",
+      "passed": true,
+      "as_run_usd": 0.014545,
+      "output_tokens": 511,
+      "total_tokens": 865,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1013": {
+      "task_id": "BigCodeBench/1013",
+      "passed": true,
+      "as_run_usd": 0.011095,
+      "output_tokens": 372,
+      "total_tokens": 731,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1015": {
+      "task_id": "BigCodeBench/1015",
+      "passed": false,
+      "as_run_usd": 0.037295,
+      "output_tokens": 1171,
+      "total_tokens": 2775,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_v966s9rc/prog.py\", line 3, in <module>\n    import pandas as pd\nModuleNotFoundError: No module named 'pandas'"
+    },
+    "BigCodeBench/1020": {
+      "task_id": "BigCodeBench/1020",
+      "passed": true,
+      "as_run_usd": 0.01721,
+      "output_tokens": 585,
+      "total_tokens": 1102,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1040": {
+      "task_id": "BigCodeBench/1040",
+      "passed": true,
+      "as_run_usd": 0.030075,
+      "output_tokens": 957,
+      "total_tokens": 2187,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "BigCodeBench/1042": {
+      "task_id": "BigCodeBench/1042",
+      "passed": true,
+      "as_run_usd": 0.011935,
+      "output_tokens": 405,
+      "total_tokens": 767,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1124": {
+      "task_id": "BigCodeBench/1124",
+      "passed": false,
+      "as_run_usd": 0.021855,
+      "output_tokens": 606,
+      "total_tokens": 1947,
+      "repair_loops": 1,
+      "error": "======================================================================\nERROR: test_malformed_url (__main__.TestCases.test_malformed_url)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1432, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/tmp/bcb_wf910bh7/prog.py\", line 78, in test_malformed_url\n    result = task_func('Check out this site: ht://incorrect-url')\n  File \"/tmp/b"
+    },
+    "BigCodeBench/1129": {
+      "task_id": "BigCodeBench/1129",
+      "passed": true,
+      "as_run_usd": 0.013575,
+      "output_tokens": 456,
+      "total_tokens": 891,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1137": {
+      "task_id": "BigCodeBench/1137",
+      "passed": true,
+      "as_run_usd": 0.00953,
+      "output_tokens": 324,
+      "total_tokens": 610,
+      "repair_loops": 0,
+      "error": ""
+    }
+  },
+  "sj_hybrid": {
+    "BigCodeBench/13": {
+      "task_id": "BigCodeBench/13",
+      "passed": true,
+      "as_run_usd": 0.00307,
+      "output_tokens": 714,
+      "total_tokens": 1674,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/82": {
+      "task_id": "BigCodeBench/82",
+      "passed": false,
+      "as_run_usd": 0.026057,
+      "output_tokens": 3555,
+      "total_tokens": 5964,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_rc_20u27/prog.py\", line 1, in <module>\n    from flask import Flask, render_template, redirect, url_for\nModuleNotFoundError: No module named 'flask'"
+    },
+    "BigCodeBench/129": {
+      "task_id": "BigCodeBench/129",
+      "passed": false,
+      "as_run_usd": 0.026173,
+      "output_tokens": 3577,
+      "total_tokens": 5989,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_bt73ihnr/prog.py\", line 3, in <module>\n    import pandas as pd\nModuleNotFoundError: No module named 'pandas'"
+    },
+    "BigCodeBench/147": {
+      "task_id": "BigCodeBench/147",
+      "passed": true,
+      "as_run_usd": 0.002221,
+      "output_tokens": 461,
+      "total_tokens": 1179,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/211": {
+      "task_id": "BigCodeBench/211",
+      "passed": true,
+      "as_run_usd": 0.002106,
+      "output_tokens": 428,
+      "total_tokens": 1111,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/273": {
+      "task_id": "BigCodeBench/273",
+      "passed": false,
+      "as_run_usd": 0.025455,
+      "output_tokens": 3453,
+      "total_tokens": 5797,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_ut9rwumf/prog.py\", line 1, in <module>\n    import cgi\nModuleNotFoundError: No module named 'cgi'"
+    },
+    "BigCodeBench/274": {
+      "task_id": "BigCodeBench/274",
+      "passed": false,
+      "as_run_usd": 0.025427,
+      "output_tokens": 3341,
+      "total_tokens": 5419,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_k_696te0/prog.py\", line 1, in <module>\n    import cgi\nModuleNotFoundError: No module named 'cgi'"
+    },
+    "BigCodeBench/401": {
+      "task_id": "BigCodeBench/401",
+      "passed": false,
+      "as_run_usd": 0.021743,
+      "output_tokens": 2919,
+      "total_tokens": 4414,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_wepyx4ld/prog.py\", line 1, in <module>\n    from flask import Flask\nModuleNotFoundError: No module named 'flask'"
+    },
+    "BigCodeBench/590": {
+      "task_id": "BigCodeBench/590",
+      "passed": false,
+      "as_run_usd": 0.022664,
+      "output_tokens": 3025,
+      "total_tokens": 4855,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_x43l80os/prog.py\", line 2, in <module>\n    from pyquery import PyQuery as pq\nModuleNotFoundError: No module named 'pyquery'"
+    },
+    "BigCodeBench/723": {
+      "task_id": "BigCodeBench/723",
+      "passed": true,
+      "as_run_usd": 0.01972,
+      "output_tokens": 2552,
+      "total_tokens": 3647,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "BigCodeBench/990": {
+      "task_id": "BigCodeBench/990",
+      "passed": true,
+      "as_run_usd": 0.003157,
+      "output_tokens": 724,
+      "total_tokens": 1753,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/998": {
+      "task_id": "BigCodeBench/998",
+      "passed": true,
+      "as_run_usd": 0.002213,
+      "output_tokens": 456,
+      "total_tokens": 1180,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/999": {
+      "task_id": "BigCodeBench/999",
+      "passed": false,
+      "as_run_usd": 0.02324,
+      "output_tokens": 3019,
+      "total_tokens": 5345,
+      "repair_loops": 1,
+      "error": "======================================================================\nERROR: test_count_categories_data1 (__main__.TestCases.test_count_categories_data1)\nTest that the function counts the occurrences of each category in the CSV file.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1432, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/tmp/bcb_mn6dtf2v/prog.py\", line 61, in t"
+    },
+    "BigCodeBench/1003": {
+      "task_id": "BigCodeBench/1003",
+      "passed": false,
+      "as_run_usd": 0.022878,
+      "output_tokens": 3063,
+      "total_tokens": 4908,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_o8cy39ew/prog.py\", line 3, in <module>\n    import pandas as pd\nModuleNotFoundError: No module named 'pandas'"
+    },
+    "BigCodeBench/1004": {
+      "task_id": "BigCodeBench/1004",
+      "passed": false,
+      "as_run_usd": 0.022947,
+      "output_tokens": 3059,
+      "total_tokens": 4986,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_ke2ruwb6/prog.py\", line 4, in <module>\n    import matplotlib.pyplot as plt\nModuleNotFoundError: No module named 'matplotlib'"
+    },
+    "BigCodeBench/1006": {
+      "task_id": "BigCodeBench/1006",
+      "passed": true,
+      "as_run_usd": 0.025324,
+      "output_tokens": 3304,
+      "total_tokens": 5673,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "BigCodeBench/1008": {
+      "task_id": "BigCodeBench/1008",
+      "passed": false,
+      "as_run_usd": 0.02659,
+      "output_tokens": 3565,
+      "total_tokens": 6412,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_ue4d85il/prog.py\", line 3, in <module>\n    import pandas as pd\nModuleNotFoundError: No module named 'pandas'"
+    },
+    "BigCodeBench/1012": {
+      "task_id": "BigCodeBench/1012",
+      "passed": true,
+      "as_run_usd": 0.002592,
+      "output_tokens": 596,
+      "total_tokens": 1353,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1013": {
+      "task_id": "BigCodeBench/1013",
+      "passed": true,
+      "as_run_usd": 0.002254,
+      "output_tokens": 457,
+      "total_tokens": 1224,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1015": {
+      "task_id": "BigCodeBench/1015",
+      "passed": false,
+      "as_run_usd": 0.026235,
+      "output_tokens": 3577,
+      "total_tokens": 6044,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_edd9vyu_/prog.py\", line 3, in <module>\n    import pandas as pd\nModuleNotFoundError: No module named 'pandas'"
+    },
+    "BigCodeBench/1020": {
+      "task_id": "BigCodeBench/1020",
+      "passed": true,
+      "as_run_usd": 0.003071,
+      "output_tokens": 670,
+      "total_tokens": 1752,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1040": {
+      "task_id": "BigCodeBench/1040",
+      "passed": true,
+      "as_run_usd": 0.003048,
+      "output_tokens": 771,
+      "total_tokens": 1548,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1042": {
+      "task_id": "BigCodeBench/1042",
+      "passed": true,
+      "as_run_usd": 0.002341,
+      "output_tokens": 490,
+      "total_tokens": 1263,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1124": {
+      "task_id": "BigCodeBench/1124",
+      "passed": true,
+      "as_run_usd": 0.00259,
+      "output_tokens": 565,
+      "total_tokens": 1406,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1129": {
+      "task_id": "BigCodeBench/1129",
+      "passed": true,
+      "as_run_usd": 0.002601,
+      "output_tokens": 541,
+      "total_tokens": 1459,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1137": {
+      "task_id": "BigCodeBench/1137",
+      "passed": true,
+      "as_run_usd": 0.002002,
+      "output_tokens": 409,
+      "total_tokens": 1030,
+      "repair_loops": 0,
+      "error": ""
+    }
+  },
+  "combo_read_write": {
+    "BigCodeBench/13": {
+      "task_id": "BigCodeBench/13",
+      "passed": true,
+      "as_run_usd": 0.00307,
+      "output_tokens": 714,
+      "total_tokens": 1674,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/82": {
+      "task_id": "BigCodeBench/82",
+      "passed": false,
+      "as_run_usd": 0.026117,
+      "output_tokens": 3555,
+      "total_tokens": 6004,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_faya61hy/prog.py\", line 1, in <module>\n    from flask import Flask, render_template, redirect, url_for\nModuleNotFoundError: No module named 'flask'"
+    },
+    "BigCodeBench/129": {
+      "task_id": "BigCodeBench/129",
+      "passed": false,
+      "as_run_usd": 0.026232,
+      "output_tokens": 3577,
+      "total_tokens": 6028,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_oduar47a/prog.py\", line 3, in <module>\n    import pandas as pd\nModuleNotFoundError: No module named 'pandas'"
+    },
+    "BigCodeBench/147": {
+      "task_id": "BigCodeBench/147",
+      "passed": true,
+      "as_run_usd": 0.002221,
+      "output_tokens": 461,
+      "total_tokens": 1179,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/211": {
+      "task_id": "BigCodeBench/211",
+      "passed": true,
+      "as_run_usd": 0.002106,
+      "output_tokens": 428,
+      "total_tokens": 1111,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/273": {
+      "task_id": "BigCodeBench/273",
+      "passed": false,
+      "as_run_usd": 0.025515,
+      "output_tokens": 3453,
+      "total_tokens": 5837,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_keb40x2_/prog.py\", line 1, in <module>\n    import cgi\nModuleNotFoundError: No module named 'cgi'"
+    },
+    "BigCodeBench/274": {
+      "task_id": "BigCodeBench/274",
+      "passed": false,
+      "as_run_usd": 0.022726,
+      "output_tokens": 2973,
+      "total_tokens": 5090,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_ctxt80j4/prog.py\", line 1, in <module>\n    import cgi\nModuleNotFoundError: No module named 'cgi'"
+    },
+    "BigCodeBench/401": {
+      "task_id": "BigCodeBench/401",
+      "passed": false,
+      "as_run_usd": 0.021802,
+      "output_tokens": 2919,
+      "total_tokens": 4453,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_djvv9oe7/prog.py\", line 1, in <module>\n    from flask import Flask\nModuleNotFoundError: No module named 'flask'"
+    },
+    "BigCodeBench/590": {
+      "task_id": "BigCodeBench/590",
+      "passed": false,
+      "as_run_usd": 0.022723,
+      "output_tokens": 3025,
+      "total_tokens": 4894,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_wg3imb9q/prog.py\", line 2, in <module>\n    from pyquery import PyQuery as pq\nModuleNotFoundError: No module named 'pyquery'"
+    },
+    "BigCodeBench/723": {
+      "task_id": "BigCodeBench/723",
+      "passed": true,
+      "as_run_usd": 0.01978,
+      "output_tokens": 2552,
+      "total_tokens": 3687,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "BigCodeBench/990": {
+      "task_id": "BigCodeBench/990",
+      "passed": true,
+      "as_run_usd": 0.003157,
+      "output_tokens": 724,
+      "total_tokens": 1753,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/998": {
+      "task_id": "BigCodeBench/998",
+      "passed": true,
+      "as_run_usd": 0.002213,
+      "output_tokens": 456,
+      "total_tokens": 1180,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/999": {
+      "task_id": "BigCodeBench/999",
+      "passed": true,
+      "as_run_usd": 0.024139,
+      "output_tokens": 3131,
+      "total_tokens": 5496,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "BigCodeBench/1003": {
+      "task_id": "BigCodeBench/1003",
+      "passed": false,
+      "as_run_usd": 0.022937,
+      "output_tokens": 3063,
+      "total_tokens": 4948,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_sj18ti05/prog.py\", line 3, in <module>\n    import pandas as pd\nModuleNotFoundError: No module named 'pandas'"
+    },
+    "BigCodeBench/1004": {
+      "task_id": "BigCodeBench/1004",
+      "passed": false,
+      "as_run_usd": 0.022196,
+      "output_tokens": 2951,
+      "total_tokens": 4918,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_g_shtg1c/prog.py\", line 4, in <module>\n    import matplotlib.pyplot as plt\nModuleNotFoundError: No module named 'matplotlib'"
+    },
+    "BigCodeBench/1006": {
+      "task_id": "BigCodeBench/1006",
+      "passed": true,
+      "as_run_usd": 0.025384,
+      "output_tokens": 3304,
+      "total_tokens": 5713,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "BigCodeBench/1008": {
+      "task_id": "BigCodeBench/1008",
+      "passed": false,
+      "as_run_usd": 0.026648,
+      "output_tokens": 3565,
+      "total_tokens": 6451,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_a8dmagv2/prog.py\", line 3, in <module>\n    import pandas as pd\nModuleNotFoundError: No module named 'pandas'"
+    },
+    "BigCodeBench/1012": {
+      "task_id": "BigCodeBench/1012",
+      "passed": true,
+      "as_run_usd": 0.002592,
+      "output_tokens": 596,
+      "total_tokens": 1353,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1013": {
+      "task_id": "BigCodeBench/1013",
+      "passed": true,
+      "as_run_usd": 0.002254,
+      "output_tokens": 457,
+      "total_tokens": 1224,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1015": {
+      "task_id": "BigCodeBench/1015",
+      "passed": false,
+      "as_run_usd": 0.026295,
+      "output_tokens": 3577,
+      "total_tokens": 6084,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_ym8vu0b1/prog.py\", line 3, in <module>\n    import pandas as pd\nModuleNotFoundError: No module named 'pandas'"
+    },
+    "BigCodeBench/1020": {
+      "task_id": "BigCodeBench/1020",
+      "passed": true,
+      "as_run_usd": 0.003071,
+      "output_tokens": 670,
+      "total_tokens": 1752,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1040": {
+      "task_id": "BigCodeBench/1040",
+      "passed": true,
+      "as_run_usd": 0.003048,
+      "output_tokens": 771,
+      "total_tokens": 1548,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1042": {
+      "task_id": "BigCodeBench/1042",
+      "passed": true,
+      "as_run_usd": 0.002341,
+      "output_tokens": 490,
+      "total_tokens": 1263,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1124": {
+      "task_id": "BigCodeBench/1124",
+      "passed": true,
+      "as_run_usd": 0.00259,
+      "output_tokens": 565,
+      "total_tokens": 1406,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1129": {
+      "task_id": "BigCodeBench/1129",
+      "passed": true,
+      "as_run_usd": 0.002601,
+      "output_tokens": 541,
+      "total_tokens": 1459,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1137": {
+      "task_id": "BigCodeBench/1137",
+      "passed": true,
+      "as_run_usd": 0.002002,
+      "output_tokens": 409,
+      "total_tokens": 1030,
+      "repair_loops": 0,
+      "error": ""
+    }
+  },
+  "combo_cascade_llm": {
+    "BigCodeBench/13": {
+      "task_id": "BigCodeBench/13",
+      "passed": true,
+      "as_run_usd": 0.001709,
+      "output_tokens": 629,
+      "total_tokens": 1085,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/82": {
+      "task_id": "BigCodeBench/82",
+      "passed": false,
+      "as_run_usd": 0.047203,
+      "output_tokens": 6229,
+      "total_tokens": 9343,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_9j93g9cn/prog.py\", line 1, in <module>\n    from flask import Flask, render_template, redirect, url_for\nModuleNotFoundError: No module named 'flask'"
+    },
+    "BigCodeBench/129": {
+      "task_id": "BigCodeBench/129",
+      "passed": false,
+      "as_run_usd": 0.04739,
+      "output_tokens": 6262,
+      "total_tokens": 9371,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_bmfq5ac3/prog.py\", line 3, in <module>\n    import pandas as pd\nModuleNotFoundError: No module named 'pandas'"
+    },
+    "BigCodeBench/147": {
+      "task_id": "BigCodeBench/147",
+      "passed": true,
+      "as_run_usd": 0.00104,
+      "output_tokens": 376,
+      "total_tokens": 711,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/211": {
+      "task_id": "BigCodeBench/211",
+      "passed": true,
+      "as_run_usd": 0.000953,
+      "output_tokens": 343,
+      "total_tokens": 660,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/273": {
+      "task_id": "BigCodeBench/273",
+      "passed": false,
+      "as_run_usd": 0.046105,
+      "output_tokens": 6076,
+      "total_tokens": 9050,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_h_rzocvv/prog.py\", line 1, in <module>\n    import cgi\nModuleNotFoundError: No module named 'cgi'"
+    },
+    "BigCodeBench/274": {
+      "task_id": "BigCodeBench/274",
+      "passed": false,
+      "as_run_usd": 0.041156,
+      "output_tokens": 5356,
+      "total_tokens": 7823,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_v9fvdxfq/prog.py\", line 1, in <module>\n    import cgi\nModuleNotFoundError: No module named 'cgi'"
+    },
+    "BigCodeBench/401": {
+      "task_id": "BigCodeBench/401",
+      "passed": false,
+      "as_run_usd": 0.040003,
+      "output_tokens": 5275,
+      "total_tokens": 7140,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_yc3hlwym/prog.py\", line 1, in <module>\n    from flask import Flask\nModuleNotFoundError: No module named 'flask'"
+    },
+    "BigCodeBench/590": {
+      "task_id": "BigCodeBench/590",
+      "passed": false,
+      "as_run_usd": 0.041409,
+      "output_tokens": 5434,
+      "total_tokens": 7693,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_14a_9fws/prog.py\", line 2, in <module>\n    from pyquery import PyQuery as pq\nModuleNotFoundError: No module named 'pyquery'"
+    },
+    "BigCodeBench/723": {
+      "task_id": "BigCodeBench/723",
+      "passed": true,
+      "as_run_usd": 0.019188,
+      "output_tokens": 2467,
+      "total_tokens": 3611,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "BigCodeBench/990": {
+      "task_id": "BigCodeBench/990",
+      "passed": true,
+      "as_run_usd": 0.001744,
+      "output_tokens": 639,
+      "total_tokens": 1129,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/998": {
+      "task_id": "BigCodeBench/998",
+      "passed": true,
+      "as_run_usd": 0.001029,
+      "output_tokens": 371,
+      "total_tokens": 709,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/999": {
+      "task_id": "BigCodeBench/999",
+      "passed": true,
+      "as_run_usd": 0.023209,
+      "output_tokens": 3046,
+      "total_tokens": 5195,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "BigCodeBench/1003": {
+      "task_id": "BigCodeBench/1003",
+      "passed": false,
+      "as_run_usd": 0.041779,
+      "output_tokens": 5491,
+      "total_tokens": 7775,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_6vhv4tlg/prog.py\", line 3, in <module>\n    import pandas as pd\nModuleNotFoundError: No module named 'pandas'"
+    },
+    "BigCodeBench/1004": {
+      "task_id": "BigCodeBench/1004",
+      "passed": false,
+      "as_run_usd": 0.040063,
+      "output_tokens": 5269,
+      "total_tokens": 7534,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_wqxq9mc5/prog.py\", line 4, in <module>\n    import matplotlib.pyplot as plt\nModuleNotFoundError: No module named 'matplotlib'"
+    },
+    "BigCodeBench/1006": {
+      "task_id": "BigCodeBench/1006",
+      "passed": true,
+      "as_run_usd": 0.024472,
+      "output_tokens": 3219,
+      "total_tokens": 5423,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "BigCodeBench/1008": {
+      "task_id": "BigCodeBench/1008",
+      "passed": false,
+      "as_run_usd": 0.047753,
+      "output_tokens": 6244,
+      "total_tokens": 9782,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_qx7uak8s/prog.py\", line 3, in <module>\n    import pandas as pd\nModuleNotFoundError: No module named 'pandas'"
+    },
+    "BigCodeBench/1012": {
+      "task_id": "BigCodeBench/1012",
+      "passed": true,
+      "as_run_usd": 0.001384,
+      "output_tokens": 511,
+      "total_tokens": 865,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1013": {
+      "task_id": "BigCodeBench/1013",
+      "passed": true,
+      "as_run_usd": 0.001038,
+      "output_tokens": 372,
+      "total_tokens": 731,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1015": {
+      "task_id": "BigCodeBench/1015",
+      "passed": false,
+      "as_run_usd": 0.047454,
+      "output_tokens": 6262,
+      "total_tokens": 9428,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_19fgpaxg/prog.py\", line 3, in <module>\n    import pandas as pd\nModuleNotFoundError: No module named 'pandas'"
+    },
+    "BigCodeBench/1020": {
+      "task_id": "BigCodeBench/1020",
+      "passed": true,
+      "as_run_usd": 0.001618,
+      "output_tokens": 585,
+      "total_tokens": 1102,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1040": {
+      "task_id": "BigCodeBench/1040",
+      "passed": true,
+      "as_run_usd": 0.001824,
+      "output_tokens": 686,
+      "total_tokens": 1050,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1042": {
+      "task_id": "BigCodeBench/1042",
+      "passed": true,
+      "as_run_usd": 0.001121,
+      "output_tokens": 405,
+      "total_tokens": 767,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1124": {
+      "task_id": "BigCodeBench/1124",
+      "passed": true,
+      "as_run_usd": 0.001319,
+      "output_tokens": 480,
+      "total_tokens": 876,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1129": {
+      "task_id": "BigCodeBench/1129",
+      "passed": true,
+      "as_run_usd": 0.00127,
+      "output_tokens": 456,
+      "total_tokens": 891,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1137": {
+      "task_id": "BigCodeBench/1137",
+      "passed": true,
+      "as_run_usd": 0.000896,
+      "output_tokens": 324,
+      "total_tokens": 610,
+      "repair_loops": 0,
+      "error": ""
+    }
+  },
+  "combo_hybrid_llm": {
+    "BigCodeBench/13": {
+      "task_id": "BigCodeBench/13",
+      "passed": true,
+      "as_run_usd": 0.00307,
+      "output_tokens": 714,
+      "total_tokens": 1674,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/82": {
+      "task_id": "BigCodeBench/82",
+      "passed": false,
+      "as_run_usd": 0.033715,
+      "output_tokens": 3600,
+      "total_tokens": 6172,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_8r2n0h6z/prog.py\", line 1, in <module>\n    from flask import Flask, render_template, redirect, url_for\nModuleNotFoundError: No module named 'flask'"
+    },
+    "BigCodeBench/129": {
+      "task_id": "BigCodeBench/129",
+      "passed": false,
+      "as_run_usd": 0.033861,
+      "output_tokens": 3622,
+      "total_tokens": 6188,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_y3y_qf6p/prog.py\", line 3, in <module>\n    import pandas as pd\nModuleNotFoundError: No module named 'pandas'"
+    },
+    "BigCodeBench/147": {
+      "task_id": "BigCodeBench/147",
+      "passed": true,
+      "as_run_usd": 0.002221,
+      "output_tokens": 461,
+      "total_tokens": 1179,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/211": {
+      "task_id": "BigCodeBench/211",
+      "passed": true,
+      "as_run_usd": 0.002106,
+      "output_tokens": 428,
+      "total_tokens": 1111,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/273": {
+      "task_id": "BigCodeBench/273",
+      "passed": false,
+      "as_run_usd": 0.032954,
+      "output_tokens": 3498,
+      "total_tokens": 5993,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_6dvjtiq9/prog.py\", line 1, in <module>\n    import cgi\nModuleNotFoundError: No module named 'cgi'"
+    },
+    "BigCodeBench/274": {
+      "task_id": "BigCodeBench/274",
+      "passed": false,
+      "as_run_usd": 0.03312,
+      "output_tokens": 3386,
+      "total_tokens": 5614,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_gvszxf20/prog.py\", line 1, in <module>\n    import cgi\nModuleNotFoundError: No module named 'cgi'"
+    },
+    "BigCodeBench/401": {
+      "task_id": "BigCodeBench/401",
+      "passed": false,
+      "as_run_usd": 0.028344,
+      "output_tokens": 2964,
+      "total_tokens": 4612,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_shzjd9_w/prog.py\", line 1, in <module>\n    from flask import Flask\nModuleNotFoundError: No module named 'flask'"
+    },
+    "BigCodeBench/590": {
+      "task_id": "BigCodeBench/590",
+      "passed": false,
+      "as_run_usd": 0.029472,
+      "output_tokens": 3070,
+      "total_tokens": 5056,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_1vgh1dpa/prog.py\", line 2, in <module>\n    from pyquery import PyQuery as pq\nModuleNotFoundError: No module named 'pyquery'"
+    },
+    "BigCodeBench/723": {
+      "task_id": "BigCodeBench/723",
+      "passed": true,
+      "as_run_usd": 0.025838,
+      "output_tokens": 2597,
+      "total_tokens": 4208,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "BigCodeBench/990": {
+      "task_id": "BigCodeBench/990",
+      "passed": true,
+      "as_run_usd": 0.003157,
+      "output_tokens": 724,
+      "total_tokens": 1753,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/998": {
+      "task_id": "BigCodeBench/998",
+      "passed": true,
+      "as_run_usd": 0.002213,
+      "output_tokens": 456,
+      "total_tokens": 1180,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/999": {
+      "task_id": "BigCodeBench/999",
+      "passed": true,
+      "as_run_usd": 0.031261,
+      "output_tokens": 3176,
+      "total_tokens": 6413,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "BigCodeBench/1003": {
+      "task_id": "BigCodeBench/1003",
+      "passed": false,
+      "as_run_usd": 0.029742,
+      "output_tokens": 3108,
+      "total_tokens": 5107,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_gwb7lf5n/prog.py\", line 3, in <module>\n    import pandas as pd\nModuleNotFoundError: No module named 'pandas'"
+    },
+    "BigCodeBench/1004": {
+      "task_id": "BigCodeBench/1004",
+      "passed": false,
+      "as_run_usd": 0.029821,
+      "output_tokens": 3104,
+      "total_tokens": 5189,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_182c5wcb/prog.py\", line 4, in <module>\n    import matplotlib.pyplot as plt\nModuleNotFoundError: No module named 'matplotlib'"
+    },
+    "BigCodeBench/1006": {
+      "task_id": "BigCodeBench/1006",
+      "passed": false,
+      "as_run_usd": 0.030398,
+      "output_tokens": 3102,
+      "total_tokens": 6123,
+      "repair_loops": 1,
+      "error": "======================================================================\nERROR: test_download_invald_zip_file (__main__.TestCases.test_download_invald_zip_file)\nTest a URL that points to a ZIP file, but the file is invalid.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1432, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/tmp/bcb_vytsub7j/prog.py\", line 84, in test_download_"
+    },
+    "BigCodeBench/1008": {
+      "task_id": "BigCodeBench/1008",
+      "passed": false,
+      "as_run_usd": 0.034331,
+      "output_tokens": 3610,
+      "total_tokens": 6610,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_8iym9tnu/prog.py\", line 3, in <module>\n    import pandas as pd\nModuleNotFoundError: No module named 'pandas'"
+    },
+    "BigCodeBench/1012": {
+      "task_id": "BigCodeBench/1012",
+      "passed": true,
+      "as_run_usd": 0.002592,
+      "output_tokens": 596,
+      "total_tokens": 1353,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1013": {
+      "task_id": "BigCodeBench/1013",
+      "passed": true,
+      "as_run_usd": 0.002254,
+      "output_tokens": 457,
+      "total_tokens": 1224,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1015": {
+      "task_id": "BigCodeBench/1015",
+      "passed": false,
+      "as_run_usd": 0.033932,
+      "output_tokens": 3622,
+      "total_tokens": 6243,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_i72jsk0w/prog.py\", line 3, in <module>\n    import pandas as pd\nModuleNotFoundError: No module named 'pandas'"
+    },
+    "BigCodeBench/1020": {
+      "task_id": "BigCodeBench/1020",
+      "passed": true,
+      "as_run_usd": 0.003071,
+      "output_tokens": 670,
+      "total_tokens": 1752,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1040": {
+      "task_id": "BigCodeBench/1040",
+      "passed": true,
+      "as_run_usd": 0.003048,
+      "output_tokens": 771,
+      "total_tokens": 1548,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1042": {
+      "task_id": "BigCodeBench/1042",
+      "passed": true,
+      "as_run_usd": 0.002341,
+      "output_tokens": 490,
+      "total_tokens": 1263,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1124": {
+      "task_id": "BigCodeBench/1124",
+      "passed": true,
+      "as_run_usd": 0.00259,
+      "output_tokens": 565,
+      "total_tokens": 1406,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1129": {
+      "task_id": "BigCodeBench/1129",
+      "passed": true,
+      "as_run_usd": 0.002601,
+      "output_tokens": 541,
+      "total_tokens": 1459,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1137": {
+      "task_id": "BigCodeBench/1137",
+      "passed": true,
+      "as_run_usd": 0.002002,
+      "output_tokens": 409,
+      "total_tokens": 1030,
+      "repair_loops": 0,
+      "error": ""
+    }
+  },
+  "sj_cascade": {
+    "BigCodeBench/13": {
+      "task_id": "BigCodeBench/13",
+      "passed": true,
+      "as_run_usd": 0.001709,
+      "output_tokens": 629,
+      "total_tokens": 1085,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/82": {
+      "task_id": "BigCodeBench/82",
+      "passed": false,
+      "as_run_usd": 0.047245,
+      "output_tokens": 6229,
+      "total_tokens": 9371,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_h2uew1t5/prog.py\", line 1, in <module>\n    from flask import Flask, render_template, redirect, url_for\nModuleNotFoundError: No module named 'flask'"
+    },
+    "BigCodeBench/129": {
+      "task_id": "BigCodeBench/129",
+      "passed": false,
+      "as_run_usd": 0.047462,
+      "output_tokens": 6262,
+      "total_tokens": 9419,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_jvaavq5f/prog.py\", line 3, in <module>\n    import pandas as pd\nModuleNotFoundError: No module named 'pandas'"
+    },
+    "BigCodeBench/147": {
+      "task_id": "BigCodeBench/147",
+      "passed": true,
+      "as_run_usd": 0.00104,
+      "output_tokens": 376,
+      "total_tokens": 711,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/211": {
+      "task_id": "BigCodeBench/211",
+      "passed": true,
+      "as_run_usd": 0.000953,
+      "output_tokens": 343,
+      "total_tokens": 660,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/273": {
+      "task_id": "BigCodeBench/273",
+      "passed": false,
+      "as_run_usd": 0.046183,
+      "output_tokens": 6076,
+      "total_tokens": 9102,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_j8hwz6o6/prog.py\", line 1, in <module>\n    import cgi\nModuleNotFoundError: No module named 'cgi'"
+    },
+    "BigCodeBench/274": {
+      "task_id": "BigCodeBench/274",
+      "passed": false,
+      "as_run_usd": 0.047308,
+      "output_tokens": 6092,
+      "total_tokens": 8981,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_bafcbv69/prog.py\", line 1, in <module>\n    import cgi\nModuleNotFoundError: No module named 'cgi'"
+    },
+    "BigCodeBench/401": {
+      "task_id": "BigCodeBench/401",
+      "passed": false,
+      "as_run_usd": 0.040071,
+      "output_tokens": 5275,
+      "total_tokens": 7186,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_dtwh54q5/prog.py\", line 1, in <module>\n    from flask import Flask\nModuleNotFoundError: No module named 'flask'"
+    },
+    "BigCodeBench/590": {
+      "task_id": "BigCodeBench/590",
+      "passed": false,
+      "as_run_usd": 0.041467,
+      "output_tokens": 5434,
+      "total_tokens": 7733,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_w55g520c/prog.py\", line 2, in <module>\n    from pyquery import PyQuery as pq\nModuleNotFoundError: No module named 'pyquery'"
+    },
+    "BigCodeBench/723": {
+      "task_id": "BigCodeBench/723",
+      "passed": true,
+      "as_run_usd": 0.01868,
+      "output_tokens": 2467,
+      "total_tokens": 3272,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "BigCodeBench/990": {
+      "task_id": "BigCodeBench/990",
+      "passed": true,
+      "as_run_usd": 0.001744,
+      "output_tokens": 639,
+      "total_tokens": 1129,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/998": {
+      "task_id": "BigCodeBench/998",
+      "passed": true,
+      "as_run_usd": 0.001029,
+      "output_tokens": 371,
+      "total_tokens": 709,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/999": {
+      "task_id": "BigCodeBench/999",
+      "passed": false,
+      "as_run_usd": 0.042245,
+      "output_tokens": 5425,
+      "total_tokens": 8370,
+      "repair_loops": 2,
+      "error": "======================================================================\nERROR: test_count_categories_data1 (__main__.TestCases.test_count_categories_data1)\nTest that the function counts the occurrences of each category in the CSV file.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1432, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/tmp/bcb_6dk6lc2b/prog.py\", line 61, in t"
+    },
+    "BigCodeBench/1003": {
+      "task_id": "BigCodeBench/1003",
+      "passed": false,
+      "as_run_usd": 0.041853,
+      "output_tokens": 5491,
+      "total_tokens": 7823,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_w_2goqkb/prog.py\", line 3, in <module>\n    import pandas as pd\nModuleNotFoundError: No module named 'pandas'"
+    },
+    "BigCodeBench/1004": {
+      "task_id": "BigCodeBench/1004",
+      "passed": false,
+      "as_run_usd": 0.041904,
+      "output_tokens": 5485,
+      "total_tokens": 7897,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_l4n41fek/prog.py\", line 4, in <module>\n    import matplotlib.pyplot as plt\nModuleNotFoundError: No module named 'matplotlib'"
+    },
+    "BigCodeBench/1006": {
+      "task_id": "BigCodeBench/1006",
+      "passed": true,
+      "as_run_usd": 0.023813,
+      "output_tokens": 3219,
+      "total_tokens": 4984,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "BigCodeBench/1008": {
+      "task_id": "BigCodeBench/1008",
+      "passed": false,
+      "as_run_usd": 0.047825,
+      "output_tokens": 6244,
+      "total_tokens": 9830,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_4e6qbm3f/prog.py\", line 3, in <module>\n    import pandas as pd\nModuleNotFoundError: No module named 'pandas'"
+    },
+    "BigCodeBench/1012": {
+      "task_id": "BigCodeBench/1012",
+      "passed": true,
+      "as_run_usd": 0.001384,
+      "output_tokens": 511,
+      "total_tokens": 865,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1013": {
+      "task_id": "BigCodeBench/1013",
+      "passed": true,
+      "as_run_usd": 0.001038,
+      "output_tokens": 372,
+      "total_tokens": 731,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1015": {
+      "task_id": "BigCodeBench/1015",
+      "passed": false,
+      "as_run_usd": 0.047522,
+      "output_tokens": 6262,
+      "total_tokens": 9474,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_33t6ob12/prog.py\", line 3, in <module>\n    import pandas as pd\nModuleNotFoundError: No module named 'pandas'"
+    },
+    "BigCodeBench/1020": {
+      "task_id": "BigCodeBench/1020",
+      "passed": true,
+      "as_run_usd": 0.001618,
+      "output_tokens": 585,
+      "total_tokens": 1102,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1040": {
+      "task_id": "BigCodeBench/1040",
+      "passed": true,
+      "as_run_usd": 0.001824,
+      "output_tokens": 686,
+      "total_tokens": 1050,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1042": {
+      "task_id": "BigCodeBench/1042",
+      "passed": true,
+      "as_run_usd": 0.001121,
+      "output_tokens": 405,
+      "total_tokens": 767,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1124": {
+      "task_id": "BigCodeBench/1124",
+      "passed": true,
+      "as_run_usd": 0.001319,
+      "output_tokens": 480,
+      "total_tokens": 876,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1129": {
+      "task_id": "BigCodeBench/1129",
+      "passed": true,
+      "as_run_usd": 0.00127,
+      "output_tokens": 456,
+      "total_tokens": 891,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1137": {
+      "task_id": "BigCodeBench/1137",
+      "passed": true,
+      "as_run_usd": 0.000896,
+      "output_tokens": 324,
+      "total_tokens": 610,
+      "repair_loops": 0,
+      "error": ""
+    }
+  },
+  "sj_escalation_shield": {
+    "BigCodeBench/13": {
+      "task_id": "BigCodeBench/13",
+      "passed": true,
+      "as_run_usd": 0.001709,
+      "output_tokens": 629,
+      "total_tokens": 1085,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/82": {
+      "task_id": "BigCodeBench/82",
+      "passed": false,
+      "as_run_usd": 0.034309,
+      "output_tokens": 4181,
+      "total_tokens": 7319,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_p04apprp/prog.py\", line 1, in <module>\n    from flask import Flask, render_template, redirect, url_for\nModuleNotFoundError: No module named 'flask'"
+    },
+    "BigCodeBench/129": {
+      "task_id": "BigCodeBench/129",
+      "passed": false,
+      "as_run_usd": 0.034556,
+      "output_tokens": 4214,
+      "total_tokens": 7365,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_8_izsuuy/prog.py\", line 3, in <module>\n    import pandas as pd\nModuleNotFoundError: No module named 'pandas'"
+    },
+    "BigCodeBench/147": {
+      "task_id": "BigCodeBench/147",
+      "passed": true,
+      "as_run_usd": 0.00104,
+      "output_tokens": 376,
+      "total_tokens": 711,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/211": {
+      "task_id": "BigCodeBench/211",
+      "passed": true,
+      "as_run_usd": 0.000953,
+      "output_tokens": 343,
+      "total_tokens": 660,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/273": {
+      "task_id": "BigCodeBench/273",
+      "passed": false,
+      "as_run_usd": 0.033092,
+      "output_tokens": 4028,
+      "total_tokens": 7050,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_jc9vvx1w/prog.py\", line 1, in <module>\n    import cgi\nModuleNotFoundError: No module named 'cgi'"
+    },
+    "BigCodeBench/274": {
+      "task_id": "BigCodeBench/274",
+      "passed": false,
+      "as_run_usd": 0.034594,
+      "output_tokens": 4044,
+      "total_tokens": 6927,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_4n1hdsw4/prog.py\", line 1, in <module>\n    import cgi\nModuleNotFoundError: No module named 'cgi'"
+    },
+    "BigCodeBench/401": {
+      "task_id": "BigCodeBench/401",
+      "passed": false,
+      "as_run_usd": 0.02608,
+      "output_tokens": 3227,
+      "total_tokens": 5132,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_nj7wxc6h/prog.py\", line 1, in <module>\n    from flask import Flask\nModuleNotFoundError: No module named 'flask'"
+    },
+    "BigCodeBench/590": {
+      "task_id": "BigCodeBench/590",
+      "passed": false,
+      "as_run_usd": 0.027682,
+      "output_tokens": 3386,
+      "total_tokens": 5679,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_g132u7ni/prog.py\", line 2, in <module>\n    from pyquery import PyQuery as pq\nModuleNotFoundError: No module named 'pyquery'"
+    },
+    "BigCodeBench/723": {
+      "task_id": "BigCodeBench/723",
+      "passed": true,
+      "as_run_usd": 0.018675,
+      "output_tokens": 2467,
+      "total_tokens": 3269,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "BigCodeBench/990": {
+      "task_id": "BigCodeBench/990",
+      "passed": true,
+      "as_run_usd": 0.001744,
+      "output_tokens": 639,
+      "total_tokens": 1129,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/998": {
+      "task_id": "BigCodeBench/998",
+      "passed": true,
+      "as_run_usd": 0.001029,
+      "output_tokens": 371,
+      "total_tokens": 709,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/999": {
+      "task_id": "BigCodeBench/999",
+      "passed": true,
+      "as_run_usd": 0.029705,
+      "output_tokens": 3489,
+      "total_tokens": 6428,
+      "repair_loops": 2,
+      "error": ""
+    },
+    "BigCodeBench/1003": {
+      "task_id": "BigCodeBench/1003",
+      "passed": false,
+      "as_run_usd": 0.028122,
+      "output_tokens": 3443,
+      "total_tokens": 5769,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_bjb_hb2f/prog.py\", line 3, in <module>\n    import pandas as pd\nModuleNotFoundError: No module named 'pandas'"
+    },
+    "BigCodeBench/1004": {
+      "task_id": "BigCodeBench/1004",
+      "passed": false,
+      "as_run_usd": 0.028181,
+      "output_tokens": 3437,
+      "total_tokens": 5843,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_09b6qrs5/prog.py\", line 4, in <module>\n    import matplotlib.pyplot as plt\nModuleNotFoundError: No module named 'matplotlib'"
+    },
+    "BigCodeBench/1006": {
+      "task_id": "BigCodeBench/1006",
+      "passed": true,
+      "as_run_usd": 0.02381,
+      "output_tokens": 3219,
+      "total_tokens": 4982,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "BigCodeBench/1008": {
+      "task_id": "BigCodeBench/1008",
+      "passed": false,
+      "as_run_usd": 0.034973,
+      "output_tokens": 4196,
+      "total_tokens": 7776,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_29ruph6f/prog.py\", line 3, in <module>\n    import pandas as pd\nModuleNotFoundError: No module named 'pandas'"
+    },
+    "BigCodeBench/1012": {
+      "task_id": "BigCodeBench/1012",
+      "passed": true,
+      "as_run_usd": 0.001384,
+      "output_tokens": 511,
+      "total_tokens": 865,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1013": {
+      "task_id": "BigCodeBench/1013",
+      "passed": true,
+      "as_run_usd": 0.001038,
+      "output_tokens": 372,
+      "total_tokens": 731,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1015": {
+      "task_id": "BigCodeBench/1015",
+      "passed": false,
+      "as_run_usd": 0.034628,
+      "output_tokens": 4214,
+      "total_tokens": 7422,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_ynpk1d6x/prog.py\", line 3, in <module>\n    import pandas as pd\nModuleNotFoundError: No module named 'pandas'"
+    },
+    "BigCodeBench/1020": {
+      "task_id": "BigCodeBench/1020",
+      "passed": true,
+      "as_run_usd": 0.001618,
+      "output_tokens": 585,
+      "total_tokens": 1102,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1040": {
+      "task_id": "BigCodeBench/1040",
+      "passed": true,
+      "as_run_usd": 0.001824,
+      "output_tokens": 686,
+      "total_tokens": 1050,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1042": {
+      "task_id": "BigCodeBench/1042",
+      "passed": true,
+      "as_run_usd": 0.001121,
+      "output_tokens": 405,
+      "total_tokens": 767,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1124": {
+      "task_id": "BigCodeBench/1124",
+      "passed": true,
+      "as_run_usd": 0.001319,
+      "output_tokens": 480,
+      "total_tokens": 876,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1129": {
+      "task_id": "BigCodeBench/1129",
+      "passed": true,
+      "as_run_usd": 0.00127,
+      "output_tokens": 456,
+      "total_tokens": 891,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1137": {
+      "task_id": "BigCodeBench/1137",
+      "passed": true,
+      "as_run_usd": 0.000896,
+      "output_tokens": 324,
+      "total_tokens": 610,
+      "repair_loops": 0,
+      "error": ""
+    }
+  },
+  "sj_smart_repair": {
+    "BigCodeBench/13": {
+      "task_id": "BigCodeBench/13",
+      "passed": true,
+      "as_run_usd": 0.020762,
+      "output_tokens": 2677,
+      "total_tokens": 3133,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/82": {
+      "task_id": "BigCodeBench/82",
+      "passed": false,
+      "as_run_usd": 0.059494,
+      "output_tokens": 7999,
+      "total_tokens": 10858,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_2t2kkax6/prog.py\", line 1, in <module>\n    from flask import Flask, render_template, redirect, url_for\nModuleNotFoundError: No module named 'flask'"
+    },
+    "BigCodeBench/129": {
+      "task_id": "BigCodeBench/129",
+      "passed": false,
+      "as_run_usd": 0.061864,
+      "output_tokens": 8310,
+      "total_tokens": 11461,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_80kloviv/prog.py\", line 3, in <module>\n    import pandas as pd\nModuleNotFoundError: No module named 'pandas'"
+    },
+    "BigCodeBench/147": {
+      "task_id": "BigCodeBench/147",
+      "passed": true,
+      "as_run_usd": 0.018682,
+      "output_tokens": 2424,
+      "total_tokens": 2759,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/211": {
+      "task_id": "BigCodeBench/211",
+      "passed": true,
+      "as_run_usd": 0.01859,
+      "output_tokens": 2615,
+      "total_tokens": 3658,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "BigCodeBench/273": {
+      "task_id": "BigCodeBench/273",
+      "passed": false,
+      "as_run_usd": 0.060663,
+      "output_tokens": 8124,
+      "total_tokens": 11146,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_jqdc_pjd/prog.py\", line 1, in <module>\n    import cgi\nModuleNotFoundError: No module named 'cgi'"
+    },
+    "BigCodeBench/274": {
+      "task_id": "BigCodeBench/274",
+      "passed": false,
+      "as_run_usd": 0.058762,
+      "output_tokens": 7772,
+      "total_tokens": 10287,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_h1iior4m/prog.py\", line 1, in <module>\n    import cgi\nModuleNotFoundError: No module named 'cgi'"
+    },
+    "BigCodeBench/401": {
+      "task_id": "BigCodeBench/401",
+      "passed": false,
+      "as_run_usd": 0.053629,
+      "output_tokens": 7164,
+      "total_tokens": 8910,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_3f_q6hwp/prog.py\", line 1, in <module>\n    from flask import Flask\nModuleNotFoundError: No module named 'flask'"
+    },
+    "BigCodeBench/590": {
+      "task_id": "BigCodeBench/590",
+      "passed": false,
+      "as_run_usd": 0.05528,
+      "output_tokens": 7364,
+      "total_tokens": 9539,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_ascov_uj/prog.py\", line 2, in <module>\n    from pyquery import PyQuery as pq\nModuleNotFoundError: No module named 'pyquery'"
+    },
+    "BigCodeBench/723": {
+      "task_id": "BigCodeBench/723",
+      "passed": true,
+      "as_run_usd": 0.017755,
+      "output_tokens": 2319,
+      "total_tokens": 2561,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/990": {
+      "task_id": "BigCodeBench/990",
+      "passed": true,
+      "as_run_usd": 0.021004,
+      "output_tokens": 3084,
+      "total_tokens": 4689,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "BigCodeBench/998": {
+      "task_id": "BigCodeBench/998",
+      "passed": true,
+      "as_run_usd": 0.018873,
+      "output_tokens": 2664,
+      "total_tokens": 3806,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "BigCodeBench/999": {
+      "task_id": "BigCodeBench/999",
+      "passed": true,
+      "as_run_usd": 0.021236,
+      "output_tokens": 3046,
+      "total_tokens": 4784,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "BigCodeBench/1003": {
+      "task_id": "BigCodeBench/1003",
+      "passed": false,
+      "as_run_usd": 0.055486,
+      "output_tokens": 7401,
+      "total_tokens": 9589,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_1xeodywo/prog.py\", line 3, in <module>\n    import pandas as pd\nModuleNotFoundError: No module named 'pandas'"
+    },
+    "BigCodeBench/1004": {
+      "task_id": "BigCodeBench/1004",
+      "passed": false,
+      "as_run_usd": 0.056617,
+      "output_tokens": 7533,
+      "total_tokens": 9939,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_irf_mshl/prog.py\", line 4, in <module>\n    import matplotlib.pyplot as plt\nModuleNotFoundError: No module named 'matplotlib'"
+    },
+    "BigCodeBench/1006": {
+      "task_id": "BigCodeBench/1006",
+      "passed": true,
+      "as_run_usd": 0.021793,
+      "output_tokens": 3219,
+      "total_tokens": 4982,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "BigCodeBench/1008": {
+      "task_id": "BigCodeBench/1008",
+      "passed": false,
+      "as_run_usd": 0.061149,
+      "output_tokens": 8153,
+      "total_tokens": 11593,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_14qlemd9/prog.py\", line 3, in <module>\n    import pandas as pd\nModuleNotFoundError: No module named 'pandas'"
+    },
+    "BigCodeBench/1012": {
+      "task_id": "BigCodeBench/1012",
+      "passed": true,
+      "as_run_usd": 0.019724,
+      "output_tokens": 2559,
+      "total_tokens": 2913,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1013": {
+      "task_id": "BigCodeBench/1013",
+      "passed": true,
+      "as_run_usd": 0.018689,
+      "output_tokens": 2420,
+      "total_tokens": 2779,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1015": {
+      "task_id": "BigCodeBench/1015",
+      "passed": false,
+      "as_run_usd": 0.061928,
+      "output_tokens": 8310,
+      "total_tokens": 11518,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_iiqqceo6/prog.py\", line 3, in <module>\n    import pandas as pd\nModuleNotFoundError: No module named 'pandas'"
+    },
+    "BigCodeBench/1020": {
+      "task_id": "BigCodeBench/1020",
+      "passed": true,
+      "as_run_usd": 0.020523,
+      "output_tokens": 2633,
+      "total_tokens": 3150,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1040": {
+      "task_id": "BigCodeBench/1040",
+      "passed": true,
+      "as_run_usd": 0.019912,
+      "output_tokens": 3005,
+      "total_tokens": 4232,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "BigCodeBench/1042": {
+      "task_id": "BigCodeBench/1042",
+      "passed": true,
+      "as_run_usd": 0.019193,
+      "output_tokens": 2722,
+      "total_tokens": 3951,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "BigCodeBench/1124": {
+      "task_id": "BigCodeBench/1124",
+      "passed": true,
+      "as_run_usd": 0.019554,
+      "output_tokens": 2528,
+      "total_tokens": 2924,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1129": {
+      "task_id": "BigCodeBench/1129",
+      "passed": true,
+      "as_run_usd": 0.019433,
+      "output_tokens": 2504,
+      "total_tokens": 2939,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1137": {
+      "task_id": "BigCodeBench/1137",
+      "passed": false,
+      "as_run_usd": 0.05115,
+      "output_tokens": 6723,
+      "total_tokens": 8413,
+      "repair_loops": 2,
+      "error": "======================================================================\nERROR: test_phone_numbers_page_1 (__main__.TestCases.test_phone_numbers_page_1)\nTest extraction from test_page_1 with a single phone number\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/tmp/bcb_ckf7ir_w/prog.py\", line 57, in test_phone_numbers_page_1\n    self.run_test_case(filename, expected_numbers)\n    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "
+    }
+  },
+  "sj_ultra_sweet": {
+    "BigCodeBench/13": {
+      "task_id": "BigCodeBench/13",
+      "passed": true,
+      "as_run_usd": 0.003522,
+      "output_tokens": 714,
+      "total_tokens": 1675,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/82": {
+      "task_id": "BigCodeBench/82",
+      "passed": false,
+      "as_run_usd": 0.028403,
+      "output_tokens": 1507,
+      "total_tokens": 3956,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_2dpzvnf6/prog.py\", line 1, in <module>\n    from flask import Flask, render_template, redirect, url_for\nModuleNotFoundError: No module named 'flask'"
+    },
+    "BigCodeBench/129": {
+      "task_id": "BigCodeBench/129",
+      "passed": false,
+      "as_run_usd": 0.021438,
+      "output_tokens": 1237,
+      "total_tokens": 3688,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_9xjtmm_u/prog.py\", line 3, in <module>\n    import pandas as pd\nModuleNotFoundError: No module named 'pandas'"
+    },
+    "BigCodeBench/147": {
+      "task_id": "BigCodeBench/147",
+      "passed": true,
+      "as_run_usd": 0.002611,
+      "output_tokens": 461,
+      "total_tokens": 1180,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/211": {
+      "task_id": "BigCodeBench/211",
+      "passed": true,
+      "as_run_usd": 0.002487,
+      "output_tokens": 428,
+      "total_tokens": 1111,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/273": {
+      "task_id": "BigCodeBench/273",
+      "passed": false,
+      "as_run_usd": 0.026711,
+      "output_tokens": 1405,
+      "total_tokens": 3790,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_r3nbqf9a/prog.py\", line 1, in <module>\n    import cgi\nModuleNotFoundError: No module named 'cgi'"
+    },
+    "BigCodeBench/274": {
+      "task_id": "BigCodeBench/274",
+      "passed": false,
+      "as_run_usd": 0.028045,
+      "output_tokens": 1293,
+      "total_tokens": 3411,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_1d4do2of/prog.py\", line 1, in <module>\n    import cgi\nModuleNotFoundError: No module named 'cgi'"
+    },
+    "BigCodeBench/401": {
+      "task_id": "BigCodeBench/401",
+      "passed": false,
+      "as_run_usd": 0.016615,
+      "output_tokens": 871,
+      "total_tokens": 2405,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_25wszsu2/prog.py\", line 1, in <module>\n    from flask import Flask\nModuleNotFoundError: No module named 'flask'"
+    },
+    "BigCodeBench/590": {
+      "task_id": "BigCodeBench/590",
+      "passed": false,
+      "as_run_usd": 0.019024,
+      "output_tokens": 977,
+      "total_tokens": 2846,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_k8y2zqwd/prog.py\", line 2, in <module>\n    from pyquery import PyQuery as pq\nModuleNotFoundError: No module named 'pyquery'"
+    },
+    "BigCodeBench/723": {
+      "task_id": "BigCodeBench/723",
+      "passed": false,
+      "as_run_usd": 0.008537,
+      "output_tokens": 381,
+      "total_tokens": 1516,
+      "repair_loops": 1,
+      "error": "======================================================================\nERROR: test_correct_scraping (__main__.TestCases.test_correct_scraping)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1432, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/tmp/bcb_efjuqn9i/prog.py\", line 48, in test_correct_scraping\n    task_func('http://example.com')\n    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^"
+    },
+    "BigCodeBench/990": {
+      "task_id": "BigCodeBench/990",
+      "passed": true,
+      "as_run_usd": 0.003625,
+      "output_tokens": 724,
+      "total_tokens": 1753,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/998": {
+      "task_id": "BigCodeBench/998",
+      "passed": true,
+      "as_run_usd": 0.002605,
+      "output_tokens": 456,
+      "total_tokens": 1181,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/999": {
+      "task_id": "BigCodeBench/999",
+      "passed": true,
+      "as_run_usd": 0.023333,
+      "output_tokens": 1083,
+      "total_tokens": 3449,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "BigCodeBench/1003": {
+      "task_id": "BigCodeBench/1003",
+      "passed": false,
+      "as_run_usd": 0.019629,
+      "output_tokens": 1015,
+      "total_tokens": 2899,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_jimx3eyz/prog.py\", line 3, in <module>\n    import pandas as pd\nModuleNotFoundError: No module named 'pandas'"
+    },
+    "BigCodeBench/1004": {
+      "task_id": "BigCodeBench/1004",
+      "passed": false,
+      "as_run_usd": 0.019768,
+      "output_tokens": 1011,
+      "total_tokens": 2977,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_9k4vhy4x/prog.py\", line 4, in <module>\n    import matplotlib.pyplot as plt\nModuleNotFoundError: No module named 'matplotlib'"
+    },
+    "BigCodeBench/1006": {
+      "task_id": "BigCodeBench/1006",
+      "passed": true,
+      "as_run_usd": 0.027307,
+      "output_tokens": 1256,
+      "total_tokens": 3665,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "BigCodeBench/1008": {
+      "task_id": "BigCodeBench/1008",
+      "passed": false,
+      "as_run_usd": 0.029616,
+      "output_tokens": 1517,
+      "total_tokens": 4403,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_udly0iu8/prog.py\", line 3, in <module>\n    import pandas as pd\nModuleNotFoundError: No module named 'pandas'"
+    },
+    "BigCodeBench/1012": {
+      "task_id": "BigCodeBench/1012",
+      "passed": true,
+      "as_run_usd": 0.002992,
+      "output_tokens": 596,
+      "total_tokens": 1353,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1013": {
+      "task_id": "BigCodeBench/1013",
+      "passed": true,
+      "as_run_usd": 0.002656,
+      "output_tokens": 457,
+      "total_tokens": 1224,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1015": {
+      "task_id": "BigCodeBench/1015",
+      "passed": false,
+      "as_run_usd": 0.028877,
+      "output_tokens": 1529,
+      "total_tokens": 4037,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_csbr1qdj/prog.py\", line 3, in <module>\n    import pandas as pd\nModuleNotFoundError: No module named 'pandas'"
+    },
+    "BigCodeBench/1020": {
+      "task_id": "BigCodeBench/1020",
+      "passed": true,
+      "as_run_usd": 0.003552,
+      "output_tokens": 670,
+      "total_tokens": 1753,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1040": {
+      "task_id": "BigCodeBench/1040",
+      "passed": true,
+      "as_run_usd": 0.003453,
+      "output_tokens": 771,
+      "total_tokens": 1548,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1042": {
+      "task_id": "BigCodeBench/1042",
+      "passed": true,
+      "as_run_usd": 0.002745,
+      "output_tokens": 490,
+      "total_tokens": 1263,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1124": {
+      "task_id": "BigCodeBench/1124",
+      "passed": true,
+      "as_run_usd": 0.003011,
+      "output_tokens": 565,
+      "total_tokens": 1406,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1129": {
+      "task_id": "BigCodeBench/1129",
+      "passed": true,
+      "as_run_usd": 0.003041,
+      "output_tokens": 541,
+      "total_tokens": 1460,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1137": {
+      "task_id": "BigCodeBench/1137",
+      "passed": true,
+      "as_run_usd": 0.002368,
+      "output_tokens": 409,
+      "total_tokens": 1030,
+      "repair_loops": 0,
+      "error": ""
+    }
+  },
+  "sj_dual_verifier": {
+    "BigCodeBench/13": {
+      "task_id": "BigCodeBench/13",
+      "passed": true,
+      "as_run_usd": 0.001709,
+      "output_tokens": 629,
+      "total_tokens": 1085,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/82": {
+      "task_id": "BigCodeBench/82",
+      "passed": false,
+      "as_run_usd": 0.058614,
+      "output_tokens": 4892,
+      "total_tokens": 9336,
+      "repair_loops": 3,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_v4_onkp7/prog.py\", line 1, in <module>\n    from flask import Flask, render_template, redirect, url_for\nModuleNotFoundError: No module named 'flask'"
+    },
+    "BigCodeBench/129": {
+      "task_id": "BigCodeBench/129",
+      "passed": false,
+      "as_run_usd": 0.051876,
+      "output_tokens": 4644,
+      "total_tokens": 9109,
+      "repair_loops": 3,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_l_j3uuki/prog.py\", line 3, in <module>\n    import pandas as pd\nModuleNotFoundError: No module named 'pandas'"
+    },
+    "BigCodeBench/147": {
+      "task_id": "BigCodeBench/147",
+      "passed": true,
+      "as_run_usd": 0.00104,
+      "output_tokens": 376,
+      "total_tokens": 711,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/211": {
+      "task_id": "BigCodeBench/211",
+      "passed": true,
+      "as_run_usd": 0.000953,
+      "output_tokens": 343,
+      "total_tokens": 660,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/273": {
+      "task_id": "BigCodeBench/273",
+      "passed": false,
+      "as_run_usd": 0.055842,
+      "output_tokens": 4688,
+      "total_tokens": 8960,
+      "repair_loops": 3,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_h9pu9c3l/prog.py\", line 1, in <module>\n    import cgi\nModuleNotFoundError: No module named 'cgi'"
+    },
+    "BigCodeBench/274": {
+      "task_id": "BigCodeBench/274",
+      "passed": false,
+      "as_run_usd": 0.061139,
+      "output_tokens": 4832,
+      "total_tokens": 9084,
+      "repair_loops": 3,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_p1kcycma/prog.py\", line 1, in <module>\n    import cgi\nModuleNotFoundError: No module named 'cgi'"
+    },
+    "BigCodeBench/401": {
+      "task_id": "BigCodeBench/401",
+      "passed": false,
+      "as_run_usd": 0.03985,
+      "output_tokens": 3620,
+      "total_tokens": 6314,
+      "repair_loops": 3,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_bgtmvhak/prog.py\", line 1, in <module>\n    from flask import Flask\nModuleNotFoundError: No module named 'flask'"
+    },
+    "BigCodeBench/590": {
+      "task_id": "BigCodeBench/590",
+      "passed": false,
+      "as_run_usd": 0.043512,
+      "output_tokens": 3832,
+      "total_tokens": 7061,
+      "repair_loops": 3,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_v59425af/prog.py\", line 2, in <module>\n    from pyquery import PyQuery as pq\nModuleNotFoundError: No module named 'pyquery'"
+    },
+    "BigCodeBench/723": {
+      "task_id": "BigCodeBench/723",
+      "passed": true,
+      "as_run_usd": 0.018675,
+      "output_tokens": 2467,
+      "total_tokens": 3269,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "BigCodeBench/990": {
+      "task_id": "BigCodeBench/990",
+      "passed": true,
+      "as_run_usd": 0.001744,
+      "output_tokens": 639,
+      "total_tokens": 1129,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/998": {
+      "task_id": "BigCodeBench/998",
+      "passed": true,
+      "as_run_usd": 0.001029,
+      "output_tokens": 371,
+      "total_tokens": 709,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/999": {
+      "task_id": "BigCodeBench/999",
+      "passed": true,
+      "as_run_usd": 0.029705,
+      "output_tokens": 3489,
+      "total_tokens": 6428,
+      "repair_loops": 2,
+      "error": ""
+    },
+    "BigCodeBench/1003": {
+      "task_id": "BigCodeBench/1003",
+      "passed": false,
+      "as_run_usd": 0.044512,
+      "output_tokens": 3908,
+      "total_tokens": 7187,
+      "repair_loops": 3,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_83tlc1z5/prog.py\", line 3, in <module>\n    import pandas as pd\nModuleNotFoundError: No module named 'pandas'"
+    },
+    "BigCodeBench/1004": {
+      "task_id": "BigCodeBench/1004",
+      "passed": false,
+      "as_run_usd": 0.044651,
+      "output_tokens": 3900,
+      "total_tokens": 7285,
+      "repair_loops": 3,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_9ed9xqqg/prog.py\", line 4, in <module>\n    import matplotlib.pyplot as plt\nModuleNotFoundError: No module named 'matplotlib'"
+    },
+    "BigCodeBench/1006": {
+      "task_id": "BigCodeBench/1006",
+      "passed": true,
+      "as_run_usd": 0.02381,
+      "output_tokens": 3219,
+      "total_tokens": 4982,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "BigCodeBench/1008": {
+      "task_id": "BigCodeBench/1008",
+      "passed": false,
+      "as_run_usd": 0.060148,
+      "output_tokens": 4912,
+      "total_tokens": 9947,
+      "repair_loops": 3,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_qpovfckr/prog.py\", line 3, in <module>\n    import pandas as pd\nModuleNotFoundError: No module named 'pandas'"
+    },
+    "BigCodeBench/1012": {
+      "task_id": "BigCodeBench/1012",
+      "passed": true,
+      "as_run_usd": 0.001384,
+      "output_tokens": 511,
+      "total_tokens": 865,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1013": {
+      "task_id": "BigCodeBench/1013",
+      "passed": true,
+      "as_run_usd": 0.001038,
+      "output_tokens": 372,
+      "total_tokens": 731,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1015": {
+      "task_id": "BigCodeBench/1015",
+      "passed": false,
+      "as_run_usd": 0.059343,
+      "output_tokens": 4936,
+      "total_tokens": 9477,
+      "repair_loops": 3,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_7sz5wi0f/prog.py\", line 3, in <module>\n    import pandas as pd\nModuleNotFoundError: No module named 'pandas'"
+    },
+    "BigCodeBench/1020": {
+      "task_id": "BigCodeBench/1020",
+      "passed": true,
+      "as_run_usd": 0.001618,
+      "output_tokens": 585,
+      "total_tokens": 1102,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1040": {
+      "task_id": "BigCodeBench/1040",
+      "passed": true,
+      "as_run_usd": 0.001824,
+      "output_tokens": 686,
+      "total_tokens": 1050,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1042": {
+      "task_id": "BigCodeBench/1042",
+      "passed": true,
+      "as_run_usd": 0.001121,
+      "output_tokens": 405,
+      "total_tokens": 767,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1124": {
+      "task_id": "BigCodeBench/1124",
+      "passed": true,
+      "as_run_usd": 0.001319,
+      "output_tokens": 480,
+      "total_tokens": 876,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1129": {
+      "task_id": "BigCodeBench/1129",
+      "passed": true,
+      "as_run_usd": 0.00127,
+      "output_tokens": 456,
+      "total_tokens": 891,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "BigCodeBench/1137": {
+      "task_id": "BigCodeBench/1137",
+      "passed": true,
+      "as_run_usd": 0.000896,
+      "output_tokens": 324,
+      "total_tokens": 610,
+      "repair_loops": 0,
+      "error": ""
+    }
+  }
+}

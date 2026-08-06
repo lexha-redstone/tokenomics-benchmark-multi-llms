@@ -29,8 +29,8 @@ All evaluations use direct API pricing:
 
 | Model ID | Role | Input ($/1M) | Output ($/1M) | Cache Read ($/1M) | Cache Write ($/1M) |
 |---|---|---|---|---|---|
-| `gemini-3.1-flash-lite` | Cheap Executor / Triage | $0.25 | $1.50 | $0.025 | $0.25 |
-| `gemini-3.5-flash` | Planner / Low-cost Repair | $1.50 | $9.00 | $0.15 | $1.50 |
+| `gemini-3.1-flash-lite` | Cheap Executor / Triage | $0.25 | $1.50 | $0.025 | $0.00 |
+| `gemini-3.5-flash` | Planner / Low-cost Repair | $1.50 | $9.00 | $0.15 | $0.00 |
 | `claude-sonnet-5` | Frontier Executor / Repair | $2.00 | $10.00 | $0.20 | $2.50 |
 | `claude-opus-4-8` | High-End Advisor / Escalation | $5.00 | $25.00 | $0.50 | $6.25 |
 

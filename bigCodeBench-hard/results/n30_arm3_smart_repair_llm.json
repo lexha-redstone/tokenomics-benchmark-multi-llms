@@ -1,0 +1,284 @@
+{
+  "arm": "Arm 3: Smart Repair LLM Triage (Pure Gemini)",
+  "n": 30,
+  "passed": 14,
+  "pass_rate": 46.67,
+  "total_as_run_usd": 1.037736,
+  "total_triage_usd": 0.081,
+  "cost_per_solved_usd": 0.074124,
+  "avg_output_tokens": 5549.3,
+  "seconds": 836.52,
+  "results": [
+    {
+      "task_id": "BigCodeBench/13",
+      "passed": true,
+      "as_run_usd": 0.077856,
+      "output_tokens": 12392,
+      "total_tokens": 17132,
+      "repair_loops": 2,
+      "error": ""
+    },
+    {
+      "task_id": "BigCodeBench/15",
+      "passed": true,
+      "as_run_usd": 0.00627,
+      "output_tokens": 1517,
+      "total_tokens": 3352,
+      "repair_loops": 1,
+      "error": ""
+    },
+    {
+      "task_id": "BigCodeBench/17",
+      "passed": false,
+      "as_run_usd": 0.046867,
+      "output_tokens": 7374,
+      "total_tokens": 9738,
+      "repair_loops": 2,
+      "error": "\"/usr/lib/python3.13/pkgutil.py\", line 513, in resolve_name\n    mod = importlib.import_module(modname)\n  File \"/usr/lib/python3.13/importlib/__init__.py\", line 88, in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\n           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen importlib._bootstrap>\", line 1395, in _gcd_import\n  File \"<frozen importlib._bootstrap>\", line 1360, in _find_and_load\n  File \"<frozen importlib._bootstrap>\", line 1324, in _find_and_load_unlocked\nModuleNotFoundError: No module named 'psutil'\n\n======================================================================\nERROR: test_process_not_found_starts_process (__main__.TestCases.test_process_not_found_starts_process)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1429, in patched\n    with self.decoration_helper(patched,\n         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^\n                                args,\n                                ^^^^^\n                                keywargs) as (newargs, newkeywargs):\n                                ^^^^^^^^^\n  File \"/usr/lib/python3.13/contextlib.py\", line 141, in __enter__\n    return next(self.gen)\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1411, in decoration_helper\n    arg = exit_stack.enter_context(patching)\n  File \"/usr/lib/python3.13/contextlib.py\", line 530, in enter_context\n    result = _enter(cm)\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1487, in __enter__\n    self.target = self.getter()\n                  ~~~~~~~~~~~^^\n  File \"/usr/lib/python3.13/pkgutil.py\", line 513, in resolve_name\n    mod = importlib.import_module(modname)\n  File \"/usr/lib/python3.13/importlib/__init__.py\", line 88, in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\n           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen importlib._bootstrap>\", line 1395, in _gcd_import\n  File \"<frozen importlib._bootstrap>\", line 1360, in _find_and_load\n  File \"<frozen importlib._bootstrap>\", line 1324, in _find_and_load_unlocked\nModuleNotFoundError: No module named 'psutil'\n\n======================================================================\nERROR: test_process_terminates_and_restarts_multiple_instances (__main__.TestCases.test_process_terminates_and_restarts_multiple_instances)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1429, in patched\n    with self.decoration_helper(patched,\n         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^\n                                args,\n                                ^^^^^\n                                keywargs) as (newargs, newkeywargs):\n                                ^^^^^^^^^\n  File \"/usr/lib/python3.13/contextlib.py\", line 141, in __enter__\n    return next(self.gen)\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1411, in decoration_helper\n    arg = exit_stack.enter_context(patching)\n  File \"/usr/lib/python3.13/contextlib.py\", line 530, in enter_context\n    result = _enter(cm)\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1487, in __enter__\n    self.target = self.getter()\n                  ~~~~~~~~~~~^^\n  File \"/usr/lib/python3.13/pkgutil.py\", line 513, in resolve_name\n    mod = importlib.import_module(modname)\n  File \"/usr/lib/python3.13/importlib/__init__.py\", line 88, in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\n           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen importlib._bootstrap>\", line 1395, in _gcd_import\n  File \"<frozen importlib._bootstrap>\", line 1360, in _find_and_load\n  File \"<frozen importlib._bootstrap>\", line 1324, in _find_and_load_unlocked\nModuleNotFoundError: No module named 'psutil'\n\n----------------------------------------------------------------------\nRan 3 tests in 0.005s\n\nFAILED (errors=3)"
+    },
+    {
+      "task_id": "BigCodeBench/19",
+      "passed": true,
+      "as_run_usd": 0.003643,
+      "output_tokens": 445,
+      "total_tokens": 649,
+      "repair_loops": 0,
+      "error": ""
+    },
+    {
+      "task_id": "BigCodeBench/34",
+      "passed": false,
+      "as_run_usd": 0.03277,
+      "output_tokens": 5347,
+      "total_tokens": 9057,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_bbo9sczx/prog.py\", line 2, in <module>\n    from wordcloud import WordCloud\nModuleNotFoundError: No module named 'wordcloud'"
+    },
+    {
+      "task_id": "BigCodeBench/37",
+      "passed": false,
+      "as_run_usd": 0.020732,
+      "output_tokens": 3374,
+      "total_tokens": 5835,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_hxdpd9d8/prog.py\", line 3, in <module>\n    import seaborn as sns\nModuleNotFoundError: No module named 'seaborn'"
+    },
+    {
+      "task_id": "BigCodeBench/82",
+      "passed": false,
+      "as_run_usd": 0.08023,
+      "output_tokens": 12607,
+      "total_tokens": 17388,
+      "repair_loops": 2,
+      "error": "model response contains no `def task_func` code block"
+    },
+    {
+      "task_id": "BigCodeBench/89",
+      "passed": false,
+      "as_run_usd": 0.03616,
+      "output_tokens": 5798,
+      "total_tokens": 9025,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_pdmonbwk/prog.py\", line 3, in <module>\n    from sklearn.preprocessing import StandardScaler\nModuleNotFoundError: No module named 'sklearn'"
+    },
+    {
+      "task_id": "BigCodeBench/92",
+      "passed": true,
+      "as_run_usd": 0.04066,
+      "output_tokens": 6475,
+      "total_tokens": 9312,
+      "repair_loops": 2,
+      "error": ""
+    },
+    {
+      "task_id": "BigCodeBench/93",
+      "passed": false,
+      "as_run_usd": 0.035039,
+      "output_tokens": 5501,
+      "total_tokens": 7518,
+      "repair_loops": 2,
+      "error": "======================================================================\nFAIL: test_values (__main__.TestCases.test_values)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/tmp/bcb_4i65rkt_/prog.py\", line 103, in test_values\n    self.assertAlmostEqual(actual[0], expected[0], places=7, msg=\"DataFrame contents should match the expected output\")\n    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: -0.3190801695341147 != -0.36270132751314693 within 7 places (0.04362115797903221 difference) : DataFrame contents should match the expected output\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/tmp/bcb_4i65rkt_/prog.py\", line 106, in test_values\n    self.assertAlmostEqual(actual[0], -expected[0], places=7, msg=\"DataFrame contents should match the expected output\")\n    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: -0.3190801695341147 != 0.36270132751314693 within 7 places (0.6817814970472617 difference) : DataFrame contents should match the expected output\n\n----------------------------------------------------------------------\nRan 5 tests in 0.037s\n\nFAILED (failures=1)"
+    },
+    {
+      "task_id": "BigCodeBench/99",
+      "passed": false,
+      "as_run_usd": 0.04019,
+      "output_tokens": 6322,
+      "total_tokens": 8769,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_t8pj8tu2/prog.py\", line 3, in <module>\n    from sklearn.datasets import load_iris\nModuleNotFoundError: No module named 'sklearn'"
+    },
+    {
+      "task_id": "BigCodeBench/100",
+      "passed": true,
+      "as_run_usd": 0.004132,
+      "output_tokens": 493,
+      "total_tokens": 783,
+      "repair_loops": 0,
+      "error": ""
+    },
+    {
+      "task_id": "BigCodeBench/101",
+      "passed": false,
+      "as_run_usd": 0.031731,
+      "output_tokens": 5125,
+      "total_tokens": 7564,
+      "repair_loops": 2,
+      "error": "======================================================================\nERROR: test_basic_functionality (__main__.TestCases.test_basic_functionality)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/tmp/bcb_meo6aoig/prog.py\", line 35, in task_func\n    import seaborn as sns\nModuleNotFoundError: No module named 'seaborn'\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/tmp/bcb_meo6aoig/prog.py\", line 86, in test_basic_functionality\n    ax = task_func()\n  File \"/tmp/bcb_meo6aoig/prog.py\", line 80, in task_func\n    raise ValueError(f\"An error occurred while generating the plot: {e}\")\nValueError: An error occurred while generating the plot: No module named 'seaborn'\n\n======================================================================\nERROR: test_heatmap_features (__main__.TestCases.test_heatmap_features)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/tmp/bcb_meo6aoig/prog.py\", line 35, in task_func\n    import seaborn as sns\nModuleNotFoundError: No module named 'seaborn'\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/tmp/bcb_meo6aoig/prog.py\", line 89, in test_heatmap_features\n    ax = task_func()\n  File \"/tmp/bcb_meo6aoig/prog.py\", line 80, in task_func\n    raise ValueError(f\"An error occurred while generating the plot: {e}\")\nValueError: An error occurred while generating the plot: No module named 'seaborn'\n\n======================================================================\nERROR: test_heatmap_values (__main__.TestCases.test_heatmap_values)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/tmp/bcb_meo6aoig/prog.py\", line 35, in task_func\n    import seaborn as sns\nModuleNotFoundError: No module named 'seaborn'\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/tmp/bcb_meo6aoig/prog.py\", line 94, in test_heatmap_values\n    ax = task_func()\n  File \"/tmp/bcb_meo6aoig/prog.py\", line 80, in task_func\n    raise ValueError(f\"An error occurred while generating the plot: {e}\")\nValueError: An error occurred while generating the plot: No module named 'seaborn'\n\n======================================================================\nERROR: test_plot_appearance (__main__.TestCases.test_plot_appearance)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/tmp/bcb_meo6aoig/prog.py\", line 35, in task_func\n    import seaborn as sns\nModuleNotFoundError: No module named 'seaborn'\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/tmp/bcb_meo6aoig/prog.py\", line 100, in test_plot_appearance\n    ax = task_func()\n  File \"/tmp/bcb_meo6aoig/prog.py\", line 80, in task_func\n    raise ValueError(f\"An error occurred while generating the plot: {e}\")\nValueError: An error occurred while generating the plot: No module named 'seaborn'\n\n----------------------------------------------------------------------\nRan 4 tests in 0.002s\n\nFAILED (errors=4)"
+    },
+    {
+      "task_id": "BigCodeBench/108",
+      "passed": false,
+      "as_run_usd": 0.051603,
+      "output_tokens": 8051,
+      "total_tokens": 11920,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_b4bvd7b9/prog.py\", line 127, in <module>\n    from statsmodels.tsa.seasonal import DecomposeResult\nModuleNotFoundError: No module named 'statsmodels'"
+    },
+    {
+      "task_id": "BigCodeBench/120",
+      "passed": true,
+      "as_run_usd": 0.006002,
+      "output_tokens": 1313,
+      "total_tokens": 6269,
+      "repair_loops": 1,
+      "error": ""
+    },
+    {
+      "task_id": "BigCodeBench/123",
+      "passed": false,
+      "as_run_usd": 0.030106,
+      "output_tokens": 6478,
+      "total_tokens": 9149,
+      "repair_loops": 2,
+      "error": "======================================================================\nFAIL: test_correct_file_count (__main__.TestCases.test_correct_file_count)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/tmp/bcb_tiop0clk/prog.py\", line 118, in test_correct_file_count\n    self.assertEqual(len(df), 9)  # 3 rows per file\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^\nAssertionError: 3 != 9\n\n======================================================================\nFAIL: test_list_modification (__main__.TestCases.test_list_modification)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/tmp/bcb_tiop0clk/prog.py\", line 107, in test_list_modification\n    self.assertIn(12, my_list)\n    ~~~~~~~~~~~~~^^^^^^^^^^^^^\nAssertionError: 12 not found in [1, 2, 3, '12']\n\n----------------------------------------------------------------------\nRan 5 tests in 0.022s\n\nFAILED (failures=2)"
+    },
+    {
+      "task_id": "BigCodeBench/124",
+      "passed": false,
+      "as_run_usd": 0.077713,
+      "output_tokens": 12283,
+      "total_tokens": 18872,
+      "repair_loops": 2,
+      "error": "model response contains no `def task_func` code block"
+    },
+    {
+      "task_id": "BigCodeBench/129",
+      "passed": true,
+      "as_run_usd": 0.066297,
+      "output_tokens": 10387,
+      "total_tokens": 16170,
+      "repair_loops": 2,
+      "error": ""
+    },
+    {
+      "task_id": "BigCodeBench/139",
+      "passed": true,
+      "as_run_usd": 0.003591,
+      "output_tokens": 424,
+      "total_tokens": 698,
+      "repair_loops": 0,
+      "error": ""
+    },
+    {
+      "task_id": "BigCodeBench/147",
+      "passed": true,
+      "as_run_usd": 0.047325,
+      "output_tokens": 7461,
+      "total_tokens": 10288,
+      "repair_loops": 2,
+      "error": ""
+    },
+    {
+      "task_id": "BigCodeBench/161",
+      "passed": true,
+      "as_run_usd": 0.004483,
+      "output_tokens": 547,
+      "total_tokens": 801,
+      "repair_loops": 0,
+      "error": ""
+    },
+    {
+      "task_id": "BigCodeBench/162",
+      "passed": true,
+      "as_run_usd": 0.003624,
+      "output_tokens": 432,
+      "total_tokens": 688,
+      "repair_loops": 0,
+      "error": ""
+    },
+    {
+      "task_id": "BigCodeBench/177",
+      "passed": false,
+      "as_run_usd": 0.04057,
+      "output_tokens": 6346,
+      "total_tokens": 8275,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_lipefz87/prog.py\", line 60, in <module>\n    import nltk\nModuleNotFoundError: No module named 'nltk'"
+    },
+    {
+      "task_id": "BigCodeBench/184",
+      "passed": true,
+      "as_run_usd": 0.063815,
+      "output_tokens": 10038,
+      "total_tokens": 14391,
+      "repair_loops": 2,
+      "error": ""
+    },
+    {
+      "task_id": "BigCodeBench/187",
+      "passed": false,
+      "as_run_usd": 0.042837,
+      "output_tokens": 6863,
+      "total_tokens": 9491,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_r25jv1hv/prog.py\", line 1, in <module>\n    import geopandas as gpd\nModuleNotFoundError: No module named 'geopandas'"
+    },
+    {
+      "task_id": "BigCodeBench/199",
+      "passed": false,
+      "as_run_usd": 0.046001,
+      "output_tokens": 7075,
+      "total_tokens": 10860,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_ly6_i1wm/prog.py\", line 92, in <module>\n    import pytz\nModuleNotFoundError: No module named 'pytz'"
+    },
+    {
+      "task_id": "BigCodeBench/208",
+      "passed": true,
+      "as_run_usd": 0.006318,
+      "output_tokens": 761,
+      "total_tokens": 1168,
+      "repair_loops": 0,
+      "error": ""
+    },
+    {
+      "task_id": "BigCodeBench/211",
+      "passed": false,
+      "as_run_usd": 0.049646,
+      "output_tokens": 8117,
+      "total_tokens": 13246,
+      "repair_loops": 2,
+      "error": "lib/python3.13/unittest/mock.py\", line 979, in assert_called_with\n    raise AssertionError(_error_message()) from cause\nAssertionError: expected call not found.\nExpected: get('https://example.com/data.zip', headers={'accept': 'application/octet-stream'})\n  Actual: get('https://example.com/data.zip', headers={'accept': 'application/octet-stream'}, stream=True)\n\n======================================================================\nFAIL: test_4 (__main__.TestCases.test_4)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1432, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/tmp/bcb_wwopnnh6/prog.py\", line 163, in test_4\n    mock_requests_get.assert_called_once_with(MOCK_URL, headers={'accept': 'application/octet-stream'})\n    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 991, in assert_called_once_with\n    return self.assert_called_with(*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 979, in assert_called_with\n    raise AssertionError(_error_message()) from cause\nAssertionError: expected call not found.\nExpected: get('https://example.com/data.zip', headers={'accept': 'application/octet-stream'})\n  Actual: get('https://example.com/data.zip', headers={'accept': 'application/octet-stream'}, stream=True)\n\n======================================================================\nFAIL: test_5 (__main__.TestCases.test_5)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1432, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/tmp/bcb_wwopnnh6/prog.py\", line 188, in test_5\n    mock_requests_get.assert_called_once_with(MOCK_URL, headers={'accept': 'application/octet-stream'})\n    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 991, in assert_called_once_with\n    return self.assert_called_with(*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 979, in assert_called_with\n    raise AssertionError(_error_message()) from cause\nAssertionError: expected call not found.\nExpected: get('https://example.com/data.zip', headers={'accept': 'application/octet-stream'})\n  Actual: get('https://example.com/data.zip', headers={'accept': 'application/octet-stream'}, stream=True)\n\n======================================================================\nFAIL: test_download_and_extract (__main__.TestCases.test_download_and_extract)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1432, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/tmp/bcb_wwopnnh6/prog.py\", line 88, in test_download_and_extract\n    mock_requests_get.assert_called_once_with(MOCK_URL, headers={'accept': 'application/octet-stream'})\n    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 991, in assert_called_once_with\n    return self.assert_called_with(*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 979, in assert_called_with\n    raise AssertionError(_error_message()) from cause\nAssertionError: expected call not found.\nExpected: get('https://example.com/data.zip', headers={'accept': 'application/octet-stream'})\n  Actual: get('https://example.com/data.zip', headers={'accept': 'application/octet-stream'}, stream=True)\n\n----------------------------------------------------------------------\nRan 5 tests in 0.026s\n\nFAILED (failures=5)"
+    },
+    {
+      "task_id": "BigCodeBench/214",
+      "passed": true,
+      "as_run_usd": 0.004769,
+      "output_tokens": 1221,
+      "total_tokens": 5883,
+      "repair_loops": 1,
+      "error": ""
+    },
+    {
+      "task_id": "BigCodeBench/227",
+      "passed": false,
+      "as_run_usd": 0.036756,
+      "output_tokens": 5913,
+      "total_tokens": 8716,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_jlezwqxa/prog.py\", line 2, in <module>\n    import librosa\nModuleNotFoundError: No module named 'librosa'"
+    }
+  ],
+  "pricing_note": "Updated pricing: gemini-3.6-flash=$1.50/$7.50, gemini-3.5-flash-lite=$0.30/$2.50"
+}

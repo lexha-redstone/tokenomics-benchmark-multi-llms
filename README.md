@@ -1,49 +1,74 @@
-# Benchmark Using Multi-LLMs for Tokenomics
+# Multi-LLM Benchmark Suite for Tokenomics & Straitjacket
 
-This repository is designed to evaluate various Large Language Model (LLM) combinations and cascading strategies across multiple code-generation use cases.
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+[![Contribution Guide](https://img.shields.io/badge/Guide-Contribution%20Standards-emerald.svg)](straitjacket_benchmark_contribution_guide.md)
+[![Comprehensive Report](https://img.shields.io/badge/Report-Comprehensive%20TCO%20Synthesis-purple.svg)](reports/comprehensive_multi_llm_benchmark_report_20260806.md)
 
-The project explores how to balance benchmark performance (e.g., code correctness) with API cost using Google Cloud Vertex AI and Anthropic APIs.
+This repository evaluates **Multi-LLM collaboration architectures, cascading strategies, and context containment harnesses** across realistic software engineering benchmarks. It provides empirical evidence on balancing benchmark performance (code correctness / task resolution) with API cost using Google Cloud Vertex AI (Gemini) and Anthropic (Claude) models.
 
 ---
 
-## Repository Structure
+## 📁 Repository Structure
 
 ```
 .
-├── .gitignore
-├── MODELS.md               # Details of supported models and pricing configurations
-├── README.md               # This file
-├── requirements.txt        # Python package dependencies
-├── src/                    # Shared Python library
+├── README.md                                    # Repository overview and quick start guide
+├── MODELS.md                                    # Model IDs, pricing rates, and architecture specifications
+├── requirements.txt                             # Pinned Python package dependencies
+├── straitjacket_benchmark_contribution_guide.md   # Benchmark charter, standards, and PR contribution guide
+│
+├── run_benchmark.py                             # 🚀 MASTER UNIFIED CLI RUNNER (End-to-End)
+│
+├── src/                                         # Shared Core Benchmark Library
 │   ├── __init__.py
-│   ├── config.py           # Model settings, prices, and prompt templates
-│   ├── client.py           # Vertex AI SDK client wrappers and backoff retry logic
-│   ├── evaluator.py        # Code extraction and sandboxed unit test runner
-│   └── architectures.py    # Standard evaluation architectures (Single, Read/Write, etc.)
-├── bigCodeBench-hard/      # Use Case 1: BigCodeBench-Hard code generation tasks
-│   ├── data/               # HF downloaded dataset
-│   ├── results/            # Run metric logs
-│   ├── bench_runner.py     # Benchmark runner script for BigCodeBench-Hard
-│   └── build_html_dashboard.py
-└── webdev/                 # Use Case 2: Web/Networking development tasks
-    ├── data/               # Local WebDev dataset
-    ├── results/            # Run metric logs
-    └── bench_runner.py     # Benchmark runner script for Web-Dev
+│   ├── config.py                                # Centralized model IDs, pricing table, and prompt roles
+│   ├── client.py                                # Vertex AI Gemini & Claude client with retry & fallback
+│   ├── evaluator.py                             # Python unittest & git patch evaluators + SJ triage
+│   ├── datasets.py                              # Unified dataset loaders (BCB, SWE-bench Pro, WebDev)
+│   ├── architectures.py                         # Modular multi-LLM architecture pipelines & registry
+│   └── reporter.py                              # Markdown TCO report & interactive HTML dashboard generator
+│
+├── reports/                                     # 📊 ALL GENERATED REPORTS & DASHBOARDS (.md, .html)
+│   ├── comprehensive_multi_llm_benchmark_report_20260806.md  # 🌟 Master Cross-Dataset Synthesis Report
+│   ├── straitjacket_n30_comparative_tco_report.md            # BigCodeBench-Hard N=30 Audited Report
+│   ├── n50_gemini_vs_claude_tco_report.md                    # BigCodeBench-Hard N=50 Comprehensive Report
+│   ├── swe_bench_pro_straitjacket_report.md                  # SWE-bench Pro Comparative Report
+│   ├── swe_bench_pro_dashboard.html                          # SWE-bench Pro Interactive HTML Dashboard
+│   ├── bigcodebench_hard_dashboard.html                      # BigCodeBench Interactive HTML Dashboard
+│   └── webdev_dashboard.html                                 # WebDev Interactive HTML Dashboard
+│
+├── tools/                                       # 🛠️ Post-Processing, Auditing & Pricing Scripts
+│   ├── generate_n30_report.py                   # Audits N=30 BCB raw vs effective pass rates
+│   ├── generate_n50_report.py                   # Audits N=50 BCB Gemini vs Claude comparison
+│   └── update_all_reports_pricing.py            # Recalculates metrics with active Vertex AI pricing
+│
+├── bigCodeBench-hard/                           # Dataset 1: BigCodeBench-Hard (Python function completion)
+│   ├── data/                                    # Downloaded/cached HF dataset (.jsonl)
+│   ├── results/                                 # Raw JSON metrics & run caches
+│   └── bench_runner.py                          # BCB runner adapter
+│
+├── swebench_pro/                                # Dataset 2: SWE-bench Pro (Enterprise git patch resolution)
+│   ├── data/                                    # Cached SWE-bench Pro public tasks (.jsonl)
+│   ├── results/                                 # Raw JSON metrics & run caches
+│   ├── bench_runner.py                          # SWE-bench Pro runner adapter
+│   └── run_swebench_pro_sweetspot.py            # Master SWE-bench Pro evaluation script
+│
+└── webdev/                                      # Dataset 3: Web-Dev (Web & networking tasks)
+    ├── data/                                    # Local WebDev dataset (.jsonl)
+    ├── results/                                 # Raw JSON metrics & run caches
+    └── bench_runner.py                          # WebDev runner adapter
 ```
 
 ---
 
-## Getting Started
+## ⚡ Quick Start
 
 ### 1. Setup Virtual Environment
 
-Create a clean python virtual environment (`tokenomics-bench-env`) and install dependencies:
-
 ```bash
-# Create virtual environment
+# Create and activate virtual environment
 python3 -m venv tokenomics-bench-env
-
-# Activate virtual environment
 source tokenomics-bench-env/bin/activate
 
 # Install requirements
@@ -52,95 +77,51 @@ pip install -r requirements.txt
 
 ### 2. Configure Google Cloud Credentials
 
-Ensure your Application Default Credentials (ADC) are configured for Vertex AI:
-
 ```bash
 gcloud auth application-default login
-```
 
-Set the GCP project and location where your Vertex AI models are deployed:
-
-```bash
 export GCP_PROJECT="your-gcp-project-id"
-export GCP_LOCATION="us-central1" # or other region supporting Gemini 3.5
+export GCP_LOCATION="global" # or us-central1
 ```
 
 ---
 
-## Running Benchmarks
+## 🚀 Running Benchmarks (Unified CLI)
 
-### Use Case 1: BigCodeBench-Hard
+The master runner [`run_benchmark.py`](run_benchmark.py) executes benchmarks and automatically places JSON metrics in `<dataset>/results/` and Markdown & HTML reports in `reports/`:
 
-Run a single architecture evaluation (e.g., `hybrid`) on the first 10 tasks:
 ```bash
-./tokenomics-bench-env/bin/python bigCodeBench-hard/bench_runner.py --arch hybrid --n 10
-```
+# 1. Evaluate SWE-bench Pro (30 tasks, all Straitjacket zero-cost triage variants)
+python3 run_benchmark.py --dataset swebench --group straitjacket --n 30 --report
 
-Compare all standard configurations:
-```bash
-./tokenomics-bench-env/bin/python bigCodeBench-hard/bench_runner.py --compare-all --n 10
-```
+# 2. Evaluate BigCodeBench-Hard (10 tasks, specific variants)
+python3 run_benchmark.py --dataset bcb --variants single_flash36,sj_hybrid,sj_smart_repair --n 10 --report
 
-#### Available Architectures
-- `single`: Direct completion by one model (e.g., `gemini-3.5-flash`).
-- `read-write`: Advisor-Executor split (Planner + Executor).
-- `cascade`: Offload generation to a cheap model, repair with a premium thinking model.
-- `hybrid`: Custom hybrid pipeline combining planning, triage, cheap repair, and thinking escalation.
+# 3. Evaluate WebDev benchmark (single-model baselines)
+python3 run_benchmark.py --dataset webdev --group single --n 10 --report
+
+# 4. Compare all variants on SWE-bench Pro without cache (fresh API execution)
+python3 run_benchmark.py --dataset swebench --group all --n 30 --no-cache --report
+```
 
 ---
 
-### Use Case 2: Web Development
+## 📊 Benchmark Datasets & Findings
 
-Run the WebDev benchmark on web-related libraries filtered from BigCodeBench-Hard:
-```bash
-./tokenomics-bench-env/bin/python webdev/bench_runner.py --arch hybrid --n 5
-```
+1. **BigCodeBench-Hard**:
+   - Complex multi-library algorithmic and data engineering tasks.
+   - **Sweet-Spot Champion**: `Straitjacket Smart Repair` (`gemini-3.6-flash` -> `3.5-flash-lite` -> `3.6-flash`) achieved **81.5% effective pass rate at $0.0076 / solved task** (35x cheaper than Claude Opus-5).
+2. **SWE-bench Pro**:
+   - Long-horizon enterprise repository git patch generation.
+   - **Sweet-Spot Champion**: `Straitjacket Ultra-Sweet Hybrid` and `Straitjacket Escalation Shield` achieved **76.7%–80.0% pass rate at $0.00388 / solved task** (7.4x cheaper than Claude Opus-5).
+3. **WebDev**:
+   - Real-world web framework, REST API, parsing, and networking tasks.
+   - **Sweet-Spot Champion**: `Straitjacket Hybrid` achieved **80.0% pass rate at $0.0041 / solved task** (87% cheaper than Claude Opus-5).
 
-Compare all architectures including advanced routing configurations:
-```bash
-./tokenomics-bench-env/bin/python webdev/bench_runner.py --compare-all --n 5
-```
-
-#### Web-Specific Architectures
-- `router`: Dynamic routing based on complexity prediction.
-- `dual-advisor`: Separates algorithmic planning from API contract planning.
-- `tdd`: Generates test cases first to guide the executor.
-- `shield`: Multi-tier fallback validation.
-- `peer-reviewer`: Self-correction loop via an independent auditor model.
+👉 Read the full analysis in [**Comprehensive Multi-LLM Benchmark & Tokenomics Synthesis Report (`reports/comprehensive_multi_llm_benchmark_report_20260806.md`)**](reports/comprehensive_multi_llm_benchmark_report_20260806.md).
 
 ---
 
-## Detailed Model Configuration
-For more information on the models evaluated, pricing rates, and detailed architecture pipelines, please refer to [MODELS.md](file:///Users/lexha/Documents/work/codes/prj/17-tokenomics/benchmark-using-multi-LLMs/MODELS.md).
+## 📖 Contribution Standards
 
----
-
-## Extending the Benchmark
-
-You can easily add new models or define custom benchmark architectures.
-
-### 1. Adding a New Model
-1. Open [src/config.py](file:///Users/lexha/Documents/work/codes/prj/17-tokenomics/benchmark-using-multi-LLMs/src/config.py).
-2. Define your Model ID constant.
-3. Add the pricing entry (USD per 1,000,000 tokens) under `PRICING` (for input, output, and optional cache read/write rates).
-
-### 2. Defining a Custom Architecture
-1. Open [src/architectures.py](file:///Users/lexha/Documents/work/codes/prj/17-tokenomics/benchmark-using-multi-LLMs/src/architectures.py).
-2. Create a new function (e.g., `run_my_custom_flow(problem, ...)`).
-3. Use `dispatch_model(model_id, prompt)` to orchestrate LLM calls, `extract_code(text)` to clean outputs, and `run_bigcodebench(problem, code)` to execute unit tests.
-4. Return a dict matching the metrics schema:
-   ```python
-   {
-       "passed": True/False,
-       "as_run_usd": 0.00,
-       "output_tokens": 120,
-       "total_tokens": 500,
-       "error": "..."
-   }
-   ```
-
-### 3. Exposing the Architecture in Runners
-1. Open the runner script (e.g., `bigCodeBench-hard/bench_runner.py` or `webdev/bench_runner.py`).
-2. Add your new architecture choice to `parser.add_argument("--arch", choices=[...])`.
-3. Map the choice inside the `run_benchmark` driver function to invoke your custom architecture function.
-
+👉 [**Straitjacket Benchmark Contribution Guide (`straitjacket_benchmark_contribution_guide.md`)**](straitjacket_benchmark_contribution_guide.md)

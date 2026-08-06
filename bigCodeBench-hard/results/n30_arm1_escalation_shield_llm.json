@@ -1,0 +1,284 @@
+{
+  "arm": "Arm 1: Escalation Shield LLM Triage (Gemini -> Claude)",
+  "n": 30,
+  "passed": 11,
+  "pass_rate": 36.67,
+  "total_as_run_usd": 0.518998,
+  "total_triage_usd": 0.0792,
+  "cost_per_solved_usd": 0.047182,
+  "avg_output_tokens": 2231.2,
+  "seconds": 183.54,
+  "results": [
+    {
+      "task_id": "BigCodeBench/13",
+      "passed": true,
+      "as_run_usd": 0.002326,
+      "output_tokens": 880,
+      "total_tokens": 1301,
+      "repair_loops": 0,
+      "error": ""
+    },
+    {
+      "task_id": "BigCodeBench/15",
+      "passed": true,
+      "as_run_usd": 0.011926,
+      "output_tokens": 1561,
+      "total_tokens": 3360,
+      "repair_loops": 1,
+      "error": ""
+    },
+    {
+      "task_id": "BigCodeBench/17",
+      "passed": false,
+      "as_run_usd": 0.017755,
+      "output_tokens": 2187,
+      "total_tokens": 5744,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_1hdk127e/prog.py\", line 5, in <module>\n    import psutil\nModuleNotFoundError: No module named 'psutil'\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/tmp/bcb_1hdk127e/prog.py\", line 7, in <module>\n    raise ImportError(\n    ...<2 lines>...\n    )\nImportError: The 'psutil' module is required but not installed. Please install it using: pip install psutil"
+    },
+    {
+      "task_id": "BigCodeBench/19",
+      "passed": true,
+      "as_run_usd": 0.001264,
+      "output_tokens": 481,
+      "total_tokens": 685,
+      "repair_loops": 0,
+      "error": ""
+    },
+    {
+      "task_id": "BigCodeBench/34",
+      "passed": false,
+      "as_run_usd": 0.018322,
+      "output_tokens": 2253,
+      "total_tokens": 5844,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_37e1wdw6/prog.py\", line 5, in <module>\n    from wordcloud import WordCloud\nModuleNotFoundError: No module named 'wordcloud'\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/tmp/bcb_37e1wdw6/prog.py\", line 7, in <module>\n    raise ImportError(\"The 'wordcloud' package is required but not installed.\")\nImportError: The 'wordcloud' package is required but not installed."
+    },
+    {
+      "task_id": "BigCodeBench/37",
+      "passed": false,
+      "as_run_usd": 0.017596,
+      "output_tokens": 2063,
+      "total_tokens": 4944,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_n74w97cg/prog.py\", line 2, in <module>\n    from sklearn.ensemble import RandomForestClassifier\nModuleNotFoundError: No module named 'sklearn'"
+    },
+    {
+      "task_id": "BigCodeBench/82",
+      "passed": false,
+      "as_run_usd": 0.02351,
+      "output_tokens": 2959,
+      "total_tokens": 7042,
+      "repair_loops": 2,
+      "error": "======================================================================\nFAIL: test_logout_route_redirects_to_login (__main__.TestCases.test_logout_route_redirects_to_login)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/tmp/bcb_etd2_svk/prog.py\", line 164, in test_logout_route_redirects_to_login\n    self.assertIn('Logged in as: testuser', response.data.decode())\n    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 'Logged in as: testuser' not found in \"Logged in as: <MagicMock name='_get_user().username' id='139999773783248'>\"\n\n----------------------------------------------------------------------\nRan 6 tests in 0.034s\n\nFAILED (failures=1)"
+    },
+    {
+      "task_id": "BigCodeBench/89",
+      "passed": false,
+      "as_run_usd": 0.028783,
+      "output_tokens": 3471,
+      "total_tokens": 7207,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_j1stfdw8/prog.py\", line 3, in <module>\n    from scipy import stats\nModuleNotFoundError: No module named 'scipy'"
+    },
+    {
+      "task_id": "BigCodeBench/92",
+      "passed": true,
+      "as_run_usd": 0.029299,
+      "output_tokens": 3498,
+      "total_tokens": 6606,
+      "repair_loops": 2,
+      "error": ""
+    },
+    {
+      "task_id": "BigCodeBench/93",
+      "passed": false,
+      "as_run_usd": 0.020342,
+      "output_tokens": 2529,
+      "total_tokens": 5402,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_ilscwzzx/prog.py\", line 4, in <module>\n    from sklearn.decomposition import PCA\nModuleNotFoundError: No module named 'sklearn'"
+    },
+    {
+      "task_id": "BigCodeBench/99",
+      "passed": false,
+      "as_run_usd": 0.018131,
+      "output_tokens": 2165,
+      "total_tokens": 4773,
+      "repair_loops": 2,
+      "error": "ERROR: Could not find a version that satisfies the requirement seaborn (from versions: none)\nERROR: No matching distribution found for seaborn\nTraceback (most recent call last):\n  File \"/tmp/bcb_ej0vnnwp/prog.py\", line 8, in _ensure_package\n    __import__(import_name)\n    ~~~~~~~~~~^^^^^^^^^^^^^\nModuleNotFoundError: No module named 'seaborn'\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/tmp/bcb_ej0vnnwp/prog.py\", line 12, in <module>\n    _ensure_package(\"seaborn\")\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^\n  File \"/tmp/bcb_ej0vnnwp/prog.py\", line 10, in _ensure_package\n    subprocess.check_call([sys.executable, \"-m\", \"pip\", \"install\", package_name])\n    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/subprocess.py\", line 419, in check_call\n    raise CalledProcessError(retcode, cmd)\nsubprocess.CalledProcessError: Command '['/usr/local/google/home/lexha/Desktop/work/prj/17-tokenomics/benchmark-using-multi-LLMs/.venv/bin/python', '-m', 'pip', 'install', 'seaborn']' returned non-zero exit status 1."
+    },
+    {
+      "task_id": "BigCodeBench/100",
+      "passed": false,
+      "as_run_usd": 0.018571,
+      "output_tokens": 2822,
+      "total_tokens": 8013,
+      "repair_loops": 2,
+      "error": "======================================================================\nFAIL: test_value (__main__.TestCases.test_value)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/tmp/bcb_c6doqwml/prog.py\", line 106, in test_value\n    self.assertEqual(expect, y_data.tolist(), \"DataFrame contents should match the expected output\")\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Lists differ: [81, 14, 3, 94, 35, 31, 28, 17, 94, 13, 86,[68 chars], 69] != [82, 15, 4, 95, 36, 32, 29, 18, 95, 14, 87,[68 chars], 70]\n\nFirst differing element 0:\n81\n82\n\n- [81,\n?   ^\n\n+ [82,\n?   ^\n\n+  15,\n+  4,\n+  95,\n+  36,\n+  32,\n+  29,\n+  18,\n+  95,\n   14,\n-  3,\n+  87,\n-  94,\n?   ^\n\n+  95,\n?   ^\n\n+  70,\n+  12,\n+  76,\n+  55,\n-  35,\n?  -\n\n+  5,\n+  4,\n-  31,\n?  -\n\n+  12,\n?   +\n\n   28,\n-  17,\n-  94,\n-  13,\n?  -\n\n+  30,\n?   +\n\n-  86,\n?  -\n\n+  65,\n?   +\n\n-  94,\n-  69,\n-  11,\n-  75,\n?   ^\n\n+  78,\n?   ^\n\n-  54,\n   4,\n-  3,\n-  11,\n-  27,\n?   -\n\n+  72,\n?  +\n\n-  29,\n?   ^\n\n+  26,\n?   ^\n\n-  64,\n-  77,\n-  3,\n-  71,\n-  25,\n?   -\n\n+  92,\n?  +\n\n-  91,\n-  83,\n?   ^\n\n+  84,\n?   ^\n\n-  89,\n?  -\n\n+  90,\n?   +\n\n-  69]\n+  70] : DataFrame contents should match the expected output\n\n----------------------------------------------------------------------\nRan 6 tests in 0.085s\n\nFAILED (failures=1)"
+    },
+    {
+      "task_id": "BigCodeBench/101",
+      "passed": false,
+      "as_run_usd": 0.022089,
+      "output_tokens": 2842,
+      "total_tokens": 6731,
+      "repair_loops": 2,
+      "error": "======================================================================\nERROR: test_heatmap_values (__main__.TestCases.test_heatmap_values)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/tmp/bcb_iaf7pg2r/prog.py\", line 94, in test_heatmap_values\n    self.assertAlmostEqual(heatmap_data.tolist(), expect, \"DataFrame contents should match the expected output\")\n    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/unittest/case.py\", line 938, in assertAlmostEqual\n    diff = abs(first - second)\n               ~~~~~~^~~~~~~~\nTypeError: unsupported operand type(s) for -: 'list' and 'list'\n\n======================================================================\nFAIL: test_heatmap_features (__main__.TestCases.test_heatmap_features)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/tmp/bcb_iaf7pg2r/prog.py\", line 87, in test_heatmap_features\n    self.assertEqual(heatmap_data.shape, (169,))  # Assuming Boston dataset has 13 features\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Tuples differ: (14, 14) != (169,)\n\nFirst differing element 0:\n14\n169\n\nFirst tuple contains 1 additional elements.\nFirst extra element 1:\n14\n\n- (14, 14)\n+ (169,)\n\n======================================================================\nFAIL: test_plot_appearance (__main__.TestCases.test_plot_appearance)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/tmp/bcb_iaf7pg2r/prog.py\", line 99, in test_plot_appearance\n    self.assertEqual(ax.get_title(), \"\")\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^\nAssertionError: 'Boston Housing Dataset Correlation Heatmap' != ''\n- Boston Housing Dataset Correlation Heatmap\n\n\n----------------------------------------------------------------------\nRan 4 tests in 1.101s\n\nFAILED (failures=2, errors=1)"
+    },
+    {
+      "task_id": "BigCodeBench/108",
+      "passed": false,
+      "as_run_usd": 0.034124,
+      "output_tokens": 4146,
+      "total_tokens": 9319,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_zkdjcnmk/prog.py\", line 5, in <module>\n    from statsmodels.tsa.seasonal import seasonal_decompose\nModuleNotFoundError: No module named 'statsmodels'\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/tmp/bcb_zkdjcnmk/prog.py\", line 7, in <module>\n    raise ImportError(\n    ...<2 lines>...\n    )\nImportError: The 'statsmodels' package is required for this function. Please install it using 'pip install statsmodels'."
+    },
+    {
+      "task_id": "BigCodeBench/120",
+      "passed": false,
+      "as_run_usd": 0.027239,
+      "output_tokens": 3219,
+      "total_tokens": 13126,
+      "repair_loops": 2,
+      "error": "3',\n   '2020-09-16',\n   '2020-11-07',\n   '2020-04-11',\n   '2020-03-19',\n   '2020-07-10',\n   '2020-03-23',\n   '2020-10-03',\n   '2020-09-28',\n   '2020-01-01',\n   '2020-11-02',\n   '2020-06-14',\n   '2020-09-07',\n   '2020-01-10',\n   '2020-02-27',\n   '2020-07-04',\n   '2020-06-06',\n   '2020-05-02',\n   '2020-01-30',\n   '2020-05-03',\n   '2020-10-17',\n   '2020-02-10',\n   '2020-02-13',\n   '2020-09-05',\n   '2020-02-05',\n   '2020-09-29',\n   '2020-03-05',\n   '2020-03-06',\n   '2020-12-03',\n   '2020-08-31',\n   '2020-10-08',\n   '2020-03-25',\n   '2020-05-15',\n   '2020-09-27',\n   '2020-11-06',\n   '2020-08-04',\n   '2020-04-18',\n   '2020-10-03',\n   '2020-12-19',\n   '2020-04-12',\n   '2020-12-31',\n   '2020-06-08',\n   '2020-07-23',\n   '2020-12-09',\n   '2020-11-28',\n   '2020-07-10',\n   '2020-08-12',\n   '2020-09-21',\n   '2020-08-19',\n   '2020-03-02',\n   '2020-05-06',\n   '2020-04-25',\n   '2020-02-02',\n   '2020-06-22',\n   '2020-01-11',\n   '2020-10-28',\n   '2020-10-10',\n   '2020-04-27',\n   '2020-10-28',\n   '2020-04-22',\n   '2020-01-04',\n   '2020-02-06',\n   '2020-12-28',\n   '2020-11-19',\n   '2020-01-31',\n   '2020-04-27',\n   '2020-02-04',\n   '2020-01-17',\n   '2020-06-18',\n   '2020-02-06',\n   '2020-09-20',\n   '2020-05-01',\n   '2020-05-22',\n   '2020-12-08',\n   '2020-09-05',\n   '2020-04-19',\n   '2020-10-03',\n   '2020-03-08',\n   '2020-10-19',\n   '2020-10-22',\n   '2020-08-30',\n   '2020-05-04',\n   '2020-08-30',\n   '2020-07-27',\n   '2020-04-07',\n   '2020-02-18',\n   '2020-02-19',\n   '2020-12-03',\n   '2020-08-08',\n   '2020-06-30',\n   '2020-08-04',\n   '2020-07-29',\n   '2020-08-27',\n   '2020-01-28',\n   '2020-12-10',\n   '2020-11-30',\n   '2020-11-26',\n   '2020-02-20',\n   '2020-02-01',\n   '2020-07-25',\n   '2020-06-22',\n   '2020-02-25',\n   '2020-05-07',\n   '2020-04-08',\n   '2020-04-07',\n   '2020-10-01',\n   '2020-08-17',\n   '2020-03-12',\n   '2020-08-04',\n   '2020-04-03',\n   '2020-05-22',\n   '2020-08-24',\n   '2020-05-07',\n   '2020-02-08',\n   '2020-08-14',\n   '2020-10-08',\n   '2020-02-20',\n   '2020-01-26',\n   '2020-11-29',\n   '2020-10-03',\n   '2020-01-08',\n   '2020-02-17',\n   '2020-05-01',\n   '2020-03-26',\n   '2020-07-27',\n   '2020-09-05',\n   '2020-09-03',\n   '2020-04-19',\n   '2020-07-24',\n   '2020-01-31',\n   '2020-03-25',\n   '2020-07-13',\n   '2020-01-02',\n   '2020-07-18',\n   '2020-05-15',\n   '2020-08-20',\n   '2020-05-26',\n   '2020-08-04',\n   '2020-12-22',\n   '2020-10-11',\n   '2020-12-04',\n   '2020-09-06',\n   '2020-03-20',\n   '2020-04-07',\n   '2020-05-31',\n   '2020-04-21',\n   '2020-01-30',\n   '2020-10-23',\n   '2020-10-04',\n   '2020-02-01',\n   '2020-06-09',\n   '2020-01-30',\n   '2020-01-26',\n   '2020-10-26',\n   '2020-09-01',\n   '2020-09-14',\n   '2020-09-28',\n   '2020-03-21',\n   '2020-01-30',\n   '2020-09-17',\n   '2020-02-11',\n   '2020-04-05',\n   '2020-02-05',\n   '2020-10-31',\n   '2020-02-04',\n   '2020-12-11',\n   '2020-04-30',\n   '2020-07-25',\n   '2020-03-02',\n   '2020-10-18',\n   '2020-05-06',\n   '2020-10-23',\n   '2020-10-31',\n   '2020-01-21',\n   '2020-11-13',\n   '2020-02-11',\n   '2020-08-02',\n   '2020-12-02',\n   '2020-10-25',\n   '2020-10-16',\n   '2020-09-24',\n   '2020-06-10',\n   '2020-05-13',\n   '2020-04-14',\n   '2020-12-08',\n   '2020-06-09',\n   '2020-05-02',\n   '2020-05-15',\n   '2020-07-21',\n   '2020-03-08',\n   '2020-12-09',\n   '2020-11-26',\n   '2020-06-02',\n   '2020-08-22',\n-  '2020-06-10',\n?              ^\n\n+  '2020-06-10']\n?              ^\n\n-  '2020-02-07'] : DataFrame contents should match the expected output\n\n======================================================================\nFAIL: test_series_length (__main__.TestCases.test_series_length)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/tmp/bcb_i4y613ul/prog.py\", line 85, in test_series_length\n    self.assertEqual(len(dates), (end_date - start_date).days)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 10 != 9\n\n----------------------------------------------------------------------\nRan 6 tests in 0.008s\n\nFAILED (failures=2)"
+    },
+    {
+      "task_id": "BigCodeBench/123",
+      "passed": true,
+      "as_run_usd": 0.011062,
+      "output_tokens": 1451,
+      "total_tokens": 3224,
+      "repair_loops": 1,
+      "error": ""
+    },
+    {
+      "task_id": "BigCodeBench/124",
+      "passed": false,
+      "as_run_usd": 0.026866,
+      "output_tokens": 3376,
+      "total_tokens": 10389,
+      "repair_loops": 2,
+      "error": "======================================================================\nFAIL: test_output_types (__main__.TestCases.test_output_types)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/tmp/bcb_h_tou54c/prog.py\", line 87, in test_output_types\n    self.assertEqual(bar_heights, expect, \"DataFrame contents should match the expected output\")\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Lists differ: [np.float64(0.0), np.float64(0.0), np.floa[1653 chars]0.0)] != [2.0, 2.0, 1.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0[53 chars] 2.0]\n\nFirst differing element 0:\nnp.float64(0.0)\n2.0\n\nFirst list contains 80 additional elements.\nFirst extra element 20:\nnp.float64(0.0)\n\n+ [2.0,\n+  2.0,\n+  1.0,\n+  0.0,\n+  0.0,\n+  1.0,\n+  0.0,\n+  1.0,\n+  0.0,\n+  1.0,\n+  4.0,\n+  0.0,\n+  1.0,\n+  1.0,\n+  0.0,\n+  0.0,\n+  0.0,\n+  0.0,\n+  2.0,\n+  2.0]\n- [np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(1.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(1.0),\n-  np.float64(1.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(1.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(1.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(1.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(1.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(1.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(1.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(3.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(1.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(1.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(1.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(1.0),\n-  np.float64(1.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(0.0),\n-  np.float64(1.0),\n-  np.float64(0.0)] : DataFrame contents should match the expected output\n\n----------------------------------------------------------------------\nRan 6 tests in 0.309s\n\nFAILED (failures=1)"
+    },
+    {
+      "task_id": "BigCodeBench/129",
+      "passed": true,
+      "as_run_usd": 0.001968,
+      "output_tokens": 739,
+      "total_tokens": 1140,
+      "repair_loops": 0,
+      "error": ""
+    },
+    {
+      "task_id": "BigCodeBench/139",
+      "passed": true,
+      "as_run_usd": 0.000947,
+      "output_tokens": 346,
+      "total_tokens": 620,
+      "repair_loops": 0,
+      "error": ""
+    },
+    {
+      "task_id": "BigCodeBench/147",
+      "passed": false,
+      "as_run_usd": 0.018983,
+      "output_tokens": 2293,
+      "total_tokens": 4803,
+      "repair_loops": 2,
+      "error": "======================================================================\nFAIL: test_open_port (__main__.TestCases.test_open_port)\nTest that an open port is correctly detected.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1432, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/tmp/bcb_fm_3xlpf/prog.py\", line 78, in test_open_port\n    self.assertTrue(any(result.values()), \"At least one port should be open for the test range.\")\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: False is not true : At least one port should be open for the test range.\n\n----------------------------------------------------------------------\nRan 5 tests in 1.134s\n\nFAILED (failures=1)"
+    },
+    {
+      "task_id": "BigCodeBench/161",
+      "passed": true,
+      "as_run_usd": 0.001429,
+      "output_tokens": 541,
+      "total_tokens": 795,
+      "repair_loops": 0,
+      "error": ""
+    },
+    {
+      "task_id": "BigCodeBench/162",
+      "passed": true,
+      "as_run_usd": 0.001132,
+      "output_tokens": 422,
+      "total_tokens": 678,
+      "repair_loops": 0,
+      "error": ""
+    },
+    {
+      "task_id": "BigCodeBench/177",
+      "passed": false,
+      "as_run_usd": 0.01822,
+      "output_tokens": 2233,
+      "total_tokens": 4979,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_c6r2yjmu/prog.py\", line 63, in <module>\n    import nltk\nModuleNotFoundError: No module named 'nltk'"
+    },
+    {
+      "task_id": "BigCodeBench/184",
+      "passed": true,
+      "as_run_usd": 0.027977,
+      "output_tokens": 3278,
+      "total_tokens": 7559,
+      "repair_loops": 2,
+      "error": ""
+    },
+    {
+      "task_id": "BigCodeBench/187",
+      "passed": false,
+      "as_run_usd": 0.020117,
+      "output_tokens": 2445,
+      "total_tokens": 5482,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_z3x9qgcq/prog.py\", line 2, in <module>\n    import geopandas as gpd\nModuleNotFoundError: No module named 'geopandas'"
+    },
+    {
+      "task_id": "BigCodeBench/199",
+      "passed": false,
+      "as_run_usd": 0.034756,
+      "output_tokens": 4177,
+      "total_tokens": 9713,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_ah_3z7n9/prog.py\", line 100, in <module>\n    import pytz\nModuleNotFoundError: No module named 'pytz'"
+    },
+    {
+      "task_id": "BigCodeBench/208",
+      "passed": true,
+      "as_run_usd": 0.001597,
+      "output_tokens": 590,
+      "total_tokens": 997,
+      "repair_loops": 0,
+      "error": ""
+    },
+    {
+      "task_id": "BigCodeBench/211",
+      "passed": false,
+      "as_run_usd": 0.019065,
+      "output_tokens": 2638,
+      "total_tokens": 8096,
+      "repair_loops": 2,
+      "error": "======================================================================\nERROR: test_2 (__main__.TestCases.test_2)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1432, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/tmp/bcb_666tdlc0/prog.py\", line 117, in test_2\n    extracted_files = task_func(MOCK_URL, MOCK_DESTINATION_DIR)\n  File \"/tmp/bcb_666tdlc0/prog.py\", line 58, in task_func\n    os.remove(zip_file_path)\n    ~~~~~~~~~^^^^^^^^^^^^^^^\nFileNotFoundError: [Errno 2] No such file or directory: 'MagicMock/join()/140352383932400'\n\n======================================================================\nERROR: test_3 (__main__.TestCases.test_3)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1432, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/tmp/bcb_666tdlc0/prog.py\", line 142, in test_3\n    extracted_files = task_func(MOCK_URL, MOCK_DESTINATION_DIR)\n  File \"/tmp/bcb_666tdlc0/prog.py\", line 58, in task_func\n    os.remove(zip_file_path)\n    ~~~~~~~~~^^^^^^^^^^^^^^^\nFileNotFoundError: [Errno 2] No such file or directory: 'MagicMock/join()/140352381599824'\n\n======================================================================\nERROR: test_4 (__main__.TestCases.test_4)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1432, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/tmp/bcb_666tdlc0/prog.py\", line 167, in test_4\n    extracted_files = task_func(MOCK_URL, MOCK_DESTINATION_DIR)\n  File \"/tmp/bcb_666tdlc0/prog.py\", line 58, in task_func\n    os.remove(zip_file_path)\n    ~~~~~~~~~^^^^^^^^^^^^^^^\nFileNotFoundError: [Errno 2] No such file or directory: 'MagicMock/join()/140352381610576'\n\n======================================================================\nERROR: test_5 (__main__.TestCases.test_5)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1432, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/tmp/bcb_666tdlc0/prog.py\", line 192, in test_5\n    extracted_files = task_func(MOCK_URL, MOCK_DESTINATION_DIR)\n  File \"/tmp/bcb_666tdlc0/prog.py\", line 58, in task_func\n    os.remove(zip_file_path)\n    ~~~~~~~~~^^^^^^^^^^^^^^^\nFileNotFoundError: [Errno 2] No such file or directory: 'MagicMock/join()/140352382096720'\n\n======================================================================\nERROR: test_download_and_extract (__main__.TestCases.test_download_and_extract)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1432, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/tmp/bcb_666tdlc0/prog.py\", line 92, in test_download_and_extract\n    extracted_files = task_func(MOCK_URL, MOCK_DESTINATION_DIR)\n  File \"/tmp/bcb_666tdlc0/prog.py\", line 58, in task_func\n    os.remove(zip_file_path)\n    ~~~~~~~~~^^^^^^^^^^^^^^^\nFileNotFoundError: [Errno 2] No such file or directory: 'MagicMock/join()/140352380436560'\n\n----------------------------------------------------------------------\nRan 5 tests in 0.046s\n\nFAILED (errors=5)"
+    },
+    {
+      "task_id": "BigCodeBench/214",
+      "passed": false,
+      "as_run_usd": 0.017525,
+      "output_tokens": 2186,
+      "total_tokens": 7926,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_37wu3f9p/prog.py\", line 3, in <module>\n    import cv2\nModuleNotFoundError: No module named 'cv2'"
+    },
+    {
+      "task_id": "BigCodeBench/227",
+      "passed": false,
+      "as_run_usd": 0.026077,
+      "output_tokens": 3144,
+      "total_tokens": 6881,
+      "repair_loops": 2,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_73r_gbap/prog.py\", line 3, in <module>\n    import soundfile as sf\nModuleNotFoundError: No module named 'soundfile'"
+    }
+  ],
+  "pricing_note": "Updated pricing: gemini-3.6-flash=$1.50/$7.50, gemini-3.5-flash-lite=$0.30/$2.50"
+}

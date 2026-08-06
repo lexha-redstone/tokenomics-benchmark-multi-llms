@@ -1,0 +1,94 @@
+{
+  "arch": "cascade",
+  "n": 10,
+  "passed": 3,
+  "pass_rate": 0.3,
+  "total_as_run_usd": 0.2108,
+  "avg_output_tokens": 2613.8,
+  "results": [
+    {
+      "passed": true,
+      "as_run_usd": 0.001499,
+      "output_tokens": 918,
+      "total_tokens": 1405,
+      "repair_loops": 0,
+      "error": ""
+    },
+    {
+      "passed": true,
+      "as_run_usd": 0.002602,
+      "output_tokens": 1444,
+      "total_tokens": 3188,
+      "repair_loops": 1,
+      "error": ""
+    },
+    {
+      "passed": false,
+      "as_run_usd": 0.023163,
+      "output_tokens": 2781,
+      "total_tokens": 6603,
+      "repair_loops": 3,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_xy8ncu4d/prog.py\", line 5, in <module>\n    import psutil\nModuleNotFoundError: No module named 'psutil'\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/tmp/bcb_xy8ncu4d/prog.py\", line 8, in <module>\n    _subprocess.run(['pip', 'install', 'psutil'], check=False)\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/subprocess.py\", line 554, in run\n    with Popen(*popenargs, **kwargs) as process:\n         ~~~~~^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/subprocess.py\", line 1039, in __init__\n    self._execute_child(args, executable, preexec_fn, close_fds,\n    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n                        pass_fds, cwd, env,\n                        ^^^^^^^^^^^^^^^^^^^\n    ...<5 lines>...\n                        gid, gids, uid, umask,\n                        ^^^^^^^^^^^^^^^^^^^^^^\n                        start_new_session, process_group)\n                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/subprocess.py\", line 1991, in _execute_child\n    raise child_exception_type(errno_num, err_msg, err_filename)\nFileNotFoundError: [Errno 2] No such file or directory: 'pip'"
+    },
+    {
+      "passed": true,
+      "as_run_usd": 0.000837,
+      "output_tokens": 513,
+      "total_tokens": 783,
+      "repair_loops": 0,
+      "error": ""
+    },
+    {
+      "passed": false,
+      "as_run_usd": 0.022462,
+      "output_tokens": 2421,
+      "total_tokens": 6812,
+      "repair_loops": 3,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_lhearsp0/prog.py\", line 2, in <module>\n    from wordcloud import WordCloud\nModuleNotFoundError: No module named 'wordcloud'"
+    },
+    {
+      "passed": false,
+      "as_run_usd": 0.025546,
+      "output_tokens": 2724,
+      "total_tokens": 7884,
+      "repair_loops": 3,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_4_cgzi81/prog.py\", line 2, in <module>\n    from sklearn.ensemble import RandomForestClassifier\nModuleNotFoundError: No module named 'sklearn'"
+    },
+    {
+      "passed": false,
+      "as_run_usd": 0.044854,
+      "output_tokens": 5153,
+      "total_tokens": 11993,
+      "repair_loops": 3,
+      "error": "======================================================================\nFAIL: test_logout_route_redirects_to_login (__main__.TestCases.test_logout_route_redirects_to_login)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/tmp/bcb_vt3zhdvx/prog.py\", line 194, in test_logout_route_redirects_to_login\n    self.assertIn('Logged in as: testuser', response.data.decode())\n    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 'Logged in as: testuser' not found in \"Logged in as: <MagicMock name='_get_user().username' id='140329149062784'>\"\n\n----------------------------------------------------------------------\nRan 6 tests in 0.039s\n\nFAILED (failures=1)"
+    },
+    {
+      "passed": false,
+      "as_run_usd": 0.03261,
+      "output_tokens": 3806,
+      "total_tokens": 9508,
+      "repair_loops": 3,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_gi5xkbos/prog.py\", line 3, in <module>\n    from scipy import stats\nModuleNotFoundError: No module named 'scipy'"
+    },
+    {
+      "passed": false,
+      "as_run_usd": 0.033933,
+      "output_tokens": 3850,
+      "total_tokens": 9586,
+      "repair_loops": 3,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_c6wotecx/prog.py\", line 5, in <module>\n    from sklearn.cluster import KMeans\nModuleNotFoundError: No module named 'sklearn'"
+    },
+    {
+      "passed": false,
+      "as_run_usd": 0.023261,
+      "output_tokens": 2528,
+      "total_tokens": 6852,
+      "repair_loops": 3,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_h19ajflg/prog.py\", line 4, in <module>\n    from sklearn.decomposition import PCA\nModuleNotFoundError: No module named 'sklearn'"
+    }
+  ],
+  "arm_id": "arm0",
+  "arm_name": "Arm 0: Raw Stderr Baseline",
+  "elapsed_sec": 176.5,
+  "triage_usd": 0.0
+}

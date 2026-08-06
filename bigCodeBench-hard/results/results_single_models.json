@@ -1,0 +1,38 @@
+[
+  {
+    "name": "1. Single: Gemini 3.6-Flash (MEDIUM)",
+    "n": 10,
+    "passed": 5,
+    "pass_rate": 0.5,
+    "total_as_run_usd": 0.2661,
+    "cost_per_solved_usd": 0.0532,
+    "avg_output_tokens": 3481.6
+  },
+  {
+    "name": "2. Single: Claude Sonnet-5 (OFF)",
+    "n": 10,
+    "passed": 6,
+    "pass_rate": 0.6,
+    "total_as_run_usd": 0.0484,
+    "cost_per_solved_usd": 0.0081,
+    "avg_output_tokens": 388.5
+  },
+  {
+    "name": "3. Single: Claude Opus-5 (OFF)",
+    "n": 10,
+    "passed": 9,
+    "pass_rate": 0.9,
+    "total_as_run_usd": 0.187,
+    "cost_per_solved_usd": 0.0208,
+    "avg_output_tokens": 652.6
+  },
+  {
+    "name": "4. Single: Claude Opus-4.8 (OFF)",
+    "n": 10,
+    "passed": 7,
+    "pass_rate": 0.7,
+    "total_as_run_usd": 0.2176,
+    "cost_per_solved_usd": 0.0311,
+    "avg_output_tokens": 775.2
+  }
+]

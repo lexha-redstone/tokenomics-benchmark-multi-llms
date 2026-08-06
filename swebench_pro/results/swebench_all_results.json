@@ -1,0 +1,78 @@
+{
+  "dataset": "swebench",
+  "dataset_name": "SWE-bench Pro",
+  "group": "all",
+  "n": 2,
+  "summary": [
+    {
+      "id": "single_flash36",
+      "name": "2. Single: gemini-3.6-flash",
+      "category": "1. Single models",
+      "models": "Gemini 3.6 Flash",
+      "triage_mode": "None / Direct",
+      "n": 2,
+      "passed": 2,
+      "pass_rate": 1.0,
+      "total_as_run_usd": 0.03455,
+      "total_triage_usd": 0.0,
+      "cost_per_solved_usd": 0.017275,
+      "avg_output_tokens": 2228.0,
+      "seconds": 0.0,
+      "results": [
+        {
+          "task_id": "instance_NodeBB__NodeBB-04998908ba6721d64eba79ae3b65a351dcfbc5b5-vnan",
+          "passed": true,
+          "as_run_usd": 0.017402,
+          "output_tokens": 2228,
+          "total_tokens": 2689,
+          "repair_loops": 0,
+          "error": ""
+        },
+        {
+          "task_id": "instance_qutebrowser__qutebrowser-f91ace96223cac8161c16dd061907e138fe85111-v059c6fdc75567943479b23ebca7c07b5e9a7f34c",
+          "passed": true,
+          "as_run_usd": 0.017148,
+          "output_tokens": 2228,
+          "total_tokens": 2520,
+          "repair_loops": 0,
+          "error": ""
+        }
+      ]
+    },
+    {
+      "id": "sj_smart_repair",
+      "name": "11. Straitjacket Smart Repair (Pure Gemini)",
+      "category": "3. Combination of models + straitjacket",
+      "models": "Gemini 3.6 Flash -> 3.5 Lite -> Flash (Med)",
+      "triage_mode": "Straitjacket UnittestProfile ($0.00)",
+      "n": 2,
+      "passed": 2,
+      "pass_rate": 1.0,
+      "total_as_run_usd": 0.03455,
+      "total_triage_usd": 0.0,
+      "cost_per_solved_usd": 0.017275,
+      "avg_output_tokens": 2228.0,
+      "seconds": 0.0,
+      "results": [
+        {
+          "task_id": "instance_NodeBB__NodeBB-04998908ba6721d64eba79ae3b65a351dcfbc5b5-vnan",
+          "passed": true,
+          "as_run_usd": 0.017402,
+          "output_tokens": 2228,
+          "total_tokens": 2689,
+          "repair_loops": 0,
+          "error": ""
+        },
+        {
+          "task_id": "instance_qutebrowser__qutebrowser-f91ace96223cac8161c16dd061907e138fe85111-v059c6fdc75567943479b23ebca7c07b5e9a7f34c",
+          "passed": true,
+          "as_run_usd": 0.017148,
+          "output_tokens": 2228,
+          "total_tokens": 2520,
+          "repair_loops": 0,
+          "error": ""
+        }
+      ]
+    }
+  ]
+}

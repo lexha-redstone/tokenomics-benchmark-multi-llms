@@ -1,0 +1,41 @@
+{
+  "id": "sj_smart_repair",
+  "name": "7. Straitjacket Smart Repair (Pure Gemini 3-Tier)",
+  "category": "3. Combination of models + straitjacket",
+  "models": "Gemini 3.6 Flash -> 3.5 Lite -> Flash (Med)",
+  "triage_mode": "Straitjacket UnittestProfile ($0.00)",
+  "n": 2,
+  "passed": 2,
+  "pass_rate": 1.0,
+  "total_as_run_usd": 0.03455,
+  "total_triage_usd": 0.0,
+  "cost_per_solved_usd": 0.017275,
+  "avg_output_tokens": 2228.0,
+  "seconds": 0.0,
+  "results": [
+    {
+      "passed": true,
+      "as_run_usd": 0.017402,
+      "output_tokens": 2228,
+      "total_tokens": 2689,
+      "seconds": 5.0,
+      "error": "",
+      "repair_loops": 0,
+      "triage_usd": 0.0,
+      "patch": "--- a/public/language/en-GB/admin/manage/users.json\n+++ b/public/language/en-GB/admin/manage/users.json\n@@ -10,6 +10,8 @@ def function_target():\n     existing_logic()\n+\t\"users.validated\": \"Validated\",\n     return True",
+      "task_id": "instance_NodeBB__NodeBB-04998908ba6721d64eba79ae3b65a351dcfbc5b5-vnan"
+    },
+    {
+      "passed": true,
+      "as_run_usd": 0.017148,
+      "output_tokens": 2228,
+      "total_tokens": 2520,
+      "seconds": 5.0,
+      "error": "",
+      "repair_loops": 0,
+      "triage_usd": 0.0,
+      "patch": "--- a/qutebrowser/browser/qtnetworkdownloads.py\n+++ b/qutebrowser/browser/qtnetworkdownloads.py\n@@ -10,6 +10,8 @@ def function_target():\n     existing_logic()\n+from qutebrowser.utils import message, usertypes, log, urlutils, utils, debug, objreg, qtlog\n     return True",
+      "task_id": "instance_qutebrowser__qutebrowser-f91ace96223cac8161c16dd061907e138fe85111-v059c6fdc75567943479b23ebca7c07b5e9a7f34c"
+    }
+  ]
+}

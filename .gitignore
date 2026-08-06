@@ -1,16 +1,76 @@
-# Virtual Environment
+# ==============================================================================
+# Git Ignore Rules for Multi-LLM Benchmark Suite
+# ==============================================================================
+
+# --- Virtual Environments ---
+.venv
+.venv/
+venv/
+env/
 tokenomics-bench-env/
+tokenomics-bench-env
+ENV/
+env.bak/
+venv.bak/
 
-# Python Cache
+# --- Python Bytecode & Cache ---
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
 
-# OS files
+# --- Testing & Quality Tools Cache ---
+.pytest_cache/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+
+# --- IDE & Editor Specific Files ---
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.claude/
+.gemini/
+
+# --- Operating System Files ---
 .DS_Store
-_instructions/
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
 
-# Benchmark Artifacts (Results, Reports, Downloaded Data)
-**/report/
-*.html
+# --- Temporary Files & Logs ---
+*.log
+*.tmp
+*.temp
+_instructions/

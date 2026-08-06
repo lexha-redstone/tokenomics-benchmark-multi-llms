@@ -1,0 +1,78 @@
+{
+  "dataset": "bcb",
+  "dataset_name": "BigCodeBench-Hard",
+  "group": "all",
+  "n": 2,
+  "summary": [
+    {
+      "id": "single_flash36",
+      "name": "2. Single: gemini-3.6-flash",
+      "category": "1. Single models",
+      "models": "Gemini 3.6 Flash",
+      "triage_mode": "None / Direct",
+      "n": 2,
+      "passed": 1,
+      "pass_rate": 0.5,
+      "total_as_run_usd": 0.059178,
+      "total_triage_usd": 0.0018,
+      "cost_per_solved_usd": 0.059178,
+      "avg_output_tokens": 3747.5,
+      "seconds": 0.0,
+      "results": [
+        {
+          "task_id": "BigCodeBench/13",
+          "passed": true,
+          "as_run_usd": 0.020762,
+          "output_tokens": 2677,
+          "total_tokens": 3133,
+          "repair_loops": 0,
+          "error": ""
+        },
+        {
+          "task_id": "BigCodeBench/15",
+          "passed": false,
+          "as_run_usd": 0.038416,
+          "output_tokens": 4818,
+          "total_tokens": 6339,
+          "repair_loops": 1,
+          "error": "======================================================================\nERROR: test_command_failure_with_specific_exit_code (__main__.TestCases.test_command_failure_with_specific_exit_code)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/tmp/bcb_doptcqv4/prog.py\", line 106, in test_command_failure_with_specific_exit_code\n    result = task_func(commands_path, self.output_dir_path)\n  File \"/tmp/bcb_doptcqv4/prog.py\", line 35, in tas"
+        }
+      ]
+    },
+    {
+      "id": "sj_hybrid",
+      "name": "9. Straitjacket Hybrid (Flash Plan + Lite Exec + Flash Repair)",
+      "category": "3. Combination of models + straitjacket",
+      "models": "Gemini 3.6 Flash + 3.5 Lite",
+      "triage_mode": "Straitjacket UnittestProfile ($0.00)",
+      "n": 2,
+      "passed": 2,
+      "pass_rate": 1.0,
+      "total_as_run_usd": 0.006024,
+      "total_triage_usd": 0.0,
+      "cost_per_solved_usd": 0.003012,
+      "avg_output_tokens": 691.0,
+      "seconds": 0.0,
+      "results": [
+        {
+          "task_id": "BigCodeBench/13",
+          "passed": true,
+          "as_run_usd": 0.00307,
+          "output_tokens": 714,
+          "total_tokens": 1674,
+          "repair_loops": 0,
+          "error": ""
+        },
+        {
+          "task_id": "BigCodeBench/15",
+          "passed": true,
+          "as_run_usd": 0.002954,
+          "output_tokens": 668,
+          "total_tokens": 1626,
+          "repair_loops": 0,
+          "error": ""
+        }
+      ]
+    }
+  ]
+}

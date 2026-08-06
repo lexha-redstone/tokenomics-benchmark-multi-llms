@@ -1,0 +1,84 @@
+{
+  "arch": "hybrid-straitjacket",
+  "n": 10,
+  "passed": 3,
+  "pass_rate": 0.3,
+  "total_as_run_usd": 0.1675,
+  "avg_output_tokens": 2282.6,
+  "results": [
+    {
+      "passed": false,
+      "as_run_usd": 0.036594,
+      "output_tokens": 4554,
+      "total_tokens": 9858,
+      "error": "======================================================================\nFAIL: test_case_2 (__main__.TestCases.test_case_2)\nTest with an invalid FTP server by raising an exception on connect.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1432, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/tmp/bcb_8szvunft/prog.py\", line 124, in test_case_2\n    self.assertEqual(str(context.exception), f'Failed to connect to FTP server invalid_server: {error_message}')\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 'Fail[13 chars] to FTP server' != 'Fail[13 chars] to FTP server invalid_server: Failed to connect to FTP server'\n- Failed to connect to FTP server\n+ Failed to connect to FTP server invalid_server: Failed to connect to FTP server\n\n\n======================================================================\nFAIL: test_case_3 (__main__.TestCases.test_case_3)\nTest with an invalid FTP user by raising an exception on login.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1432, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/tmp/bcb_8szvunft/prog.py\", line 132, in test_case_3\n    self.assertEqual(str(context.exception), f'Failed to log into FTP server ftp.dlptest.com with user invalid_user: {error_message}')\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 'Failed to login' != 'Failed to log into FTP server ftp.dlptest.com with use[27 chars]ogin'\n- Failed to login\n+ Failed to log into FTP server ftp.dlptest.com with user invalid_user: Failed to login\n\n\n======================================================================\nFAIL: test_case_4 (__main__.TestCases.test_case_4)\nTest with an invalid FTP password by raising an exception on login.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1432, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/tmp/bcb_8szvunft/prog.py\", line 140, in test_case_4\n    self.assertEqual(str(context.exception), f'Failed to log into FTP server ftp.dlptest.com with user dlpuser: {error_message}')\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 'Failed to login' != 'Failed to log into FTP server ftp.dlptest.com with use[22 chars]ogin'\n- Failed to login\n+ Failed to log into FTP server ftp.dlptest.com with user dlpuser: Failed to login\n\n\n======================================================================\nFAIL: test_case_5 (__main__.TestCases.test_case_5)\nTest with an invalid FTP directory by raising an exception on cwd.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1432, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/tmp/bcb_8szvunft/prog.py\", line 148, in test_case_5\n    self.assertEqual(str(context.exception), f'Failed to change to directory /invalid_directory on server ftp.dlptest.com: {error_message}')\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 'Failed to change directory' != 'Failed to change to directory /invalid_directory on server[40 chars]tory'\n- Failed to change directory\n+ Failed to change to directory /invalid_directory on server ftp.dlptest.com: Failed to change directory\n\n\n----------------------------------------------------------------------\nRan 5 tests in 0.974s\n\nFAILED (failures=4)"
+    },
+    {
+      "passed": true,
+      "as_run_usd": 0.006956,
+      "output_tokens": 1914,
+      "total_tokens": 4512,
+      "error": ""
+    },
+    {
+      "passed": false,
+      "as_run_usd": 0.01447,
+      "output_tokens": 1960,
+      "total_tokens": 4950,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_cig6hwsv/prog.py\", line 2, in <module>\n    import psutil\nModuleNotFoundError: No module named 'psutil'"
+    },
+    {
+      "passed": true,
+      "as_run_usd": 0.003901,
+      "output_tokens": 716,
+      "total_tokens": 1576,
+      "error": ""
+    },
+    {
+      "passed": false,
+      "as_run_usd": 0.011957,
+      "output_tokens": 1427,
+      "total_tokens": 4662,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_fcb870dq/prog.py\", line 2, in <module>\n    from wordcloud import WordCloud\nModuleNotFoundError: No module named 'wordcloud'"
+    },
+    {
+      "passed": false,
+      "as_run_usd": 0.015265,
+      "output_tokens": 1877,
+      "total_tokens": 5587,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_4ksrt3ix/prog.py\", line 2, in <module>\n    from sklearn.ensemble import RandomForestClassifier\nModuleNotFoundError: No module named 'sklearn'"
+    },
+    {
+      "passed": true,
+      "as_run_usd": 0.018161,
+      "output_tokens": 2348,
+      "total_tokens": 6848,
+      "error": ""
+    },
+    {
+      "passed": false,
+      "as_run_usd": 0.026106,
+      "output_tokens": 3541,
+      "total_tokens": 8607,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_0n436y88/prog.py\", line 3, in <module>\n    from scipy import stats\nModuleNotFoundError: No module named 'scipy'"
+    },
+    {
+      "passed": false,
+      "as_run_usd": 0.0182,
+      "output_tokens": 2399,
+      "total_tokens": 6219,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_8f8k1eov/prog.py\", line 4, in <module>\n    from sklearn.cluster import KMeans\nModuleNotFoundError: No module named 'sklearn'"
+    },
+    {
+      "passed": false,
+      "as_run_usd": 0.015866,
+      "output_tokens": 2090,
+      "total_tokens": 5299,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_yehel_76/prog.py\", line 4, in <module>\n    from sklearn.decomposition import PCA\nModuleNotFoundError: No module named 'sklearn'"
+    }
+  ],
+  "arm_id": "arm2",
+  "arm_name": "Arm 2: Straitjacket Local Triage (Arch E-SJ)",
+  "elapsed_sec": 161.0,
+  "triage_usd": 0.0
+}

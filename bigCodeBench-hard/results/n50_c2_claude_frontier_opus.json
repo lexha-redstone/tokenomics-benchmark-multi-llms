@@ -1,0 +1,462 @@
+{
+  "arm": "C2: Claude Frontier High-End (Sonnet-5 -> Opus-5)",
+  "n": 50,
+  "passed": 19,
+  "pass_rate": 38.0,
+  "total_as_run_usd": 2.290268,
+  "cost_per_solved_usd": 0.12054,
+  "avg_output_tokens": 1832.6,
+  "seconds": 1084.49,
+  "results": [
+    {
+      "task_id": "BigCodeBench/13",
+      "passed": true,
+      "as_run_usd": 0.00576,
+      "output_tokens": 454,
+      "total_tokens": 1064,
+      "repair_loops": 0,
+      "error": ""
+    },
+    {
+      "task_id": "BigCodeBench/15",
+      "passed": true,
+      "as_run_usd": 0.005334,
+      "output_tokens": 443,
+      "total_tokens": 895,
+      "repair_loops": 0,
+      "error": ""
+    },
+    {
+      "task_id": "BigCodeBench/17",
+      "passed": false,
+      "as_run_usd": 0.053072,
+      "output_tokens": 2085,
+      "total_tokens": 3151,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_8e0b_6sz/prog.py\", line 2, in <module>\n    import psutil\nModuleNotFoundError: No module named 'psutil'"
+    },
+    {
+      "task_id": "BigCodeBench/19",
+      "passed": true,
+      "as_run_usd": 0.002586,
+      "output_tokens": 204,
+      "total_tokens": 477,
+      "repair_loops": 0,
+      "error": ""
+    },
+    {
+      "task_id": "BigCodeBench/34",
+      "passed": false,
+      "as_run_usd": 0.059769,
+      "output_tokens": 2309,
+      "total_tokens": 3565,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_mn6yk5gj/prog.py\", line 2, in <module>\n    from wordcloud import WordCloud\nModuleNotFoundError: No module named 'wordcloud'"
+    },
+    {
+      "task_id": "BigCodeBench/37",
+      "passed": false,
+      "as_run_usd": 0.051724,
+      "output_tokens": 1972,
+      "total_tokens": 3622,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_692pjwaw/prog.py\", line 5, in <module>\n    from sklearn.ensemble import RandomForestClassifier\nModuleNotFoundError: No module named 'sklearn'"
+    },
+    {
+      "task_id": "BigCodeBench/82",
+      "passed": false,
+      "as_run_usd": 0.070444,
+      "output_tokens": 2885,
+      "total_tokens": 5073,
+      "repair_loops": 1,
+      "error": ")\n  File \"/usr/local/google/home/lexha/Desktop/work/prj/17-tokenomics/benchmark-using-multi-LLMs/.venv/lib/python3.13/site-packages/flask/app.py\", line 1536, in __call__\n    return self.wsgi_app(environ, start_response)\n           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/google/home/lexha/Desktop/work/prj/17-tokenomics/benchmark-using-multi-LLMs/.venv/lib/python3.13/site-packages/flask/app.py\", line 1514, in wsgi_app\n    response = self.handle_exception(e)\n  File \"/usr/local/google/home/lexha/Desktop/work/prj/17-tokenomics/benchmark-using-multi-LLMs/.venv/lib/python3.13/site-packages/flask/app.py\", line 1511, in wsgi_app\n    response = self.full_dispatch_request()\n  File \"/usr/local/google/home/lexha/Desktop/work/prj/17-tokenomics/benchmark-using-multi-LLMs/.venv/lib/python3.13/site-packages/flask/app.py\", line 919, in full_dispatch_request\n    rv = self.handle_user_exception(e)\n  File \"/usr/local/google/home/lexha/Desktop/work/prj/17-tokenomics/benchmark-using-multi-LLMs/.venv/lib/python3.13/site-packages/flask/app.py\", line 917, in full_dispatch_request\n    rv = self.dispatch_request()\n  File \"/usr/local/google/home/lexha/Desktop/work/prj/17-tokenomics/benchmark-using-multi-LLMs/.venv/lib/python3.13/site-packages/flask/app.py\", line 902, in dispatch_request\n    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^\n  File \"/usr/local/google/home/lexha/Desktop/work/prj/17-tokenomics/benchmark-using-multi-LLMs/.venv/lib/python3.13/site-packages/flask_login/utils.py\", line 290, in decorated_view\n    return current_app.ensure_sync(func)(*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/tmp/bcb_cl35zjfi/prog.py\", line 109, in protected\n    return render_template('protected.html', username=current_user.username)\n  File \"/usr/local/google/home/lexha/Desktop/work/prj/17-tokenomics/benchmark-using-multi-LLMs/.venv/lib/python3.13/site-packages/flask/templating.py\", line 150, in render_template\n    template = app.jinja_env.get_or_select_template(template_name_or_list)\n  File \"/usr/local/google/home/lexha/Desktop/work/prj/17-tokenomics/benchmark-using-multi-LLMs/.venv/lib/python3.13/site-packages/jinja2/environment.py\", line 1087, in get_or_select_template\n    return self.get_template(template_name_or_list, parent, globals)\n           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/google/home/lexha/Desktop/work/prj/17-tokenomics/benchmark-using-multi-LLMs/.venv/lib/python3.13/site-packages/jinja2/environment.py\", line 1016, in get_template\n    return self._load_template(name, globals)\n           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^\n  File \"/usr/local/google/home/lexha/Desktop/work/prj/17-tokenomics/benchmark-using-multi-LLMs/.venv/lib/python3.13/site-packages/jinja2/environment.py\", line 975, in _load_template\n    template = self.loader.load(self, name, self.make_globals(globals))\n  File \"/usr/local/google/home/lexha/Desktop/work/prj/17-tokenomics/benchmark-using-multi-LLMs/.venv/lib/python3.13/site-packages/jinja2/loaders.py\", line 126, in load\n    source, filename, uptodate = self.get_source(environment, name)\n                                 ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/google/home/lexha/Desktop/work/prj/17-tokenomics/benchmark-using-multi-LLMs/.venv/lib/python3.13/site-packages/flask/templating.py\", line 66, in get_source\n    return self._get_source_fast(environment, template)\n           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/google/home/lexha/Desktop/work/prj/17-tokenomics/benchmark-using-multi-LLMs/.venv/lib/python3.13/site-packages/flask/templating.py\", line 100, in _get_source_fast\n    raise TemplateNotFound(template)\njinja2.exceptions.TemplateNotFound: protected.html\n\n----------------------------------------------------------------------\nRan 6 tests in 1.091s\n\nFAILED (errors=1)"
+    },
+    {
+      "task_id": "BigCodeBench/89",
+      "passed": false,
+      "as_run_usd": 0.069386,
+      "output_tokens": 2697,
+      "total_tokens": 4558,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_kmqabuj8/prog.py\", line 6, in <module>\n    from scipy import stats\nModuleNotFoundError: No module named 'scipy'"
+    },
+    {
+      "task_id": "BigCodeBench/92",
+      "passed": false,
+      "as_run_usd": 0.073219,
+      "output_tokens": 2890,
+      "total_tokens": 4456,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_vjebm401/prog.py\", line 5, in <module>\n    from sklearn.cluster import KMeans\nModuleNotFoundError: No module named 'sklearn'"
+    },
+    {
+      "task_id": "BigCodeBench/93",
+      "passed": false,
+      "as_run_usd": 0.059112,
+      "output_tokens": 2458,
+      "total_tokens": 4055,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_epwfw5ip/prog.py\", line 7, in <module>\n    from sklearn.decomposition import PCA\nModuleNotFoundError: No module named 'sklearn'"
+    },
+    {
+      "task_id": "BigCodeBench/99",
+      "passed": false,
+      "as_run_usd": 0.071462,
+      "output_tokens": 2775,
+      "total_tokens": 4105,
+      "repair_loops": 1,
+      "error": "model response contains no `def task_func` code block"
+    },
+    {
+      "task_id": "BigCodeBench/100",
+      "passed": true,
+      "as_run_usd": 0.003964,
+      "output_tokens": 312,
+      "total_tokens": 734,
+      "repair_loops": 0,
+      "error": ""
+    },
+    {
+      "task_id": "BigCodeBench/101",
+      "passed": false,
+      "as_run_usd": 0.074579,
+      "output_tokens": 3022,
+      "total_tokens": 4431,
+      "repair_loops": 1,
+      "error": "model response contains no `def task_func` code block"
+    },
+    {
+      "task_id": "BigCodeBench/108",
+      "passed": false,
+      "as_run_usd": 0.077423,
+      "output_tokens": 3055,
+      "total_tokens": 5415,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_c6et3qnj/prog.py\", line 3, in <module>\n    from statsmodels.tsa.seasonal import seasonal_decompose\nModuleNotFoundError: No module named 'statsmodels'"
+    },
+    {
+      "task_id": "BigCodeBench/120",
+      "passed": true,
+      "as_run_usd": 0.052148,
+      "output_tokens": 1922,
+      "total_tokens": 3956,
+      "repair_loops": 1,
+      "error": ""
+    },
+    {
+      "task_id": "BigCodeBench/123",
+      "passed": true,
+      "as_run_usd": 0.035555,
+      "output_tokens": 1290,
+      "total_tokens": 2914,
+      "repair_loops": 1,
+      "error": ""
+    },
+    {
+      "task_id": "BigCodeBench/124",
+      "passed": true,
+      "as_run_usd": 0.054161,
+      "output_tokens": 1998,
+      "total_tokens": 4162,
+      "repair_loops": 1,
+      "error": ""
+    },
+    {
+      "task_id": "BigCodeBench/129",
+      "passed": true,
+      "as_run_usd": 0.00584,
+      "output_tokens": 467,
+      "total_tokens": 1052,
+      "repair_loops": 0,
+      "error": ""
+    },
+    {
+      "task_id": "BigCodeBench/139",
+      "passed": true,
+      "as_run_usd": 0.003524,
+      "output_tokens": 272,
+      "total_tokens": 674,
+      "repair_loops": 0,
+      "error": ""
+    },
+    {
+      "task_id": "BigCodeBench/147",
+      "passed": false,
+      "as_run_usd": 0.038929,
+      "output_tokens": 1498,
+      "total_tokens": 2812,
+      "repair_loops": 1,
+      "error": "======================================================================\nFAIL: test_open_port (__main__.TestCases.test_open_port)\nTest that an open port is correctly detected.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1432, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/tmp/bcb_mobfurln/prog.py\", line 73, in test_open_port\n    self.assertTrue(any(result.values()), \"At least one port should be open for the test range.\")\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: False is not true : At least one port should be open for the test range.\n\n----------------------------------------------------------------------\nRan 5 tests in 1.161s\n\nFAILED (failures=1)"
+    },
+    {
+      "task_id": "BigCodeBench/161",
+      "passed": true,
+      "as_run_usd": 0.004324,
+      "output_tokens": 361,
+      "total_tokens": 718,
+      "repair_loops": 0,
+      "error": ""
+    },
+    {
+      "task_id": "BigCodeBench/162",
+      "passed": true,
+      "as_run_usd": 0.002802,
+      "output_tokens": 204,
+      "total_tokens": 585,
+      "repair_loops": 0,
+      "error": ""
+    },
+    {
+      "task_id": "BigCodeBench/177",
+      "passed": false,
+      "as_run_usd": 0.077436,
+      "output_tokens": 3191,
+      "total_tokens": 4861,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_xuym49f4/prog.py\", line 2, in <module>\n    import nltk\nModuleNotFoundError: No module named 'nltk'"
+    },
+    {
+      "task_id": "BigCodeBench/184",
+      "passed": false,
+      "as_run_usd": 0.06883,
+      "output_tokens": 2524,
+      "total_tokens": 4822,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_ifrev1ev/prog.py\", line 3, in <module>\n    from sklearn.feature_extraction.text import CountVectorizer\nModuleNotFoundError: No module named 'sklearn'"
+    },
+    {
+      "task_id": "BigCodeBench/187",
+      "passed": false,
+      "as_run_usd": 0.05562,
+      "output_tokens": 2205,
+      "total_tokens": 3813,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_wpenjp_r/prog.py\", line 2, in <module>\n    import geopandas as gpd\nModuleNotFoundError: No module named 'geopandas'"
+    },
+    {
+      "task_id": "BigCodeBench/199",
+      "passed": false,
+      "as_run_usd": 0.082311,
+      "output_tokens": 3243,
+      "total_tokens": 6135,
+      "repair_loops": 1,
+      "error": "File \"/tmp/bcb_lpny1r1u/prog.py\", line 3\n    The unittest run reports **\"ran 0 tests\"** with a 4-line stderr \u2014 meaning the test module failed to even collect/import, or no tests were discovered. The functional bug hiding behind this is in the **timezone/UTC handling contract**:\n                                                                    ^\nSyntaxError: invalid character '\u2014' (U+2014)"
+    },
+    {
+      "task_id": "BigCodeBench/208",
+      "passed": true,
+      "as_run_usd": 0.054318,
+      "output_tokens": 2103,
+      "total_tokens": 3837,
+      "repair_loops": 1,
+      "error": ""
+    },
+    {
+      "task_id": "BigCodeBench/211",
+      "passed": false,
+      "as_run_usd": 0.037554,
+      "output_tokens": 1428,
+      "total_tokens": 2733,
+      "repair_loops": 1,
+      "error": "rog.py\", line 132, in test_3\n    mock_open.assert_called_once_with(os.path.join(MOCK_DESTINATION_DIR, 'data.zip'), 'wb')\n    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 991, in assert_called_once_with\n    return self.assert_called_with(*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 979, in assert_called_with\n    raise AssertionError(_error_message()) from cause\nAssertionError: expected call not found.\nExpected: open(<MagicMock name='join()' id='139868279129152'>, 'wb')\n  Actual: open('data.zip', 'wb')\n\n======================================================================\nFAIL: test_4 (__main__.TestCases.test_4)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1432, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/tmp/bcb_2q6jci6c/prog.py\", line 157, in test_4\n    mock_open.assert_called_once_with(os.path.join(MOCK_DESTINATION_DIR, 'data_download.zip'), 'wb')\n    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 991, in assert_called_once_with\n    return self.assert_called_with(*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 979, in assert_called_with\n    raise AssertionError(_error_message()) from cause\nAssertionError: expected call not found.\nExpected: open(<MagicMock name='join()' id='139868279139232'>, 'wb')\n  Actual: open('data_download.zip', 'wb')\n\n======================================================================\nFAIL: test_5 (__main__.TestCases.test_5)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1432, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/tmp/bcb_2q6jci6c/prog.py\", line 182, in test_5\n    mock_open.assert_called_once_with(os.path.join(MOCK_DESTINATION_DIR, 'data_download.zip'), 'wb')\n    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 991, in assert_called_once_with\n    return self.assert_called_with(*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 979, in assert_called_with\n    raise AssertionError(_error_message()) from cause\nAssertionError: expected call not found.\nExpected: open(<MagicMock name='join()' id='139868279607312'>, 'wb')\n  Actual: open('data_download.zip', 'wb')\n\n======================================================================\nFAIL: test_download_and_extract (__main__.TestCases.test_download_and_extract)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1432, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/tmp/bcb_2q6jci6c/prog.py\", line 82, in test_download_and_extract\n    mock_open.assert_called_once_with(os.path.join(MOCK_DESTINATION_DIR, 'data.zip'), 'wb')\n    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 991, in assert_called_once_with\n    return self.assert_called_with(*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 979, in assert_called_with\n    raise AssertionError(_error_message()) from cause\nAssertionError: expected call not found.\nExpected: open(<MagicMock name='join()' id='139868279617392'>, 'wb')\n  Actual: open('data.zip', 'wb')\n\n----------------------------------------------------------------------\nRan 5 tests in 0.023s\n\nFAILED (failures=5)"
+    },
+    {
+      "task_id": "BigCodeBench/214",
+      "passed": true,
+      "as_run_usd": 0.002692,
+      "output_tokens": 192,
+      "total_tokens": 578,
+      "repair_loops": 0,
+      "error": ""
+    },
+    {
+      "task_id": "BigCodeBench/227",
+      "passed": false,
+      "as_run_usd": 0.070052,
+      "output_tokens": 2724,
+      "total_tokens": 4594,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_3jwig_gu/prog.py\", line 3, in <module>\n    import soundfile as sf\nModuleNotFoundError: No module named 'soundfile'"
+    },
+    {
+      "task_id": "BigCodeBench/239",
+      "passed": false,
+      "as_run_usd": 0.064653,
+      "output_tokens": 2525,
+      "total_tokens": 3946,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_h8zypnqd/prog.py\", line 10, in <module>\n    from scipy import stats\nModuleNotFoundError: No module named 'scipy'"
+    },
+    {
+      "task_id": "BigCodeBench/241",
+      "passed": false,
+      "as_run_usd": 0.044822,
+      "output_tokens": 1711,
+      "total_tokens": 2937,
+      "repair_loops": 1,
+      "error": "model response contains no `def task_func` code block"
+    },
+    {
+      "task_id": "BigCodeBench/267",
+      "passed": false,
+      "as_run_usd": 0.051447,
+      "output_tokens": 1973,
+      "total_tokens": 3097,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_73bucb05/prog.py\", line 8, in <module>\n    from scipy import fftpack\nModuleNotFoundError: No module named 'scipy'"
+    },
+    {
+      "task_id": "BigCodeBench/273",
+      "passed": false,
+      "as_run_usd": 0.072707,
+      "output_tokens": 2992,
+      "total_tokens": 5091,
+      "repair_loops": 1,
+      "error": "      'status': 'error',\n        ^^^^^^^^^^^^^^^^^^\n        'message': 'Content-Type header is not application/json'\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    })\n    ^^\n  File \"/tmp/bcb_atahagik/prog.py\", line 96, in _send_json\n    self.send_response(status)\n    ~~~~~~~~~~~~~~~~~~^^^^^^^^\n  File \"/usr/lib/python3.13/http/server.py\", line 512, in send_response\n    self.log_request(code)\n    ~~~~~~~~~~~~~~~~^^^^^^\n  File \"/usr/lib/python3.13/http/server.py\", line 565, in log_request\n    self.requestline, str(code), str(size))\n    ^^^^^^^^^^^^^^^^\nAttributeError: 'RequestHandler' object has no attribute 'requestline'\n\n======================================================================\nERROR: test_invalid_json (__main__.TestCases.test_invalid_json)\nTest handler response to invalid JSON.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/tmp/bcb_atahagik/prog.py\", line 127, in do_POST\n    data = json.loads(body)\n  File \"/usr/lib/python3.13/json/__init__.py\", line 352, in loads\n    return _default_decoder.decode(s)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^\n  File \"/usr/lib/python3.13/json/decoder.py\", line 345, in decode\n    obj, end = self.raw_decode(s, idx=_w(s, 0).end())\n               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/json/decoder.py\", line 361, in raw_decode\n    obj, end = self.scan_once(s, idx)\n               ~~~~~~~~~~~~~~^^^^^^^^\njson.decoder.JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 23 (char 22)\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1432, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/tmp/bcb_atahagik/prog.py\", line 197, in test_invalid_json\n    request_handler.do_POST()\n    ~~~~~~~~~~~~~~~~~~~~~~~^^\n  File \"/tmp/bcb_atahagik/prog.py\", line 129, in do_POST\n    self._send_json(400, {\n    ~~~~~~~~~~~~~~~^^^^^^^\n        'status': 'error',\n        ^^^^^^^^^^^^^^^^^^\n        'message': 'Invalid JSON'\n        ^^^^^^^^^^^^^^^^^^^^^^^^^\n    })\n    ^^\n  File \"/tmp/bcb_atahagik/prog.py\", line 96, in _send_json\n    self.send_response(status)\n    ~~~~~~~~~~~~~~~~~~^^^^^^^^\n  File \"/usr/lib/python3.13/http/server.py\", line 512, in send_response\n    self.log_request(code)\n    ~~~~~~~~~~~~~~~~^^^^^^\n  File \"/usr/lib/python3.13/http/server.py\", line 565, in log_request\n    self.requestline, str(code), str(size))\n    ^^^^^^^^^^^^^^^^\nAttributeError: 'RequestHandler' object has no attribute 'requestline'\n\n======================================================================\nERROR: test_missing_data_key (__main__.TestCases.test_missing_data_key)\nTest handler response to JSON without 'data' key.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1432, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/tmp/bcb_atahagik/prog.py\", line 208, in test_missing_data_key\n    request_handler.do_POST()\n    ~~~~~~~~~~~~~~~~~~~~~~~^^\n  File \"/tmp/bcb_atahagik/prog.py\", line 139, in do_POST\n    self._send_json(400, {\n    ~~~~~~~~~~~~~~~^^^^^^^\n        'status': 'error',\n        ^^^^^^^^^^^^^^^^^^\n        'message': 'No data key in request'\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    })\n    ^^\n  File \"/tmp/bcb_atahagik/prog.py\", line 96, in _send_json\n    self.send_response(status)\n    ~~~~~~~~~~~~~~~~~~^^^^^^^^\n  File \"/usr/lib/python3.13/http/server.py\", line 512, in send_response\n    self.log_request(code)\n    ~~~~~~~~~~~~~~~~^^^^^^\n  File \"/usr/lib/python3.13/http/server.py\", line 565, in log_request\n    self.requestline, str(code), str(size))\n    ^^^^^^^^^^^^^^^^\nAttributeError: 'RequestHandler' object has no attribute 'requestline'\n\n----------------------------------------------------------------------\nRan 5 tests in 0.010s\n\nFAILED (errors=3)"
+    },
+    {
+      "task_id": "BigCodeBench/274",
+      "passed": false,
+      "as_run_usd": 0.080109,
+      "output_tokens": 3281,
+      "total_tokens": 5419,
+      "repair_loops": 1,
+      "error": "File \"/tmp/bcb_37680mx2/prog.py\", line 1\n    Looking at the error, the test run produced `ran 0` tests with an import-level failure (stderr shows a traceback). The root cause is architectural: **`cgi` was removed from the standard library in Python 3.13** (deprecated since 3.11, PEP 594). Importing it raises `ModuleNotFoundError` at module load time, so the test module never even collects \u2014 hence \"ran 0 tests\".\n                                                                                                                                                                                                                                                                                                                                                               ^\nSyntaxError: invalid character '\u2014' (U+2014)"
+    },
+    {
+      "task_id": "BigCodeBench/287",
+      "passed": true,
+      "as_run_usd": 0.066105,
+      "output_tokens": 2601,
+      "total_tokens": 3543,
+      "repair_loops": 1,
+      "error": ""
+    },
+    {
+      "task_id": "BigCodeBench/302",
+      "passed": false,
+      "as_run_usd": 0.073914,
+      "output_tokens": 2868,
+      "total_tokens": 4593,
+      "repair_loops": 1,
+      "error": "======================================================================\nERROR: test_plot_data_correlation (__main__.TestCases.test_plot_data_correlation)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/tmp/bcb_soka1awh/prog.py\", line 178, in test_plot_data_correlation\n    plot_data = np.array([text.get_text() for text in ax.collections[0].axes.texts]).reshape(corr_df.shape)\n                                                      ~~~~~~~~~~~~~~^^^\n  File \"/usr/local/google/home/lexha/Desktop/work/prj/17-tokenomics/benchmark-using-multi-LLMs/.venv/lib/python3.13/site-packages/matplotlib/axes/_base.py\", line 1530, in __getitem__\n    return [artist\n           ~~~~~~~\n            for artist in self._axes._children\n            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n            if self._type_check(artist)][key]\n            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^\nIndexError: list index out of range\n\n----------------------------------------------------------------------\nRan 5 tests in 0.072s\n\nFAILED (errors=1)"
+    },
+    {
+      "task_id": "BigCodeBench/308",
+      "passed": true,
+      "as_run_usd": 0.003984,
+      "output_tokens": 288,
+      "total_tokens": 840,
+      "repair_loops": 0,
+      "error": ""
+    },
+    {
+      "task_id": "BigCodeBench/310",
+      "passed": true,
+      "as_run_usd": 0.004768,
+      "output_tokens": 415,
+      "total_tokens": 724,
+      "repair_loops": 0,
+      "error": ""
+    },
+    {
+      "task_id": "BigCodeBench/313",
+      "passed": false,
+      "as_run_usd": 0.062481,
+      "output_tokens": 2513,
+      "total_tokens": 3916,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_36qbj6fw/prog.py\", line 133, in <module>\n    from faker import Faker\nModuleNotFoundError: No module named 'faker'"
+    },
+    {
+      "task_id": "BigCodeBench/324",
+      "passed": true,
+      "as_run_usd": 0.035616,
+      "output_tokens": 1395,
+      "total_tokens": 2658,
+      "repair_loops": 1,
+      "error": ""
+    },
+    {
+      "task_id": "BigCodeBench/326",
+      "passed": false,
+      "as_run_usd": 0.033093,
+      "output_tokens": 1215,
+      "total_tokens": 2397,
+      "repair_loops": 1,
+      "error": "======================================================================\nFAIL: test_multiple_bat_files_mixed_results (__main__.TestCases.test_multiple_bat_files_mixed_results)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1432, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/tmp/bcb_aay14iug/prog.py\", line 85, in test_multiple_bat_files_mixed_results\n    self.assertEqual(result, [(\"file1.bat\", 0), (\"file2.bat\", 1), (\"file3.bat\", None)])\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Lists differ: [('file1.bat', <MagicMock name='mock.__enter__().wait()'[179 chars]0'>)] != [('file1.bat', 0), ('file2.bat', 1), ('file3.bat', None)]\n\nFirst differing element 0:\n('file1.bat', <MagicMock name='mock.__enter__().wait()' id='140127902321360'>)\n('file1.bat', 0)\n\n+ [('file1.bat', 0), ('file2.bat', 1), ('file3.bat', None)]\n- [('file1.bat', <MagicMock name='mock.__enter__().wait()' id='140127902321360'>),\n-  ('file2.bat', <MagicMock name='mock.__enter__().wait()' id='140127902323040'>),\n-  ('file3.bat', <MagicMock name='mock.__enter__().wait()' id='140127902324720'>)]\n\n======================================================================\nFAIL: test_single_bat_file_failure (__main__.TestCases.test_single_bat_file_failure)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1432, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/tmp/bcb_aay14iug/prog.py\", line 72, in test_single_bat_file_failure\n    self.assertEqual(result, [(\"file1.bat\", 1)])\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Lists differ: [('file1.bat', <MagicMock name='Popen().__enter__().wait[22 chars]0'>)] != [('file1.bat', 1)]\n\nFirst differing element 0:\n('file1.bat', <MagicMock name='Popen().__enter__().wait[21 chars]80'>)\n('file1.bat', 1)\n\n- [('file1.bat',\n+ [('file1.bat', 1)]\n?               ++++\n\n-   <MagicMock name='Popen().__enter__().wait()' id='140127902328080'>)]\n\n======================================================================\nFAIL: test_single_bat_file_success (__main__.TestCases.test_single_bat_file_success)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1432, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/tmp/bcb_aay14iug/prog.py\", line 63, in test_single_bat_file_success\n    self.assertEqual(result, [(\"file1.bat\", 0)])\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Lists differ: [('file1.bat', <MagicMock name='Popen().__enter__().wait[22 chars]0'>)] != [('file1.bat', 0)]\n\nFirst differing element 0:\n('file1.bat', <MagicMock name='Popen().__enter__().wait[21 chars]40'>)\n('file1.bat', 0)\n\n- [('file1.bat',\n+ [('file1.bat', 0)]\n?               ++++\n\n-   <MagicMock name='Popen().__enter__().wait()' id='140127902331440'>)]\n\n----------------------------------------------------------------------\nRan 5 tests in 0.009s\n\nFAILED (failures=3)"
+    },
+    {
+      "task_id": "BigCodeBench/341",
+      "passed": false,
+      "as_run_usd": 0.052533,
+      "output_tokens": 1996,
+      "total_tokens": 3725,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_xqkpuxpx/prog.py\", line 5, in <module>\n    import seaborn as sns\nModuleNotFoundError: No module named 'seaborn'"
+    },
+    {
+      "task_id": "BigCodeBench/346",
+      "passed": false,
+      "as_run_usd": 0.036578,
+      "output_tokens": 1313,
+      "total_tokens": 2858,
+      "repair_loops": 1,
+      "error": "/usr/local/google/home/lexha/Desktop/work/prj/17-tokenomics/benchmark-using-multi-LLMs/.venv/bin/python: can't open file '/tmp/tmp_u59x4ah/test/script4.py': [Errno 2] No such file or directory\nTraceback (most recent call last):\n  File \"/tmp/tmp25edmq54/test/script5.py\", line 1, in <module>\n    raise Exception(\"Dummy exception\");\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nException: Dummy exception\n======================================================================\nERROR: test_case_2 (__main__.TestCases.test_case_2)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/tmp/bcb_wtlmn61j/prog.py\", line 105, in test_case_2\n    return_code = task_func(self.script_paths[1])\n  File \"/tmp/bcb_wtlmn61j/prog.py\", line 58, in task_func\n    raise subprocess.CalledProcessError(return_code, cmd)\nsubprocess.CalledProcessError: Command '['/usr/local/google/home/lexha/Desktop/work/prj/17-tokenomics/benchmark-using-multi-LLMs/.venv/bin/python', '/tmp/tmp7iyzd7x8/test/script2.py']' returned non-zero exit status 1.\n\n----------------------------------------------------------------------\nRan 5 tests in 0.427s\n\nFAILED (errors=1)"
+    },
+    {
+      "task_id": "BigCodeBench/360",
+      "passed": false,
+      "as_run_usd": 0.076045,
+      "output_tokens": 2975,
+      "total_tokens": 4869,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_0dipl8rf/prog.py\", line 155, in <module>\n    create_dummy_excel(path)\n    ~~~~~~~~~~~~~~~~~~^^^^^^\n  File \"/tmp/bcb_0dipl8rf/prog.py\", line 150, in create_dummy_excel\n    df.to_excel(file_path, index=False, sheet_name=sheet_name, engine=\"openpyxl\")\n    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/google/home/lexha/Desktop/work/prj/17-tokenomics/benchmark-using-multi-LLMs/.venv/lib/python3.13/site-packages/pandas/core/generic.py\", line 2312, in to_excel\n    formatter.write(\n    ~~~~~~~~~~~~~~~^\n        excel_writer,\n        ^^^^^^^^^^^^^\n    ...<6 lines>...\n        engine_kwargs=engine_kwargs,\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/usr/local/google/home/lexha/Desktop/work/prj/17-tokenomics/benchmark-using-multi-LLMs/.venv/lib/python3.13/site-packages/pandas/io/formats/excel.py\", line 1003, in write\n    writer = ExcelWriter(\n        writer,\n    ...<2 lines>...\n        engine_kwargs=engine_kwargs,\n    )\n  File \"/usr/local/google/home/lexha/Desktop/work/prj/17-tokenomics/benchmark-using-multi-LLMs/.venv/lib/python3.13/site-packages/pandas/io/excel/_openpyxl.py\", line 58, in __init__\n    from openpyxl.workbook import Workbook\nModuleNotFoundError: No module named 'openpyxl'"
+    },
+    {
+      "task_id": "BigCodeBench/367",
+      "passed": true,
+      "as_run_usd": 0.006924,
+      "output_tokens": 615,
+      "total_tokens": 1002,
+      "repair_loops": 0,
+      "error": ""
+    },
+    {
+      "task_id": "BigCodeBench/368",
+      "passed": false,
+      "as_run_usd": 0.0475,
+      "output_tokens": 1772,
+      "total_tokens": 3090,
+      "repair_loops": 1,
+      "error": "======================================================================\nFAIL: test_case_3 (__main__.TestCases.test_case_3)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/tmp/bcb_7h43ql4e/prog.py\", line 115, in test_case_3\n    with self.assertRaises(FileNotFoundError):\n         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^\nAssertionError: FileNotFoundError not raised\n\n----------------------------------------------------------------------\nRan 5 tests in 0.027s\n\nFAILED (failures=1)"
+    },
+    {
+      "task_id": "BigCodeBench/374",
+      "passed": false,
+      "as_run_usd": 0.045037,
+      "output_tokens": 1746,
+      "total_tokens": 2930,
+      "repair_loops": 1,
+      "error": "Traceback (most recent call last):\n  File \"/tmp/bcb_lhbs1rtg/prog.py\", line 1, in <module>\n    import regex as re\nModuleNotFoundError: No module named 'regex'"
+    },
+    {
+      "task_id": "BigCodeBench/399",
+      "passed": false,
+      "as_run_usd": 0.058504,
+      "output_tokens": 2281,
+      "total_tokens": 3766,
+      "repair_loops": 1,
+      "error": "model response contains no `def task_func` code block"
+    },
+    {
+      "task_id": "BigCodeBench/401",
+      "passed": true,
+      "as_run_usd": 0.049518,
+      "output_tokens": 1972,
+      "total_tokens": 3515,
+      "repair_loops": 1,
+      "error": ""
+    }
+  ]
+}

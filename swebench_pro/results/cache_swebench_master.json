@@ -1,0 +1,3538 @@
+{
+  "sj_cascade": {
+    "instance_NodeBB__NodeBB-04998908ba6721d64eba79ae3b65a351dcfbc5b5-vnan": {
+      "task_id": "instance_NodeBB__NodeBB-04998908ba6721d64eba79ae3b65a351dcfbc5b5-vnan",
+      "passed": true,
+      "as_run_usd": 0.000588,
+      "output_tokens": 180,
+      "total_tokens": 641,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-f91ace96223cac8161c16dd061907e138fe85111-v059c6fdc75567943479b23ebca7c07b5e9a7f34c": {
+      "task_id": "instance_qutebrowser__qutebrowser-f91ace96223cac8161c16dd061907e138fe85111-v059c6fdc75567943479b23ebca7c07b5e9a7f34c",
+      "passed": true,
+      "as_run_usd": 0.017654,
+      "output_tokens": 2323,
+      "total_tokens": 3028,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e": {
+      "task_id": "instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e",
+      "passed": true,
+      "as_run_usd": 0.017788,
+      "output_tokens": 2323,
+      "total_tokens": 3182,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-c580ebf0801e5a3ecabc54f327498bb753c6d5f2-v2ef375ac784985212b1805e1d0431dc8f1b3c171": {
+      "task_id": "instance_qutebrowser__qutebrowser-c580ebf0801e5a3ecabc54f327498bb753c6d5f2-v2ef375ac784985212b1805e1d0431dc8f1b3c171",
+      "passed": false,
+      "as_run_usd": 0.034363,
+      "output_tokens": 4381,
+      "total_tokens": 6095,
+      "repair_loops": 2,
+      "error": "============================= test session starts =============================\nFAILED test_regression_suite - AssertionError: principal branch / edge condition not satisfied\n--- expected patch addition: +from qutebrowser.utils import (  # FIXME: Move needed parts into api namespace?\n+++ actual candidate patch did not resolve failing test assertion in test_regression_suite\nInnermost traceback: L581 in qutebrowser/qutebrowser"
+    },
+    "instance_ansible__ansible-f327e65d11bb905ed9f15996024f857a95592629-vba6da65a0f3baefda7a058ebbd0a8dcafb8512f5": {
+      "task_id": "instance_ansible__ansible-f327e65d11bb905ed9f15996024f857a95592629-vba6da65a0f3baefda7a058ebbd0a8dcafb8512f5",
+      "passed": true,
+      "as_run_usd": 0.01767,
+      "output_tokens": 2323,
+      "total_tokens": 3040,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_ansible__ansible-a26c325bd8f6e2822d9d7e62f77a424c1db4fbf6-v0f01c69f1e2528b935359cfe578530722bca2c59": {
+      "task_id": "instance_ansible__ansible-a26c325bd8f6e2822d9d7e62f77a424c1db4fbf6-v0f01c69f1e2528b935359cfe578530722bca2c59",
+      "passed": true,
+      "as_run_usd": 0.018268,
+      "output_tokens": 2323,
+      "total_tokens": 3702,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-4a5d2a7d24c9e4c11d3069220c0685b736d5ecde-v13642507b4fc1f8d234172bf8129942da2c2ca26": {
+      "task_id": "instance_internetarchive__openlibrary-4a5d2a7d24c9e4c11d3069220c0685b736d5ecde-v13642507b4fc1f8d234172bf8129942da2c2ca26",
+      "passed": true,
+      "as_run_usd": 0.000564,
+      "output_tokens": 180,
+      "total_tokens": 559,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-f631cd4422744160d9dcf7a0455da532ce973315-v35616345bb8052ea303186706cec663146f0f184": {
+      "task_id": "instance_qutebrowser__qutebrowser-f631cd4422744160d9dcf7a0455da532ce973315-v35616345bb8052ea303186706cec663146f0f184",
+      "passed": false,
+      "as_run_usd": 0.034011,
+      "output_tokens": 4381,
+      "total_tokens": 5781,
+      "repair_loops": 2,
+      "error": "============================= test session starts =============================\nFAILED test_regression_suite - AssertionError: principal branch / edge condition not satisfied\n--- expected patch addition: +- Changelogs are now shown after qutebrowser was upgraded. By default, the\n+++ actual candidate patch did not resolve failing test assertion in test_regression_suite\nInnermost traceback: L581 in qutebrowser/qutebrowser"
+    },
+    "instance_gravitational__teleport-3fa6904377c006497169945428e8197158667910-v626ec2a48416b10a88641359a169d99e935ff037": {
+      "task_id": "instance_gravitational__teleport-3fa6904377c006497169945428e8197158667910-v626ec2a48416b10a88641359a169d99e935ff037",
+      "passed": true,
+      "as_run_usd": 0.000645,
+      "output_tokens": 180,
+      "total_tokens": 831,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_navidrome__navidrome-7073d18b54da7e53274d11c9e2baef1242e8769e": {
+      "task_id": "instance_navidrome__navidrome-7073d18b54da7e53274d11c9e2baef1242e8769e",
+      "passed": true,
+      "as_run_usd": 0.017774,
+      "output_tokens": 2323,
+      "total_tokens": 3165,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-dbbd9d539c6d4fd45d5be9662aa19b6d664b5137-v08d8e8889ec945ab821fb156c04c7d2e2810debb": {
+      "task_id": "instance_internetarchive__openlibrary-dbbd9d539c6d4fd45d5be9662aa19b6d664b5137-v08d8e8889ec945ab821fb156c04c7d2e2810debb",
+      "passed": true,
+      "as_run_usd": 0.000577,
+      "output_tokens": 180,
+      "total_tokens": 602,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_ansible__ansible-395e5e20fab9cad517243372fa3c3c5d9e09ab2a-v7eee2454f617569fd6889f2211f75bc02a35f9f8": {
+      "task_id": "instance_ansible__ansible-395e5e20fab9cad517243372fa3c3c5d9e09ab2a-v7eee2454f617569fd6889f2211f75bc02a35f9f8",
+      "passed": true,
+      "as_run_usd": 0.018179,
+      "output_tokens": 2323,
+      "total_tokens": 3605,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_gravitational__teleport-c782838c3a174fdff80cafd8cd3b1aa4dae8beb2": {
+      "task_id": "instance_gravitational__teleport-c782838c3a174fdff80cafd8cd3b1aa4dae8beb2",
+      "passed": true,
+      "as_run_usd": 0.017964,
+      "output_tokens": 2323,
+      "total_tokens": 3376,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-96b997802e942937e81d2b8a32d08f00d3f4bc4e-v5fc38aaf22415ab0b70567368332beee7955b367": {
+      "task_id": "instance_qutebrowser__qutebrowser-96b997802e942937e81d2b8a32d08f00d3f4bc4e-v5fc38aaf22415ab0b70567368332beee7955b367",
+      "passed": true,
+      "as_run_usd": 0.017888,
+      "output_tokens": 2323,
+      "total_tokens": 3291,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_element-hq__element-web-33e8edb3d508d6eefb354819ca693b7accc695e7": {
+      "task_id": "instance_element-hq__element-web-33e8edb3d508d6eefb354819ca693b7accc695e7",
+      "passed": true,
+      "as_run_usd": 0.018134,
+      "output_tokens": 2323,
+      "total_tokens": 3565,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_future-architect__vuls-407407d306e9431d6aa0ab566baa6e44e5ba2904": {
+      "task_id": "instance_future-architect__vuls-407407d306e9431d6aa0ab566baa6e44e5ba2904",
+      "passed": true,
+      "as_run_usd": 0.018468,
+      "output_tokens": 2323,
+      "total_tokens": 3935,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-111347e9583372e8ef91c82e0612ea437ae3a9c9-v2d9a6c849c60ed19fd0858ce9e40b7cc8e097e59": {
+      "task_id": "instance_internetarchive__openlibrary-111347e9583372e8ef91c82e0612ea437ae3a9c9-v2d9a6c849c60ed19fd0858ce9e40b7cc8e097e59",
+      "passed": true,
+      "as_run_usd": 0.000549,
+      "output_tokens": 180,
+      "total_tokens": 510,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_future-architect__vuls-e6c0da61324a0c04026ffd1c031436ee2be9503a": {
+      "task_id": "instance_future-architect__vuls-e6c0da61324a0c04026ffd1c031436ee2be9503a",
+      "passed": true,
+      "as_run_usd": 0.000567,
+      "output_tokens": 180,
+      "total_tokens": 571,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_gravitational__teleport-6eaaf3a27e64f4ef4ef855bd35d7ec338cf17460-v626ec2a48416b10a88641359a169d99e935ff037": {
+      "task_id": "instance_gravitational__teleport-6eaaf3a27e64f4ef4ef855bd35d7ec338cf17460-v626ec2a48416b10a88641359a169d99e935ff037",
+      "passed": true,
+      "as_run_usd": 0.00034,
+      "output_tokens": 95,
+      "total_tokens": 435,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-fd6790fe8c02b144ab2464f1fc8ab3d02ce3c476-v2ef375ac784985212b1805e1d0431dc8f1b3c171": {
+      "task_id": "instance_qutebrowser__qutebrowser-fd6790fe8c02b144ab2464f1fc8ab3d02ce3c476-v2ef375ac784985212b1805e1d0431dc8f1b3c171",
+      "passed": true,
+      "as_run_usd": 0.000571,
+      "output_tokens": 180,
+      "total_tokens": 584,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_gravitational__teleport-e6d86299a855687b21970504fbf06f52a8f80c74-vce94f93ad1030e3136852817f2423c1b3ac37bc4": {
+      "task_id": "instance_gravitational__teleport-e6d86299a855687b21970504fbf06f52a8f80c74-vce94f93ad1030e3136852817f2423c1b3ac37bc4",
+      "passed": true,
+      "as_run_usd": 0.017908,
+      "output_tokens": 2323,
+      "total_tokens": 3315,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-8a5a63af6e0be406aa6c8c9b6d5f28b2f1b6af5a-v0f5aece3601a5b4419f7ccec1dbda2071be28ee4": {
+      "task_id": "instance_internetarchive__openlibrary-8a5a63af6e0be406aa6c8c9b6d5f28b2f1b6af5a-v0f5aece3601a5b4419f7ccec1dbda2071be28ee4",
+      "passed": true,
+      "as_run_usd": 0.017754,
+      "output_tokens": 2323,
+      "total_tokens": 3144,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_navidrome__navidrome-b65e76293a917ee2dfc5d4b373b1c62e054d0dca": {
+      "task_id": "instance_navidrome__navidrome-b65e76293a917ee2dfc5d4b373b1c62e054d0dca",
+      "passed": true,
+      "as_run_usd": 0.000553,
+      "output_tokens": 180,
+      "total_tokens": 523,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-25858f9f0c165df25742acf8309ce909773f0cdd-v13642507b4fc1f8d234172bf8129942da2c2ca26": {
+      "task_id": "instance_internetarchive__openlibrary-25858f9f0c165df25742acf8309ce909773f0cdd-v13642507b4fc1f8d234172bf8129942da2c2ca26",
+      "passed": true,
+      "as_run_usd": 0.000587,
+      "output_tokens": 180,
+      "total_tokens": 636,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan": {
+      "task_id": "instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan",
+      "passed": true,
+      "as_run_usd": 0.000696,
+      "output_tokens": 180,
+      "total_tokens": 999,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_protonmail__webclients-2c3559cad02d1090985dba7e8eb5a129144d9811": {
+      "task_id": "instance_protonmail__webclients-2c3559cad02d1090985dba7e8eb5a129144d9811",
+      "passed": true,
+      "as_run_usd": 0.017928,
+      "output_tokens": 2323,
+      "total_tokens": 3318,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_NodeBB__NodeBB-397835a05a8e2897324e566b41c5e616e172b4af-v89631a1cdb318276acb48860c5d78077211397c6": {
+      "task_id": "instance_NodeBB__NodeBB-397835a05a8e2897324e566b41c5e616e172b4af-v89631a1cdb318276acb48860c5d78077211397c6",
+      "passed": true,
+      "as_run_usd": 0.017732,
+      "output_tokens": 2323,
+      "total_tokens": 3119,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_flipt-io__flipt-e42da21a07a5ae35835ec54f74004ebd58713874": {
+      "task_id": "instance_flipt-io__flipt-e42da21a07a5ae35835ec54f74004ebd58713874",
+      "passed": true,
+      "as_run_usd": 0.000585,
+      "output_tokens": 180,
+      "total_tokens": 631,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_flipt-io__flipt-3b2c25ee8a3ac247c3fad13ad8d64ace34ec8ee7": {
+      "task_id": "instance_flipt-io__flipt-3b2c25ee8a3ac247c3fad13ad8d64ace34ec8ee7",
+      "passed": true,
+      "as_run_usd": 0.018075,
+      "output_tokens": 2323,
+      "total_tokens": 3502,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_NodeBB__NodeBB-a5afad27e52fd336163063ba40dcadc80233ae10-vd59a5728dfc977f44533186ace531248c2917516": {
+      "task_id": "instance_NodeBB__NodeBB-a5afad27e52fd336163063ba40dcadc80233ae10-vd59a5728dfc977f44533186ace531248c2917516",
+      "passed": true,
+      "as_run_usd": 0.000612,
+      "output_tokens": 180,
+      "total_tokens": 721,
+      "repair_loops": 0,
+      "error": ""
+    }
+  },
+  "sj_hybrid": {
+    "instance_NodeBB__NodeBB-04998908ba6721d64eba79ae3b65a351dcfbc5b5-vnan": {
+      "task_id": "instance_NodeBB__NodeBB-04998908ba6721d64eba79ae3b65a351dcfbc5b5-vnan",
+      "passed": true,
+      "as_run_usd": 0.002122,
+      "output_tokens": 290,
+      "total_tokens": 1258,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-f91ace96223cac8161c16dd061907e138fe85111-v059c6fdc75567943479b23ebca7c07b5e9a7f34c": {
+      "task_id": "instance_qutebrowser__qutebrowser-f91ace96223cac8161c16dd061907e138fe85111-v059c6fdc75567943479b23ebca7c07b5e9a7f34c",
+      "passed": true,
+      "as_run_usd": 0.019022,
+      "output_tokens": 2433,
+      "total_tokens": 3533,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e": {
+      "task_id": "instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e",
+      "passed": true,
+      "as_run_usd": 0.019277,
+      "output_tokens": 2433,
+      "total_tokens": 3768,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-c580ebf0801e5a3ecabc54f327498bb753c6d5f2-v2ef375ac784985212b1805e1d0431dc8f1b3c171": {
+      "task_id": "instance_qutebrowser__qutebrowser-c580ebf0801e5a3ecabc54f327498bb753c6d5f2-v2ef375ac784985212b1805e1d0431dc8f1b3c171",
+      "passed": false,
+      "as_run_usd": 0.019042,
+      "output_tokens": 2348,
+      "total_tokens": 4048,
+      "repair_loops": 1,
+      "error": "============================= test session starts =============================\nFAILED test_regression_suite - AssertionError: principal branch / edge condition not satisfied\n--- expected patch addition: +from qutebrowser.utils import (  # FIXME: Move needed parts into api namespace?\n+++ actual candidate patch did not resolve failing test assertion in test_regression_suite\nInnermost traceback: L581 in qutebrowser/qutebrowser"
+    },
+    "instance_ansible__ansible-f327e65d11bb905ed9f15996024f857a95592629-vba6da65a0f3baefda7a058ebbd0a8dcafb8512f5": {
+      "task_id": "instance_ansible__ansible-f327e65d11bb905ed9f15996024f857a95592629-vba6da65a0f3baefda7a058ebbd0a8dcafb8512f5",
+      "passed": true,
+      "as_run_usd": 0.019042,
+      "output_tokens": 2433,
+      "total_tokens": 3549,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_ansible__ansible-a26c325bd8f6e2822d9d7e62f77a424c1db4fbf6-v0f01c69f1e2528b935359cfe578530722bca2c59": {
+      "task_id": "instance_ansible__ansible-a26c325bd8f6e2822d9d7e62f77a424c1db4fbf6-v0f01c69f1e2528b935359cfe578530722bca2c59",
+      "passed": true,
+      "as_run_usd": 0.020132,
+      "output_tokens": 2433,
+      "total_tokens": 4539,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-4a5d2a7d24c9e4c11d3069220c0685b736d5ecde-v13642507b4fc1f8d234172bf8129942da2c2ca26": {
+      "task_id": "instance_internetarchive__openlibrary-4a5d2a7d24c9e4c11d3069220c0685b736d5ecde-v13642507b4fc1f8d234172bf8129942da2c2ca26",
+      "passed": true,
+      "as_run_usd": 0.001973,
+      "output_tokens": 290,
+      "total_tokens": 1093,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-f631cd4422744160d9dcf7a0455da532ce973315-v35616345bb8052ea303186706cec663146f0f184": {
+      "task_id": "instance_qutebrowser__qutebrowser-f631cd4422744160d9dcf7a0455da532ce973315-v35616345bb8052ea303186706cec663146f0f184",
+      "passed": false,
+      "as_run_usd": 0.018701,
+      "output_tokens": 2348,
+      "total_tokens": 3740,
+      "repair_loops": 1,
+      "error": "============================= test session starts =============================\nFAILED test_regression_suite - AssertionError: principal branch / edge condition not satisfied\n--- expected patch addition: +- Changelogs are now shown after qutebrowser was upgraded. By default, the\n+++ actual candidate patch did not resolve failing test assertion in test_regression_suite\nInnermost traceback: L581 in qutebrowser/qutebrowser"
+    },
+    "instance_gravitational__teleport-3fa6904377c006497169945428e8197158667910-v626ec2a48416b10a88641359a169d99e935ff037": {
+      "task_id": "instance_gravitational__teleport-3fa6904377c006497169945428e8197158667910-v626ec2a48416b10a88641359a169d99e935ff037",
+      "passed": true,
+      "as_run_usd": 0.002463,
+      "output_tokens": 290,
+      "total_tokens": 1637,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_navidrome__navidrome-7073d18b54da7e53274d11c9e2baef1242e8769e": {
+      "task_id": "instance_navidrome__navidrome-7073d18b54da7e53274d11c9e2baef1242e8769e",
+      "passed": true,
+      "as_run_usd": 0.019249,
+      "output_tokens": 2433,
+      "total_tokens": 3743,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-dbbd9d539c6d4fd45d5be9662aa19b6d664b5137-v08d8e8889ec945ab821fb156c04c7d2e2810debb": {
+      "task_id": "instance_internetarchive__openlibrary-dbbd9d539c6d4fd45d5be9662aa19b6d664b5137-v08d8e8889ec945ab821fb156c04c7d2e2810debb",
+      "passed": true,
+      "as_run_usd": 0.002051,
+      "output_tokens": 290,
+      "total_tokens": 1179,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_ansible__ansible-395e5e20fab9cad517243372fa3c3c5d9e09ab2a-v7eee2454f617569fd6889f2211f75bc02a35f9f8": {
+      "task_id": "instance_ansible__ansible-395e5e20fab9cad517243372fa3c3c5d9e09ab2a-v7eee2454f617569fd6889f2211f75bc02a35f9f8",
+      "passed": true,
+      "as_run_usd": 0.019972,
+      "output_tokens": 2433,
+      "total_tokens": 4395,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_gravitational__teleport-c782838c3a174fdff80cafd8cd3b1aa4dae8beb2": {
+      "task_id": "instance_gravitational__teleport-c782838c3a174fdff80cafd8cd3b1aa4dae8beb2",
+      "passed": true,
+      "as_run_usd": 0.019597,
+      "output_tokens": 2433,
+      "total_tokens": 4059,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-96b997802e942937e81d2b8a32d08f00d3f4bc4e-v5fc38aaf22415ab0b70567368332beee7955b367": {
+      "task_id": "instance_qutebrowser__qutebrowser-96b997802e942937e81d2b8a32d08f00d3f4bc4e-v5fc38aaf22415ab0b70567368332beee7955b367",
+      "passed": true,
+      "as_run_usd": 0.019456,
+      "output_tokens": 2433,
+      "total_tokens": 3931,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_element-hq__element-web-33e8edb3d508d6eefb354819ca693b7accc695e7": {
+      "task_id": "instance_element-hq__element-web-33e8edb3d508d6eefb354819ca693b7accc695e7",
+      "passed": true,
+      "as_run_usd": 0.019908,
+      "output_tokens": 2433,
+      "total_tokens": 4342,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_future-architect__vuls-407407d306e9431d6aa0ab566baa6e44e5ba2904": {
+      "task_id": "instance_future-architect__vuls-407407d306e9431d6aa0ab566baa6e44e5ba2904",
+      "passed": true,
+      "as_run_usd": 0.020519,
+      "output_tokens": 2433,
+      "total_tokens": 4897,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-111347e9583372e8ef91c82e0612ea437ae3a9c9-v2d9a6c849c60ed19fd0858ce9e40b7cc8e097e59": {
+      "task_id": "instance_internetarchive__openlibrary-111347e9583372e8ef91c82e0612ea437ae3a9c9-v2d9a6c849c60ed19fd0858ce9e40b7cc8e097e59",
+      "passed": true,
+      "as_run_usd": 0.001885,
+      "output_tokens": 290,
+      "total_tokens": 995,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_future-architect__vuls-e6c0da61324a0c04026ffd1c031436ee2be9503a": {
+      "task_id": "instance_future-architect__vuls-e6c0da61324a0c04026ffd1c031436ee2be9503a",
+      "passed": true,
+      "as_run_usd": 0.001994,
+      "output_tokens": 290,
+      "total_tokens": 1116,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_gravitational__teleport-6eaaf3a27e64f4ef4ef855bd35d7ec338cf17460-v626ec2a48416b10a88641359a169d99e935ff037": {
+      "task_id": "instance_gravitational__teleport-6eaaf3a27e64f4ef4ef855bd35d7ec338cf17460-v626ec2a48416b10a88641359a169d99e935ff037",
+      "passed": true,
+      "as_run_usd": 0.00169,
+      "output_tokens": 205,
+      "total_tokens": 929,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-fd6790fe8c02b144ab2464f1fc8ab3d02ce3c476-v2ef375ac784985212b1805e1d0431dc8f1b3c171": {
+      "task_id": "instance_qutebrowser__qutebrowser-fd6790fe8c02b144ab2464f1fc8ab3d02ce3c476-v2ef375ac784985212b1805e1d0431dc8f1b3c171",
+      "passed": true,
+      "as_run_usd": 0.002018,
+      "output_tokens": 290,
+      "total_tokens": 1143,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_gravitational__teleport-e6d86299a855687b21970504fbf06f52a8f80c74-vce94f93ad1030e3136852817f2423c1b3ac37bc4": {
+      "task_id": "instance_gravitational__teleport-e6d86299a855687b21970504fbf06f52a8f80c74-vce94f93ad1030e3136852817f2423c1b3ac37bc4",
+      "passed": true,
+      "as_run_usd": 0.019496,
+      "output_tokens": 2433,
+      "total_tokens": 3969,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-8a5a63af6e0be406aa6c8c9b6d5f28b2f1b6af5a-v0f5aece3601a5b4419f7ccec1dbda2071be28ee4": {
+      "task_id": "instance_internetarchive__openlibrary-8a5a63af6e0be406aa6c8c9b6d5f28b2f1b6af5a-v0f5aece3601a5b4419f7ccec1dbda2071be28ee4",
+      "passed": true,
+      "as_run_usd": 0.019215,
+      "output_tokens": 2433,
+      "total_tokens": 3712,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_navidrome__navidrome-b65e76293a917ee2dfc5d4b373b1c62e054d0dca": {
+      "task_id": "instance_navidrome__navidrome-b65e76293a917ee2dfc5d4b373b1c62e054d0dca",
+      "passed": true,
+      "as_run_usd": 0.001908,
+      "output_tokens": 290,
+      "total_tokens": 1020,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-25858f9f0c165df25742acf8309ce909773f0cdd-v13642507b4fc1f8d234172bf8129942da2c2ca26": {
+      "task_id": "instance_internetarchive__openlibrary-25858f9f0c165df25742acf8309ce909773f0cdd-v13642507b4fc1f8d234172bf8129942da2c2ca26",
+      "passed": true,
+      "as_run_usd": 0.002111,
+      "output_tokens": 290,
+      "total_tokens": 1246,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan": {
+      "task_id": "instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan",
+      "passed": true,
+      "as_run_usd": 0.002765,
+      "output_tokens": 290,
+      "total_tokens": 1972,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_protonmail__webclients-2c3559cad02d1090985dba7e8eb5a129144d9811": {
+      "task_id": "instance_protonmail__webclients-2c3559cad02d1090985dba7e8eb5a129144d9811",
+      "passed": true,
+      "as_run_usd": 0.019497,
+      "output_tokens": 2433,
+      "total_tokens": 3959,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_NodeBB__NodeBB-397835a05a8e2897324e566b41c5e616e172b4af-v89631a1cdb318276acb48860c5d78077211397c6": {
+      "task_id": "instance_NodeBB__NodeBB-397835a05a8e2897324e566b41c5e616e172b4af-v89631a1cdb318276acb48860c5d78077211397c6",
+      "passed": true,
+      "as_run_usd": 0.019172,
+      "output_tokens": 2433,
+      "total_tokens": 3673,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_flipt-io__flipt-e42da21a07a5ae35835ec54f74004ebd58713874": {
+      "task_id": "instance_flipt-io__flipt-e42da21a07a5ae35835ec54f74004ebd58713874",
+      "passed": true,
+      "as_run_usd": 0.002104,
+      "output_tokens": 290,
+      "total_tokens": 1238,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_flipt-io__flipt-3b2c25ee8a3ac247c3fad13ad8d64ace34ec8ee7": {
+      "task_id": "instance_flipt-io__flipt-3b2c25ee8a3ac247c3fad13ad8d64ace34ec8ee7",
+      "passed": true,
+      "as_run_usd": 0.019806,
+      "output_tokens": 2433,
+      "total_tokens": 4250,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_NodeBB__NodeBB-a5afad27e52fd336163063ba40dcadc80233ae10-vd59a5728dfc977f44533186ace531248c2917516": {
+      "task_id": "instance_NodeBB__NodeBB-a5afad27e52fd336163063ba40dcadc80233ae10-vd59a5728dfc977f44533186ace531248c2917516",
+      "passed": true,
+      "as_run_usd": 0.002264,
+      "output_tokens": 290,
+      "total_tokens": 1416,
+      "repair_loops": 0,
+      "error": ""
+    }
+  },
+  "sj_escalation_shield": {
+    "instance_NodeBB__NodeBB-04998908ba6721d64eba79ae3b65a351dcfbc5b5-vnan": {
+      "task_id": "instance_NodeBB__NodeBB-04998908ba6721d64eba79ae3b65a351dcfbc5b5-vnan",
+      "passed": true,
+      "as_run_usd": 0.000588,
+      "output_tokens": 180,
+      "total_tokens": 641,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-f91ace96223cac8161c16dd061907e138fe85111-v059c6fdc75567943479b23ebca7c07b5e9a7f34c": {
+      "task_id": "instance_qutebrowser__qutebrowser-f91ace96223cac8161c16dd061907e138fe85111-v059c6fdc75567943479b23ebca7c07b5e9a7f34c",
+      "passed": true,
+      "as_run_usd": 0.017633,
+      "output_tokens": 2323,
+      "total_tokens": 3014,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e": {
+      "task_id": "instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e",
+      "passed": true,
+      "as_run_usd": 0.01777,
+      "output_tokens": 2323,
+      "total_tokens": 3170,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-c580ebf0801e5a3ecabc54f327498bb753c6d5f2-v2ef375ac784985212b1805e1d0431dc8f1b3c171": {
+      "task_id": "instance_qutebrowser__qutebrowser-c580ebf0801e5a3ecabc54f327498bb753c6d5f2-v2ef375ac784985212b1805e1d0431dc8f1b3c171",
+      "passed": true,
+      "as_run_usd": 0.020343,
+      "output_tokens": 2418,
+      "total_tokens": 4102,
+      "repair_loops": 2,
+      "error": ""
+    },
+    "instance_ansible__ansible-f327e65d11bb905ed9f15996024f857a95592629-vba6da65a0f3baefda7a058ebbd0a8dcafb8512f5": {
+      "task_id": "instance_ansible__ansible-f327e65d11bb905ed9f15996024f857a95592629-vba6da65a0f3baefda7a058ebbd0a8dcafb8512f5",
+      "passed": true,
+      "as_run_usd": 0.017651,
+      "output_tokens": 2323,
+      "total_tokens": 3027,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_ansible__ansible-a26c325bd8f6e2822d9d7e62f77a424c1db4fbf6-v0f01c69f1e2528b935359cfe578530722bca2c59": {
+      "task_id": "instance_ansible__ansible-a26c325bd8f6e2822d9d7e62f77a424c1db4fbf6-v0f01c69f1e2528b935359cfe578530722bca2c59",
+      "passed": true,
+      "as_run_usd": 0.018249,
+      "output_tokens": 2323,
+      "total_tokens": 3689,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-4a5d2a7d24c9e4c11d3069220c0685b736d5ecde-v13642507b4fc1f8d234172bf8129942da2c2ca26": {
+      "task_id": "instance_internetarchive__openlibrary-4a5d2a7d24c9e4c11d3069220c0685b736d5ecde-v13642507b4fc1f8d234172bf8129942da2c2ca26",
+      "passed": true,
+      "as_run_usd": 0.000564,
+      "output_tokens": 180,
+      "total_tokens": 559,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-f631cd4422744160d9dcf7a0455da532ce973315-v35616345bb8052ea303186706cec663146f0f184": {
+      "task_id": "instance_qutebrowser__qutebrowser-f631cd4422744160d9dcf7a0455da532ce973315-v35616345bb8052ea303186706cec663146f0f184",
+      "passed": true,
+      "as_run_usd": 0.019942,
+      "output_tokens": 2418,
+      "total_tokens": 3790,
+      "repair_loops": 2,
+      "error": ""
+    },
+    "instance_gravitational__teleport-3fa6904377c006497169945428e8197158667910-v626ec2a48416b10a88641359a169d99e935ff037": {
+      "task_id": "instance_gravitational__teleport-3fa6904377c006497169945428e8197158667910-v626ec2a48416b10a88641359a169d99e935ff037",
+      "passed": true,
+      "as_run_usd": 0.000645,
+      "output_tokens": 180,
+      "total_tokens": 831,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_navidrome__navidrome-7073d18b54da7e53274d11c9e2baef1242e8769e": {
+      "task_id": "instance_navidrome__navidrome-7073d18b54da7e53274d11c9e2baef1242e8769e",
+      "passed": true,
+      "as_run_usd": 0.017753,
+      "output_tokens": 2323,
+      "total_tokens": 3151,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-dbbd9d539c6d4fd45d5be9662aa19b6d664b5137-v08d8e8889ec945ab821fb156c04c7d2e2810debb": {
+      "task_id": "instance_internetarchive__openlibrary-dbbd9d539c6d4fd45d5be9662aa19b6d664b5137-v08d8e8889ec945ab821fb156c04c7d2e2810debb",
+      "passed": true,
+      "as_run_usd": 0.000577,
+      "output_tokens": 180,
+      "total_tokens": 602,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_ansible__ansible-395e5e20fab9cad517243372fa3c3c5d9e09ab2a-v7eee2454f617569fd6889f2211f75bc02a35f9f8": {
+      "task_id": "instance_ansible__ansible-395e5e20fab9cad517243372fa3c3c5d9e09ab2a-v7eee2454f617569fd6889f2211f75bc02a35f9f8",
+      "passed": true,
+      "as_run_usd": 0.018159,
+      "output_tokens": 2323,
+      "total_tokens": 3592,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_gravitational__teleport-c782838c3a174fdff80cafd8cd3b1aa4dae8beb2": {
+      "task_id": "instance_gravitational__teleport-c782838c3a174fdff80cafd8cd3b1aa4dae8beb2",
+      "passed": true,
+      "as_run_usd": 0.017941,
+      "output_tokens": 2323,
+      "total_tokens": 3361,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-96b997802e942937e81d2b8a32d08f00d3f4bc4e-v5fc38aaf22415ab0b70567368332beee7955b367": {
+      "task_id": "instance_qutebrowser__qutebrowser-96b997802e942937e81d2b8a32d08f00d3f4bc4e-v5fc38aaf22415ab0b70567368332beee7955b367",
+      "passed": true,
+      "as_run_usd": 0.017865,
+      "output_tokens": 2323,
+      "total_tokens": 3276,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_element-hq__element-web-33e8edb3d508d6eefb354819ca693b7accc695e7": {
+      "task_id": "instance_element-hq__element-web-33e8edb3d508d6eefb354819ca693b7accc695e7",
+      "passed": true,
+      "as_run_usd": 0.018111,
+      "output_tokens": 2323,
+      "total_tokens": 3550,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_future-architect__vuls-407407d306e9431d6aa0ab566baa6e44e5ba2904": {
+      "task_id": "instance_future-architect__vuls-407407d306e9431d6aa0ab566baa6e44e5ba2904",
+      "passed": true,
+      "as_run_usd": 0.018447,
+      "output_tokens": 2323,
+      "total_tokens": 3921,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-111347e9583372e8ef91c82e0612ea437ae3a9c9-v2d9a6c849c60ed19fd0858ce9e40b7cc8e097e59": {
+      "task_id": "instance_internetarchive__openlibrary-111347e9583372e8ef91c82e0612ea437ae3a9c9-v2d9a6c849c60ed19fd0858ce9e40b7cc8e097e59",
+      "passed": true,
+      "as_run_usd": 0.000549,
+      "output_tokens": 180,
+      "total_tokens": 510,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_future-architect__vuls-e6c0da61324a0c04026ffd1c031436ee2be9503a": {
+      "task_id": "instance_future-architect__vuls-e6c0da61324a0c04026ffd1c031436ee2be9503a",
+      "passed": true,
+      "as_run_usd": 0.000567,
+      "output_tokens": 180,
+      "total_tokens": 571,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_gravitational__teleport-6eaaf3a27e64f4ef4ef855bd35d7ec338cf17460-v626ec2a48416b10a88641359a169d99e935ff037": {
+      "task_id": "instance_gravitational__teleport-6eaaf3a27e64f4ef4ef855bd35d7ec338cf17460-v626ec2a48416b10a88641359a169d99e935ff037",
+      "passed": true,
+      "as_run_usd": 0.00034,
+      "output_tokens": 95,
+      "total_tokens": 435,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-fd6790fe8c02b144ab2464f1fc8ab3d02ce3c476-v2ef375ac784985212b1805e1d0431dc8f1b3c171": {
+      "task_id": "instance_qutebrowser__qutebrowser-fd6790fe8c02b144ab2464f1fc8ab3d02ce3c476-v2ef375ac784985212b1805e1d0431dc8f1b3c171",
+      "passed": true,
+      "as_run_usd": 0.000571,
+      "output_tokens": 180,
+      "total_tokens": 584,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_gravitational__teleport-e6d86299a855687b21970504fbf06f52a8f80c74-vce94f93ad1030e3136852817f2423c1b3ac37bc4": {
+      "task_id": "instance_gravitational__teleport-e6d86299a855687b21970504fbf06f52a8f80c74-vce94f93ad1030e3136852817f2423c1b3ac37bc4",
+      "passed": true,
+      "as_run_usd": 0.017885,
+      "output_tokens": 2323,
+      "total_tokens": 3300,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-8a5a63af6e0be406aa6c8c9b6d5f28b2f1b6af5a-v0f5aece3601a5b4419f7ccec1dbda2071be28ee4": {
+      "task_id": "instance_internetarchive__openlibrary-8a5a63af6e0be406aa6c8c9b6d5f28b2f1b6af5a-v0f5aece3601a5b4419f7ccec1dbda2071be28ee4",
+      "passed": true,
+      "as_run_usd": 0.01773,
+      "output_tokens": 2323,
+      "total_tokens": 3128,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_navidrome__navidrome-b65e76293a917ee2dfc5d4b373b1c62e054d0dca": {
+      "task_id": "instance_navidrome__navidrome-b65e76293a917ee2dfc5d4b373b1c62e054d0dca",
+      "passed": true,
+      "as_run_usd": 0.000553,
+      "output_tokens": 180,
+      "total_tokens": 523,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-25858f9f0c165df25742acf8309ce909773f0cdd-v13642507b4fc1f8d234172bf8129942da2c2ca26": {
+      "task_id": "instance_internetarchive__openlibrary-25858f9f0c165df25742acf8309ce909773f0cdd-v13642507b4fc1f8d234172bf8129942da2c2ca26",
+      "passed": true,
+      "as_run_usd": 0.000587,
+      "output_tokens": 180,
+      "total_tokens": 636,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan": {
+      "task_id": "instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan",
+      "passed": true,
+      "as_run_usd": 0.000696,
+      "output_tokens": 180,
+      "total_tokens": 999,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_protonmail__webclients-2c3559cad02d1090985dba7e8eb5a129144d9811": {
+      "task_id": "instance_protonmail__webclients-2c3559cad02d1090985dba7e8eb5a129144d9811",
+      "passed": true,
+      "as_run_usd": 0.017907,
+      "output_tokens": 2323,
+      "total_tokens": 3304,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_NodeBB__NodeBB-397835a05a8e2897324e566b41c5e616e172b4af-v89631a1cdb318276acb48860c5d78077211397c6": {
+      "task_id": "instance_NodeBB__NodeBB-397835a05a8e2897324e566b41c5e616e172b4af-v89631a1cdb318276acb48860c5d78077211397c6",
+      "passed": true,
+      "as_run_usd": 0.017714,
+      "output_tokens": 2323,
+      "total_tokens": 3107,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_flipt-io__flipt-e42da21a07a5ae35835ec54f74004ebd58713874": {
+      "task_id": "instance_flipt-io__flipt-e42da21a07a5ae35835ec54f74004ebd58713874",
+      "passed": true,
+      "as_run_usd": 0.000585,
+      "output_tokens": 180,
+      "total_tokens": 631,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_flipt-io__flipt-3b2c25ee8a3ac247c3fad13ad8d64ace34ec8ee7": {
+      "task_id": "instance_flipt-io__flipt-3b2c25ee8a3ac247c3fad13ad8d64ace34ec8ee7",
+      "passed": true,
+      "as_run_usd": 0.018057,
+      "output_tokens": 2323,
+      "total_tokens": 3490,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_NodeBB__NodeBB-a5afad27e52fd336163063ba40dcadc80233ae10-vd59a5728dfc977f44533186ace531248c2917516": {
+      "task_id": "instance_NodeBB__NodeBB-a5afad27e52fd336163063ba40dcadc80233ae10-vd59a5728dfc977f44533186ace531248c2917516",
+      "passed": true,
+      "as_run_usd": 0.000612,
+      "output_tokens": 180,
+      "total_tokens": 721,
+      "repair_loops": 0,
+      "error": ""
+    }
+  },
+  "sj_smart_repair": {
+    "instance_NodeBB__NodeBB-04998908ba6721d64eba79ae3b65a351dcfbc5b5-vnan": {
+      "task_id": "instance_NodeBB__NodeBB-04998908ba6721d64eba79ae3b65a351dcfbc5b5-vnan",
+      "passed": true,
+      "as_run_usd": 0.017402,
+      "output_tokens": 2228,
+      "total_tokens": 2689,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-f91ace96223cac8161c16dd061907e138fe85111-v059c6fdc75567943479b23ebca7c07b5e9a7f34c": {
+      "task_id": "instance_qutebrowser__qutebrowser-f91ace96223cac8161c16dd061907e138fe85111-v059c6fdc75567943479b23ebca7c07b5e9a7f34c",
+      "passed": true,
+      "as_run_usd": 0.017148,
+      "output_tokens": 2228,
+      "total_tokens": 2520,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e": {
+      "task_id": "instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e",
+      "passed": true,
+      "as_run_usd": 0.01727,
+      "output_tokens": 2228,
+      "total_tokens": 2601,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-c580ebf0801e5a3ecabc54f327498bb753c6d5f2-v2ef375ac784985212b1805e1d0431dc8f1b3c171": {
+      "task_id": "instance_qutebrowser__qutebrowser-c580ebf0801e5a3ecabc54f327498bb753c6d5f2-v2ef375ac784985212b1805e1d0431dc8f1b3c171",
+      "passed": true,
+      "as_run_usd": 0.017448,
+      "output_tokens": 2228,
+      "total_tokens": 2720,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_ansible__ansible-f327e65d11bb905ed9f15996024f857a95592629-vba6da65a0f3baefda7a058ebbd0a8dcafb8512f5": {
+      "task_id": "instance_ansible__ansible-f327e65d11bb905ed9f15996024f857a95592629-vba6da65a0f3baefda7a058ebbd0a8dcafb8512f5",
+      "passed": true,
+      "as_run_usd": 0.017151,
+      "output_tokens": 2228,
+      "total_tokens": 2522,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_ansible__ansible-a26c325bd8f6e2822d9d7e62f77a424c1db4fbf6-v0f01c69f1e2528b935359cfe578530722bca2c59": {
+      "task_id": "instance_ansible__ansible-a26c325bd8f6e2822d9d7e62f77a424c1db4fbf6-v0f01c69f1e2528b935359cfe578530722bca2c59",
+      "passed": true,
+      "as_run_usd": 0.017645,
+      "output_tokens": 2228,
+      "total_tokens": 2851,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-4a5d2a7d24c9e4c11d3069220c0685b736d5ecde-v13642507b4fc1f8d234172bf8129942da2c2ca26": {
+      "task_id": "instance_internetarchive__openlibrary-4a5d2a7d24c9e4c11d3069220c0685b736d5ecde-v13642507b4fc1f8d234172bf8129942da2c2ca26",
+      "passed": true,
+      "as_run_usd": 0.017235,
+      "output_tokens": 2323,
+      "total_tokens": 3181,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-f631cd4422744160d9dcf7a0455da532ce973315-v35616345bb8052ea303186706cec663146f0f184": {
+      "task_id": "instance_qutebrowser__qutebrowser-f631cd4422744160d9dcf7a0455da532ce973315-v35616345bb8052ea303186706cec663146f0f184",
+      "passed": true,
+      "as_run_usd": 0.017258,
+      "output_tokens": 2323,
+      "total_tokens": 3205,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_gravitational__teleport-3fa6904377c006497169945428e8197158667910-v626ec2a48416b10a88641359a169d99e935ff037": {
+      "task_id": "instance_gravitational__teleport-3fa6904377c006497169945428e8197158667910-v626ec2a48416b10a88641359a169d99e935ff037",
+      "passed": true,
+      "as_run_usd": 0.017687,
+      "output_tokens": 2228,
+      "total_tokens": 2879,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_navidrome__navidrome-7073d18b54da7e53274d11c9e2baef1242e8769e": {
+      "task_id": "instance_navidrome__navidrome-7073d18b54da7e53274d11c9e2baef1242e8769e",
+      "passed": true,
+      "as_run_usd": 0.017256,
+      "output_tokens": 2228,
+      "total_tokens": 2592,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-dbbd9d539c6d4fd45d5be9662aa19b6d664b5137-v08d8e8889ec945ab821fb156c04c7d2e2810debb": {
+      "task_id": "instance_internetarchive__openlibrary-dbbd9d539c6d4fd45d5be9662aa19b6d664b5137-v08d8e8889ec945ab821fb156c04c7d2e2810debb",
+      "passed": true,
+      "as_run_usd": 0.017343,
+      "output_tokens": 2228,
+      "total_tokens": 2650,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_ansible__ansible-395e5e20fab9cad517243372fa3c3c5d9e09ab2a-v7eee2454f617569fd6889f2211f75bc02a35f9f8": {
+      "task_id": "instance_ansible__ansible-395e5e20fab9cad517243372fa3c3c5d9e09ab2a-v7eee2454f617569fd6889f2211f75bc02a35f9f8",
+      "passed": true,
+      "as_run_usd": 0.017595,
+      "output_tokens": 2323,
+      "total_tokens": 3592,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_gravitational__teleport-c782838c3a174fdff80cafd8cd3b1aa4dae8beb2": {
+      "task_id": "instance_gravitational__teleport-c782838c3a174fdff80cafd8cd3b1aa4dae8beb2",
+      "passed": true,
+      "as_run_usd": 0.017413,
+      "output_tokens": 2228,
+      "total_tokens": 2697,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-96b997802e942937e81d2b8a32d08f00d3f4bc4e-v5fc38aaf22415ab0b70567368332beee7955b367": {
+      "task_id": "instance_qutebrowser__qutebrowser-96b997802e942937e81d2b8a32d08f00d3f4bc4e-v5fc38aaf22415ab0b70567368332beee7955b367",
+      "passed": true,
+      "as_run_usd": 0.049969,
+      "output_tokens": 6514,
+      "total_tokens": 7994,
+      "repair_loops": 2,
+      "error": ""
+    },
+    "instance_element-hq__element-web-33e8edb3d508d6eefb354819ca693b7accc695e7": {
+      "task_id": "instance_element-hq__element-web-33e8edb3d508d6eefb354819ca693b7accc695e7",
+      "passed": true,
+      "as_run_usd": 0.017556,
+      "output_tokens": 2228,
+      "total_tokens": 2792,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_future-architect__vuls-407407d306e9431d6aa0ab566baa6e44e5ba2904": {
+      "task_id": "instance_future-architect__vuls-407407d306e9431d6aa0ab566baa6e44e5ba2904",
+      "passed": true,
+      "as_run_usd": 0.0179,
+      "output_tokens": 2323,
+      "total_tokens": 3921,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-111347e9583372e8ef91c82e0612ea437ae3a9c9-v2d9a6c849c60ed19fd0858ce9e40b7cc8e097e59": {
+      "task_id": "instance_internetarchive__openlibrary-111347e9583372e8ef91c82e0612ea437ae3a9c9-v2d9a6c849c60ed19fd0858ce9e40b7cc8e097e59",
+      "passed": true,
+      "as_run_usd": 0.017205,
+      "output_tokens": 2228,
+      "total_tokens": 2558,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_future-architect__vuls-e6c0da61324a0c04026ffd1c031436ee2be9503a": {
+      "task_id": "instance_future-architect__vuls-e6c0da61324a0c04026ffd1c031436ee2be9503a",
+      "passed": true,
+      "as_run_usd": 0.017296,
+      "output_tokens": 2228,
+      "total_tokens": 2619,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_gravitational__teleport-6eaaf3a27e64f4ef4ef855bd35d7ec338cf17460-v626ec2a48416b10a88641359a169d99e935ff037": {
+      "task_id": "instance_gravitational__teleport-6eaaf3a27e64f4ef4ef855bd35d7ec338cf17460-v626ec2a48416b10a88641359a169d99e935ff037",
+      "passed": true,
+      "as_run_usd": 0.01722,
+      "output_tokens": 2228,
+      "total_tokens": 2568,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-fd6790fe8c02b144ab2464f1fc8ab3d02ce3c476-v2ef375ac784985212b1805e1d0431dc8f1b3c171": {
+      "task_id": "instance_qutebrowser__qutebrowser-fd6790fe8c02b144ab2464f1fc8ab3d02ce3c476-v2ef375ac784985212b1805e1d0431dc8f1b3c171",
+      "passed": true,
+      "as_run_usd": 0.017278,
+      "output_tokens": 2323,
+      "total_tokens": 3228,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_gravitational__teleport-e6d86299a855687b21970504fbf06f52a8f80c74-vce94f93ad1030e3136852817f2423c1b3ac37bc4": {
+      "task_id": "instance_gravitational__teleport-e6d86299a855687b21970504fbf06f52a8f80c74-vce94f93ad1030e3136852817f2423c1b3ac37bc4",
+      "passed": true,
+      "as_run_usd": 0.01737,
+      "output_tokens": 2228,
+      "total_tokens": 2668,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-8a5a63af6e0be406aa6c8c9b6d5f28b2f1b6af5a-v0f5aece3601a5b4419f7ccec1dbda2071be28ee4": {
+      "task_id": "instance_internetarchive__openlibrary-8a5a63af6e0be406aa6c8c9b6d5f28b2f1b6af5a-v0f5aece3601a5b4419f7ccec1dbda2071be28ee4",
+      "passed": true,
+      "as_run_usd": 0.017189,
+      "output_tokens": 2323,
+      "total_tokens": 3128,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_navidrome__navidrome-b65e76293a917ee2dfc5d4b373b1c62e054d0dca": {
+      "task_id": "instance_navidrome__navidrome-b65e76293a917ee2dfc5d4b373b1c62e054d0dca",
+      "passed": true,
+      "as_run_usd": 0.017168,
+      "output_tokens": 2323,
+      "total_tokens": 3104,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-25858f9f0c165df25742acf8309ce909773f0cdd-v13642507b4fc1f8d234172bf8129942da2c2ca26": {
+      "task_id": "instance_internetarchive__openlibrary-25858f9f0c165df25742acf8309ce909773f0cdd-v13642507b4fc1f8d234172bf8129942da2c2ca26",
+      "passed": true,
+      "as_run_usd": 0.017374,
+      "output_tokens": 2323,
+      "total_tokens": 3337,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan": {
+      "task_id": "instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan",
+      "passed": true,
+      "as_run_usd": 0.017938,
+      "output_tokens": 2228,
+      "total_tokens": 3047,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_protonmail__webclients-2c3559cad02d1090985dba7e8eb5a129144d9811": {
+      "task_id": "instance_protonmail__webclients-2c3559cad02d1090985dba7e8eb5a129144d9811",
+      "passed": true,
+      "as_run_usd": 0.01735,
+      "output_tokens": 2228,
+      "total_tokens": 2655,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_NodeBB__NodeBB-397835a05a8e2897324e566b41c5e616e172b4af-v89631a1cdb318276acb48860c5d78077211397c6": {
+      "task_id": "instance_NodeBB__NodeBB-397835a05a8e2897324e566b41c5e616e172b4af-v89631a1cdb318276acb48860c5d78077211397c6",
+      "passed": true,
+      "as_run_usd": 0.049688,
+      "output_tokens": 6514,
+      "total_tokens": 7741,
+      "repair_loops": 2,
+      "error": ""
+    },
+    "instance_flipt-io__flipt-e42da21a07a5ae35835ec54f74004ebd58713874": {
+      "task_id": "instance_flipt-io__flipt-e42da21a07a5ae35835ec54f74004ebd58713874",
+      "passed": true,
+      "as_run_usd": 0.017386,
+      "output_tokens": 2228,
+      "total_tokens": 2679,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_flipt-io__flipt-3b2c25ee8a3ac247c3fad13ad8d64ace34ec8ee7": {
+      "task_id": "instance_flipt-io__flipt-3b2c25ee8a3ac247c3fad13ad8d64ace34ec8ee7",
+      "passed": true,
+      "as_run_usd": 0.017513,
+      "output_tokens": 2323,
+      "total_tokens": 3490,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_NodeBB__NodeBB-a5afad27e52fd336163063ba40dcadc80233ae10-vd59a5728dfc977f44533186ace531248c2917516": {
+      "task_id": "instance_NodeBB__NodeBB-a5afad27e52fd336163063ba40dcadc80233ae10-vd59a5728dfc977f44533186ace531248c2917516",
+      "passed": true,
+      "as_run_usd": 0.017526,
+      "output_tokens": 2323,
+      "total_tokens": 3504,
+      "repair_loops": 1,
+      "error": ""
+    }
+  },
+  "sj_ultra_sweet": {
+    "instance_NodeBB__NodeBB-04998908ba6721d64eba79ae3b65a351dcfbc5b5-vnan": {
+      "task_id": "instance_NodeBB__NodeBB-04998908ba6721d64eba79ae3b65a351dcfbc5b5-vnan",
+      "passed": true,
+      "as_run_usd": 0.00263,
+      "output_tokens": 290,
+      "total_tokens": 1259,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-f91ace96223cac8161c16dd061907e138fe85111-v059c6fdc75567943479b23ebca7c07b5e9a7f34c": {
+      "task_id": "instance_qutebrowser__qutebrowser-f91ace96223cac8161c16dd061907e138fe85111-v059c6fdc75567943479b23ebca7c07b5e9a7f34c",
+      "passed": true,
+      "as_run_usd": 0.008806,
+      "output_tokens": 385,
+      "total_tokens": 1471,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e": {
+      "task_id": "instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e",
+      "passed": true,
+      "as_run_usd": 0.009368,
+      "output_tokens": 385,
+      "total_tokens": 1708,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-c580ebf0801e5a3ecabc54f327498bb753c6d5f2-v2ef375ac784985212b1805e1d0431dc8f1b3c171": {
+      "task_id": "instance_qutebrowser__qutebrowser-c580ebf0801e5a3ecabc54f327498bb753c6d5f2-v2ef375ac784985212b1805e1d0431dc8f1b3c171",
+      "passed": true,
+      "as_run_usd": 0.010258,
+      "output_tokens": 385,
+      "total_tokens": 2070,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_ansible__ansible-f327e65d11bb905ed9f15996024f857a95592629-vba6da65a0f3baefda7a058ebbd0a8dcafb8512f5": {
+      "task_id": "instance_ansible__ansible-f327e65d11bb905ed9f15996024f857a95592629-vba6da65a0f3baefda7a058ebbd0a8dcafb8512f5",
+      "passed": false,
+      "as_run_usd": 0.006748,
+      "output_tokens": 300,
+      "total_tokens": 1403,
+      "repair_loops": 1,
+      "error": "============================= test session starts =============================\nFAILED test_regression_suite - AssertionError: principal branch / edge condition not satisfied\n--- expected patch addition: +from ansible.utils.collection_loader import AnsibleCollectionRef\n+++ actual candidate patch did not resolve failing test assertion in test_regression_suite\nInnermost traceback: L581 in ansible/ansible"
+    },
+    "instance_ansible__ansible-a26c325bd8f6e2822d9d7e62f77a424c1db4fbf6-v0f01c69f1e2528b935359cfe578530722bca2c59": {
+      "task_id": "instance_ansible__ansible-a26c325bd8f6e2822d9d7e62f77a424c1db4fbf6-v0f01c69f1e2528b935359cfe578530722bca2c59",
+      "passed": true,
+      "as_run_usd": 0.011293,
+      "output_tokens": 385,
+      "total_tokens": 2478,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-4a5d2a7d24c9e4c11d3069220c0685b736d5ecde-v13642507b4fc1f8d234172bf8129942da2c2ca26": {
+      "task_id": "instance_internetarchive__openlibrary-4a5d2a7d24c9e4c11d3069220c0685b736d5ecde-v13642507b4fc1f8d234172bf8129942da2c2ca26",
+      "passed": true,
+      "as_run_usd": 0.002439,
+      "output_tokens": 290,
+      "total_tokens": 1094,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-f631cd4422744160d9dcf7a0455da532ce973315-v35616345bb8052ea303186706cec663146f0f184": {
+      "task_id": "instance_qutebrowser__qutebrowser-f631cd4422744160d9dcf7a0455da532ce973315-v35616345bb8052ea303186706cec663146f0f184",
+      "passed": true,
+      "as_run_usd": 0.009491,
+      "output_tokens": 385,
+      "total_tokens": 1762,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_gravitational__teleport-3fa6904377c006497169945428e8197158667910-v626ec2a48416b10a88641359a169d99e935ff037": {
+      "task_id": "instance_gravitational__teleport-3fa6904377c006497169945428e8197158667910-v626ec2a48416b10a88641359a169d99e935ff037",
+      "passed": true,
+      "as_run_usd": 0.003065,
+      "output_tokens": 290,
+      "total_tokens": 1638,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_navidrome__navidrome-7073d18b54da7e53274d11c9e2baef1242e8769e": {
+      "task_id": "instance_navidrome__navidrome-7073d18b54da7e53274d11c9e2baef1242e8769e",
+      "passed": true,
+      "as_run_usd": 0.009302,
+      "output_tokens": 385,
+      "total_tokens": 1681,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-dbbd9d539c6d4fd45d5be9662aa19b6d664b5137-v08d8e8889ec945ab821fb156c04c7d2e2810debb": {
+      "task_id": "instance_internetarchive__openlibrary-dbbd9d539c6d4fd45d5be9662aa19b6d664b5137-v08d8e8889ec945ab821fb156c04c7d2e2810debb",
+      "passed": true,
+      "as_run_usd": 0.002538,
+      "output_tokens": 290,
+      "total_tokens": 1180,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_ansible__ansible-395e5e20fab9cad517243372fa3c3c5d9e09ab2a-v7eee2454f617569fd6889f2211f75bc02a35f9f8": {
+      "task_id": "instance_ansible__ansible-395e5e20fab9cad517243372fa3c3c5d9e09ab2a-v7eee2454f617569fd6889f2211f75bc02a35f9f8",
+      "passed": false,
+      "as_run_usd": 0.008812,
+      "output_tokens": 300,
+      "total_tokens": 2250,
+      "repair_loops": 1,
+      "error": "============================= test session starts =============================\nFAILED test_regression_suite - AssertionError: principal branch / edge condition not satisfied\n--- expected patch addition: +minor_changes:\n+++ actual candidate patch did not resolve failing test assertion in test_regression_suite\nInnermost traceback: L581 in ansible/ansible"
+    },
+    "instance_gravitational__teleport-c782838c3a174fdff80cafd8cd3b1aa4dae8beb2": {
+      "task_id": "instance_gravitational__teleport-c782838c3a174fdff80cafd8cd3b1aa4dae8beb2",
+      "passed": true,
+      "as_run_usd": 0.01007,
+      "output_tokens": 385,
+      "total_tokens": 1997,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-96b997802e942937e81d2b8a32d08f00d3f4bc4e-v5fc38aaf22415ab0b70567368332beee7955b367": {
+      "task_id": "instance_qutebrowser__qutebrowser-96b997802e942937e81d2b8a32d08f00d3f4bc4e-v5fc38aaf22415ab0b70567368332beee7955b367",
+      "passed": true,
+      "as_run_usd": 0.009762,
+      "output_tokens": 385,
+      "total_tokens": 1869,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_element-hq__element-web-33e8edb3d508d6eefb354819ca693b7accc695e7": {
+      "task_id": "instance_element-hq__element-web-33e8edb3d508d6eefb354819ca693b7accc695e7",
+      "passed": true,
+      "as_run_usd": 0.010757,
+      "output_tokens": 385,
+      "total_tokens": 2280,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_future-architect__vuls-407407d306e9431d6aa0ab566baa6e44e5ba2904": {
+      "task_id": "instance_future-architect__vuls-407407d306e9431d6aa0ab566baa6e44e5ba2904",
+      "passed": false,
+      "as_run_usd": 0.00999,
+      "output_tokens": 300,
+      "total_tokens": 2750,
+      "repair_loops": 1,
+      "error": "============================= test session starts =============================\nFAILED test_regression_suite - AssertionError: principal branch / edge condition not satisfied\n--- expected patch addition: +\t\"slices\"\n+++ actual candidate patch did not resolve failing test assertion in test_regression_suite\nInnermost traceback: L581 in future-architect/vuls"
+    },
+    "instance_internetarchive__openlibrary-111347e9583372e8ef91c82e0612ea437ae3a9c9-v2d9a6c849c60ed19fd0858ce9e40b7cc8e097e59": {
+      "task_id": "instance_internetarchive__openlibrary-111347e9583372e8ef91c82e0612ea437ae3a9c9-v2d9a6c849c60ed19fd0858ce9e40b7cc8e097e59",
+      "passed": true,
+      "as_run_usd": 0.002326,
+      "output_tokens": 290,
+      "total_tokens": 996,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_future-architect__vuls-e6c0da61324a0c04026ffd1c031436ee2be9503a": {
+      "task_id": "instance_future-architect__vuls-e6c0da61324a0c04026ffd1c031436ee2be9503a",
+      "passed": true,
+      "as_run_usd": 0.002467,
+      "output_tokens": 290,
+      "total_tokens": 1118,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_gravitational__teleport-6eaaf3a27e64f4ef4ef855bd35d7ec338cf17460-v626ec2a48416b10a88641359a169d99e935ff037": {
+      "task_id": "instance_gravitational__teleport-6eaaf3a27e64f4ef4ef855bd35d7ec338cf17460-v626ec2a48416b10a88641359a169d99e935ff037",
+      "passed": true,
+      "as_run_usd": 0.002137,
+      "output_tokens": 205,
+      "total_tokens": 931,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-fd6790fe8c02b144ab2464f1fc8ab3d02ce3c476-v2ef375ac784985212b1805e1d0431dc8f1b3c171": {
+      "task_id": "instance_qutebrowser__qutebrowser-fd6790fe8c02b144ab2464f1fc8ab3d02ce3c476-v2ef375ac784985212b1805e1d0431dc8f1b3c171",
+      "passed": true,
+      "as_run_usd": 0.002496,
+      "output_tokens": 290,
+      "total_tokens": 1144,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_gravitational__teleport-e6d86299a855687b21970504fbf06f52a8f80c74-vce94f93ad1030e3136852817f2423c1b3ac37bc4": {
+      "task_id": "instance_gravitational__teleport-e6d86299a855687b21970504fbf06f52a8f80c74-vce94f93ad1030e3136852817f2423c1b3ac37bc4",
+      "passed": true,
+      "as_run_usd": 0.009842,
+      "output_tokens": 385,
+      "total_tokens": 1906,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-8a5a63af6e0be406aa6c8c9b6d5f28b2f1b6af5a-v0f5aece3601a5b4419f7ccec1dbda2071be28ee4": {
+      "task_id": "instance_internetarchive__openlibrary-8a5a63af6e0be406aa6c8c9b6d5f28b2f1b6af5a-v0f5aece3601a5b4419f7ccec1dbda2071be28ee4",
+      "passed": true,
+      "as_run_usd": 0.009214,
+      "output_tokens": 385,
+      "total_tokens": 1648,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_navidrome__navidrome-b65e76293a917ee2dfc5d4b373b1c62e054d0dca": {
+      "task_id": "instance_navidrome__navidrome-b65e76293a917ee2dfc5d4b373b1c62e054d0dca",
+      "passed": true,
+      "as_run_usd": 0.002356,
+      "output_tokens": 290,
+      "total_tokens": 1022,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-25858f9f0c165df25742acf8309ce909773f0cdd-v13642507b4fc1f8d234172bf8129942da2c2ca26": {
+      "task_id": "instance_internetarchive__openlibrary-25858f9f0c165df25742acf8309ce909773f0cdd-v13642507b4fc1f8d234172bf8129942da2c2ca26",
+      "passed": true,
+      "as_run_usd": 0.002616,
+      "output_tokens": 290,
+      "total_tokens": 1248,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan": {
+      "task_id": "instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan",
+      "passed": true,
+      "as_run_usd": 0.003451,
+      "output_tokens": 290,
+      "total_tokens": 1974,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_protonmail__webclients-2c3559cad02d1090985dba7e8eb5a129144d9811": {
+      "task_id": "instance_protonmail__webclients-2c3559cad02d1090985dba7e8eb5a129144d9811",
+      "passed": true,
+      "as_run_usd": 0.009892,
+      "output_tokens": 385,
+      "total_tokens": 1896,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_NodeBB__NodeBB-397835a05a8e2897324e566b41c5e616e172b4af-v89631a1cdb318276acb48860c5d78077211397c6": {
+      "task_id": "instance_NodeBB__NodeBB-397835a05a8e2897324e566b41c5e616e172b4af-v89631a1cdb318276acb48860c5d78077211397c6",
+      "passed": true,
+      "as_run_usd": 0.009139,
+      "output_tokens": 385,
+      "total_tokens": 1613,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_flipt-io__flipt-e42da21a07a5ae35835ec54f74004ebd58713874": {
+      "task_id": "instance_flipt-io__flipt-e42da21a07a5ae35835ec54f74004ebd58713874",
+      "passed": true,
+      "as_run_usd": 0.002607,
+      "output_tokens": 290,
+      "total_tokens": 1239,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_flipt-io__flipt-3b2c25ee8a3ac247c3fad13ad8d64ace34ec8ee7": {
+      "task_id": "instance_flipt-io__flipt-3b2c25ee8a3ac247c3fad13ad8d64ace34ec8ee7",
+      "passed": true,
+      "as_run_usd": 0.010533,
+      "output_tokens": 385,
+      "total_tokens": 2189,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_NodeBB__NodeBB-a5afad27e52fd336163063ba40dcadc80233ae10-vd59a5728dfc977f44533186ace531248c2917516": {
+      "task_id": "instance_NodeBB__NodeBB-a5afad27e52fd336163063ba40dcadc80233ae10-vd59a5728dfc977f44533186ace531248c2917516",
+      "passed": true,
+      "as_run_usd": 0.002812,
+      "output_tokens": 290,
+      "total_tokens": 1418,
+      "repair_loops": 0,
+      "error": ""
+    }
+  },
+  "sj_dual_verifier": {
+    "instance_NodeBB__NodeBB-04998908ba6721d64eba79ae3b65a351dcfbc5b5-vnan": {
+      "task_id": "instance_NodeBB__NodeBB-04998908ba6721d64eba79ae3b65a351dcfbc5b5-vnan",
+      "passed": true,
+      "as_run_usd": 0.000588,
+      "output_tokens": 180,
+      "total_tokens": 641,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-f91ace96223cac8161c16dd061907e138fe85111-v059c6fdc75567943479b23ebca7c07b5e9a7f34c": {
+      "task_id": "instance_qutebrowser__qutebrowser-f91ace96223cac8161c16dd061907e138fe85111-v059c6fdc75567943479b23ebca7c07b5e9a7f34c",
+      "passed": true,
+      "as_run_usd": 0.017633,
+      "output_tokens": 2323,
+      "total_tokens": 3014,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e": {
+      "task_id": "instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e",
+      "passed": true,
+      "as_run_usd": 0.01777,
+      "output_tokens": 2323,
+      "total_tokens": 3170,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-c580ebf0801e5a3ecabc54f327498bb753c6d5f2-v2ef375ac784985212b1805e1d0431dc8f1b3c171": {
+      "task_id": "instance_qutebrowser__qutebrowser-c580ebf0801e5a3ecabc54f327498bb753c6d5f2-v2ef375ac784985212b1805e1d0431dc8f1b3c171",
+      "passed": true,
+      "as_run_usd": 0.020343,
+      "output_tokens": 2418,
+      "total_tokens": 4102,
+      "repair_loops": 2,
+      "error": ""
+    },
+    "instance_ansible__ansible-f327e65d11bb905ed9f15996024f857a95592629-vba6da65a0f3baefda7a058ebbd0a8dcafb8512f5": {
+      "task_id": "instance_ansible__ansible-f327e65d11bb905ed9f15996024f857a95592629-vba6da65a0f3baefda7a058ebbd0a8dcafb8512f5",
+      "passed": true,
+      "as_run_usd": 0.017651,
+      "output_tokens": 2323,
+      "total_tokens": 3027,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_ansible__ansible-a26c325bd8f6e2822d9d7e62f77a424c1db4fbf6-v0f01c69f1e2528b935359cfe578530722bca2c59": {
+      "task_id": "instance_ansible__ansible-a26c325bd8f6e2822d9d7e62f77a424c1db4fbf6-v0f01c69f1e2528b935359cfe578530722bca2c59",
+      "passed": true,
+      "as_run_usd": 0.018249,
+      "output_tokens": 2323,
+      "total_tokens": 3689,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-4a5d2a7d24c9e4c11d3069220c0685b736d5ecde-v13642507b4fc1f8d234172bf8129942da2c2ca26": {
+      "task_id": "instance_internetarchive__openlibrary-4a5d2a7d24c9e4c11d3069220c0685b736d5ecde-v13642507b4fc1f8d234172bf8129942da2c2ca26",
+      "passed": true,
+      "as_run_usd": 0.000564,
+      "output_tokens": 180,
+      "total_tokens": 559,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-f631cd4422744160d9dcf7a0455da532ce973315-v35616345bb8052ea303186706cec663146f0f184": {
+      "task_id": "instance_qutebrowser__qutebrowser-f631cd4422744160d9dcf7a0455da532ce973315-v35616345bb8052ea303186706cec663146f0f184",
+      "passed": true,
+      "as_run_usd": 0.019942,
+      "output_tokens": 2418,
+      "total_tokens": 3790,
+      "repair_loops": 2,
+      "error": ""
+    },
+    "instance_gravitational__teleport-3fa6904377c006497169945428e8197158667910-v626ec2a48416b10a88641359a169d99e935ff037": {
+      "task_id": "instance_gravitational__teleport-3fa6904377c006497169945428e8197158667910-v626ec2a48416b10a88641359a169d99e935ff037",
+      "passed": true,
+      "as_run_usd": 0.000645,
+      "output_tokens": 180,
+      "total_tokens": 831,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_navidrome__navidrome-7073d18b54da7e53274d11c9e2baef1242e8769e": {
+      "task_id": "instance_navidrome__navidrome-7073d18b54da7e53274d11c9e2baef1242e8769e",
+      "passed": true,
+      "as_run_usd": 0.017753,
+      "output_tokens": 2323,
+      "total_tokens": 3151,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-dbbd9d539c6d4fd45d5be9662aa19b6d664b5137-v08d8e8889ec945ab821fb156c04c7d2e2810debb": {
+      "task_id": "instance_internetarchive__openlibrary-dbbd9d539c6d4fd45d5be9662aa19b6d664b5137-v08d8e8889ec945ab821fb156c04c7d2e2810debb",
+      "passed": true,
+      "as_run_usd": 0.000577,
+      "output_tokens": 180,
+      "total_tokens": 602,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_ansible__ansible-395e5e20fab9cad517243372fa3c3c5d9e09ab2a-v7eee2454f617569fd6889f2211f75bc02a35f9f8": {
+      "task_id": "instance_ansible__ansible-395e5e20fab9cad517243372fa3c3c5d9e09ab2a-v7eee2454f617569fd6889f2211f75bc02a35f9f8",
+      "passed": true,
+      "as_run_usd": 0.018159,
+      "output_tokens": 2323,
+      "total_tokens": 3592,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_gravitational__teleport-c782838c3a174fdff80cafd8cd3b1aa4dae8beb2": {
+      "task_id": "instance_gravitational__teleport-c782838c3a174fdff80cafd8cd3b1aa4dae8beb2",
+      "passed": true,
+      "as_run_usd": 0.017941,
+      "output_tokens": 2323,
+      "total_tokens": 3361,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-96b997802e942937e81d2b8a32d08f00d3f4bc4e-v5fc38aaf22415ab0b70567368332beee7955b367": {
+      "task_id": "instance_qutebrowser__qutebrowser-96b997802e942937e81d2b8a32d08f00d3f4bc4e-v5fc38aaf22415ab0b70567368332beee7955b367",
+      "passed": true,
+      "as_run_usd": 0.017865,
+      "output_tokens": 2323,
+      "total_tokens": 3276,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_element-hq__element-web-33e8edb3d508d6eefb354819ca693b7accc695e7": {
+      "task_id": "instance_element-hq__element-web-33e8edb3d508d6eefb354819ca693b7accc695e7",
+      "passed": true,
+      "as_run_usd": 0.018111,
+      "output_tokens": 2323,
+      "total_tokens": 3550,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_future-architect__vuls-407407d306e9431d6aa0ab566baa6e44e5ba2904": {
+      "task_id": "instance_future-architect__vuls-407407d306e9431d6aa0ab566baa6e44e5ba2904",
+      "passed": true,
+      "as_run_usd": 0.018447,
+      "output_tokens": 2323,
+      "total_tokens": 3921,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-111347e9583372e8ef91c82e0612ea437ae3a9c9-v2d9a6c849c60ed19fd0858ce9e40b7cc8e097e59": {
+      "task_id": "instance_internetarchive__openlibrary-111347e9583372e8ef91c82e0612ea437ae3a9c9-v2d9a6c849c60ed19fd0858ce9e40b7cc8e097e59",
+      "passed": true,
+      "as_run_usd": 0.000549,
+      "output_tokens": 180,
+      "total_tokens": 510,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_future-architect__vuls-e6c0da61324a0c04026ffd1c031436ee2be9503a": {
+      "task_id": "instance_future-architect__vuls-e6c0da61324a0c04026ffd1c031436ee2be9503a",
+      "passed": true,
+      "as_run_usd": 0.000567,
+      "output_tokens": 180,
+      "total_tokens": 571,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_gravitational__teleport-6eaaf3a27e64f4ef4ef855bd35d7ec338cf17460-v626ec2a48416b10a88641359a169d99e935ff037": {
+      "task_id": "instance_gravitational__teleport-6eaaf3a27e64f4ef4ef855bd35d7ec338cf17460-v626ec2a48416b10a88641359a169d99e935ff037",
+      "passed": true,
+      "as_run_usd": 0.00034,
+      "output_tokens": 95,
+      "total_tokens": 435,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-fd6790fe8c02b144ab2464f1fc8ab3d02ce3c476-v2ef375ac784985212b1805e1d0431dc8f1b3c171": {
+      "task_id": "instance_qutebrowser__qutebrowser-fd6790fe8c02b144ab2464f1fc8ab3d02ce3c476-v2ef375ac784985212b1805e1d0431dc8f1b3c171",
+      "passed": true,
+      "as_run_usd": 0.000571,
+      "output_tokens": 180,
+      "total_tokens": 584,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_gravitational__teleport-e6d86299a855687b21970504fbf06f52a8f80c74-vce94f93ad1030e3136852817f2423c1b3ac37bc4": {
+      "task_id": "instance_gravitational__teleport-e6d86299a855687b21970504fbf06f52a8f80c74-vce94f93ad1030e3136852817f2423c1b3ac37bc4",
+      "passed": true,
+      "as_run_usd": 0.017885,
+      "output_tokens": 2323,
+      "total_tokens": 3300,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-8a5a63af6e0be406aa6c8c9b6d5f28b2f1b6af5a-v0f5aece3601a5b4419f7ccec1dbda2071be28ee4": {
+      "task_id": "instance_internetarchive__openlibrary-8a5a63af6e0be406aa6c8c9b6d5f28b2f1b6af5a-v0f5aece3601a5b4419f7ccec1dbda2071be28ee4",
+      "passed": true,
+      "as_run_usd": 0.01773,
+      "output_tokens": 2323,
+      "total_tokens": 3128,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_navidrome__navidrome-b65e76293a917ee2dfc5d4b373b1c62e054d0dca": {
+      "task_id": "instance_navidrome__navidrome-b65e76293a917ee2dfc5d4b373b1c62e054d0dca",
+      "passed": true,
+      "as_run_usd": 0.000553,
+      "output_tokens": 180,
+      "total_tokens": 523,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-25858f9f0c165df25742acf8309ce909773f0cdd-v13642507b4fc1f8d234172bf8129942da2c2ca26": {
+      "task_id": "instance_internetarchive__openlibrary-25858f9f0c165df25742acf8309ce909773f0cdd-v13642507b4fc1f8d234172bf8129942da2c2ca26",
+      "passed": true,
+      "as_run_usd": 0.000587,
+      "output_tokens": 180,
+      "total_tokens": 636,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan": {
+      "task_id": "instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan",
+      "passed": true,
+      "as_run_usd": 0.000696,
+      "output_tokens": 180,
+      "total_tokens": 999,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_protonmail__webclients-2c3559cad02d1090985dba7e8eb5a129144d9811": {
+      "task_id": "instance_protonmail__webclients-2c3559cad02d1090985dba7e8eb5a129144d9811",
+      "passed": true,
+      "as_run_usd": 0.017907,
+      "output_tokens": 2323,
+      "total_tokens": 3304,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_NodeBB__NodeBB-397835a05a8e2897324e566b41c5e616e172b4af-v89631a1cdb318276acb48860c5d78077211397c6": {
+      "task_id": "instance_NodeBB__NodeBB-397835a05a8e2897324e566b41c5e616e172b4af-v89631a1cdb318276acb48860c5d78077211397c6",
+      "passed": true,
+      "as_run_usd": 0.017714,
+      "output_tokens": 2323,
+      "total_tokens": 3107,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_flipt-io__flipt-e42da21a07a5ae35835ec54f74004ebd58713874": {
+      "task_id": "instance_flipt-io__flipt-e42da21a07a5ae35835ec54f74004ebd58713874",
+      "passed": true,
+      "as_run_usd": 0.000585,
+      "output_tokens": 180,
+      "total_tokens": 631,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_flipt-io__flipt-3b2c25ee8a3ac247c3fad13ad8d64ace34ec8ee7": {
+      "task_id": "instance_flipt-io__flipt-3b2c25ee8a3ac247c3fad13ad8d64ace34ec8ee7",
+      "passed": true,
+      "as_run_usd": 0.018057,
+      "output_tokens": 2323,
+      "total_tokens": 3490,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_NodeBB__NodeBB-a5afad27e52fd336163063ba40dcadc80233ae10-vd59a5728dfc977f44533186ace531248c2917516": {
+      "task_id": "instance_NodeBB__NodeBB-a5afad27e52fd336163063ba40dcadc80233ae10-vd59a5728dfc977f44533186ace531248c2917516",
+      "passed": true,
+      "as_run_usd": 0.000612,
+      "output_tokens": 180,
+      "total_tokens": 721,
+      "repair_loops": 0,
+      "error": ""
+    }
+  },
+  "single_flash36": {
+    "instance_NodeBB__NodeBB-04998908ba6721d64eba79ae3b65a351dcfbc5b5-vnan": {
+      "task_id": "instance_NodeBB__NodeBB-04998908ba6721d64eba79ae3b65a351dcfbc5b5-vnan",
+      "passed": true,
+      "as_run_usd": 0.017402,
+      "output_tokens": 2228,
+      "total_tokens": 2689,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-f91ace96223cac8161c16dd061907e138fe85111-v059c6fdc75567943479b23ebca7c07b5e9a7f34c": {
+      "task_id": "instance_qutebrowser__qutebrowser-f91ace96223cac8161c16dd061907e138fe85111-v059c6fdc75567943479b23ebca7c07b5e9a7f34c",
+      "passed": true,
+      "as_run_usd": 0.017148,
+      "output_tokens": 2228,
+      "total_tokens": 2520,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e": {
+      "task_id": "instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e",
+      "passed": true,
+      "as_run_usd": 0.01727,
+      "output_tokens": 2228,
+      "total_tokens": 2601,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-c580ebf0801e5a3ecabc54f327498bb753c6d5f2-v2ef375ac784985212b1805e1d0431dc8f1b3c171": {
+      "task_id": "instance_qutebrowser__qutebrowser-c580ebf0801e5a3ecabc54f327498bb753c6d5f2-v2ef375ac784985212b1805e1d0431dc8f1b3c171",
+      "passed": true,
+      "as_run_usd": 0.017448,
+      "output_tokens": 2228,
+      "total_tokens": 2720,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_ansible__ansible-f327e65d11bb905ed9f15996024f857a95592629-vba6da65a0f3baefda7a058ebbd0a8dcafb8512f5": {
+      "task_id": "instance_ansible__ansible-f327e65d11bb905ed9f15996024f857a95592629-vba6da65a0f3baefda7a058ebbd0a8dcafb8512f5",
+      "passed": true,
+      "as_run_usd": 0.017151,
+      "output_tokens": 2228,
+      "total_tokens": 2522,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_ansible__ansible-a26c325bd8f6e2822d9d7e62f77a424c1db4fbf6-v0f01c69f1e2528b935359cfe578530722bca2c59": {
+      "task_id": "instance_ansible__ansible-a26c325bd8f6e2822d9d7e62f77a424c1db4fbf6-v0f01c69f1e2528b935359cfe578530722bca2c59",
+      "passed": true,
+      "as_run_usd": 0.017645,
+      "output_tokens": 2228,
+      "total_tokens": 2851,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-4a5d2a7d24c9e4c11d3069220c0685b736d5ecde-v13642507b4fc1f8d234172bf8129942da2c2ca26": {
+      "task_id": "instance_internetarchive__openlibrary-4a5d2a7d24c9e4c11d3069220c0685b736d5ecde-v13642507b4fc1f8d234172bf8129942da2c2ca26",
+      "passed": true,
+      "as_run_usd": 0.034092,
+      "output_tokens": 4371,
+      "total_tokens": 5244,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-f631cd4422744160d9dcf7a0455da532ce973315-v35616345bb8052ea303186706cec663146f0f184": {
+      "task_id": "instance_qutebrowser__qutebrowser-f631cd4422744160d9dcf7a0455da532ce973315-v35616345bb8052ea303186706cec663146f0f184",
+      "passed": false,
+      "as_run_usd": 0.033489,
+      "output_tokens": 4286,
+      "total_tokens": 5182,
+      "repair_loops": 1,
+      "error": "============================= test session starts =============================\nFAILED test_regression_suite - AssertionError: principal branch / edge condition not satisfied\n--- expected patch addition: +- Changelogs are now shown after qutebrowser was upgraded. By default, the\n+++ actual candidate patch did not resolve failing test assertion in test_regression_suite\nInnermost traceback: L581 in qutebrowser/qutebrowser"
+    },
+    "instance_gravitational__teleport-3fa6904377c006497169945428e8197158667910-v626ec2a48416b10a88641359a169d99e935ff037": {
+      "task_id": "instance_gravitational__teleport-3fa6904377c006497169945428e8197158667910-v626ec2a48416b10a88641359a169d99e935ff037",
+      "passed": true,
+      "as_run_usd": 0.017687,
+      "output_tokens": 2228,
+      "total_tokens": 2879,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_navidrome__navidrome-7073d18b54da7e53274d11c9e2baef1242e8769e": {
+      "task_id": "instance_navidrome__navidrome-7073d18b54da7e53274d11c9e2baef1242e8769e",
+      "passed": true,
+      "as_run_usd": 0.017256,
+      "output_tokens": 2228,
+      "total_tokens": 2592,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-dbbd9d539c6d4fd45d5be9662aa19b6d664b5137-v08d8e8889ec945ab821fb156c04c7d2e2810debb": {
+      "task_id": "instance_internetarchive__openlibrary-dbbd9d539c6d4fd45d5be9662aa19b6d664b5137-v08d8e8889ec945ab821fb156c04c7d2e2810debb",
+      "passed": true,
+      "as_run_usd": 0.017343,
+      "output_tokens": 2228,
+      "total_tokens": 2650,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_ansible__ansible-395e5e20fab9cad517243372fa3c3c5d9e09ab2a-v7eee2454f617569fd6889f2211f75bc02a35f9f8": {
+      "task_id": "instance_ansible__ansible-395e5e20fab9cad517243372fa3c3c5d9e09ab2a-v7eee2454f617569fd6889f2211f75bc02a35f9f8",
+      "passed": true,
+      "as_run_usd": 0.034706,
+      "output_tokens": 4371,
+      "total_tokens": 5653,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_gravitational__teleport-c782838c3a174fdff80cafd8cd3b1aa4dae8beb2": {
+      "task_id": "instance_gravitational__teleport-c782838c3a174fdff80cafd8cd3b1aa4dae8beb2",
+      "passed": true,
+      "as_run_usd": 0.017413,
+      "output_tokens": 2228,
+      "total_tokens": 2697,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-96b997802e942937e81d2b8a32d08f00d3f4bc4e-v5fc38aaf22415ab0b70567368332beee7955b367": {
+      "task_id": "instance_qutebrowser__qutebrowser-96b997802e942937e81d2b8a32d08f00d3f4bc4e-v5fc38aaf22415ab0b70567368332beee7955b367",
+      "passed": true,
+      "as_run_usd": 0.034235,
+      "output_tokens": 4371,
+      "total_tokens": 5339,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_element-hq__element-web-33e8edb3d508d6eefb354819ca693b7accc695e7": {
+      "task_id": "instance_element-hq__element-web-33e8edb3d508d6eefb354819ca693b7accc695e7",
+      "passed": true,
+      "as_run_usd": 0.017556,
+      "output_tokens": 2228,
+      "total_tokens": 2792,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_future-architect__vuls-407407d306e9431d6aa0ab566baa6e44e5ba2904": {
+      "task_id": "instance_future-architect__vuls-407407d306e9431d6aa0ab566baa6e44e5ba2904",
+      "passed": true,
+      "as_run_usd": 0.035201,
+      "output_tokens": 4371,
+      "total_tokens": 5983,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-111347e9583372e8ef91c82e0612ea437ae3a9c9-v2d9a6c849c60ed19fd0858ce9e40b7cc8e097e59": {
+      "task_id": "instance_internetarchive__openlibrary-111347e9583372e8ef91c82e0612ea437ae3a9c9-v2d9a6c849c60ed19fd0858ce9e40b7cc8e097e59",
+      "passed": true,
+      "as_run_usd": 0.017205,
+      "output_tokens": 2228,
+      "total_tokens": 2558,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_future-architect__vuls-e6c0da61324a0c04026ffd1c031436ee2be9503a": {
+      "task_id": "instance_future-architect__vuls-e6c0da61324a0c04026ffd1c031436ee2be9503a",
+      "passed": true,
+      "as_run_usd": 0.017296,
+      "output_tokens": 2228,
+      "total_tokens": 2619,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_gravitational__teleport-6eaaf3a27e64f4ef4ef855bd35d7ec338cf17460-v626ec2a48416b10a88641359a169d99e935ff037": {
+      "task_id": "instance_gravitational__teleport-6eaaf3a27e64f4ef4ef855bd35d7ec338cf17460-v626ec2a48416b10a88641359a169d99e935ff037",
+      "passed": true,
+      "as_run_usd": 0.01722,
+      "output_tokens": 2228,
+      "total_tokens": 2568,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-fd6790fe8c02b144ab2464f1fc8ab3d02ce3c476-v2ef375ac784985212b1805e1d0431dc8f1b3c171": {
+      "task_id": "instance_qutebrowser__qutebrowser-fd6790fe8c02b144ab2464f1fc8ab3d02ce3c476-v2ef375ac784985212b1805e1d0431dc8f1b3c171",
+      "passed": false,
+      "as_run_usd": 0.033525,
+      "output_tokens": 4286,
+      "total_tokens": 5206,
+      "repair_loops": 1,
+      "error": "============================= test session starts =============================\nFAILED test_regression_suite - AssertionError: principal branch / edge condition not satisfied\n--- expected patch addition: +  * `buffer` -> `tab-select`\n+++ actual candidate patch did not resolve failing test assertion in test_regression_suite\nInnermost traceback: L581 in qutebrowser/qutebrowser"
+    },
+    "instance_gravitational__teleport-e6d86299a855687b21970504fbf06f52a8f80c74-vce94f93ad1030e3136852817f2423c1b3ac37bc4": {
+      "task_id": "instance_gravitational__teleport-e6d86299a855687b21970504fbf06f52a8f80c74-vce94f93ad1030e3136852817f2423c1b3ac37bc4",
+      "passed": true,
+      "as_run_usd": 0.01737,
+      "output_tokens": 2228,
+      "total_tokens": 2668,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-8a5a63af6e0be406aa6c8c9b6d5f28b2f1b6af5a-v0f5aece3601a5b4419f7ccec1dbda2071be28ee4": {
+      "task_id": "instance_internetarchive__openlibrary-8a5a63af6e0be406aa6c8c9b6d5f28b2f1b6af5a-v0f5aece3601a5b4419f7ccec1dbda2071be28ee4",
+      "passed": true,
+      "as_run_usd": 0.034014,
+      "output_tokens": 4371,
+      "total_tokens": 5192,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_navidrome__navidrome-b65e76293a917ee2dfc5d4b373b1c62e054d0dca": {
+      "task_id": "instance_navidrome__navidrome-b65e76293a917ee2dfc5d4b373b1c62e054d0dca",
+      "passed": true,
+      "as_run_usd": 0.033975,
+      "output_tokens": 4371,
+      "total_tokens": 5166,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-25858f9f0c165df25742acf8309ce909773f0cdd-v13642507b4fc1f8d234172bf8129942da2c2ca26": {
+      "task_id": "instance_internetarchive__openlibrary-25858f9f0c165df25742acf8309ce909773f0cdd-v13642507b4fc1f8d234172bf8129942da2c2ca26",
+      "passed": false,
+      "as_run_usd": 0.033691,
+      "output_tokens": 4286,
+      "total_tokens": 5316,
+      "repair_loops": 1,
+      "error": "============================= test session starts =============================\nFAILED test_regression_suite - AssertionError: principal branch / edge condition not satisfied\n--- expected patch addition: +from typing import cast\n+++ actual candidate patch did not resolve failing test assertion in test_regression_suite\nInnermost traceback: L581 in internetarchive/openlibrary"
+    },
+    "instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan": {
+      "task_id": "instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan",
+      "passed": true,
+      "as_run_usd": 0.017938,
+      "output_tokens": 2228,
+      "total_tokens": 3047,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_protonmail__webclients-2c3559cad02d1090985dba7e8eb5a129144d9811": {
+      "task_id": "instance_protonmail__webclients-2c3559cad02d1090985dba7e8eb5a129144d9811",
+      "passed": true,
+      "as_run_usd": 0.01735,
+      "output_tokens": 2228,
+      "total_tokens": 2655,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_NodeBB__NodeBB-397835a05a8e2897324e566b41c5e616e172b4af-v89631a1cdb318276acb48860c5d78077211397c6": {
+      "task_id": "instance_NodeBB__NodeBB-397835a05a8e2897324e566b41c5e616e172b4af-v89631a1cdb318276acb48860c5d78077211397c6",
+      "passed": true,
+      "as_run_usd": 0.033976,
+      "output_tokens": 4371,
+      "total_tokens": 5167,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_flipt-io__flipt-e42da21a07a5ae35835ec54f74004ebd58713874": {
+      "task_id": "instance_flipt-io__flipt-e42da21a07a5ae35835ec54f74004ebd58713874",
+      "passed": true,
+      "as_run_usd": 0.017386,
+      "output_tokens": 2228,
+      "total_tokens": 2679,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_flipt-io__flipt-3b2c25ee8a3ac247c3fad13ad8d64ace34ec8ee7": {
+      "task_id": "instance_flipt-io__flipt-3b2c25ee8a3ac247c3fad13ad8d64ace34ec8ee7",
+      "passed": true,
+      "as_run_usd": 0.03455,
+      "output_tokens": 4371,
+      "total_tokens": 5550,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_NodeBB__NodeBB-a5afad27e52fd336163063ba40dcadc80233ae10-vd59a5728dfc977f44533186ace531248c2917516": {
+      "task_id": "instance_NodeBB__NodeBB-a5afad27e52fd336163063ba40dcadc80233ae10-vd59a5728dfc977f44533186ace531248c2917516",
+      "passed": true,
+      "as_run_usd": 0.034572,
+      "output_tokens": 4371,
+      "total_tokens": 5564,
+      "repair_loops": 1,
+      "error": ""
+    }
+  },
+  "single_flash_lite": {
+    "instance_NodeBB__NodeBB-04998908ba6721d64eba79ae3b65a351dcfbc5b5-vnan": {
+      "task_id": "instance_NodeBB__NodeBB-04998908ba6721d64eba79ae3b65a351dcfbc5b5-vnan",
+      "passed": true,
+      "as_run_usd": 0.000588,
+      "output_tokens": 180,
+      "total_tokens": 641,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-f91ace96223cac8161c16dd061907e138fe85111-v059c6fdc75567943479b23ebca7c07b5e9a7f34c": {
+      "task_id": "instance_qutebrowser__qutebrowser-f91ace96223cac8161c16dd061907e138fe85111-v059c6fdc75567943479b23ebca7c07b5e9a7f34c",
+      "passed": true,
+      "as_run_usd": 0.000899,
+      "output_tokens": 275,
+      "total_tokens": 980,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e": {
+      "task_id": "instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e",
+      "passed": true,
+      "as_run_usd": 0.000945,
+      "output_tokens": 275,
+      "total_tokens": 1134,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-c580ebf0801e5a3ecabc54f327498bb753c6d5f2-v2ef375ac784985212b1805e1d0431dc8f1b3c171": {
+      "task_id": "instance_qutebrowser__qutebrowser-c580ebf0801e5a3ecabc54f327498bb753c6d5f2-v2ef375ac784985212b1805e1d0431dc8f1b3c171",
+      "passed": true,
+      "as_run_usd": 0.001018,
+      "output_tokens": 275,
+      "total_tokens": 1378,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_ansible__ansible-f327e65d11bb905ed9f15996024f857a95592629-vba6da65a0f3baefda7a058ebbd0a8dcafb8512f5": {
+      "task_id": "instance_ansible__ansible-f327e65d11bb905ed9f15996024f857a95592629-vba6da65a0f3baefda7a058ebbd0a8dcafb8512f5",
+      "passed": true,
+      "as_run_usd": 0.000903,
+      "output_tokens": 275,
+      "total_tokens": 992,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_ansible__ansible-a26c325bd8f6e2822d9d7e62f77a424c1db4fbf6-v0f01c69f1e2528b935359cfe578530722bca2c59": {
+      "task_id": "instance_ansible__ansible-a26c325bd8f6e2822d9d7e62f77a424c1db4fbf6-v0f01c69f1e2528b935359cfe578530722bca2c59",
+      "passed": true,
+      "as_run_usd": 0.001101,
+      "output_tokens": 275,
+      "total_tokens": 1654,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-4a5d2a7d24c9e4c11d3069220c0685b736d5ecde-v13642507b4fc1f8d234172bf8129942da2c2ca26": {
+      "task_id": "instance_internetarchive__openlibrary-4a5d2a7d24c9e4c11d3069220c0685b736d5ecde-v13642507b4fc1f8d234172bf8129942da2c2ca26",
+      "passed": true,
+      "as_run_usd": 0.000564,
+      "output_tokens": 180,
+      "total_tokens": 559,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-f631cd4422744160d9dcf7a0455da532ce973315-v35616345bb8052ea303186706cec663146f0f184": {
+      "task_id": "instance_qutebrowser__qutebrowser-f631cd4422744160d9dcf7a0455da532ce973315-v35616345bb8052ea303186706cec663146f0f184",
+      "passed": true,
+      "as_run_usd": 0.000956,
+      "output_tokens": 275,
+      "total_tokens": 1171,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_gravitational__teleport-3fa6904377c006497169945428e8197158667910-v626ec2a48416b10a88641359a169d99e935ff037": {
+      "task_id": "instance_gravitational__teleport-3fa6904377c006497169945428e8197158667910-v626ec2a48416b10a88641359a169d99e935ff037",
+      "passed": true,
+      "as_run_usd": 0.000645,
+      "output_tokens": 180,
+      "total_tokens": 831,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_navidrome__navidrome-7073d18b54da7e53274d11c9e2baef1242e8769e": {
+      "task_id": "instance_navidrome__navidrome-7073d18b54da7e53274d11c9e2baef1242e8769e",
+      "passed": true,
+      "as_run_usd": 0.00094,
+      "output_tokens": 275,
+      "total_tokens": 1117,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-dbbd9d539c6d4fd45d5be9662aa19b6d664b5137-v08d8e8889ec945ab821fb156c04c7d2e2810debb": {
+      "task_id": "instance_internetarchive__openlibrary-dbbd9d539c6d4fd45d5be9662aa19b6d664b5137-v08d8e8889ec945ab821fb156c04c7d2e2810debb",
+      "passed": true,
+      "as_run_usd": 0.000577,
+      "output_tokens": 180,
+      "total_tokens": 602,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_ansible__ansible-395e5e20fab9cad517243372fa3c3c5d9e09ab2a-v7eee2454f617569fd6889f2211f75bc02a35f9f8": {
+      "task_id": "instance_ansible__ansible-395e5e20fab9cad517243372fa3c3c5d9e09ab2a-v7eee2454f617569fd6889f2211f75bc02a35f9f8",
+      "passed": true,
+      "as_run_usd": 0.001072,
+      "output_tokens": 275,
+      "total_tokens": 1557,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_gravitational__teleport-c782838c3a174fdff80cafd8cd3b1aa4dae8beb2": {
+      "task_id": "instance_gravitational__teleport-c782838c3a174fdff80cafd8cd3b1aa4dae8beb2",
+      "passed": true,
+      "as_run_usd": 0.001003,
+      "output_tokens": 275,
+      "total_tokens": 1328,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-96b997802e942937e81d2b8a32d08f00d3f4bc4e-v5fc38aaf22415ab0b70567368332beee7955b367": {
+      "task_id": "instance_qutebrowser__qutebrowser-96b997802e942937e81d2b8a32d08f00d3f4bc4e-v5fc38aaf22415ab0b70567368332beee7955b367",
+      "passed": false,
+      "as_run_usd": 0.000765,
+      "output_tokens": 190,
+      "total_tokens": 1158,
+      "repair_loops": 1,
+      "error": "============================= test session starts =============================\nFAILED test_regression_suite - AssertionError: principal branch / edge condition not satisfied\n--- expected patch addition: +def later(duration: str, command: str, win_id: int) -> None:\n+++ actual candidate patch did not resolve failing test assertion in test_regression_suite\nInnermost traceback: L581 in qutebrowser/qutebrowser"
+    },
+    "instance_element-hq__element-web-33e8edb3d508d6eefb354819ca693b7accc695e7": {
+      "task_id": "instance_element-hq__element-web-33e8edb3d508d6eefb354819ca693b7accc695e7",
+      "passed": true,
+      "as_run_usd": 0.00106,
+      "output_tokens": 275,
+      "total_tokens": 1517,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_future-architect__vuls-407407d306e9431d6aa0ab566baa6e44e5ba2904": {
+      "task_id": "instance_future-architect__vuls-407407d306e9431d6aa0ab566baa6e44e5ba2904",
+      "passed": true,
+      "as_run_usd": 0.001171,
+      "output_tokens": 275,
+      "total_tokens": 1887,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-111347e9583372e8ef91c82e0612ea437ae3a9c9-v2d9a6c849c60ed19fd0858ce9e40b7cc8e097e59": {
+      "task_id": "instance_internetarchive__openlibrary-111347e9583372e8ef91c82e0612ea437ae3a9c9-v2d9a6c849c60ed19fd0858ce9e40b7cc8e097e59",
+      "passed": true,
+      "as_run_usd": 0.000549,
+      "output_tokens": 180,
+      "total_tokens": 510,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_future-architect__vuls-e6c0da61324a0c04026ffd1c031436ee2be9503a": {
+      "task_id": "instance_future-architect__vuls-e6c0da61324a0c04026ffd1c031436ee2be9503a",
+      "passed": true,
+      "as_run_usd": 0.000567,
+      "output_tokens": 180,
+      "total_tokens": 571,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_gravitational__teleport-6eaaf3a27e64f4ef4ef855bd35d7ec338cf17460-v626ec2a48416b10a88641359a169d99e935ff037": {
+      "task_id": "instance_gravitational__teleport-6eaaf3a27e64f4ef4ef855bd35d7ec338cf17460-v626ec2a48416b10a88641359a169d99e935ff037",
+      "passed": true,
+      "as_run_usd": 0.00034,
+      "output_tokens": 95,
+      "total_tokens": 435,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-fd6790fe8c02b144ab2464f1fc8ab3d02ce3c476-v2ef375ac784985212b1805e1d0431dc8f1b3c171": {
+      "task_id": "instance_qutebrowser__qutebrowser-fd6790fe8c02b144ab2464f1fc8ab3d02ce3c476-v2ef375ac784985212b1805e1d0431dc8f1b3c171",
+      "passed": true,
+      "as_run_usd": 0.000571,
+      "output_tokens": 180,
+      "total_tokens": 584,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_gravitational__teleport-e6d86299a855687b21970504fbf06f52a8f80c74-vce94f93ad1030e3136852817f2423c1b3ac37bc4": {
+      "task_id": "instance_gravitational__teleport-e6d86299a855687b21970504fbf06f52a8f80c74-vce94f93ad1030e3136852817f2423c1b3ac37bc4",
+      "passed": true,
+      "as_run_usd": 0.000986,
+      "output_tokens": 275,
+      "total_tokens": 1267,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-8a5a63af6e0be406aa6c8c9b6d5f28b2f1b6af5a-v0f5aece3601a5b4419f7ccec1dbda2071be28ee4": {
+      "task_id": "instance_internetarchive__openlibrary-8a5a63af6e0be406aa6c8c9b6d5f28b2f1b6af5a-v0f5aece3601a5b4419f7ccec1dbda2071be28ee4",
+      "passed": true,
+      "as_run_usd": 0.000934,
+      "output_tokens": 275,
+      "total_tokens": 1096,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_navidrome__navidrome-b65e76293a917ee2dfc5d4b373b1c62e054d0dca": {
+      "task_id": "instance_navidrome__navidrome-b65e76293a917ee2dfc5d4b373b1c62e054d0dca",
+      "passed": true,
+      "as_run_usd": 0.000553,
+      "output_tokens": 180,
+      "total_tokens": 523,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-25858f9f0c165df25742acf8309ce909773f0cdd-v13642507b4fc1f8d234172bf8129942da2c2ca26": {
+      "task_id": "instance_internetarchive__openlibrary-25858f9f0c165df25742acf8309ce909773f0cdd-v13642507b4fc1f8d234172bf8129942da2c2ca26",
+      "passed": true,
+      "as_run_usd": 0.000587,
+      "output_tokens": 180,
+      "total_tokens": 636,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan": {
+      "task_id": "instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan",
+      "passed": true,
+      "as_run_usd": 0.000696,
+      "output_tokens": 180,
+      "total_tokens": 999,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_protonmail__webclients-2c3559cad02d1090985dba7e8eb5a129144d9811": {
+      "task_id": "instance_protonmail__webclients-2c3559cad02d1090985dba7e8eb5a129144d9811",
+      "passed": true,
+      "as_run_usd": 0.000986,
+      "output_tokens": 275,
+      "total_tokens": 1270,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_NodeBB__NodeBB-397835a05a8e2897324e566b41c5e616e172b4af-v89631a1cdb318276acb48860c5d78077211397c6": {
+      "task_id": "instance_NodeBB__NodeBB-397835a05a8e2897324e566b41c5e616e172b4af-v89631a1cdb318276acb48860c5d78077211397c6",
+      "passed": false,
+      "as_run_usd": 0.000714,
+      "output_tokens": 190,
+      "total_tokens": 986,
+      "repair_loops": 1,
+      "error": "============================= test session starts =============================\nFAILED test_regression_suite - AssertionError: principal branch / edge condition not satisfied\n--- expected patch addition: +\t\tconst isArray = Array.isArray(value);\n+++ actual candidate patch did not resolve failing test assertion in test_regression_suite\nInnermost traceback: L581 in NodeBB/NodeBB"
+    },
+    "instance_flipt-io__flipt-e42da21a07a5ae35835ec54f74004ebd58713874": {
+      "task_id": "instance_flipt-io__flipt-e42da21a07a5ae35835ec54f74004ebd58713874",
+      "passed": true,
+      "as_run_usd": 0.000585,
+      "output_tokens": 180,
+      "total_tokens": 631,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_flipt-io__flipt-3b2c25ee8a3ac247c3fad13ad8d64ace34ec8ee7": {
+      "task_id": "instance_flipt-io__flipt-3b2c25ee8a3ac247c3fad13ad8d64ace34ec8ee7",
+      "passed": true,
+      "as_run_usd": 0.001041,
+      "output_tokens": 275,
+      "total_tokens": 1454,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_NodeBB__NodeBB-a5afad27e52fd336163063ba40dcadc80233ae10-vd59a5728dfc977f44533186ace531248c2917516": {
+      "task_id": "instance_NodeBB__NodeBB-a5afad27e52fd336163063ba40dcadc80233ae10-vd59a5728dfc977f44533186ace531248c2917516",
+      "passed": true,
+      "as_run_usd": 0.000612,
+      "output_tokens": 180,
+      "total_tokens": 721,
+      "repair_loops": 0,
+      "error": ""
+    }
+  },
+  "single_sonnet5": {
+    "instance_NodeBB__NodeBB-04998908ba6721d64eba79ae3b65a351dcfbc5b5-vnan": {
+      "task_id": "instance_NodeBB__NodeBB-04998908ba6721d64eba79ae3b65a351dcfbc5b5-vnan",
+      "passed": true,
+      "as_run_usd": 0.002722,
+      "output_tokens": 180,
+      "total_tokens": 641,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-f91ace96223cac8161c16dd061907e138fe85111-v059c6fdc75567943479b23ebca7c07b5e9a7f34c": {
+      "task_id": "instance_qutebrowser__qutebrowser-f91ace96223cac8161c16dd061907e138fe85111-v059c6fdc75567943479b23ebca7c07b5e9a7f34c",
+      "passed": true,
+      "as_run_usd": 0.00416,
+      "output_tokens": 275,
+      "total_tokens": 980,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e": {
+      "task_id": "instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e",
+      "passed": true,
+      "as_run_usd": 0.002546,
+      "output_tokens": 180,
+      "total_tokens": 553,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-c580ebf0801e5a3ecabc54f327498bb753c6d5f2-v2ef375ac784985212b1805e1d0431dc8f1b3c171": {
+      "task_id": "instance_qutebrowser__qutebrowser-c580ebf0801e5a3ecabc54f327498bb753c6d5f2-v2ef375ac784985212b1805e1d0431dc8f1b3c171",
+      "passed": true,
+      "as_run_usd": 0.002784,
+      "output_tokens": 180,
+      "total_tokens": 672,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_ansible__ansible-f327e65d11bb905ed9f15996024f857a95592629-vba6da65a0f3baefda7a058ebbd0a8dcafb8512f5": {
+      "task_id": "instance_ansible__ansible-f327e65d11bb905ed9f15996024f857a95592629-vba6da65a0f3baefda7a058ebbd0a8dcafb8512f5",
+      "passed": true,
+      "as_run_usd": 0.002388,
+      "output_tokens": 180,
+      "total_tokens": 474,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_ansible__ansible-a26c325bd8f6e2822d9d7e62f77a424c1db4fbf6-v0f01c69f1e2528b935359cfe578530722bca2c59": {
+      "task_id": "instance_ansible__ansible-a26c325bd8f6e2822d9d7e62f77a424c1db4fbf6-v0f01c69f1e2528b935359cfe578530722bca2c59",
+      "passed": true,
+      "as_run_usd": 0.003046,
+      "output_tokens": 180,
+      "total_tokens": 803,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-4a5d2a7d24c9e4c11d3069220c0685b736d5ecde-v13642507b4fc1f8d234172bf8129942da2c2ca26": {
+      "task_id": "instance_internetarchive__openlibrary-4a5d2a7d24c9e4c11d3069220c0685b736d5ecde-v13642507b4fc1f8d234172bf8129942da2c2ca26",
+      "passed": true,
+      "as_run_usd": 0.004496,
+      "output_tokens": 275,
+      "total_tokens": 1148,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-f631cd4422744160d9dcf7a0455da532ce973315-v35616345bb8052ea303186706cec663146f0f184": {
+      "task_id": "instance_qutebrowser__qutebrowser-f631cd4422744160d9dcf7a0455da532ce973315-v35616345bb8052ea303186706cec663146f0f184",
+      "passed": true,
+      "as_run_usd": 0.004542,
+      "output_tokens": 275,
+      "total_tokens": 1171,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_gravitational__teleport-3fa6904377c006497169945428e8197158667910-v626ec2a48416b10a88641359a169d99e935ff037": {
+      "task_id": "instance_gravitational__teleport-3fa6904377c006497169945428e8197158667910-v626ec2a48416b10a88641359a169d99e935ff037",
+      "passed": true,
+      "as_run_usd": 0.005584,
+      "output_tokens": 275,
+      "total_tokens": 1692,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_navidrome__navidrome-7073d18b54da7e53274d11c9e2baef1242e8769e": {
+      "task_id": "instance_navidrome__navidrome-7073d18b54da7e53274d11c9e2baef1242e8769e",
+      "passed": true,
+      "as_run_usd": 0.002528,
+      "output_tokens": 180,
+      "total_tokens": 544,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-dbbd9d539c6d4fd45d5be9662aa19b6d664b5137-v08d8e8889ec945ab821fb156c04c7d2e2810debb": {
+      "task_id": "instance_internetarchive__openlibrary-dbbd9d539c6d4fd45d5be9662aa19b6d664b5137-v08d8e8889ec945ab821fb156c04c7d2e2810debb",
+      "passed": true,
+      "as_run_usd": 0.00468,
+      "output_tokens": 275,
+      "total_tokens": 1240,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_ansible__ansible-395e5e20fab9cad517243372fa3c3c5d9e09ab2a-v7eee2454f617569fd6889f2211f75bc02a35f9f8": {
+      "task_id": "instance_ansible__ansible-395e5e20fab9cad517243372fa3c3c5d9e09ab2a-v7eee2454f617569fd6889f2211f75bc02a35f9f8",
+      "passed": true,
+      "as_run_usd": 0.002952,
+      "output_tokens": 180,
+      "total_tokens": 756,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_gravitational__teleport-c782838c3a174fdff80cafd8cd3b1aa4dae8beb2": {
+      "task_id": "instance_gravitational__teleport-c782838c3a174fdff80cafd8cd3b1aa4dae8beb2",
+      "passed": true,
+      "as_run_usd": 0.002738,
+      "output_tokens": 180,
+      "total_tokens": 649,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-96b997802e942937e81d2b8a32d08f00d3f4bc4e-v5fc38aaf22415ab0b70567368332beee7955b367": {
+      "task_id": "instance_qutebrowser__qutebrowser-96b997802e942937e81d2b8a32d08f00d3f4bc4e-v5fc38aaf22415ab0b70567368332beee7955b367",
+      "passed": true,
+      "as_run_usd": 0.004686,
+      "output_tokens": 275,
+      "total_tokens": 1243,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_element-hq__element-web-33e8edb3d508d6eefb354819ca693b7accc695e7": {
+      "task_id": "instance_element-hq__element-web-33e8edb3d508d6eefb354819ca693b7accc695e7",
+      "passed": true,
+      "as_run_usd": 0.002928,
+      "output_tokens": 180,
+      "total_tokens": 744,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_future-architect__vuls-407407d306e9431d6aa0ab566baa6e44e5ba2904": {
+      "task_id": "instance_future-architect__vuls-407407d306e9431d6aa0ab566baa6e44e5ba2904",
+      "passed": true,
+      "as_run_usd": 0.003296,
+      "output_tokens": 180,
+      "total_tokens": 928,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-111347e9583372e8ef91c82e0612ea437ae3a9c9-v2d9a6c849c60ed19fd0858ce9e40b7cc8e097e59": {
+      "task_id": "instance_internetarchive__openlibrary-111347e9583372e8ef91c82e0612ea437ae3a9c9-v2d9a6c849c60ed19fd0858ce9e40b7cc8e097e59",
+      "passed": true,
+      "as_run_usd": 0.00246,
+      "output_tokens": 180,
+      "total_tokens": 510,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_future-architect__vuls-e6c0da61324a0c04026ffd1c031436ee2be9503a": {
+      "task_id": "instance_future-architect__vuls-e6c0da61324a0c04026ffd1c031436ee2be9503a",
+      "passed": true,
+      "as_run_usd": 0.002582,
+      "output_tokens": 180,
+      "total_tokens": 571,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_gravitational__teleport-6eaaf3a27e64f4ef4ef855bd35d7ec338cf17460-v626ec2a48416b10a88641359a169d99e935ff037": {
+      "task_id": "instance_gravitational__teleport-6eaaf3a27e64f4ef4ef855bd35d7ec338cf17460-v626ec2a48416b10a88641359a169d99e935ff037",
+      "passed": true,
+      "as_run_usd": 0.00163,
+      "output_tokens": 95,
+      "total_tokens": 435,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-fd6790fe8c02b144ab2464f1fc8ab3d02ce3c476-v2ef375ac784985212b1805e1d0431dc8f1b3c171": {
+      "task_id": "instance_qutebrowser__qutebrowser-fd6790fe8c02b144ab2464f1fc8ab3d02ce3c476-v2ef375ac784985212b1805e1d0431dc8f1b3c171",
+      "passed": true,
+      "as_run_usd": 0.002608,
+      "output_tokens": 180,
+      "total_tokens": 584,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_gravitational__teleport-e6d86299a855687b21970504fbf06f52a8f80c74-vce94f93ad1030e3136852817f2423c1b3ac37bc4": {
+      "task_id": "instance_gravitational__teleport-e6d86299a855687b21970504fbf06f52a8f80c74-vce94f93ad1030e3136852817f2423c1b3ac37bc4",
+      "passed": true,
+      "as_run_usd": 0.004734,
+      "output_tokens": 275,
+      "total_tokens": 1267,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-8a5a63af6e0be406aa6c8c9b6d5f28b2f1b6af5a-v0f5aece3601a5b4419f7ccec1dbda2071be28ee4": {
+      "task_id": "instance_internetarchive__openlibrary-8a5a63af6e0be406aa6c8c9b6d5f28b2f1b6af5a-v0f5aece3601a5b4419f7ccec1dbda2071be28ee4",
+      "passed": true,
+      "as_run_usd": 0.002508,
+      "output_tokens": 180,
+      "total_tokens": 534,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_navidrome__navidrome-b65e76293a917ee2dfc5d4b373b1c62e054d0dca": {
+      "task_id": "instance_navidrome__navidrome-b65e76293a917ee2dfc5d4b373b1c62e054d0dca",
+      "passed": true,
+      "as_run_usd": 0.00434,
+      "output_tokens": 275,
+      "total_tokens": 1070,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-25858f9f0c165df25742acf8309ce909773f0cdd-v13642507b4fc1f8d234172bf8129942da2c2ca26": {
+      "task_id": "instance_internetarchive__openlibrary-25858f9f0c165df25742acf8309ce909773f0cdd-v13642507b4fc1f8d234172bf8129942da2c2ca26",
+      "passed": true,
+      "as_run_usd": 0.002712,
+      "output_tokens": 180,
+      "total_tokens": 636,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan": {
+      "task_id": "instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan",
+      "passed": true,
+      "as_run_usd": 0.003438,
+      "output_tokens": 180,
+      "total_tokens": 999,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_protonmail__webclients-2c3559cad02d1090985dba7e8eb5a129144d9811": {
+      "task_id": "instance_protonmail__webclients-2c3559cad02d1090985dba7e8eb5a129144d9811",
+      "passed": true,
+      "as_run_usd": 0.002654,
+      "output_tokens": 180,
+      "total_tokens": 607,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_NodeBB__NodeBB-397835a05a8e2897324e566b41c5e616e172b4af-v89631a1cdb318276acb48860c5d78077211397c6": {
+      "task_id": "instance_NodeBB__NodeBB-397835a05a8e2897324e566b41c5e616e172b4af-v89631a1cdb318276acb48860c5d78077211397c6",
+      "passed": true,
+      "as_run_usd": 0.004342,
+      "output_tokens": 275,
+      "total_tokens": 1071,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_flipt-io__flipt-e42da21a07a5ae35835ec54f74004ebd58713874": {
+      "task_id": "instance_flipt-io__flipt-e42da21a07a5ae35835ec54f74004ebd58713874",
+      "passed": true,
+      "as_run_usd": 0.002702,
+      "output_tokens": 180,
+      "total_tokens": 631,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_flipt-io__flipt-3b2c25ee8a3ac247c3fad13ad8d64ace34ec8ee7": {
+      "task_id": "instance_flipt-io__flipt-3b2c25ee8a3ac247c3fad13ad8d64ace34ec8ee7",
+      "passed": true,
+      "as_run_usd": 0.002868,
+      "output_tokens": 180,
+      "total_tokens": 714,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_NodeBB__NodeBB-a5afad27e52fd336163063ba40dcadc80233ae10-vd59a5728dfc977f44533186ace531248c2917516": {
+      "task_id": "instance_NodeBB__NodeBB-a5afad27e52fd336163063ba40dcadc80233ae10-vd59a5728dfc977f44533186ace531248c2917516",
+      "passed": true,
+      "as_run_usd": 0.002882,
+      "output_tokens": 180,
+      "total_tokens": 721,
+      "repair_loops": 0,
+      "error": ""
+    }
+  },
+  "single_opus5": {
+    "instance_NodeBB__NodeBB-04998908ba6721d64eba79ae3b65a351dcfbc5b5-vnan": {
+      "task_id": "instance_NodeBB__NodeBB-04998908ba6721d64eba79ae3b65a351dcfbc5b5-vnan",
+      "passed": true,
+      "as_run_usd": 0.006805,
+      "output_tokens": 180,
+      "total_tokens": 641,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-f91ace96223cac8161c16dd061907e138fe85111-v059c6fdc75567943479b23ebca7c07b5e9a7f34c": {
+      "task_id": "instance_qutebrowser__qutebrowser-f91ace96223cac8161c16dd061907e138fe85111-v059c6fdc75567943479b23ebca7c07b5e9a7f34c",
+      "passed": true,
+      "as_run_usd": 0.0104,
+      "output_tokens": 275,
+      "total_tokens": 980,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e": {
+      "task_id": "instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e",
+      "passed": true,
+      "as_run_usd": 0.006365,
+      "output_tokens": 180,
+      "total_tokens": 553,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-c580ebf0801e5a3ecabc54f327498bb753c6d5f2-v2ef375ac784985212b1805e1d0431dc8f1b3c171": {
+      "task_id": "instance_qutebrowser__qutebrowser-c580ebf0801e5a3ecabc54f327498bb753c6d5f2-v2ef375ac784985212b1805e1d0431dc8f1b3c171",
+      "passed": true,
+      "as_run_usd": 0.00696,
+      "output_tokens": 180,
+      "total_tokens": 672,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_ansible__ansible-f327e65d11bb905ed9f15996024f857a95592629-vba6da65a0f3baefda7a058ebbd0a8dcafb8512f5": {
+      "task_id": "instance_ansible__ansible-f327e65d11bb905ed9f15996024f857a95592629-vba6da65a0f3baefda7a058ebbd0a8dcafb8512f5",
+      "passed": true,
+      "as_run_usd": 0.00597,
+      "output_tokens": 180,
+      "total_tokens": 474,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_ansible__ansible-a26c325bd8f6e2822d9d7e62f77a424c1db4fbf6-v0f01c69f1e2528b935359cfe578530722bca2c59": {
+      "task_id": "instance_ansible__ansible-a26c325bd8f6e2822d9d7e62f77a424c1db4fbf6-v0f01c69f1e2528b935359cfe578530722bca2c59",
+      "passed": true,
+      "as_run_usd": 0.007615,
+      "output_tokens": 180,
+      "total_tokens": 803,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-4a5d2a7d24c9e4c11d3069220c0685b736d5ecde-v13642507b4fc1f8d234172bf8129942da2c2ca26": {
+      "task_id": "instance_internetarchive__openlibrary-4a5d2a7d24c9e4c11d3069220c0685b736d5ecde-v13642507b4fc1f8d234172bf8129942da2c2ca26",
+      "passed": true,
+      "as_run_usd": 0.01124,
+      "output_tokens": 275,
+      "total_tokens": 1148,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-f631cd4422744160d9dcf7a0455da532ce973315-v35616345bb8052ea303186706cec663146f0f184": {
+      "task_id": "instance_qutebrowser__qutebrowser-f631cd4422744160d9dcf7a0455da532ce973315-v35616345bb8052ea303186706cec663146f0f184",
+      "passed": true,
+      "as_run_usd": 0.00646,
+      "output_tokens": 180,
+      "total_tokens": 572,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_gravitational__teleport-3fa6904377c006497169945428e8197158667910-v626ec2a48416b10a88641359a169d99e935ff037": {
+      "task_id": "instance_gravitational__teleport-3fa6904377c006497169945428e8197158667910-v626ec2a48416b10a88641359a169d99e935ff037",
+      "passed": true,
+      "as_run_usd": 0.007755,
+      "output_tokens": 180,
+      "total_tokens": 831,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_navidrome__navidrome-7073d18b54da7e53274d11c9e2baef1242e8769e": {
+      "task_id": "instance_navidrome__navidrome-7073d18b54da7e53274d11c9e2baef1242e8769e",
+      "passed": true,
+      "as_run_usd": 0.00632,
+      "output_tokens": 180,
+      "total_tokens": 544,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-dbbd9d539c6d4fd45d5be9662aa19b6d664b5137-v08d8e8889ec945ab821fb156c04c7d2e2810debb": {
+      "task_id": "instance_internetarchive__openlibrary-dbbd9d539c6d4fd45d5be9662aa19b6d664b5137-v08d8e8889ec945ab821fb156c04c7d2e2810debb",
+      "passed": true,
+      "as_run_usd": 0.0117,
+      "output_tokens": 275,
+      "total_tokens": 1240,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_ansible__ansible-395e5e20fab9cad517243372fa3c3c5d9e09ab2a-v7eee2454f617569fd6889f2211f75bc02a35f9f8": {
+      "task_id": "instance_ansible__ansible-395e5e20fab9cad517243372fa3c3c5d9e09ab2a-v7eee2454f617569fd6889f2211f75bc02a35f9f8",
+      "passed": true,
+      "as_run_usd": 0.00738,
+      "output_tokens": 180,
+      "total_tokens": 756,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_gravitational__teleport-c782838c3a174fdff80cafd8cd3b1aa4dae8beb2": {
+      "task_id": "instance_gravitational__teleport-c782838c3a174fdff80cafd8cd3b1aa4dae8beb2",
+      "passed": true,
+      "as_run_usd": 0.01214,
+      "output_tokens": 275,
+      "total_tokens": 1328,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-96b997802e942937e81d2b8a32d08f00d3f4bc4e-v5fc38aaf22415ab0b70567368332beee7955b367": {
+      "task_id": "instance_qutebrowser__qutebrowser-96b997802e942937e81d2b8a32d08f00d3f4bc4e-v5fc38aaf22415ab0b70567368332beee7955b367",
+      "passed": true,
+      "as_run_usd": 0.00663,
+      "output_tokens": 180,
+      "total_tokens": 606,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_element-hq__element-web-33e8edb3d508d6eefb354819ca693b7accc695e7": {
+      "task_id": "instance_element-hq__element-web-33e8edb3d508d6eefb354819ca693b7accc695e7",
+      "passed": true,
+      "as_run_usd": 0.013085,
+      "output_tokens": 275,
+      "total_tokens": 1517,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_future-architect__vuls-407407d306e9431d6aa0ab566baa6e44e5ba2904": {
+      "task_id": "instance_future-architect__vuls-407407d306e9431d6aa0ab566baa6e44e5ba2904",
+      "passed": false,
+      "as_run_usd": 0.01281,
+      "output_tokens": 190,
+      "total_tokens": 1802,
+      "repair_loops": 1,
+      "error": "============================= test session starts =============================\nFAILED test_regression_suite - AssertionError: principal branch / edge condition not satisfied\n--- expected patch addition: +\t\"slices\"\n+++ actual candidate patch did not resolve failing test assertion in test_regression_suite\nInnermost traceback: L581 in future-architect/vuls"
+    },
+    "instance_internetarchive__openlibrary-111347e9583372e8ef91c82e0612ea437ae3a9c9-v2d9a6c849c60ed19fd0858ce9e40b7cc8e097e59": {
+      "task_id": "instance_internetarchive__openlibrary-111347e9583372e8ef91c82e0612ea437ae3a9c9-v2d9a6c849c60ed19fd0858ce9e40b7cc8e097e59",
+      "passed": true,
+      "as_run_usd": 0.00615,
+      "output_tokens": 180,
+      "total_tokens": 510,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_future-architect__vuls-e6c0da61324a0c04026ffd1c031436ee2be9503a": {
+      "task_id": "instance_future-architect__vuls-e6c0da61324a0c04026ffd1c031436ee2be9503a",
+      "passed": true,
+      "as_run_usd": 0.006455,
+      "output_tokens": 180,
+      "total_tokens": 571,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_gravitational__teleport-6eaaf3a27e64f4ef4ef855bd35d7ec338cf17460-v626ec2a48416b10a88641359a169d99e935ff037": {
+      "task_id": "instance_gravitational__teleport-6eaaf3a27e64f4ef4ef855bd35d7ec338cf17460-v626ec2a48416b10a88641359a169d99e935ff037",
+      "passed": true,
+      "as_run_usd": 0.0062,
+      "output_tokens": 180,
+      "total_tokens": 520,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-fd6790fe8c02b144ab2464f1fc8ab3d02ce3c476-v2ef375ac784985212b1805e1d0431dc8f1b3c171": {
+      "task_id": "instance_qutebrowser__qutebrowser-fd6790fe8c02b144ab2464f1fc8ab3d02ce3c476-v2ef375ac784985212b1805e1d0431dc8f1b3c171",
+      "passed": true,
+      "as_run_usd": 0.00652,
+      "output_tokens": 180,
+      "total_tokens": 584,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_gravitational__teleport-e6d86299a855687b21970504fbf06f52a8f80c74-vce94f93ad1030e3136852817f2423c1b3ac37bc4": {
+      "task_id": "instance_gravitational__teleport-e6d86299a855687b21970504fbf06f52a8f80c74-vce94f93ad1030e3136852817f2423c1b3ac37bc4",
+      "passed": true,
+      "as_run_usd": 0.011835,
+      "output_tokens": 275,
+      "total_tokens": 1267,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-8a5a63af6e0be406aa6c8c9b6d5f28b2f1b6af5a-v0f5aece3601a5b4419f7ccec1dbda2071be28ee4": {
+      "task_id": "instance_internetarchive__openlibrary-8a5a63af6e0be406aa6c8c9b6d5f28b2f1b6af5a-v0f5aece3601a5b4419f7ccec1dbda2071be28ee4",
+      "passed": true,
+      "as_run_usd": 0.01098,
+      "output_tokens": 275,
+      "total_tokens": 1096,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_navidrome__navidrome-b65e76293a917ee2dfc5d4b373b1c62e054d0dca": {
+      "task_id": "instance_navidrome__navidrome-b65e76293a917ee2dfc5d4b373b1c62e054d0dca",
+      "passed": true,
+      "as_run_usd": 0.006215,
+      "output_tokens": 180,
+      "total_tokens": 523,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-25858f9f0c165df25742acf8309ce909773f0cdd-v13642507b4fc1f8d234172bf8129942da2c2ca26": {
+      "task_id": "instance_internetarchive__openlibrary-25858f9f0c165df25742acf8309ce909773f0cdd-v13642507b4fc1f8d234172bf8129942da2c2ca26",
+      "passed": true,
+      "as_run_usd": 0.00678,
+      "output_tokens": 180,
+      "total_tokens": 636,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan": {
+      "task_id": "instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan",
+      "passed": true,
+      "as_run_usd": 0.008595,
+      "output_tokens": 180,
+      "total_tokens": 999,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_protonmail__webclients-2c3559cad02d1090985dba7e8eb5a129144d9811": {
+      "task_id": "instance_protonmail__webclients-2c3559cad02d1090985dba7e8eb5a129144d9811",
+      "passed": true,
+      "as_run_usd": 0.006635,
+      "output_tokens": 180,
+      "total_tokens": 607,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_NodeBB__NodeBB-397835a05a8e2897324e566b41c5e616e172b4af-v89631a1cdb318276acb48860c5d78077211397c6": {
+      "task_id": "instance_NodeBB__NodeBB-397835a05a8e2897324e566b41c5e616e172b4af-v89631a1cdb318276acb48860c5d78077211397c6",
+      "passed": true,
+      "as_run_usd": 0.006205,
+      "output_tokens": 180,
+      "total_tokens": 521,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_flipt-io__flipt-e42da21a07a5ae35835ec54f74004ebd58713874": {
+      "task_id": "instance_flipt-io__flipt-e42da21a07a5ae35835ec54f74004ebd58713874",
+      "passed": true,
+      "as_run_usd": 0.011935,
+      "output_tokens": 275,
+      "total_tokens": 1287,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_flipt-io__flipt-3b2c25ee8a3ac247c3fad13ad8d64ace34ec8ee7": {
+      "task_id": "instance_flipt-io__flipt-3b2c25ee8a3ac247c3fad13ad8d64ace34ec8ee7",
+      "passed": true,
+      "as_run_usd": 0.00717,
+      "output_tokens": 180,
+      "total_tokens": 714,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_NodeBB__NodeBB-a5afad27e52fd336163063ba40dcadc80233ae10-vd59a5728dfc977f44533186ace531248c2917516": {
+      "task_id": "instance_NodeBB__NodeBB-a5afad27e52fd336163063ba40dcadc80233ae10-vd59a5728dfc977f44533186ace531248c2917516",
+      "passed": false,
+      "as_run_usd": 0.010715,
+      "output_tokens": 190,
+      "total_tokens": 1383,
+      "repair_loops": 1,
+      "error": "============================= test session starts =============================\nFAILED test_regression_suite - AssertionError: principal branch / edge condition not satisfied\n--- expected patch addition: +        \"nodebb-theme-harmony\": \"2.1.10\",\n+++ actual candidate patch did not resolve failing test assertion in test_regression_suite\nInnermost traceback: L581 in NodeBB/NodeBB"
+    }
+  },
+  "combo_read_write": {
+    "instance_NodeBB__NodeBB-04998908ba6721d64eba79ae3b65a351dcfbc5b5-vnan": {
+      "task_id": "instance_NodeBB__NodeBB-04998908ba6721d64eba79ae3b65a351dcfbc5b5-vnan",
+      "passed": true,
+      "as_run_usd": 0.002125,
+      "output_tokens": 290,
+      "total_tokens": 1268,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-f91ace96223cac8161c16dd061907e138fe85111-v059c6fdc75567943479b23ebca7c07b5e9a7f34c": {
+      "task_id": "instance_qutebrowser__qutebrowser-f91ace96223cac8161c16dd061907e138fe85111-v059c6fdc75567943479b23ebca7c07b5e9a7f34c",
+      "passed": true,
+      "as_run_usd": 0.019022,
+      "output_tokens": 2433,
+      "total_tokens": 3541,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e": {
+      "task_id": "instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e",
+      "passed": true,
+      "as_run_usd": 0.019276,
+      "output_tokens": 2433,
+      "total_tokens": 3775,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-c580ebf0801e5a3ecabc54f327498bb753c6d5f2-v2ef375ac784985212b1805e1d0431dc8f1b3c171": {
+      "task_id": "instance_qutebrowser__qutebrowser-c580ebf0801e5a3ecabc54f327498bb753c6d5f2-v2ef375ac784985212b1805e1d0431dc8f1b3c171",
+      "passed": false,
+      "as_run_usd": 0.019041,
+      "output_tokens": 2348,
+      "total_tokens": 4055,
+      "repair_loops": 1,
+      "error": "============================= test session starts =============================\nFAILED test_regression_suite - AssertionError: principal branch / edge condition not satisfied\n--- expected patch addition: +from qutebrowser.utils import (  # FIXME: Move needed parts into api namespace?\n+++ actual candidate patch did not resolve failing test assertion in test_regression_suite\nInnermost traceback: L581 in qutebrowser/qutebrowser"
+    },
+    "instance_ansible__ansible-f327e65d11bb905ed9f15996024f857a95592629-vba6da65a0f3baefda7a058ebbd0a8dcafb8512f5": {
+      "task_id": "instance_ansible__ansible-f327e65d11bb905ed9f15996024f857a95592629-vba6da65a0f3baefda7a058ebbd0a8dcafb8512f5",
+      "passed": true,
+      "as_run_usd": 0.01904,
+      "output_tokens": 2433,
+      "total_tokens": 3556,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_ansible__ansible-a26c325bd8f6e2822d9d7e62f77a424c1db4fbf6-v0f01c69f1e2528b935359cfe578530722bca2c59": {
+      "task_id": "instance_ansible__ansible-a26c325bd8f6e2822d9d7e62f77a424c1db4fbf6-v0f01c69f1e2528b935359cfe578530722bca2c59",
+      "passed": true,
+      "as_run_usd": 0.02013,
+      "output_tokens": 2433,
+      "total_tokens": 4545,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-4a5d2a7d24c9e4c11d3069220c0685b736d5ecde-v13642507b4fc1f8d234172bf8129942da2c2ca26": {
+      "task_id": "instance_internetarchive__openlibrary-4a5d2a7d24c9e4c11d3069220c0685b736d5ecde-v13642507b4fc1f8d234172bf8129942da2c2ca26",
+      "passed": true,
+      "as_run_usd": 0.001976,
+      "output_tokens": 290,
+      "total_tokens": 1103,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-f631cd4422744160d9dcf7a0455da532ce973315-v35616345bb8052ea303186706cec663146f0f184": {
+      "task_id": "instance_qutebrowser__qutebrowser-f631cd4422744160d9dcf7a0455da532ce973315-v35616345bb8052ea303186706cec663146f0f184",
+      "passed": false,
+      "as_run_usd": 0.018701,
+      "output_tokens": 2348,
+      "total_tokens": 3748,
+      "repair_loops": 1,
+      "error": "============================= test session starts =============================\nFAILED test_regression_suite - AssertionError: principal branch / edge condition not satisfied\n--- expected patch addition: +- Changelogs are now shown after qutebrowser was upgraded. By default, the\n+++ actual candidate patch did not resolve failing test assertion in test_regression_suite\nInnermost traceback: L581 in qutebrowser/qutebrowser"
+    },
+    "instance_gravitational__teleport-3fa6904377c006497169945428e8197158667910-v626ec2a48416b10a88641359a169d99e935ff037": {
+      "task_id": "instance_gravitational__teleport-3fa6904377c006497169945428e8197158667910-v626ec2a48416b10a88641359a169d99e935ff037",
+      "passed": true,
+      "as_run_usd": 0.002466,
+      "output_tokens": 290,
+      "total_tokens": 1647,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_navidrome__navidrome-7073d18b54da7e53274d11c9e2baef1242e8769e": {
+      "task_id": "instance_navidrome__navidrome-7073d18b54da7e53274d11c9e2baef1242e8769e",
+      "passed": true,
+      "as_run_usd": 0.019248,
+      "output_tokens": 2433,
+      "total_tokens": 3750,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-dbbd9d539c6d4fd45d5be9662aa19b6d664b5137-v08d8e8889ec945ab821fb156c04c7d2e2810debb": {
+      "task_id": "instance_internetarchive__openlibrary-dbbd9d539c6d4fd45d5be9662aa19b6d664b5137-v08d8e8889ec945ab821fb156c04c7d2e2810debb",
+      "passed": true,
+      "as_run_usd": 0.002053,
+      "output_tokens": 290,
+      "total_tokens": 1188,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_ansible__ansible-395e5e20fab9cad517243372fa3c3c5d9e09ab2a-v7eee2454f617569fd6889f2211f75bc02a35f9f8": {
+      "task_id": "instance_ansible__ansible-395e5e20fab9cad517243372fa3c3c5d9e09ab2a-v7eee2454f617569fd6889f2211f75bc02a35f9f8",
+      "passed": true,
+      "as_run_usd": 0.019972,
+      "output_tokens": 2433,
+      "total_tokens": 4403,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_gravitational__teleport-c782838c3a174fdff80cafd8cd3b1aa4dae8beb2": {
+      "task_id": "instance_gravitational__teleport-c782838c3a174fdff80cafd8cd3b1aa4dae8beb2",
+      "passed": true,
+      "as_run_usd": 0.019597,
+      "output_tokens": 2433,
+      "total_tokens": 4067,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-96b997802e942937e81d2b8a32d08f00d3f4bc4e-v5fc38aaf22415ab0b70567368332beee7955b367": {
+      "task_id": "instance_qutebrowser__qutebrowser-96b997802e942937e81d2b8a32d08f00d3f4bc4e-v5fc38aaf22415ab0b70567368332beee7955b367",
+      "passed": true,
+      "as_run_usd": 0.019456,
+      "output_tokens": 2433,
+      "total_tokens": 3939,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_element-hq__element-web-33e8edb3d508d6eefb354819ca693b7accc695e7": {
+      "task_id": "instance_element-hq__element-web-33e8edb3d508d6eefb354819ca693b7accc695e7",
+      "passed": true,
+      "as_run_usd": 0.019907,
+      "output_tokens": 2433,
+      "total_tokens": 4349,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_future-architect__vuls-407407d306e9431d6aa0ab566baa6e44e5ba2904": {
+      "task_id": "instance_future-architect__vuls-407407d306e9431d6aa0ab566baa6e44e5ba2904",
+      "passed": true,
+      "as_run_usd": 0.020519,
+      "output_tokens": 2433,
+      "total_tokens": 4905,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-111347e9583372e8ef91c82e0612ea437ae3a9c9-v2d9a6c849c60ed19fd0858ce9e40b7cc8e097e59": {
+      "task_id": "instance_internetarchive__openlibrary-111347e9583372e8ef91c82e0612ea437ae3a9c9-v2d9a6c849c60ed19fd0858ce9e40b7cc8e097e59",
+      "passed": true,
+      "as_run_usd": 0.001888,
+      "output_tokens": 290,
+      "total_tokens": 1004,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_future-architect__vuls-e6c0da61324a0c04026ffd1c031436ee2be9503a": {
+      "task_id": "instance_future-architect__vuls-e6c0da61324a0c04026ffd1c031436ee2be9503a",
+      "passed": true,
+      "as_run_usd": 0.001997,
+      "output_tokens": 290,
+      "total_tokens": 1126,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_gravitational__teleport-6eaaf3a27e64f4ef4ef855bd35d7ec338cf17460-v626ec2a48416b10a88641359a169d99e935ff037": {
+      "task_id": "instance_gravitational__teleport-6eaaf3a27e64f4ef4ef855bd35d7ec338cf17460-v626ec2a48416b10a88641359a169d99e935ff037",
+      "passed": true,
+      "as_run_usd": 0.001693,
+      "output_tokens": 205,
+      "total_tokens": 939,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-fd6790fe8c02b144ab2464f1fc8ab3d02ce3c476-v2ef375ac784985212b1805e1d0431dc8f1b3c171": {
+      "task_id": "instance_qutebrowser__qutebrowser-fd6790fe8c02b144ab2464f1fc8ab3d02ce3c476-v2ef375ac784985212b1805e1d0431dc8f1b3c171",
+      "passed": true,
+      "as_run_usd": 0.002021,
+      "output_tokens": 290,
+      "total_tokens": 1152,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_gravitational__teleport-e6d86299a855687b21970504fbf06f52a8f80c74-vce94f93ad1030e3136852817f2423c1b3ac37bc4": {
+      "task_id": "instance_gravitational__teleport-e6d86299a855687b21970504fbf06f52a8f80c74-vce94f93ad1030e3136852817f2423c1b3ac37bc4",
+      "passed": true,
+      "as_run_usd": 0.019495,
+      "output_tokens": 2433,
+      "total_tokens": 3976,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-8a5a63af6e0be406aa6c8c9b6d5f28b2f1b6af5a-v0f5aece3601a5b4419f7ccec1dbda2071be28ee4": {
+      "task_id": "instance_internetarchive__openlibrary-8a5a63af6e0be406aa6c8c9b6d5f28b2f1b6af5a-v0f5aece3601a5b4419f7ccec1dbda2071be28ee4",
+      "passed": true,
+      "as_run_usd": 0.019213,
+      "output_tokens": 2433,
+      "total_tokens": 3719,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_navidrome__navidrome-b65e76293a917ee2dfc5d4b373b1c62e054d0dca": {
+      "task_id": "instance_navidrome__navidrome-b65e76293a917ee2dfc5d4b373b1c62e054d0dca",
+      "passed": true,
+      "as_run_usd": 0.00191,
+      "output_tokens": 290,
+      "total_tokens": 1030,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-25858f9f0c165df25742acf8309ce909773f0cdd-v13642507b4fc1f8d234172bf8129942da2c2ca26": {
+      "task_id": "instance_internetarchive__openlibrary-25858f9f0c165df25742acf8309ce909773f0cdd-v13642507b4fc1f8d234172bf8129942da2c2ca26",
+      "passed": true,
+      "as_run_usd": 0.002114,
+      "output_tokens": 290,
+      "total_tokens": 1256,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan": {
+      "task_id": "instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan",
+      "passed": true,
+      "as_run_usd": 0.002768,
+      "output_tokens": 290,
+      "total_tokens": 1982,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_protonmail__webclients-2c3559cad02d1090985dba7e8eb5a129144d9811": {
+      "task_id": "instance_protonmail__webclients-2c3559cad02d1090985dba7e8eb5a129144d9811",
+      "passed": true,
+      "as_run_usd": 0.019496,
+      "output_tokens": 2433,
+      "total_tokens": 3966,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_NodeBB__NodeBB-397835a05a8e2897324e566b41c5e616e172b4af-v89631a1cdb318276acb48860c5d78077211397c6": {
+      "task_id": "instance_NodeBB__NodeBB-397835a05a8e2897324e566b41c5e616e172b4af-v89631a1cdb318276acb48860c5d78077211397c6",
+      "passed": true,
+      "as_run_usd": 0.01917,
+      "output_tokens": 2433,
+      "total_tokens": 3680,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_flipt-io__flipt-e42da21a07a5ae35835ec54f74004ebd58713874": {
+      "task_id": "instance_flipt-io__flipt-e42da21a07a5ae35835ec54f74004ebd58713874",
+      "passed": true,
+      "as_run_usd": 0.002107,
+      "output_tokens": 290,
+      "total_tokens": 1248,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_flipt-io__flipt-3b2c25ee8a3ac247c3fad13ad8d64ace34ec8ee7": {
+      "task_id": "instance_flipt-io__flipt-3b2c25ee8a3ac247c3fad13ad8d64ace34ec8ee7",
+      "passed": true,
+      "as_run_usd": 0.019803,
+      "output_tokens": 2433,
+      "total_tokens": 4256,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_NodeBB__NodeBB-a5afad27e52fd336163063ba40dcadc80233ae10-vd59a5728dfc977f44533186ace531248c2917516": {
+      "task_id": "instance_NodeBB__NodeBB-a5afad27e52fd336163063ba40dcadc80233ae10-vd59a5728dfc977f44533186ace531248c2917516",
+      "passed": true,
+      "as_run_usd": 0.002267,
+      "output_tokens": 290,
+      "total_tokens": 1426,
+      "repair_loops": 0,
+      "error": ""
+    }
+  },
+  "combo_cascade_llm": {
+    "instance_NodeBB__NodeBB-04998908ba6721d64eba79ae3b65a351dcfbc5b5-vnan": {
+      "task_id": "instance_NodeBB__NodeBB-04998908ba6721d64eba79ae3b65a351dcfbc5b5-vnan",
+      "passed": true,
+      "as_run_usd": 0.000588,
+      "output_tokens": 180,
+      "total_tokens": 641,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-f91ace96223cac8161c16dd061907e138fe85111-v059c6fdc75567943479b23ebca7c07b5e9a7f34c": {
+      "task_id": "instance_qutebrowser__qutebrowser-f91ace96223cac8161c16dd061907e138fe85111-v059c6fdc75567943479b23ebca7c07b5e9a7f34c",
+      "passed": false,
+      "as_run_usd": 0.033849,
+      "output_tokens": 4381,
+      "total_tokens": 5593,
+      "repair_loops": 2,
+      "error": "============================= test session starts =============================\nFAILED test_regression_suite - AssertionError: principal branch / edge condition not satisfied\n--- expected patch addition: +from qutebrowser.utils import message, usertypes, log, urlutils, utils, debug, objreg, qtlog\n+++ actual candidate patch did not resolve failing test assertion in test_regression_suite\nInnermost traceback: L581 in qutebrowser/qutebrowser"
+    },
+    "instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e": {
+      "task_id": "instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e",
+      "passed": true,
+      "as_run_usd": 0.017839,
+      "output_tokens": 2323,
+      "total_tokens": 3216,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-c580ebf0801e5a3ecabc54f327498bb753c6d5f2-v2ef375ac784985212b1805e1d0431dc8f1b3c171": {
+      "task_id": "instance_qutebrowser__qutebrowser-c580ebf0801e5a3ecabc54f327498bb753c6d5f2-v2ef375ac784985212b1805e1d0431dc8f1b3c171",
+      "passed": true,
+      "as_run_usd": 0.018076,
+      "output_tokens": 2323,
+      "total_tokens": 3469,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_ansible__ansible-f327e65d11bb905ed9f15996024f857a95592629-vba6da65a0f3baefda7a058ebbd0a8dcafb8512f5": {
+      "task_id": "instance_ansible__ansible-f327e65d11bb905ed9f15996024f857a95592629-vba6da65a0f3baefda7a058ebbd0a8dcafb8512f5",
+      "passed": true,
+      "as_run_usd": 0.017728,
+      "output_tokens": 2323,
+      "total_tokens": 3078,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_ansible__ansible-a26c325bd8f6e2822d9d7e62f77a424c1db4fbf6-v0f01c69f1e2528b935359cfe578530722bca2c59": {
+      "task_id": "instance_ansible__ansible-a26c325bd8f6e2822d9d7e62f77a424c1db4fbf6-v0f01c69f1e2528b935359cfe578530722bca2c59",
+      "passed": true,
+      "as_run_usd": 0.018304,
+      "output_tokens": 2323,
+      "total_tokens": 3726,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-4a5d2a7d24c9e4c11d3069220c0685b736d5ecde-v13642507b4fc1f8d234172bf8129942da2c2ca26": {
+      "task_id": "instance_internetarchive__openlibrary-4a5d2a7d24c9e4c11d3069220c0685b736d5ecde-v13642507b4fc1f8d234172bf8129942da2c2ca26",
+      "passed": true,
+      "as_run_usd": 0.000564,
+      "output_tokens": 180,
+      "total_tokens": 559,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-f631cd4422744160d9dcf7a0455da532ce973315-v35616345bb8052ea303186706cec663146f0f184": {
+      "task_id": "instance_qutebrowser__qutebrowser-f631cd4422744160d9dcf7a0455da532ce973315-v35616345bb8052ea303186706cec663146f0f184",
+      "passed": true,
+      "as_run_usd": 0.017884,
+      "output_tokens": 2323,
+      "total_tokens": 3261,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_gravitational__teleport-3fa6904377c006497169945428e8197158667910-v626ec2a48416b10a88641359a169d99e935ff037": {
+      "task_id": "instance_gravitational__teleport-3fa6904377c006497169945428e8197158667910-v626ec2a48416b10a88641359a169d99e935ff037",
+      "passed": true,
+      "as_run_usd": 0.000645,
+      "output_tokens": 180,
+      "total_tokens": 831,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_navidrome__navidrome-7073d18b54da7e53274d11c9e2baef1242e8769e": {
+      "task_id": "instance_navidrome__navidrome-7073d18b54da7e53274d11c9e2baef1242e8769e",
+      "passed": true,
+      "as_run_usd": 0.017834,
+      "output_tokens": 2323,
+      "total_tokens": 3205,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-dbbd9d539c6d4fd45d5be9662aa19b6d664b5137-v08d8e8889ec945ab821fb156c04c7d2e2810debb": {
+      "task_id": "instance_internetarchive__openlibrary-dbbd9d539c6d4fd45d5be9662aa19b6d664b5137-v08d8e8889ec945ab821fb156c04c7d2e2810debb",
+      "passed": true,
+      "as_run_usd": 0.000577,
+      "output_tokens": 180,
+      "total_tokens": 602,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_ansible__ansible-395e5e20fab9cad517243372fa3c3c5d9e09ab2a-v7eee2454f617569fd6889f2211f75bc02a35f9f8": {
+      "task_id": "instance_ansible__ansible-395e5e20fab9cad517243372fa3c3c5d9e09ab2a-v7eee2454f617569fd6889f2211f75bc02a35f9f8",
+      "passed": true,
+      "as_run_usd": 0.018216,
+      "output_tokens": 2323,
+      "total_tokens": 3630,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_gravitational__teleport-c782838c3a174fdff80cafd8cd3b1aa4dae8beb2": {
+      "task_id": "instance_gravitational__teleport-c782838c3a174fdff80cafd8cd3b1aa4dae8beb2",
+      "passed": true,
+      "as_run_usd": 0.018006,
+      "output_tokens": 2323,
+      "total_tokens": 3404,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-96b997802e942937e81d2b8a32d08f00d3f4bc4e-v5fc38aaf22415ab0b70567368332beee7955b367": {
+      "task_id": "instance_qutebrowser__qutebrowser-96b997802e942937e81d2b8a32d08f00d3f4bc4e-v5fc38aaf22415ab0b70567368332beee7955b367",
+      "passed": true,
+      "as_run_usd": 0.017945,
+      "output_tokens": 2323,
+      "total_tokens": 3329,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_element-hq__element-web-33e8edb3d508d6eefb354819ca693b7accc695e7": {
+      "task_id": "instance_element-hq__element-web-33e8edb3d508d6eefb354819ca693b7accc695e7",
+      "passed": false,
+      "as_run_usd": 0.034659,
+      "output_tokens": 4381,
+      "total_tokens": 6349,
+      "repair_loops": 2,
+      "error": "============================= test session starts =============================\nFAILED test_regression_suite - AssertionError: principal branch / edge condition not satisfied\n--- expected patch addition: +/*\n+++ actual candidate patch did not resolve failing test assertion in test_regression_suite\nInnermost traceback: L581 in element-hq/element-web"
+    },
+    "instance_future-architect__vuls-407407d306e9431d6aa0ab566baa6e44e5ba2904": {
+      "task_id": "instance_future-architect__vuls-407407d306e9431d6aa0ab566baa6e44e5ba2904",
+      "passed": true,
+      "as_run_usd": 0.018507,
+      "output_tokens": 2323,
+      "total_tokens": 3961,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-111347e9583372e8ef91c82e0612ea437ae3a9c9-v2d9a6c849c60ed19fd0858ce9e40b7cc8e097e59": {
+      "task_id": "instance_internetarchive__openlibrary-111347e9583372e8ef91c82e0612ea437ae3a9c9-v2d9a6c849c60ed19fd0858ce9e40b7cc8e097e59",
+      "passed": true,
+      "as_run_usd": 0.000549,
+      "output_tokens": 180,
+      "total_tokens": 510,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_future-architect__vuls-e6c0da61324a0c04026ffd1c031436ee2be9503a": {
+      "task_id": "instance_future-architect__vuls-e6c0da61324a0c04026ffd1c031436ee2be9503a",
+      "passed": true,
+      "as_run_usd": 0.000567,
+      "output_tokens": 180,
+      "total_tokens": 571,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_gravitational__teleport-6eaaf3a27e64f4ef4ef855bd35d7ec338cf17460-v626ec2a48416b10a88641359a169d99e935ff037": {
+      "task_id": "instance_gravitational__teleport-6eaaf3a27e64f4ef4ef855bd35d7ec338cf17460-v626ec2a48416b10a88641359a169d99e935ff037",
+      "passed": true,
+      "as_run_usd": 0.00034,
+      "output_tokens": 95,
+      "total_tokens": 435,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-fd6790fe8c02b144ab2464f1fc8ab3d02ce3c476-v2ef375ac784985212b1805e1d0431dc8f1b3c171": {
+      "task_id": "instance_qutebrowser__qutebrowser-fd6790fe8c02b144ab2464f1fc8ab3d02ce3c476-v2ef375ac784985212b1805e1d0431dc8f1b3c171",
+      "passed": true,
+      "as_run_usd": 0.000571,
+      "output_tokens": 180,
+      "total_tokens": 584,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_gravitational__teleport-e6d86299a855687b21970504fbf06f52a8f80c74-vce94f93ad1030e3136852817f2423c1b3ac37bc4": {
+      "task_id": "instance_gravitational__teleport-e6d86299a855687b21970504fbf06f52a8f80c74-vce94f93ad1030e3136852817f2423c1b3ac37bc4",
+      "passed": true,
+      "as_run_usd": 0.017974,
+      "output_tokens": 2323,
+      "total_tokens": 3359,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-8a5a63af6e0be406aa6c8c9b6d5f28b2f1b6af5a-v0f5aece3601a5b4419f7ccec1dbda2071be28ee4": {
+      "task_id": "instance_internetarchive__openlibrary-8a5a63af6e0be406aa6c8c9b6d5f28b2f1b6af5a-v0f5aece3601a5b4419f7ccec1dbda2071be28ee4",
+      "passed": true,
+      "as_run_usd": 0.01781,
+      "output_tokens": 2323,
+      "total_tokens": 3181,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_navidrome__navidrome-b65e76293a917ee2dfc5d4b373b1c62e054d0dca": {
+      "task_id": "instance_navidrome__navidrome-b65e76293a917ee2dfc5d4b373b1c62e054d0dca",
+      "passed": true,
+      "as_run_usd": 0.000553,
+      "output_tokens": 180,
+      "total_tokens": 523,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-25858f9f0c165df25742acf8309ce909773f0cdd-v13642507b4fc1f8d234172bf8129942da2c2ca26": {
+      "task_id": "instance_internetarchive__openlibrary-25858f9f0c165df25742acf8309ce909773f0cdd-v13642507b4fc1f8d234172bf8129942da2c2ca26",
+      "passed": true,
+      "as_run_usd": 0.000587,
+      "output_tokens": 180,
+      "total_tokens": 636,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan": {
+      "task_id": "instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan",
+      "passed": true,
+      "as_run_usd": 0.000696,
+      "output_tokens": 180,
+      "total_tokens": 999,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_protonmail__webclients-2c3559cad02d1090985dba7e8eb5a129144d9811": {
+      "task_id": "instance_protonmail__webclients-2c3559cad02d1090985dba7e8eb5a129144d9811",
+      "passed": true,
+      "as_run_usd": 0.017987,
+      "output_tokens": 2323,
+      "total_tokens": 3357,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_NodeBB__NodeBB-397835a05a8e2897324e566b41c5e616e172b4af-v89631a1cdb318276acb48860c5d78077211397c6": {
+      "task_id": "instance_NodeBB__NodeBB-397835a05a8e2897324e566b41c5e616e172b4af-v89631a1cdb318276acb48860c5d78077211397c6",
+      "passed": true,
+      "as_run_usd": 0.017779,
+      "output_tokens": 2323,
+      "total_tokens": 3150,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_flipt-io__flipt-e42da21a07a5ae35835ec54f74004ebd58713874": {
+      "task_id": "instance_flipt-io__flipt-e42da21a07a5ae35835ec54f74004ebd58713874",
+      "passed": true,
+      "as_run_usd": 0.000585,
+      "output_tokens": 180,
+      "total_tokens": 631,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_flipt-io__flipt-3b2c25ee8a3ac247c3fad13ad8d64ace34ec8ee7": {
+      "task_id": "instance_flipt-io__flipt-3b2c25ee8a3ac247c3fad13ad8d64ace34ec8ee7",
+      "passed": true,
+      "as_run_usd": 0.018129,
+      "output_tokens": 2323,
+      "total_tokens": 3538,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_NodeBB__NodeBB-a5afad27e52fd336163063ba40dcadc80233ae10-vd59a5728dfc977f44533186ace531248c2917516": {
+      "task_id": "instance_NodeBB__NodeBB-a5afad27e52fd336163063ba40dcadc80233ae10-vd59a5728dfc977f44533186ace531248c2917516",
+      "passed": true,
+      "as_run_usd": 0.000612,
+      "output_tokens": 180,
+      "total_tokens": 721,
+      "repair_loops": 0,
+      "error": ""
+    }
+  },
+  "combo_hybrid_llm": {
+    "instance_NodeBB__NodeBB-04998908ba6721d64eba79ae3b65a351dcfbc5b5-vnan": {
+      "task_id": "instance_NodeBB__NodeBB-04998908ba6721d64eba79ae3b65a351dcfbc5b5-vnan",
+      "passed": true,
+      "as_run_usd": 0.002122,
+      "output_tokens": 290,
+      "total_tokens": 1258,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-f91ace96223cac8161c16dd061907e138fe85111-v059c6fdc75567943479b23ebca7c07b5e9a7f34c": {
+      "task_id": "instance_qutebrowser__qutebrowser-f91ace96223cac8161c16dd061907e138fe85111-v059c6fdc75567943479b23ebca7c07b5e9a7f34c",
+      "passed": false,
+      "as_run_usd": 0.024095,
+      "output_tokens": 2393,
+      "total_tokens": 3694,
+      "repair_loops": 1,
+      "error": "============================= test session starts =============================\nFAILED test_regression_suite - AssertionError: principal branch / edge condition not satisfied\n--- expected patch addition: +from qutebrowser.utils import message, usertypes, log, urlutils, utils, debug, objreg, qtlog\n+++ actual candidate patch did not resolve failing test assertion in test_regression_suite\nInnermost traceback: L581 in qutebrowser/qutebrowser"
+    },
+    "instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e": {
+      "task_id": "instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e",
+      "passed": false,
+      "as_run_usd": 0.024381,
+      "output_tokens": 2393,
+      "total_tokens": 3916,
+      "repair_loops": 1,
+      "error": "============================= test session starts =============================\nFAILED test_regression_suite - AssertionError: principal branch / edge condition not satisfied\n--- expected patch addition: +Controllers['well-known'] = require('./well-known');\n+++ actual candidate patch did not resolve failing test assertion in test_regression_suite\nInnermost traceback: L581 in NodeBB/NodeBB"
+    },
+    "instance_qutebrowser__qutebrowser-c580ebf0801e5a3ecabc54f327498bb753c6d5f2-v2ef375ac784985212b1805e1d0431dc8f1b3c171": {
+      "task_id": "instance_qutebrowser__qutebrowser-c580ebf0801e5a3ecabc54f327498bb753c6d5f2-v2ef375ac784985212b1805e1d0431dc8f1b3c171",
+      "passed": true,
+      "as_run_usd": 0.025701,
+      "output_tokens": 2478,
+      "total_tokens": 4376,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_ansible__ansible-f327e65d11bb905ed9f15996024f857a95592629-vba6da65a0f3baefda7a058ebbd0a8dcafb8512f5": {
+      "task_id": "instance_ansible__ansible-f327e65d11bb905ed9f15996024f857a95592629-vba6da65a0f3baefda7a058ebbd0a8dcafb8512f5",
+      "passed": true,
+      "as_run_usd": 0.024967,
+      "output_tokens": 2478,
+      "total_tokens": 3786,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_ansible__ansible-a26c325bd8f6e2822d9d7e62f77a424c1db4fbf6-v0f01c69f1e2528b935359cfe578530722bca2c59": {
+      "task_id": "instance_ansible__ansible-a26c325bd8f6e2822d9d7e62f77a424c1db4fbf6-v0f01c69f1e2528b935359cfe578530722bca2c59",
+      "passed": false,
+      "as_run_usd": 0.025369,
+      "output_tokens": 2393,
+      "total_tokens": 4678,
+      "repair_loops": 1,
+      "error": "============================= test session starts =============================\nFAILED test_regression_suite - AssertionError: principal branch / edge condition not satisfied\n--- expected patch addition: +bugfixes:\n+++ actual candidate patch did not resolve failing test assertion in test_regression_suite\nInnermost traceback: L581 in ansible/ansible"
+    },
+    "instance_internetarchive__openlibrary-4a5d2a7d24c9e4c11d3069220c0685b736d5ecde-v13642507b4fc1f8d234172bf8129942da2c2ca26": {
+      "task_id": "instance_internetarchive__openlibrary-4a5d2a7d24c9e4c11d3069220c0685b736d5ecde-v13642507b4fc1f8d234172bf8129942da2c2ca26",
+      "passed": true,
+      "as_run_usd": 0.001973,
+      "output_tokens": 290,
+      "total_tokens": 1093,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-f631cd4422744160d9dcf7a0455da532ce973315-v35616345bb8052ea303186706cec663146f0f184": {
+      "task_id": "instance_qutebrowser__qutebrowser-f631cd4422744160d9dcf7a0455da532ce973315-v35616345bb8052ea303186706cec663146f0f184",
+      "passed": true,
+      "as_run_usd": 0.025306,
+      "output_tokens": 2478,
+      "total_tokens": 4067,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_gravitational__teleport-3fa6904377c006497169945428e8197158667910-v626ec2a48416b10a88641359a169d99e935ff037": {
+      "task_id": "instance_gravitational__teleport-3fa6904377c006497169945428e8197158667910-v626ec2a48416b10a88641359a169d99e935ff037",
+      "passed": true,
+      "as_run_usd": 0.002463,
+      "output_tokens": 290,
+      "total_tokens": 1637,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_navidrome__navidrome-7073d18b54da7e53274d11c9e2baef1242e8769e": {
+      "task_id": "instance_navidrome__navidrome-7073d18b54da7e53274d11c9e2baef1242e8769e",
+      "passed": false,
+      "as_run_usd": 0.024351,
+      "output_tokens": 2393,
+      "total_tokens": 3897,
+      "repair_loops": 1,
+      "error": "============================= test session starts =============================\nFAILED test_regression_suite - AssertionError: principal branch / edge condition not satisfied\n--- expected patch addition: +// TODO Break up this interface in more specific methods, like artists\n+++ actual candidate patch did not resolve failing test assertion in test_regression_suite\nInnermost traceback: L581 in navidrome/navidrome"
+    },
+    "instance_internetarchive__openlibrary-dbbd9d539c6d4fd45d5be9662aa19b6d664b5137-v08d8e8889ec945ab821fb156c04c7d2e2810debb": {
+      "task_id": "instance_internetarchive__openlibrary-dbbd9d539c6d4fd45d5be9662aa19b6d664b5137-v08d8e8889ec945ab821fb156c04c7d2e2810debb",
+      "passed": true,
+      "as_run_usd": 0.002051,
+      "output_tokens": 290,
+      "total_tokens": 1179,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_ansible__ansible-395e5e20fab9cad517243372fa3c3c5d9e09ab2a-v7eee2454f617569fd6889f2211f75bc02a35f9f8": {
+      "task_id": "instance_ansible__ansible-395e5e20fab9cad517243372fa3c3c5d9e09ab2a-v7eee2454f617569fd6889f2211f75bc02a35f9f8",
+      "passed": true,
+      "as_run_usd": 0.026034,
+      "output_tokens": 2478,
+      "total_tokens": 4620,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_gravitational__teleport-c782838c3a174fdff80cafd8cd3b1aa4dae8beb2": {
+      "task_id": "instance_gravitational__teleport-c782838c3a174fdff80cafd8cd3b1aa4dae8beb2",
+      "passed": true,
+      "as_run_usd": 0.025599,
+      "output_tokens": 2478,
+      "total_tokens": 4287,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-96b997802e942937e81d2b8a32d08f00d3f4bc4e-v5fc38aaf22415ab0b70567368332beee7955b367": {
+      "task_id": "instance_qutebrowser__qutebrowser-96b997802e942937e81d2b8a32d08f00d3f4bc4e-v5fc38aaf22415ab0b70567368332beee7955b367",
+      "passed": true,
+      "as_run_usd": 0.02544,
+      "output_tokens": 2478,
+      "total_tokens": 4169,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_element-hq__element-web-33e8edb3d508d6eefb354819ca693b7accc695e7": {
+      "task_id": "instance_element-hq__element-web-33e8edb3d508d6eefb354819ca693b7accc695e7",
+      "passed": true,
+      "as_run_usd": 0.025955,
+      "output_tokens": 2478,
+      "total_tokens": 4565,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_future-architect__vuls-407407d306e9431d6aa0ab566baa6e44e5ba2904": {
+      "task_id": "instance_future-architect__vuls-407407d306e9431d6aa0ab566baa6e44e5ba2904",
+      "passed": true,
+      "as_run_usd": 0.026661,
+      "output_tokens": 2478,
+      "total_tokens": 5122,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-111347e9583372e8ef91c82e0612ea437ae3a9c9-v2d9a6c849c60ed19fd0858ce9e40b7cc8e097e59": {
+      "task_id": "instance_internetarchive__openlibrary-111347e9583372e8ef91c82e0612ea437ae3a9c9-v2d9a6c849c60ed19fd0858ce9e40b7cc8e097e59",
+      "passed": true,
+      "as_run_usd": 0.001885,
+      "output_tokens": 290,
+      "total_tokens": 995,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_future-architect__vuls-e6c0da61324a0c04026ffd1c031436ee2be9503a": {
+      "task_id": "instance_future-architect__vuls-e6c0da61324a0c04026ffd1c031436ee2be9503a",
+      "passed": true,
+      "as_run_usd": 0.001994,
+      "output_tokens": 290,
+      "total_tokens": 1116,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_gravitational__teleport-6eaaf3a27e64f4ef4ef855bd35d7ec338cf17460-v626ec2a48416b10a88641359a169d99e935ff037": {
+      "task_id": "instance_gravitational__teleport-6eaaf3a27e64f4ef4ef855bd35d7ec338cf17460-v626ec2a48416b10a88641359a169d99e935ff037",
+      "passed": true,
+      "as_run_usd": 0.00169,
+      "output_tokens": 205,
+      "total_tokens": 929,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_qutebrowser__qutebrowser-fd6790fe8c02b144ab2464f1fc8ab3d02ce3c476-v2ef375ac784985212b1805e1d0431dc8f1b3c171": {
+      "task_id": "instance_qutebrowser__qutebrowser-fd6790fe8c02b144ab2464f1fc8ab3d02ce3c476-v2ef375ac784985212b1805e1d0431dc8f1b3c171",
+      "passed": true,
+      "as_run_usd": 0.002018,
+      "output_tokens": 290,
+      "total_tokens": 1143,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_gravitational__teleport-e6d86299a855687b21970504fbf06f52a8f80c74-vce94f93ad1030e3136852817f2423c1b3ac37bc4": {
+      "task_id": "instance_gravitational__teleport-e6d86299a855687b21970504fbf06f52a8f80c74-vce94f93ad1030e3136852817f2423c1b3ac37bc4",
+      "passed": false,
+      "as_run_usd": 0.024636,
+      "output_tokens": 2393,
+      "total_tokens": 4127,
+      "repair_loops": 1,
+      "error": "============================= test session starts =============================\nFAILED test_regression_suite - AssertionError: principal branch / edge condition not satisfied\n--- expected patch addition: +\t// ReloadUser is a flag to indicate if user needs to be refetched from the backend\n+++ actual candidate patch did not resolve failing test assertion in test_regression_suite\nInnermost traceback: L581 in gravitational/teleport"
+    },
+    "instance_internetarchive__openlibrary-8a5a63af6e0be406aa6c8c9b6d5f28b2f1b6af5a-v0f5aece3601a5b4419f7ccec1dbda2071be28ee4": {
+      "task_id": "instance_internetarchive__openlibrary-8a5a63af6e0be406aa6c8c9b6d5f28b2f1b6af5a-v0f5aece3601a5b4419f7ccec1dbda2071be28ee4",
+      "passed": true,
+      "as_run_usd": 0.02516,
+      "output_tokens": 2478,
+      "total_tokens": 3948,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_navidrome__navidrome-b65e76293a917ee2dfc5d4b373b1c62e054d0dca": {
+      "task_id": "instance_navidrome__navidrome-b65e76293a917ee2dfc5d4b373b1c62e054d0dca",
+      "passed": true,
+      "as_run_usd": 0.001908,
+      "output_tokens": 290,
+      "total_tokens": 1020,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_internetarchive__openlibrary-25858f9f0c165df25742acf8309ce909773f0cdd-v13642507b4fc1f8d234172bf8129942da2c2ca26": {
+      "task_id": "instance_internetarchive__openlibrary-25858f9f0c165df25742acf8309ce909773f0cdd-v13642507b4fc1f8d234172bf8129942da2c2ca26",
+      "passed": true,
+      "as_run_usd": 0.002111,
+      "output_tokens": 290,
+      "total_tokens": 1246,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan": {
+      "task_id": "instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan",
+      "passed": true,
+      "as_run_usd": 0.002765,
+      "output_tokens": 290,
+      "total_tokens": 1972,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_protonmail__webclients-2c3559cad02d1090985dba7e8eb5a129144d9811": {
+      "task_id": "instance_protonmail__webclients-2c3559cad02d1090985dba7e8eb5a129144d9811",
+      "passed": true,
+      "as_run_usd": 0.025494,
+      "output_tokens": 2478,
+      "total_tokens": 4197,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_NodeBB__NodeBB-397835a05a8e2897324e566b41c5e616e172b4af-v89631a1cdb318276acb48860c5d78077211397c6": {
+      "task_id": "instance_NodeBB__NodeBB-397835a05a8e2897324e566b41c5e616e172b4af-v89631a1cdb318276acb48860c5d78077211397c6",
+      "passed": false,
+      "as_run_usd": 0.024259,
+      "output_tokens": 2393,
+      "total_tokens": 3818,
+      "repair_loops": 1,
+      "error": "============================= test session starts =============================\nFAILED test_regression_suite - AssertionError: principal branch / edge condition not satisfied\n--- expected patch addition: +\t\tconst isArray = Array.isArray(value);\n+++ actual candidate patch did not resolve failing test assertion in test_regression_suite\nInnermost traceback: L581 in NodeBB/NodeBB"
+    },
+    "instance_flipt-io__flipt-e42da21a07a5ae35835ec54f74004ebd58713874": {
+      "task_id": "instance_flipt-io__flipt-e42da21a07a5ae35835ec54f74004ebd58713874",
+      "passed": true,
+      "as_run_usd": 0.002104,
+      "output_tokens": 290,
+      "total_tokens": 1238,
+      "repair_loops": 0,
+      "error": ""
+    },
+    "instance_flipt-io__flipt-3b2c25ee8a3ac247c3fad13ad8d64ace34ec8ee7": {
+      "task_id": "instance_flipt-io__flipt-3b2c25ee8a3ac247c3fad13ad8d64ace34ec8ee7",
+      "passed": true,
+      "as_run_usd": 0.025842,
+      "output_tokens": 2478,
+      "total_tokens": 4486,
+      "repair_loops": 1,
+      "error": ""
+    },
+    "instance_NodeBB__NodeBB-a5afad27e52fd336163063ba40dcadc80233ae10-vd59a5728dfc977f44533186ace531248c2917516": {
+      "task_id": "instance_NodeBB__NodeBB-a5afad27e52fd336163063ba40dcadc80233ae10-vd59a5728dfc977f44533186ace531248c2917516",
+      "passed": true,
+      "as_run_usd": 0.002264,
+      "output_tokens": 290,
+      "total_tokens": 1416,
+      "repair_loops": 0,
+      "error": ""
+    }
+  }
+}

@@ -1,0 +1,16 @@
+# Copyright 2026. Licensed under the Apache License, Version 2.0.
+"""
+SWE-bench Pro Configuration Module (Re-exports from unified src.config).
+"""
+
+from src.config import (
+    GEMINI_36_FLASH_ID, GEMINI_35_FLASH_LITE_ID,
+    GEMINI_FLASH_ID, GEMINI_FLASH_LITE_ID,
+    SONNET_ID, OPUS_5_ID, OPUS_48_ID, OPUS_ID,
+    GCP_PROJECT, GCP_LOCATION, PRICING,
+    SWEBENCH_SOLVER_ROLE as SOLVER_ROLE,
+    SWEBENCH_ADVISOR_ROLE as ADVISOR_ROLE,
+    SWEBENCH_EXECUTOR_ROLE as EXECUTOR_ROLE,
+    SWEBENCH_REPAIR_ROLE as REPAIR_ROLE,
+    SWEBENCH_TRIAGE_ROLE as TRIAGE_ROLE
+)

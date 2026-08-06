@@ -4,6 +4,7 @@
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![Contribution Guide](https://img.shields.io/badge/Guide-Contribution%20Standards-emerald.svg)](straitjacket_benchmark_contribution_guide.md)
 [![Comprehensive Report](https://img.shields.io/badge/Report-Comprehensive%20TCO%20Synthesis-purple.svg)](reports/comprehensive_multi_llm_benchmark_report_20260806.md)
+[![Skills: Straitjacket & Tokenomics](https://img.shields.io/badge/Skills-.agents%2Fskills-blueviolet.svg)](#-agent-skills--decision-frameworks)
 
 This repository evaluates **Multi-LLM collaboration architectures, cascading strategies, and context containment harnesses** across realistic software engineering benchmarks. It provides empirical evidence on balancing benchmark performance (code correctness / task resolution) with API cost using Google Cloud Vertex AI (Gemini) and Anthropic (Claude) models.
 
@@ -19,6 +20,14 @@ This repository evaluates **Multi-LLM collaboration architectures, cascading str
 ├── straitjacket_benchmark_contribution_guide.md   # Benchmark charter, standards, and PR contribution guide
 │
 ├── run_benchmark.py                             # 🚀 MASTER UNIFIED CLI RUNNER (End-to-End)
+│
+├── .agents/skills/                              # 🧠 AGENT SKILLS & DECISION FRAMEWORKS
+│   ├── straitjacket/                            # Skill 1: CLI context containment & zero-cost triage
+│   │   └── SKILL.md
+│   └── tokenomics-architect/                    # Skill 2: Multi-LLM architecture & model router
+│       ├── SKILL.md
+│       ├── references/pricing_and_capabilities.json
+│       └── examples/production_recipes.py
 │
 ├── src/                                         # Shared Core Benchmark Library
 │   ├── __init__.py
@@ -106,6 +115,37 @@ python3 run_benchmark.py --dataset swebench --group all --n 30 --no-cache --repo
 
 ---
 
+## 🧠 Agent Skills & Decision Frameworks
+
+This repository includes bundled **Agent Skills** located in [`.agents/skills/`](.agents/skills/) that AI coding assistants (Jetski/Gemini CLI) automatically load on demand.
+
+### 1. `straitjacket` Skill ([`.agents/skills/straitjacket/SKILL.md`](.agents/skills/straitjacket/SKILL.md))
+- **Purpose**: Context window containment, noisy CLI execution management, and exact byte span retrieval.
+- **Core Mechanism**:
+  - `ctx run -- <cmd>`: Executes verbose test commands (`pytest`, `unittest`, `cargo test`) and captures output into an immutable store, returning a compact **~200 token deterministic digest** instead of flooding 10k–300k+ tokens into the model context.
+  - `ctx get run:<id>#stdout --lines <start>:<end>`: Surgically retrieves only the needed 50–100 lines of failure logs on demand without re-running the test.
+  - `ctx diff run:<id1> run:<id2>`: Strips non-deterministic noise (locale, PIDs, timestamps) to isolate true regression signal.
+- **Tokenomics Benefit**: Eliminates 100% of LLM triage token overhead ($0.0000) and preserves **96–98% prompt cache hit rates**.
+
+### 2. `tokenomics-architect` Skill ([`.agents/skills/tokenomics-architect/SKILL.md`](.agents/skills/tokenomics-architect/SKILL.md))
+- **Purpose**: Autonomous decision engine recommending the optimal multi-LLM architecture, model tier, and thinking level for any software engineering task.
+- **Task Classification & Routing Matrix**:
+  - **Class A (Multi-Library / Algorithmic)**: Recommends `Straitjacket Smart Repair` (`gemini-3.6-flash` -> `3.5-flash-lite` -> `3.6-flash`). Reaches **81.5% pass rate at $0.0076/solved** (35x cheaper than Claude Opus-5).
+  - **Class B (Enterprise Repo Bug / Git Patch)**: Recommends `Straitjacket Ultra-Sweet Hybrid` (`claude-sonnet-5` plan -> `gemini-3.5-lite` exec -> `claude-opus-5` repair). Reaches **80.0% pass rate at $0.00388/solved** (7.4x cheaper than single Opus-5).
+  - **Class C (Web & Middleware)**: Recommends `Straitjacket Hybrid` (Flash plan + Lite exec + Flash repair). Reaches **80.0% pass rate at $0.0041/solved**.
+  - **Class D (Massive CI/CD Regression Batch)**: Recommends `Smart Tiered Cascade` (Lite -> Flash min -> Flash low). Reaches **76.6% pass rate at $0.0036/solved**.
+- **Reasoning / Thinking Level Budgeting**:
+  - `OFF` (0 tokens): Boilerplate, AST transforms, syntax completion.
+  - `MINIMAL` (~1k tokens): Fast sanity checking, boundary validation.
+  - `LOW` (~2k–4k tokens): **Default sweet spot for test assertion repair** (fixes 80%+ bugs).
+  - `MEDIUM` (~4k–8k tokens): 2nd escalation for algorithmic deadlocks.
+  - `HIGH` (~8k–16k tokens): Mission-critical system redesign.
+- **Bundled Resources**:
+  - [`pricing_and_capabilities.json`](.agents/skills/tokenomics-architect/references/pricing_and_capabilities.json): Machine-readable pricing & capability profiles.
+  - [`production_recipes.py`](.agents/skills/tokenomics-architect/examples/production_recipes.py): Production-ready Python implementations.
+
+---
+
 ## 📊 Benchmark Datasets & Findings
 
 1. **BigCodeBench-Hard**:
@@ -118,7 +158,7 @@ python3 run_benchmark.py --dataset swebench --group all --n 30 --no-cache --repo
    - Real-world web framework, REST API, parsing, and networking tasks.
    - **Sweet-Spot Champion**: `Straitjacket Hybrid` achieved **80.0% pass rate at $0.0041 / solved task** (87% cheaper than Claude Opus-5).
 
-👉 Read the full analysis in [**Comprehensive Multi-LLM Benchmark & Tokenomics Synthesis Report (`reports/comprehensive_multi_llm_benchmark_report_20260806.md`)**](reports/comprehensive_multi_llm_benchmark_report_20260806.md).
+👉 Read the full cross-dataset analysis in [**Comprehensive Multi-LLM Benchmark & Tokenomics Synthesis Report (`reports/comprehensive_multi_llm_benchmark_report_20260806.md`)**](reports/comprehensive_multi_llm_benchmark_report_20260806.md).
 
 ---
 

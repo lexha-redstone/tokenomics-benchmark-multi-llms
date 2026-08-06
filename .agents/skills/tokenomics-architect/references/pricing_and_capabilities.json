@@ -1,0 +1,60 @@
+{
+  "currency": "USD",
+  "unit": "per_1M_tokens",
+  "pricing_table": {
+    "gemini-3.5-flash-lite": {
+      "provider": "google",
+      "tier": "next_gen_lite",
+      "input_price_per_1m": 0.30,
+      "output_price_per_1m": 2.50,
+      "cache_read_price_per_1m": 0.030,
+      "cache_write_price_per_1m": 0.25,
+      "recommended_roles": ["executor", "initial_drafter", "fast_repair"],
+      "default_thinking_budget": 0
+    },
+    "gemini-3.6-flash": {
+      "provider": "google",
+      "tier": "next_gen_flash",
+      "input_price_per_1m": 1.50,
+      "output_price_per_1m": 7.50,
+      "cache_read_price_per_1m": 0.150,
+      "cache_write_price_per_1m": 1.50,
+      "recommended_roles": ["reasoning_repair", "advisor", "algorithmic_solver"],
+      "default_thinking_level": "low"
+    },
+    "claude-sonnet-5": {
+      "provider": "anthropic",
+      "tier": "frontier_workhorse",
+      "input_price_per_1m": 2.00,
+      "output_price_per_1m": 10.00,
+      "cache_read_price_per_1m": 0.200,
+      "cache_write_price_per_1m": 2.50,
+      "recommended_roles": ["contract_advisor", "strict_reviewer", "escalation_tier_2"],
+      "default_thinking_level": "off"
+    },
+    "claude-opus-5": {
+      "provider": "anthropic",
+      "tier": "frontier_flagship",
+      "input_price_per_1m": 5.00,
+      "output_price_per_1m": 25.00,
+      "cache_read_price_per_1m": 0.500,
+      "cache_write_price_per_1m": 6.25,
+      "recommended_roles": ["final_deadlock_breaker", "mission_critical_patch"],
+      "default_thinking_level": "adaptive"
+    }
+  },
+  "triage_strategies": {
+    "straitjacket_local_unittest_profile": {
+      "cost_usd": 0.000000,
+      "latency_ms": 0.5,
+      "tokens_consumed": 0,
+      "cache_prefix_preservation": "high_98_percent"
+    },
+    "llm_triage_error": {
+      "cost_usd": 0.001800,
+      "latency_ms": 1800.0,
+      "tokens_consumed": 550,
+      "cache_prefix_preservation": "variable"
+    }
+  }
+}

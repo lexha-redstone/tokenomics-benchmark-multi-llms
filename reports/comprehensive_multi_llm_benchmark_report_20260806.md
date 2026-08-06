@@ -78,7 +78,7 @@ BigCodeBench-Hard evaluates complex multi-library algorithmic and data engineeri
 ### Comparative TCO Scoreboard (N=50 Comprehensive Gemini vs. Claude Suite)
 
 | Configuration | Models Used | Triage Mode | Effective Pass Rate | Total Cost (USD) | Cost / Solved Task ($/solved) | Relative Cost vs. Opus-5 |
-|---|---|---|---|---|---|
+|---|---|---|:---:|:---:|:---:|:---:|
 | **G1: Pure Lite Ultra-Budget** | `Gemini 3.5 Lite -> 3.5 Lite` | SJ UnittestProfile | 30/47 (63.8%) | `$0.0482` | **`$0.0016`** | **98.8% cheaper** |
 | **⭐ G2: Smart Tiered Cascade** | `3.5 Lite -> 3.6 Flash (Min/Low)` | SJ UnittestProfile | 36/47 (76.6%) | `$0.1302` | **`$0.0036`** | **97.2% cheaper** |
 | **G3: Advisor-Executor Split** | `3.6 Flash Plan -> 3.5 Lite -> Flash` | SJ UnittestProfile | 37/47 (78.7%) | `$0.1884` | **`$0.0051`** | **96.1% cheaper** |

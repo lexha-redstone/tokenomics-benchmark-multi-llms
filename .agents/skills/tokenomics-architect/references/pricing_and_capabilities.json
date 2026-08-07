@@ -1,49 +1,126 @@
 {
+  "version": "2026-07",
   "currency": "USD",
   "unit": "per_1M_tokens",
-  "pricing_table": {
-    "gemini-3.5-flash-lite": {
-      "provider": "google",
-      "tier": "next_gen_lite",
-      "input_price_per_1m": 0.30,
-      "output_price_per_1m": 2.50,
-      "cache_read_price_per_1m": 0.030,
-      "cache_write_price_per_1m": 0.25,
-      "recommended_roles": ["executor", "initial_drafter", "fast_repair"],
-      "default_thinking_budget": 0
-    },
-    "gemini-3.6-flash": {
-      "provider": "google",
-      "tier": "next_gen_flash",
-      "input_price_per_1m": 1.50,
-      "output_price_per_1m": 7.50,
-      "cache_read_price_per_1m": 0.150,
-      "cache_write_price_per_1m": 1.50,
-      "recommended_roles": ["reasoning_repair", "advisor", "algorithmic_solver"],
-      "default_thinking_level": "low"
-    },
-    "claude-sonnet-5": {
-      "provider": "anthropic",
-      "tier": "frontier_workhorse",
-      "input_price_per_1m": 2.00,
-      "output_price_per_1m": 10.00,
-      "cache_read_price_per_1m": 0.200,
-      "cache_write_price_per_1m": 2.50,
-      "recommended_roles": ["contract_advisor", "strict_reviewer", "escalation_tier_2"],
-      "default_thinking_level": "off"
-    },
-    "claude-opus-5": {
-      "provider": "anthropic",
-      "tier": "frontier_flagship",
-      "input_price_per_1m": 5.00,
-      "output_price_per_1m": 25.00,
-      "cache_read_price_per_1m": 0.500,
-      "cache_write_price_per_1m": 6.25,
-      "recommended_roles": ["final_deadlock_breaker", "mission_critical_patch"],
-      "default_thinking_level": "adaptive"
-    }
+  "capability_tiers": ["frontier", "standard", "economy"],
+  "thinking_levels": {
+    "off": { "budget_tokens": 0, "optimal_for": "Sub-cent drafts, syntax edits, simple diffs" },
+    "minimal": { "budget_tokens": 1500, "optimal_for": "Fast sanity checking, single-function validation" },
+    "low": { "budget_tokens": 3000, "optimal_for": "Default sweet spot for algorithmic repair & code edits" },
+    "medium": { "budget_tokens": 6000, "optimal_for": "2nd escalation tier, concurrency, tricky logic" },
+    "high": { "budget_tokens": 12000, "optimal_for": "Mission-critical architecture, complex regressions" }
   },
-  "triage_strategies": {
+  "models": [
+    {
+      "id": "gemini-3.5-flash-lite",
+      "provider": "google",
+      "tier": "economy",
+      "cli_ids": { "antigravity": "gemini-3.5-flash-lite", "antigravity-sdk": "gemini-3.5-flash-lite" },
+      "pricing": { "input": 0.30, "output": 2.50, "cache_read": 0.030, "cache_write": 0.25 },
+      "roles": ["explore", "search", "triage", "verify", "implement", "edit", "bulk_executor"],
+      "default_thinking": "off",
+      "measured_throughput_tok_s": 58.8,
+      "flood_discipline": "low_requires_containment",
+      "notes": "Optimal for high-volume execution, simple edits, and exploration behind Straitjacket containment."
+    },
+    {
+      "id": "gemini-3.6-flash",
+      "provider": "google",
+      "tier": "standard",
+      "cli_ids": { "antigravity": "gemini-3.6-flash", "antigravity-sdk": "gemini-3.6-flash" },
+      "pricing": { "input": 1.50, "output": 7.50, "cache_read": 0.150, "cache_write": 1.50 },
+      "roles": ["implement", "edit", "code", "summarize", "reasoning_repair", "algorithmic_solver"],
+      "default_thinking": "low",
+      "measured_throughput_tok_s": 91.3,
+      "flood_discipline": "high",
+      "notes": "Workhorse implementer. Autonomously minimizes log dumps; excellent algorithmic repair with low thinking."
+    },
+    {
+      "id": "gemini-3.1-pro",
+      "provider": "google",
+      "tier": "frontier",
+      "cli_ids": { "antigravity": "gemini-3.1-pro-preview", "antigravity-sdk": "gemini-3.1-pro-preview" },
+      "pricing": { "input": 2.00, "output": 12.00, "cache_read": 0.200, "cache_write": 2.00 },
+      "roles": ["plan", "reason", "review", "architect"],
+      "default_thinking": "low",
+      "measured_throughput_tok_s": null,
+      "flood_discipline": "high",
+      "notes": "Google Cloud native frontier reasoning model."
+    },
+    {
+      "id": "claude-haiku-4.5",
+      "provider": "anthropic",
+      "tier": "economy",
+      "cli_ids": { "claude": "haiku" },
+      "pricing": { "input": 1.00, "output": 5.00, "cache_read": 0.100, "cache_write": 1.25 },
+      "roles": ["explore", "search", "triage", "verify", "summarize"],
+      "default_thinking": "off",
+      "measured_throughput_tok_s": null,
+      "flood_discipline": "high",
+      "notes": "Fast exploration and coordinator model for Claude Code."
+    },
+    {
+      "id": "claude-sonnet-4.6",
+      "provider": "anthropic",
+      "tier": "standard",
+      "cli_ids": { "claude": "sonnet" },
+      "pricing": { "input": 3.00, "output": 15.00, "cache_read": 0.300, "cache_write": 3.75 },
+      "roles": ["implement", "edit", "code", "review", "contract_advisor"],
+      "default_thinking": "off",
+      "measured_throughput_tok_s": null,
+      "flood_discipline": "high",
+      "notes": "Frontier workhorse. Superb formal contract generation and strict review."
+    },
+    {
+      "id": "claude-opus-4.8",
+      "provider": "anthropic",
+      "tier": "frontier",
+      "cli_ids": { "claude": "opus" },
+      "pricing": { "input": 15.00, "output": 75.00, "cache_read": 1.500, "cache_write": 18.75 },
+      "roles": ["plan", "reason", "synthesize", "decide", "review", "architect", "final_deadlock_breaker"],
+      "default_thinking": "adaptive",
+      "measured_throughput_tok_s": null,
+      "flood_discipline": "high",
+      "notes": "Flagship planner. Worth the cost for architecture/planning (plan node, prefer: strong)."
+    },
+    {
+      "id": "gpt-5.6-sol",
+      "provider": "openai",
+      "tier": "frontier",
+      "cli_ids": { "codex": "gpt-5.6-sol" },
+      "pricing": { "input": 10.00, "output": 40.00, "cache_read": 1.000, "cache_write": 10.00 },
+      "roles": ["plan", "reason", "review", "architect"],
+      "default_thinking": "low",
+      "measured_throughput_tok_s": null,
+      "flood_discipline": "high",
+      "notes": "OpenAI flagship reasoning and architecture model."
+    },
+    {
+      "id": "gpt-5.6-terra",
+      "provider": "openai",
+      "tier": "standard",
+      "cli_ids": { "codex": "gpt-5.6-terra" },
+      "pricing": { "input": 2.50, "output": 10.00, "cache_read": 0.250, "cache_write": 2.50 },
+      "roles": ["implement", "edit", "code", "test"],
+      "default_thinking": "off",
+      "measured_throughput_tok_s": null,
+      "flood_discipline": "high",
+      "notes": "Workhorse code generator for Codex."
+    },
+    {
+      "id": "gpt-5.6-luna",
+      "provider": "openai",
+      "tier": "economy",
+      "cli_ids": { "codex": "gpt-5.6-luna" },
+      "pricing": { "input": 0.50, "output": 2.00, "cache_read": 0.050, "cache_write": 0.50 },
+      "roles": ["explore", "verify", "triage"],
+      "default_thinking": "off",
+      "measured_throughput_tok_s": null,
+      "flood_discipline": "high",
+      "notes": "Fast, low-cost exploration model for Codex."
+    }
+  ],
+  "triage_mechanisms": {
     "straitjacket_local_unittest_profile": {
       "cost_usd": 0.000000,
       "latency_ms": 0.5,

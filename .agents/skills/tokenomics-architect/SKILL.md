@@ -1,172 +1,146 @@
 ---
 name: tokenomics-architect
-description: Comprehensive decision framework and recommendation engine for selecting multi-LLM architectures, models (Gemini 3.6-Flash, Gemini 3.5-Flash-Lite, Claude Sonnet-5, Claude Opus-5), thinking levels (minimal, low, medium, high), and zero-cost Straitjacket context containment strategies based on empirical software engineering benchmarks (BigCodeBench-Hard, SWE-bench Pro, WebDev).
+description: Unified multi-LLM decision framework & task-coordination orchestrator. Combines empirical tokenomics ($/solved metric, thinking levels, prompt cache warming, zero-cost triage) with Straitjacket DAG routing (ctx.route/v1, topological parallel waves, CAS checkpoint handoff, and single-tier failure escalation).
 ---
 
-# Multi-LLM Tokenomics Architect: Task-Adaptive Architecture & Model Selection Guide
+# Unified Multi-LLM Tokenomics & Orchestration Architect
 
-This skill provides an empirical, data-driven framework to select the **optimal LLM architecture, model combination, reasoning/thinking budget, and context containment strategy** for any software development or automation task.
+This skill provides an empirical, production-ready framework for **Multi-LLM Architecture Selection, Tokenomics Optimization, and Cross-Harness Task Orchestration**.
 
----
-
-## 1. The Tokenomics Core Invariants
-
-1. **Receipts Before Doctrine (The $/Solved Metric)**:  
-   Raw benchmark accuracy is misleading without cost accounting. Always evaluate architectures by **Cost per Solved Task ($/solved)**:
-   $$\text{Cost per Solved Task} = \frac{\sum \text{as\_run\_usd}}{\text{Total Solved Tasks}}$$
-2. **Role Specialization Hierarchy**:
-   - **Advisor/Planner (Reasoning Model)**: Generates concise specification contracts (<250 words). Consumes minimal tokens.
-   - **Executor (High-Throughput Sub-Cent Model)**: Generates full code or diffs adhering strictly to the contract.
-   - **Triage (Zero-Cost Local Tool)**: Extracts failure coordinates locally without invoking LLMs.
-   - **Repair (Targeted Escalation)**: Fixes localized bugs with minimal context mutations.
-3. **Zero-Cost Triage Invariant ($0.0000)**:  
-   Never pass raw stack traces into LLMs or use LLM-based triage (`triage_error`). Use deterministic local parsing (`straitjacket` / `UnittestProfile`) to achieve **$0.0000 triage cost and 0ms API latency**.
-4. **Prompt Cache Prefix Warming**:  
-   Strip ephemeral data (locale, timestamps, PID, `/tmp/...` sandbox paths) from prompts to maintain **96–98% prompt cache hit rates**, cutting repeat multi-turn token costs by up to 10×.
+Instead of brute-forcing coding tasks with a single monolithic frontier model ($75+/1M tokens) or running uncontrolled open-loop API calls, this system decomposes complex work into a **Directed Acyclic Graph (DAG)**, routes each subtask by **`Capability × Price × Thinking Level`**, and coordinates parallel execution using **bounded Content-Addressable Storage (CAS) checkpoints**.
 
 ---
 
-## 2. Model Capabilities, Pricing & Allocation Matrix
+## 1. The Core Architectural Invariants
 
-| Model Identifier | Provider | Input ($/1M) | Output ($/1M) | Cache Read ($/1M) | Optimal Role | Best Used For |
-|:---|:---:|:---:|:---:|:---:|:---|:---|
-| `gemini-3.5-flash-lite` | Google | **$0.30** | **$2.50** | **$0.030** | **Bulk Executor / Initial Drafter** | High-volume code generation, straightforward fixes, AST edits, boilerplates. |
-| `gemini-3.6-flash` | Google | **$1.50** | **$7.50** | **$0.150** | **Workhorse Reasoner / 1st Escalation** | Algorithmic design, reasoning repair, multi-library coordination, low-budget advisor. |
-| `claude-sonnet-5` | Anthropic | **$2.00** | **$10.00** | **$0.200** | **Contract Advisor / Strict Reviewer** | Formal API contract writing, complex invariant preservation, 2nd-tier escalation. |
-| `claude-opus-5` | Anthropic | **$5.00** | **$25.00** | **$0.500** | **Final Escalation / Frontier Solver** | Deadlock breaker, subtle multi-file regression repair, mission-critical patches. |
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 1. Receipts Before Doctrine ($/Solved Metric):                              │
+│    Evaluate architectures strictly by Cost per Solved Task ($/solved).      │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ 2. Quality Allocation ("Flagship Plans, Cheap Model Implements"):           │
+│    Spend Frontier Flagships (Opus/Sol) exclusively on high-leverage         │
+│    planning (<250 words); execute bulk code on Standard/Economy models.      │
+│    => Matches 98% solo-Opus pass rates at 1.43x–4.2x lower total cost.      │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ 3. Capability Gating & Price Tie-Breaks:                                    │
+│    min_tier (economy < standard < frontier) is a hard exclusion gate.       │
+│    Eligible models are ranked by role coverage, then cheapest token price.  │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ 4. Zero-Cost Triage & Bounded CAS Checkpointing:                            │
+│    Never feed raw stack traces or thousands of lines into LLM prompts.      │
+│    Extract failure coordinates deterministically ($0.00) and hand off       │
+│    compact checkpoint:<id> digests. Resolve slices on-demand via ctx get.   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ 5. Prompt Cache Prefix Warming:                                             │
+│    Strip ephemeral noise (timestamps, temp paths, PIDs) to preserve         │
+│    96–98% prompt cache hit rates, slashing multi-turn token costs by 10x.   │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
 
 ---
 
-## 3. Thinking Level Budgeting Rules
-
-| Thinking Level | Headroom Tokens | When to Use | Anti-Pattern (When NOT to Use) |
-|:---|:---:|:---|:---|
-| **OFF / None** (`thinking_budget=0`) | 0 | Sub-cent drafts, direct translations, syntax completions, straightforward unit test repairs. | Complex mathematical logic or multi-file repository dependency navigation. |
-| **Minimal** (`thinking_level=MINIMAL`) | ~1,024 – 2,048 | Fast sanity checking, boundary validation, single-function edge case discovery. | Deep architectural refactoring (wastes budget without enough reasoning depth). |
-| **Low** (`thinking_level=LOW`) | ~2,048 – 4,096 | **Default Sweet Spot for Code Repair**. Resolves 80%+ of test assertion failures. | Trivial boilerplate generation (unnecessary latency). |
-| **Medium** (`thinking_level=MEDIUM`) | ~4,096 – 8,192 | 2nd escalation tier for algorithmic deadlocks, concurrency bugs, complex data pipelines. | Initial single-shot drafting on simple tasks. |
-| **High** (`thinking_level=HIGH`) | ~8,192 – 16,384 | Mission-critical system redesign, formal verification, highly intricate regression trees. | Standard daily PR repairs (inflates latency and cost). |
-
----
-
-## 4. Task Classification & Architecture Decision Matrix
+## 2. Declarative Host, Model & Thinking Registry
 
 ```mermaid
 flowchart TD
-    Task[Incoming Engineering Task] --> Classify{Task Category}
+    subgraph Tiers ["3-Tier Capability Hierarchy"]
+        F[Frontier Tier: plan, reason, architect, deadlock breaker]
+        S[Standard Tier: implement, code, edit, reasoning repair]
+        E[Economy Tier: explore, search, triage, verify, bulk edit]
+    end
 
-    Classify -->|Class A: Multi-Library / Algorithmic| A[Pattern 1: Straitjacket Smart Repair]
-    Classify -->|Class B: Enterprise Repo Bug / SWE-bench| B[Pattern 2: Straitjacket Ultra-Sweet Hybrid]
-    Classify -->|Class C: Web / Network / APIs| C[Pattern 3: Straitjacket Hybrid]
-    Classify -->|Class D: Massive CI/CD Batch Automation| D[Pattern 4: Smart Tiered Cascade]
-    Classify -->|Class E: Strict Single-Vendor Google Cloud| E[Pattern 5: Pure Gemini 3-Tier]
+    subgraph Thinking ["Thinking Budget Levels"]
+        T0[OFF / None: 0 tokens]
+        T1[Minimal: ~1k-2k tokens]
+        T2[Low: ~2k-4k tokens - Sweet Spot]
+        T3[Medium: ~4k-8k tokens - Escalation]
+        T4[High / Adaptive: ~8k-16k tokens]
+    end
 
-    A --> ResA[Effective Pass Rate: 81.5% · $0.0076/solved]
-    B --> ResB[Pass Rate: 80.0% · $0.00388/solved]
-    C --> ResC[Pass Rate: 80.0% · $0.0041/solved]
-    D --> ResD[Pass Rate: 76.6% · $0.0036/solved]
-    E --> ResE[Pass Rate: 83.0% · $0.0152/solved]
+    F --- T4 & T3
+    S --- T2 & T1 & T0
+    E --- T0
 ```
 
-### Class A: Multi-Library / Complex Algorithmic Function Completion
-- **Representative Benchmark**: BigCodeBench-Hard (NumPy, Pandas, SciPy, Matplotlib, GIS, Audio).
-- **Recommended Architecture**: **`Straitjacket Smart Repair`**
-  - **Step 1 (Draft)**: `gemini-3.6-flash` (Thinking: `low`).
-  - **Step 2 (Local Triage)**: Deterministic zero-cost `UnittestProfile` ($0.00).
-  - **Step 3 (Cheap Fix)**: `gemini-3.5-flash-lite` attempts fast fix.
-  - **Step 4 (Escalation)**: `gemini-3.6-flash` (Thinking: `medium`).
-- **Empirical Receipt**: **81.5% effective pass rate @ $0.0076 / solved task** (35x cheaper than Claude Opus-5).
-
-### Class B: Enterprise Repository Bug Resolution & Git Patch Generation
-- **Representative Benchmark**: SWE-bench Pro (SymPy, Scikit-learn, Sphinx, NodeBB, Qutebrowser).
-- **Recommended Architecture**: **`Straitjacket Ultra-Sweet Hybrid`** or **`Straitjacket Escalation Shield`**
-  - **Step 1 (Architect Contract)**: `claude-sonnet-5` reads issue context and outputs strict contract (<250 words).
-  - **Step 2 (Execution)**: `gemini-3.5-flash-lite` generates full unified git patch.
-  - **Step 3 (Local Triage)**: Deterministic git diff & test failure profiling ($0.00).
-  - **Step 4 (Targeted Repair)**: `claude-opus-5` fixes regression if tests fail.
-- **Empirical Receipt**: **80.0% pass rate @ $0.00388 / solved task** (7.4x cheaper than direct Opus-5).
-
-### Class C: Web, Networking & Microservices
-- **Representative Benchmark**: WebDev (Flask, Requests, BeautifulSoup, Cryptography, WebSockets).
-- **Recommended Architecture**: **`Straitjacket Hybrid`**
-  - **Step 1 (Plan)**: `gemini-3.6-flash` Advisor generates endpoint & data contract.
-  - **Step 2 (Exec)**: `gemini-3.5-flash-lite` writes implementation.
-  - **Step 3 (Repair)**: `gemini-3.6-flash` repairs test failures using zero-cost digest.
-- **Empirical Receipt**: **80.0% pass rate @ $0.0041 / solved task** (87% cheaper than Claude Opus-5).
-
-### Class D: Massive CI/CD Regression Repair & High-Throughput Batching
-- **Recommended Architecture**: **`Smart Tiered Cascade`**
-  - **Tier 1**: `gemini-3.5-flash-lite` (solves 50%+ of trivial bugs for <$0.001).
-  - **Tier 2**: `gemini-3.6-flash` (Thinking: `minimal`).
-  - **Tier 3**: `gemini-3.6-flash` (Thinking: `low`).
-- **Empirical Receipt**: **76.6% pass rate @ $0.0036 / solved task** (97.2% cheaper than single frontier).
-
-### Class E: Strict Single-Vendor Native Google Cloud Stack
-- **Recommended Architecture**: **`Pure Gemini Max-Performance`**
-  - `gemini-3.6-flash` (Thinking: `low` -> `medium` -> `high`).
-- **Empirical Receipt**: **83.0% effective pass rate @ $0.0152 / solved task** (matches Claude Opus-5 at 88% lower cost).
+| Model Identifier | Provider | Capability Tier | Input / Output ($/1M) | Cache Read ($/1M) | Optimal Role & Thinking Level | Primary Use Case |
+|:---|:---:|:---:|:---:|:---:|:---|:---|
+| **`gemini-3.5-flash-lite`** | Google | **Economy** | **$0.30** / **$2.50** | **$0.030** | Bulk Executor / Initial Drafter (`thinking: off`) | High-volume edits, exploration behind containment. |
+| **`gemini-3.6-flash`** | Google | **Standard** | **$1.50** / **$7.50** | **$0.150** | Workhorse Implementer (`thinking: low`) | Algorithmic design, reasoning repair, clean diffs. |
+| **`claude-haiku-4.5`** | Anthropic | **Economy** | **$1.00** / **$5.00** | **$0.100** | Coordinator / Explorer (`thinking: off`) | Fast DAG decomposition and test verification. |
+| **`claude-sonnet-4.6`** | Anthropic | **Standard** | **$3.00** / **$15.00** | **$0.300** | Contract Advisor / Reviewer (`thinking: off`) | Formal specification contracts (<250 words). |
+| **`claude-opus-4.8`** | Anthropic | **Frontier** | **$15.00** / **$75.00** | **$1.500** | Flagship Planner (`prefer: strong`, `adaptive`) | Architecture, complex multi-file regressions. |
+| **`gpt-5.6-sol`** | OpenAI | **Frontier** | **$10.00** / **$40.00** | **$1.000** | Frontier Reasoner (`prefer: strong`, `low`) | Complex mathematical logic and system design. |
+| **`gpt-5.6-terra`** | OpenAI | **Standard** | **$2.50** / **$10.00** | **$0.250** | Standard Implementer (`thinking: off`) | Heavy code-gen in Codex environments. |
 
 ---
 
-## 5. Architectural Implementation Recipes (Python Snippets)
+## 3. The 4-Step Orchestration Lifecycle
 
-### Recipe 1: Production Straitjacket Smart Repair (Pure Gemini)
+### Step 1: Task Classification & Decomposition (`ctx.route/v1`)
+The cheap coordinator (or deterministic fallback) classifies the task and emits an acyclic DAG:
+- **Class A (Algorithmic / Multi-Library)**: Draft (`gemini-3.6-flash`, `low`) -> Triage ($0) -> Repair (`3.5-lite`) -> Escalation (`3.6-flash`, `med`).
+- **Class B (Enterprise Repo Bug / SWE-bench)**: Architect Contract (`claude-sonnet`) -> Patch Exec (`gemini-3.5-lite`) -> Triage ($0) -> Targeted Repair (`claude-opus`).
+- **Class C (Web / Microservices)**: Plan (`gemini-3.6-flash`) -> Exec (`gemini-3.5-lite`) -> Test & Fix (`gemini-3.6-flash`).
+- **Class D (High-Throughput Batching)**: Cascade `gemini-3.5-lite` -> `gemini-3.6-flash (min)` -> `gemini-3.6-flash (low)`.
+- **Class E (Pure Gemini Native)**: `gemini-3.6-flash` (`low` -> `med` -> `high`).
 
-```python
-from src.client import dispatch_model
-from src.evaluator import triage_error_straitjacket, run_bigcodebench, extract_code
+### Step 2: Capability × Price × Thinking Routing
+- Validates graph acyclicity (`_assert_acyclic`) and bounds (`max_nodes <= 12`).
+- Evaluates `min_tier`, role coverage, and `thinking_level`.
+- Prices the total budget up front against token pricing tables.
 
-def solve_with_smart_repair(problem):
-    # Tier 1: Gemini 3.6-Flash with Low Thinking
-    text, u1, _ = dispatch_model("gemini-3.6-flash", problem["prompt"], thinking_level="low")
-    code = extract_code(text)
-    passed, err = run_bigcodebench(problem, code)
-    if passed:
-        return {"code": code, "cost": u1["as_run_usd"], "loops": 0}
+### Step 3: Pre-Run Validation & Preview (`--dry-run`)
+- Displays wave schedules, model choices, thinking budgets, and estimated dollar costs.
+- Rejects plans exceeding user budget limits (`budget_usd`).
 
-    # Zero-Cost Local Triage ($0.000000)
-    digest, _, _ = triage_error_straitjacket(err, problem=problem)
-
-    # Tier 2: Sub-Cent Flash-Lite Fast Repair
-    repair_prompt = f"Problem:\n{problem['prompt']}\n\nCurrent Code:\n{code}\n\nTriaged Error:\n{digest}\n\nFix the code."
-    r1_text, u2, _ = dispatch_model("gemini-3.5-flash-lite", repair_prompt)
-    code = extract_code(r1_text)
-    passed, err = run_bigcodebench(problem, code)
-    if passed:
-        return {"code": code, "cost": u1["as_run_usd"] + u2["as_run_usd"], "loops": 1}
-
-    # Tier 3: Gemini 3.6-Flash with Medium Thinking Escalation
-    digest, _, _ = triage_error_straitjacket(err, problem=problem)
-    r2_text, u3, _ = dispatch_model("gemini-3.6-flash", repair_prompt, thinking_level="medium")
-    code = extract_code(r2_text)
-    passed, err = run_bigcodebench(problem, code)
-    return {"code": code, "cost": u1["as_run_usd"] + u2["as_run_usd"] + u3["as_run_usd"], "loops": 2, "passed": passed}
-```
+### Step 4: Closed-Loop Wave Execution (`run_route`)
+1. **Parallel Waves**: Dispatches ready nodes concurrently using `ThreadPoolExecutor`.
+2. **CAS Checkpoint Handoff**: Freezes outputs into immutable blobs; passes `checkpoint:<id>` to downstream dependents.
+3. **1-Tier Escalation**: Automatically re-runs failed nodes on the cheapest strictly superior model tier.
+4. **Bounded Re-planning**: If blocked, coordinator patches the DAG with recovery nodes (capped by `max_replans <= 2`).
 
 ---
 
-## 6. Anti-Patterns & Critical Pitfalls
+## 4. Non-Price Dimensions & Empirical Rules
 
-1. ❌ **Anti-Pattern: Frontier Single-Model Brute-Forcing**
-   - *Mistake*: Sending all prompts directly to `claude-opus-5` or `gemini-pro`.
-   - *Consequence*: 10x–35x higher token costs for equal or lower accuracy (due to lack of multi-turn structured triage).
-2. ❌ **Anti-Pattern: Raw Stderr Dumping into Context**
-   - *Mistake*: Appending 5,000 lines of raw pytest traceback into repair prompts.
-   - *Consequence*: Floods input context, bursts token budgets, and causes attention distraction.
-3. ❌ **Anti-Pattern: LLM-Based Error Triage (`triage_error`)**
-   - *Mistake*: Calling an LLM to summarize error logs.
-   - *Consequence*: Adds ~$0.0018 per repair loop and 1–3s latency; risks hallucinating line numbers.
-4. ❌ **Anti-Pattern: Path & Timestamp Pollution (Cache Busting)**
-   - *Mistake*: Including ephemeral temp paths (`/tmp/bcb_84920/prog.py`) or timestamps in prompts.
-   - *Consequence*: Drops prompt cache hit rate from 98% to 0%, multiplying token billing by 10×.
+1. **Flood Discipline Invariant**:
+   - `gemini-3.5-flash-lite` has low flood discipline (emitted 7.8 MB on uncontained log dumps). **Always run Flash-Lite behind Straitjacket tool wrapping (`ctx run`)**.
+   - `gemini-3.6-flash` has high flood discipline (autonomously uses `grep`, emitting <1 KiB).
+2. **Context Drag vs. Unit Price**:
+   - Accumulating multi-turn context can erase per-token cost advantages. Use CAS checkpointing to keep input prompts bounded.
+3. **Measured Throughput**:
+   - `gemini-3.6-flash` (91.3 tok/s) is **~36% faster** than `gemini-3.5-flash-lite` (58.8 tok/s).
 
 ---
 
-## 7. Quick Recommendation Cheat Sheet
+## 5. Production Benchmark Receipts
 
-| If your primary constraint is... | Use this Architecture | Models to Deploy | Target Budget ($/task) |
-|:---|:---|:---|:---:|
-| **Absolute Minimum Cost** | `Smart Tiered Cascade` | `gemini-3.5-flash-lite` -> `gemini-3.6-flash (min)` | < $0.004 |
-| **Maximum Pass Rate on Hard Coding** | `Straitjacket Ultra-Sweet Hybrid` | `claude-sonnet-5` -> `gemini-3.5-lite` -> `claude-opus-5` | < $0.010 |
-| **Native Google Cloud (No 3rd Party)** | `Straitjacket Smart Repair` | `gemini-3.6-flash (low)` -> `3.5-lite` -> `3.6-flash (med)` | < $0.008 |
-| **Enterprise Repo Patches (SWE-bench)** | `Straitjacket Escalation Shield` | `gemini-3.5-lite` -> `gemini-3.6-flash` -> `claude-sonnet-5` | < $0.005 |
+| Architecture Pattern | Target Task | Pipeline Configuration | Effective Pass Rate | Cost per Solved Task | Baseline Comparison |
+|:---|:---|:---|:---:|:---:|:---|
+| **`Straitjacket Smart Repair`** | BigCodeBench-Hard | `gemini-3.6-flash (low)` -> Triage -> `3.5-lite` -> `3.6-flash (med)` | **81.5%** | **$0.0076** | **35x cheaper** than Claude Opus solo. |
+| **`Ultra-Sweet Hybrid`** | SWE-bench Pro | `claude-sonnet` Contract -> `gemini-3.5-lite` Exec -> `claude-opus` Fix | **80.0%** | **$0.00388** | **7.4x cheaper** than direct Opus-5. |
+| **`Straitjacket Hybrid`** | WebDev / APIs | `gemini-3.6-flash` Plan -> `3.5-lite` Exec -> `3.6-flash` Repair | **80.0%** | **$0.0041** | **87% cheaper** than Claude Opus-5. |
+| **`Smart Tiered Cascade`** | CI/CD Batch Bugs | `gemini-3.5-lite` -> `3.6-flash (min)` -> `3.6-flash (low)` | **76.6%** | **$0.0036** | **97.2% cheaper** than single frontier. |
+| **`Pure Gemini 3-Tier`** | Native GCP Stack | `gemini-3.6-flash` (`low` -> `medium` -> `high`) | **83.0%** | **$0.0152** | Matches Opus pass rate at **88% lower cost**. |
+
+---
+
+## 6. Critical Anti-Patterns & Failure Modes
+
+1. ❌ **Monolithic Frontier Brute-Forcing**: Running full multi-turn coding exclusively on Opus/Sol ($75+/1M tokens).
+2. ❌ **Uncontained Stderr / Traceback Dumping**: Appending raw 5,000-line pytest dumps into prompts.
+3. ❌ **LLM-Based Error Triage (`triage_error`)**: Paying LLM tokens to summarize errors instead of zero-cost local regex profiling ($0.00).
+4. ❌ **Prompt Prefix Cache Busting**: Including timestamps, ephemeral `/tmp/...` paths, or PIDs in prompts.
+5. ❌ **Unbounded Re-planning**: Allowing endless repair loops without hard wave/budget caps.
+
+---
+
+## 7. Reference Files in This Unified Skill
+
+- [`references/routing_contract.md`](references/routing_contract.md): Coordinator prompt contract, `ctx.route/v1` schema with thinking level support.
+- [`references/pricing_and_capabilities.json`](references/pricing_and_capabilities.json): Master pricing, cache rates, thinking levels, and role matrix.
+- [`references/catalog_dimensions.md`](references/catalog_dimensions.md): Measured throughput, flood discipline, and the provenance rule.
+- [`examples/orchestrator_engine.py`](examples/orchestrator_engine.py): Executable Python reference implementation of the multi-model engine.
+- [`examples/production_recipes.py`](examples/production_recipes.py): Executable benchmark patterns (Smart Repair, Ultra-Sweet Hybrid).
+- [`examples/example_routes.json`](examples/example_routes.json): Sample DAG specifications for common engineering workflows.

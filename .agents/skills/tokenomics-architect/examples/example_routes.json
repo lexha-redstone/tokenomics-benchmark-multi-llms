@@ -1,0 +1,30 @@
+{
+  "scenarios": [
+    {
+      "name": "Class A: Multi-Library Algorithmic Solution (Smart Repair)",
+      "benchmark": "BigCodeBench-Hard",
+      "route": {
+        "schema": "ctx.route/v1",
+        "nodes": [
+          { "id": "draft", "goal": "Generate initial algorithmic code implementation", "role": "implement", "min_tier": "standard", "thinking_level": "low", "needs": ["code", "reason"], "deps": [] },
+          { "id": "triage", "goal": "Extract failure traceback using zero-cost local profiling", "role": "triage", "min_tier": "economy", "thinking_level": "off", "needs": ["triage"], "deps": ["draft"] },
+          { "id": "fast-repair", "goal": "Apply targeted syntax/boundary fix", "role": "implement", "min_tier": "economy", "thinking_level": "off", "needs": ["edit"], "deps": ["triage"] },
+          { "id": "escalate-repair", "goal": "Deep algorithmic reasoning repair if test still fails", "role": "implement", "min_tier": "standard", "thinking_level": "medium", "needs": ["code", "reason"], "deps": ["fast-repair"] }
+        ]
+      }
+    },
+    {
+      "name": "Class B: Enterprise Repository Bug Resolution (Ultra-Sweet Hybrid)",
+      "benchmark": "SWE-bench Pro",
+      "route": {
+        "schema": "ctx.route/v1",
+        "nodes": [
+          { "id": "architect-contract", "goal": "Read issue context and output strict specification contract (<250 words)", "role": "plan", "min_tier": "frontier", "thinking_level": "off", "prefer": "strong", "needs": ["plan", "architect"], "deps": [] },
+          { "id": "patch-exec", "goal": "Generate unified git diff adhering to contract", "role": "implement", "min_tier": "economy", "thinking_level": "off", "needs": ["implement", "code"], "deps": ["architect-contract"] },
+          { "id": "triage", "goal": "Run regression test suite and profile failures into CAS checkpoint", "role": "verify", "min_tier": "economy", "thinking_level": "off", "needs": ["test", "verify"], "deps": ["patch-exec"] },
+          { "id": "targeted-repair", "goal": "Fix subtle regressions with flagship reasoning", "role": "implement", "min_tier": "frontier", "thinking_level": "adaptive", "prefer": "strong", "needs": ["reason", "edit"], "deps": ["triage"] }
+        ]
+      }
+    }
+  ]
+}

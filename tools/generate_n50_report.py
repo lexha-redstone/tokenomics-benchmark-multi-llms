@@ -142,7 +142,7 @@ def analyze_arms():
     return analyzed
 
 def generate_report(analyzed):
-    out_path = os.path.join(REPORTS_DIR, "n50_gemini_vs_claude_tco_report.md")
+    out_path = os.path.join(REPORTS_DIR, "06_bcb-hard_gemini-vs-claude_n50.md")
     
     with open(out_path, "w", encoding="utf-8") as f:
         f.write("# Comparative TCO Report: Gemini 3.6-Flash Architectures vs Claude on BigCodeBench-Hard (N=50)\n\n")

@@ -4,7 +4,11 @@ import shutil
 import glob
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-HTML_PATH_LOCAL = os.path.join(HERE, "benchmark_webdev_report.html")
+ROOT = os.path.dirname(HERE)
+
+# Single destination -- see the note in bigCodeBench-hard/build_html_dashboard.py.
+REPORTS_DIR = os.path.join(ROOT, "reports")
+OUTPUT_HTML = os.path.join(REPORTS_DIR, "03_webdev_sweetspot.html")
 
 SPECS = {
     "1. Single: gemini-3.1-flash-lite": {
@@ -747,16 +751,11 @@ def generate_html(results):
 </html>
 """
 
-    with open(HTML_PATH_LOCAL, "w") as f:
+    os.makedirs(REPORTS_DIR, exist_ok=True)
+    with open(OUTPUT_HTML, "w") as f:
         f.write(html)
-    print(f"Local dashboard generated successfully: {HTML_PATH_LOCAL}")
+    print(f"Dashboard generated: {OUTPUT_HTML}")
 
-    reports_dir = os.path.join(os.path.dirname(HERE), "reports")
-    if os.path.exists(reports_dir):
-        reports_copy = os.path.join(reports_dir, "benchmark_webdev_report.html")
-        with open(reports_copy, "w") as f:
-            f.write(html)
-        print(f"Reports dashboard generated successfully: {reports_copy}")
 
 if __name__ == "__main__":
     r = load_results()

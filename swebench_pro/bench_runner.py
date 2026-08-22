@@ -20,6 +20,7 @@ from src.config import (
     OPUS_5_ID, OPUS_48_ID, SONNET_ID
 )
 from src.datasets import load_swebench_pro_problems as load_problems
+from src.evaluator import straitjacket_status, aggregate_containment as _aggregate_containment
 from src.architectures import (
     run_single, run_read_write, run_cascade, run_hybrid,
     run_hybrid_straitjacket, run_cascade_straitjacket,
@@ -40,7 +41,7 @@ def get_swebench_pro_configurations():
             "category": "1. Single models",
             "fn": lambda p: run_single(p, OPUS_5_ID, None),
             "models": "Claude Opus-5",
-            "triage_mode": "Straitjacket UnittestProfile ($0.00)",
+            "triage_mode": "Straitjacket contained digest ($0.00)",
         },
         {
             "id": "single_sonnet5",
@@ -48,7 +49,7 @@ def get_swebench_pro_configurations():
             "category": "1. Single models",
             "fn": lambda p: run_single(p, SONNET_ID, None),
             "models": "Claude Sonnet-5",
-            "triage_mode": "Straitjacket UnittestProfile ($0.00)",
+            "triage_mode": "Straitjacket contained digest ($0.00)",
         },
         {
             "id": "single_gemini36_low",
@@ -56,7 +57,7 @@ def get_swebench_pro_configurations():
             "category": "1. Single models",
             "fn": lambda p: run_single(p, GEMINI_36_FLASH_ID, "low"),
             "models": "Gemini 3.6 Flash (LOW)",
-            "triage_mode": "Straitjacket UnittestProfile ($0.00)",
+            "triage_mode": "Straitjacket contained digest ($0.00)",
         },
         {
             "id": "single_gemini35_lite",
@@ -64,7 +65,7 @@ def get_swebench_pro_configurations():
             "category": "1. Single models",
             "fn": lambda p: run_single(p, GEMINI_35_FLASH_LITE_ID, None),
             "models": "Gemini 3.5 Lite",
-            "triage_mode": "Straitjacket UnittestProfile ($0.00)",
+            "triage_mode": "Straitjacket contained digest ($0.00)",
         },
         {
             "id": "combo_readwrite",
@@ -80,7 +81,7 @@ def get_swebench_pro_configurations():
             "category": "3. Combination of models + straitjacket",
             "fn": lambda p: run_escalation_shield_straitjacket(p, GEMINI_35_FLASH_LITE_ID, GEMINI_36_FLASH_ID, SONNET_ID),
             "models": "Gemini Lite -> Flash -> Claude Sonnet-5",
-            "triage_mode": "Straitjacket UnittestProfile ($0.00)",
+            "triage_mode": "Straitjacket contained digest ($0.00)",
         },
         {
             "id": "sj_smart_repair",
@@ -88,7 +89,7 @@ def get_swebench_pro_configurations():
             "category": "3. Combination of models + straitjacket",
             "fn": lambda p: run_smart_repair_straitjacket(p, GEMINI_36_FLASH_ID, GEMINI_35_FLASH_LITE_ID),
             "models": "Gemini 3.6 Flash -> 3.5 Lite -> Flash (Med)",
-            "triage_mode": "Straitjacket UnittestProfile ($0.00)",
+            "triage_mode": "Straitjacket contained digest ($0.00)",
         },
         {
             "id": "sj_ultra_sweet",
@@ -96,7 +97,7 @@ def get_swebench_pro_configurations():
             "category": "3. Combination of models + straitjacket",
             "fn": lambda p: run_ultra_sweet_straitjacket(p, SONNET_ID, GEMINI_35_FLASH_LITE_ID, OPUS_5_ID),
             "models": "Claude Sonnet-5 -> Gemini Lite -> Claude Opus-5",
-            "triage_mode": "Straitjacket UnittestProfile ($0.00)",
+            "triage_mode": "Straitjacket contained digest ($0.00)",
         },
         {
             "id": "sj_dual_verifier",
@@ -104,7 +105,7 @@ def get_swebench_pro_configurations():
             "category": "4. Next-Gen Multi-Provider + straitjacket",
             "fn": lambda p: run_dual_verifier_cascade_straitjacket(p, GEMINI_35_FLASH_LITE_ID, GEMINI_36_FLASH_ID, SONNET_ID, OPUS_5_ID),
             "models": "Gemini Lite -> Flash -> Sonnet-5 -> Opus-5",
-            "triage_mode": "Straitjacket UnittestProfile ($0.00)",
+            "triage_mode": "Straitjacket contained digest ($0.00)",
         },
     ]
 
@@ -163,9 +164,13 @@ def run_swebench_pro_suite(task_ids, problems, configs, no_cache=False):
 
         triage_usd = 0.0 if ("straitjacket" in cname.lower() or "$0.00" in cfg.get("triage_mode", "")) else round(passed_cnt * 0.0018, 5)
 
+        containment = _aggregate_containment(results)
+
         summary = {
             "id": cid,
             "name": cname,
+            "straitjacket": straitjacket_status(),
+            "containment": containment,
             "category": cfg.get("category", ""),
             "models": cfg.get("models", "N/A"),
             "triage_mode": cfg.get("triage_mode", "$0.00"),

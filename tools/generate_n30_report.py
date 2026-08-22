@@ -137,7 +137,7 @@ def analyze_arms():
     return analyzed
 
 def generate_report(analyzed):
-    out_path = os.path.join(REPORTS_DIR, "straitjacket_n30_comparative_tco_report.md")
+    out_path = os.path.join(REPORTS_DIR, "05_bcb-hard_straitjacket_n30.md")
     
     with open(out_path, "w", encoding="utf-8") as f:
         f.write("# Comparative TCO Report: `straitjacket` on BigCodeBench-Hard (N=30)\n\n")

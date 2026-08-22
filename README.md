@@ -2,166 +2,286 @@
 
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
-[![Contribution Guide](https://img.shields.io/badge/Guide-Contribution%20Standards-emerald.svg)](straitjacket_benchmark_contribution_guide.md)
-[![Comprehensive Report](https://img.shields.io/badge/Report-Comprehensive%20TCO%20Synthesis-purple.svg)](reports/comprehensive_multi_llm_benchmark_report_20260806.md)
-[![Skills: Straitjacket & Tokenomics](https://img.shields.io/badge/Skills-.agents%2Fskills-blueviolet.svg)](#-agent-skills--decision-frameworks)
+[![Reports](https://img.shields.io/badge/Reports-indexed%20run%20log-purple.svg)](reports/README.md)
+[![Straitjacket](https://img.shields.io/badge/Harness-ctx--harness%200.35.1-emerald.svg)](docs/straitjacket-implementation.md)
 
-This repository evaluates **Multi-LLM collaboration architectures, cascading strategies, and context containment harnesses** across realistic software engineering benchmarks. It provides empirical evidence on balancing benchmark performance (code correctness / task resolution) with API cost using Google Cloud Vertex AI (Gemini) and Anthropic (Claude) models.
+**Question this repository answers:** when a coding agent's tests fail, how
+should the failure reach the next model — and what does each answer cost?
 
----
+It benchmarks multi-LLM collaboration architectures (cascades, advisor/executor
+splits, escalation ladders) against single frontier models on real software
+engineering tasks, holding everything constant except one variable: how failing
+test output is delivered to the repair turn. Models run live on Google Cloud
+Vertex AI (Gemini) and Anthropic (Claude).
 
-## 📁 Repository Structure
+**New here? Read in this order.**
 
-```
-.
-├── README.md                                    # Repository overview and quick start guide
-├── MODELS.md                                    # Model IDs, pricing rates, and architecture specifications
-├── requirements.txt                             # Pinned Python package dependencies
-├── straitjacket_benchmark_contribution_guide.md   # Benchmark charter, standards, and PR contribution guide
-│
-├── run_benchmark.py                             # 🚀 MASTER UNIFIED CLI RUNNER (End-to-End)
-│
-├── .agents/skills/                              # 🧠 AGENT SKILLS & DECISION FRAMEWORKS
-│   ├── straitjacket/                            # Skill 1: CLI context containment & zero-cost triage
-│   │   └── SKILL.md
-│   └── tokenomics-architect/                    # Skill 2: Multi-LLM architecture & model router
-│       ├── SKILL.md
-│       ├── references/pricing_and_capabilities.json
-│       └── examples/production_recipes.py
-│
-├── src/                                         # Shared Core Benchmark Library
-│   ├── __init__.py
-│   ├── config.py                                # Centralized model IDs, pricing table, and prompt roles
-│   ├── client.py                                # Vertex AI Gemini & Claude client with retry & fallback
-│   ├── evaluator.py                             # Python unittest & git patch evaluators + SJ triage
-│   ├── datasets.py                              # Unified dataset loaders (BCB, SWE-bench Pro, WebDev)
-│   ├── architectures.py                         # Modular multi-LLM architecture pipelines & registry
-│   └── reporter.py                              # Markdown TCO report & interactive HTML dashboard generator
-│
-├── reports/                                     # 📊 ALL GENERATED REPORTS & DASHBOARDS (.md, .html)
-│   ├── comprehensive_multi_llm_benchmark_report_20260806.md  # 🌟 Master Cross-Dataset Synthesis Report
-│   ├── straitjacket_n30_comparative_tco_report.md            # BigCodeBench-Hard N=30 Audited Report
-│   ├── n50_gemini_vs_claude_tco_report.md                    # BigCodeBench-Hard N=50 Comprehensive Report
-│   ├── swe_bench_pro_straitjacket_report.md                  # SWE-bench Pro Comparative Report
-│   ├── swe_bench_pro_dashboard.html                          # SWE-bench Pro Interactive HTML Dashboard
-│   ├── bigcodebench_hard_dashboard.html                      # BigCodeBench Interactive HTML Dashboard
-│   └── webdev_dashboard.html                                 # WebDev Interactive HTML Dashboard
-│
-├── tools/                                       # 🛠️ Post-Processing, Auditing & Pricing Scripts
-│   ├── generate_n30_report.py                   # Audits N=30 BCB raw vs effective pass rates
-│   ├── generate_n50_report.py                   # Audits N=50 BCB Gemini vs Claude comparison
-│   └── update_all_reports_pricing.py            # Recalculates metrics with active Vertex AI pricing
-│
-├── bigCodeBench-hard/                           # Dataset 1: BigCodeBench-Hard (Python function completion)
-│   ├── data/                                    # Downloaded/cached HF dataset (.jsonl)
-│   ├── results/                                 # Raw JSON metrics & run caches
-│   └── bench_runner.py                          # BCB runner adapter
-│
-├── swebench_pro/                                # Dataset 2: SWE-bench Pro (Enterprise git patch resolution)
-│   ├── data/                                    # Cached SWE-bench Pro public tasks (.jsonl)
-│   ├── results/                                 # Raw JSON metrics & run caches
-│   ├── bench_runner.py                          # SWE-bench Pro runner adapter
-│   └── run_swebench_pro_sweetspot.py            # Master SWE-bench Pro evaluation script
-│
-└── webdev/                                      # Dataset 3: Web-Dev (Web & networking tasks)
-    ├── data/                                    # Local WebDev dataset (.jsonl)
-    ├── results/                                 # Raw JSON metrics & run caches
-    └── bench_runner.py                          # WebDev runner adapter
-```
+| | |
+|---|---|
+| 1 | [Key takeaways & best setting](#1-key-takeaways--best-setting) — what the runs found |
+| 2 | [Run a benchmark](#3-run-a-benchmark) — exact files and commands |
+| 3 | [Pipeline architecture](docs/pipeline-architecture.md) — how a task flows through the system |
+| 4 | [Straitjacket implementation](docs/straitjacket-implementation.md) — what it is, and how it differs from upstream |
+| 5 | [Report index](reports/README.md) — every sweep, in execution order |
 
 ---
 
-## ⚡ Quick Start
+## 1. Key takeaways & best setting
 
-### 1. Setup Virtual Environment
+From the largest sweep, **[report 12 — BigCodeBench-Hard, N=100](reports/README.md)**
+(`gemini-3.7-flash`, `claude-sonnet-5`, `claude-opus-5`, live API):
+
+| Configuration | Pass rate | Total cost | **$ / solved task** |
+|---|---|---|---|
+| Single: `claude-opus-5` | **72%** | $3.61 | $0.0501 |
+| Straitjacket Escalation Shield | 64% | $1.81 | **$0.0283** |
+| Straitjacket Cascade | 62% | $2.18 | $0.0351 |
+| Single: `gemini-3.7-flash` | 62% | $2.29 | $0.0369 |
+| Straitjacket Smart Repair | 62% | $2.79 | $0.0449 |
+| Straitjacket Hybrid | 59% | $1.62 | **$0.0275** |
+| Single: `claude-sonnet-5` | 53% | $1.57 | $0.0297 |
+
+### Best setting depends on what you are optimising
+
+| If you want… | Use | Why |
+|---|---|---|
+| **Highest accuracy, cost no object** | `single_opus5` | 72% — nothing else reaches it |
+| **Best accuracy per dollar** | `sj_escalation_shield` | 89% of Opus's pass rate at **56% of its cost per solved task**, and half the absolute spend |
+| **Cheapest working pipeline** | `sj_hybrid` | lowest $/solved at $0.0275; 59% pass rate |
+
+The escalation shield (`gemini-3.5-lite` → `gemini-3.7-flash` → `claude-sonnet-5`,
+each repair turn fed the contained digest) is the recommended default: it keeps
+a frontier model in reserve for the hard tail without paying frontier prices on
+the 60% of tasks a cheap model already solves.
+
+### Findings that hold across datasets
+
+Earlier sweeps ([report 11 — cross-dataset synthesis](reports/11_synthesis_cross-dataset.md))
+found the same shape on SWE-bench Pro and WebDev: a reasoning planner plus a
+sub-cent executor plus a targeted repair turn matches or beats frontier single
+models at a fraction of the cost.
+
+Three caveats worth stating plainly:
+
+- **Containment is not free accuracy.** Replacing a paid triage model with the
+  harness's digest removes 100% of triage spend ($0.0000 vs ~$0.0018/repair).
+  It does not by itself raise pass rates; it lowers the cost of reaching them.
+- **Containment does nothing when there is nothing to contain.** A failure whose
+  whole output is a handful of lines shows a delta at or below zero, and the
+  reports print that as readily as a win.
+- **Report 12's containment receipt for the `sj_*` rows is blank** — those arms
+  bypassed the instrumentation (fixed; see
+  [§4.5](docs/straitjacket-implementation.md#45-refusal-over-fabrication)).
+  Pass rates and costs in that report are valid; the residency columns need a
+  re-run.
+
+---
+
+## 2. Setup
 
 ```bash
-# Create and activate virtual environment
-python3 -m venv tokenomics-bench-env
-source tokenomics-bench-env/bin/activate
-
-# Install requirements
-pip install -r requirements.txt
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt        # includes ctx-harness, the straitjacket harness
 ```
-
-### 2. Configure Google Cloud Credentials
 
 ```bash
 gcloud auth application-default login
-
 export GCP_PROJECT="your-gcp-project-id"
-export GCP_LOCATION="global" # or us-central1
+export GCP_LOCATION="global"           # or us-central1
 ```
 
----
-
-## 🚀 Running Benchmarks (Unified CLI)
-
-The master runner [`run_benchmark.py`](run_benchmark.py) executes benchmarks and automatically places JSON metrics in `<dataset>/results/` and Markdown & HTML reports in `reports/`:
+Verify the harness before spending money on a sweep:
 
 ```bash
-# 1. Evaluate SWE-bench Pro (30 tasks, all Straitjacket zero-cost triage variants)
+python3 -m src.straitjacket
+```
+
+It prints backend status, runs two real captures, and performs a live bounded
+retrieval. Model IDs and pricing live in [`MODELS.md`](MODELS.md).
+
+---
+
+## 3. Run a benchmark
+
+**One entry point for every dataset:** [`run_benchmark.py`](run_benchmark.py).
+The per-dataset directories contain data, results and historical scripts — you
+do not need to run anything inside them.
+
+### BigCodeBench-Hard
+
+The dataset ships in the repository
+(`bigCodeBench-hard/data/BigCodeBench-Hard-v0.1.4.jsonl`), so no download step
+is needed.
+
+```bash
+# Smoke test: 5 tasks, one cheap variant. Confirms credentials and the harness.
+python3 run_benchmark.py --dataset bcb --n 5 --variants single_flash_lite --report
+```
+
+```bash
+# The headline sweep (report 12 was produced by this command).
+python3 run_benchmark.py \
+    --dataset bcb \
+    --n 100 \
+    --variants single_flash37,single_sonnet5,single_opus5,sj_cascade,sj_hybrid,sj_smart_repair,sj_escalation_shield \
+    --report \
+    --no-cache
+```
+
+```bash
+# The ablation: identical models and prompts, only the evidence treatment differs.
+# These are the rows that license any claim about containment.
+python3 run_benchmark.py --dataset bcb --group ablation --n 30 --report
+```
+
+**Use `--no-cache` whenever you care about the containment receipt.** Cached
+task records from older revisions have no containment field, and a cached run
+silently produces an empty receipt.
+
+Only run one sweep at a time. Concurrent runs write the same results file,
+cache and reports, and the last one to finish wins.
+
+### Other datasets
+
+```bash
 python3 run_benchmark.py --dataset swebench --group straitjacket --n 30 --report
+python3 run_benchmark.py --dataset webdev   --group single       --n 10 --report
+```
 
-# 2. Evaluate BigCodeBench-Hard (10 tasks, specific variants)
-python3 run_benchmark.py --dataset bcb --variants single_flash36,sj_hybrid,sj_smart_repair --n 10 --report
+### CLI reference
 
-# 3. Evaluate WebDev benchmark (single-model baselines)
-python3 run_benchmark.py --dataset webdev --group single --n 10 --report
+| Flag | Values | Meaning |
+|---|---|---|
+| `--dataset` / `-d` | `bcb`, `swebench`, `webdev` | which benchmark |
+| `--n` | integer | number of tasks |
+| `--variants` / `-v` | comma-separated ids | exactly which architectures to run |
+| `--group` / `-g` | `all`, `single`, `combo`, `straitjacket`, `nextgen`, `ablation` | a preset family instead of explicit ids |
+| `--no-cache` | flag | ignore cached task results and re-run live |
+| `--report` / `-r` | flag | emit the markdown report and HTML dashboard |
+| `--out` / `-o` | path | override the consolidated JSON path |
 
-# 4. Compare all variants on SWE-bench Pro without cache (fresh API execution)
-python3 run_benchmark.py --dataset swebench --group all --n 30 --no-cache --report
+List every variant id:
+
+```bash
+python3 -c "import sys;sys.path.insert(0,'.');from src.architectures import VARIANT_REGISTRY as R;[print(f'{k:<28}{v[\"name\"]}') for k,v in R.items()]"
+```
+
+### Where the output lands
+
+| Artifact | Path |
+|---|---|
+| Consolidated metrics | `bigCodeBench-hard/results/bcb_all_results.json` |
+| Per-task cache | `bigCodeBench-hard/results/cache_bcb_master.json` |
+| Markdown report | `reports/NN_<dataset>_<tag>_n<N>.md` |
+| HTML dashboard | `reports/NN_<dataset>_<tag>_n<N>.html` |
+
+Reports are append-only and numbered in execution order, so a new sweep never
+overwrites an earlier one's evidence. After a run:
+
+```bash
+python3 tools/index_reports.py --apply     # adopt new reports, refresh reports/README.md
 ```
 
 ---
 
-## 🧠 Agent Skills & Decision Frameworks
+## 4. Repository map
 
-This repository includes bundled **Agent Skills** located in [`.agents/skills/`](.agents/skills/) that AI coding assistants (Jetski/Gemini CLI) automatically load on demand.
-
-### 1. `straitjacket` Skill ([`.agents/skills/straitjacket/SKILL.md`](.agents/skills/straitjacket/SKILL.md))
-- **Purpose**: Context window containment, noisy CLI execution management, and exact byte span retrieval.
-- **Core Mechanism**:
-  - `ctx run -- <cmd>`: Executes verbose test commands (`pytest`, `unittest`, `cargo test`) and captures output into an immutable store, returning a compact **~200 token deterministic digest** instead of flooding 10k–300k+ tokens into the model context.
-  - `ctx get run:<id>#stdout --lines <start>:<end>`: Surgically retrieves only the needed 50–100 lines of failure logs on demand without re-running the test.
-  - `ctx diff run:<id1> run:<id2>`: Strips non-deterministic noise (locale, PIDs, timestamps) to isolate true regression signal.
-- **Tokenomics Benefit**: Eliminates 100% of LLM triage token overhead ($0.0000) and preserves **96–98% prompt cache hit rates**.
-
-### 2. `tokenomics-architect` Skill ([`.agents/skills/tokenomics-architect/SKILL.md`](.agents/skills/tokenomics-architect/SKILL.md))
-- **Purpose**: Autonomous decision engine recommending the optimal multi-LLM architecture, model tier, and thinking level for any software engineering task.
-- **Task Classification & Routing Matrix**:
-  - **Class A (Multi-Library / Algorithmic)**: Recommends `Straitjacket Smart Repair` (`gemini-3.6-flash` -> `3.5-flash-lite` -> `3.6-flash`). Reaches **81.5% pass rate at $0.0076/solved** (35x cheaper than Claude Opus-5).
-  - **Class B (Enterprise Repo Bug / Git Patch)**: Recommends `Straitjacket Ultra-Sweet Hybrid` (`claude-sonnet-5` plan -> `gemini-3.5-lite` exec -> `claude-opus-5` repair). Reaches **80.0% pass rate at $0.00388/solved** (7.4x cheaper than single Opus-5).
-  - **Class C (Web & Middleware)**: Recommends `Straitjacket Hybrid` (Flash plan + Lite exec + Flash repair). Reaches **80.0% pass rate at $0.0041/solved**.
-  - **Class D (Massive CI/CD Regression Batch)**: Recommends `Smart Tiered Cascade` (Lite -> Flash min -> Flash low). Reaches **76.6% pass rate at $0.0036/solved**.
-- **Reasoning / Thinking Level Budgeting**:
-  - `OFF` (0 tokens): Boilerplate, AST transforms, syntax completion.
-  - `MINIMAL` (~1k tokens): Fast sanity checking, boundary validation.
-  - `LOW` (~2k–4k tokens): **Default sweet spot for test assertion repair** (fixes 80%+ bugs).
-  - `MEDIUM` (~4k–8k tokens): 2nd escalation for algorithmic deadlocks.
-  - `HIGH` (~8k–16k tokens): Mission-critical system redesign.
-- **Bundled Resources**:
-  - [`pricing_and_capabilities.json`](.agents/skills/tokenomics-architect/references/pricing_and_capabilities.json): Machine-readable pricing & capability profiles.
-  - [`production_recipes.py`](.agents/skills/tokenomics-architect/examples/production_recipes.py): Production-ready Python implementations.
-
----
-
-## 📊 Benchmark Datasets & Findings
-
-1. **BigCodeBench-Hard**:
-   - Complex multi-library algorithmic and data engineering tasks.
-   - **Sweet-Spot Champion**: `Straitjacket Smart Repair` (`gemini-3.6-flash` -> `3.5-flash-lite` -> `3.6-flash`) achieved **81.5% effective pass rate at $0.0076 / solved task** (35x cheaper than Claude Opus-5).
-2. **SWE-bench Pro**:
-   - Long-horizon enterprise repository git patch generation.
-   - **Sweet-Spot Champion**: `Straitjacket Ultra-Sweet Hybrid` and `Straitjacket Escalation Shield` achieved **76.7%–80.0% pass rate at $0.00388 / solved task** (7.4x cheaper than Claude Opus-5).
-3. **WebDev**:
-   - Real-world web framework, REST API, parsing, and networking tasks.
-   - **Sweet-Spot Champion**: `Straitjacket Hybrid` achieved **80.0% pass rate at $0.0041 / solved task** (87% cheaper than Claude Opus-5).
-
-👉 Read the full cross-dataset analysis in [**Comprehensive Multi-LLM Benchmark & Tokenomics Synthesis Report (`reports/comprehensive_multi_llm_benchmark_report_20260806.md`)**](reports/comprehensive_multi_llm_benchmark_report_20260806.md).
+```
+.
+├── run_benchmark.py                 # ← the entry point for every dataset
+│
+├── src/                             # shared core library
+│   ├── config.py                    #   model ids, pricing, prompt roles
+│   ├── client.py                    #   Vertex AI + Anthropic dispatch, retry, usage
+│   ├── datasets.py                  #   dataset loaders
+│   ├── straitjacket.py              #   the ONLY bridge to ctx-harness
+│   ├── evaluator.py                 #   sandboxed execution + the Evidence contract
+│   ├── architectures.py             #   variant registry + every pipeline
+│   └── reporter.py                  #   markdown report + HTML dashboard
+│
+├── docs/                            # ← explanations (methodology, not results)
+│   ├── straitjacket-implementation.md
+│   ├── pipeline-architecture.md
+│   ├── bigcodebench-hard-sweetspot-methodology.md
+│   └── webdev-sweetspot-methodology.md
+│
+├── reports/                         # ← results only, indexed by run order
+│   ├── README.md                    #   the index: read this first
+│   └── NN_<dataset>_<tag>_n<N>.{md,html}
+│
+├── tests/                           # contract tests for the straitjacket bridge
+├── tools/                           # report indexing, auditing, pricing refresh
+│
+├── bigCodeBench-hard/               # dataset 1: Python function completion
+├── swebench_pro/                    # dataset 2: enterprise git patch resolution
+├── webdev/                          # dataset 3: web & networking tasks
+│     each: data/  results/  bench_runner.py  + historical sweep scripts
+│
+└── .agents/skills/                  # agent skills (see §6)
+```
 
 ---
 
-## 📖 Contribution Standards
+## 5. Straitjacket
 
-👉 [**Straitjacket Benchmark Contribution Guide (`straitjacket_benchmark_contribution_guide.md`)**](straitjacket_benchmark_contribution_guide.md)
+Every digest in every report is produced by the upstream
+[`straitjacket`](https://github.com/vamsiramakrishnan/straitjacket) harness
+(`ctx-harness`). Nothing in this repository re-implements its evidence
+selection — profile detection, digest rendering, coverage receipts and bounded
+retrieval are all upstream calls.
+
+Candidate solutions are executed **through** the harness, so test output is
+captured at the birth gate: stored whole, never returned as an unbounded blob.
+One capture yields two payloads — the raw stream an uncontained arm sends, and
+the bounded digest a contained arm sends — so an A/B isolates the treatment and
+nothing else.
+
+If the harness is missing, straitjacket-labelled arms refuse to run rather than
+produce something digest-shaped.
+
+👉 **[Full implementation notes and differences from upstream](docs/straitjacket-implementation.md)**
+
+```bash
+python3 -m src.straitjacket                        # self-check, both failure regimes
+pytest tests/test_straitjacket_integration.py -q   # contract tests
+```
+
+---
+
+## 6. Agent skills
+
+Bundled skills in [`.agents/skills/`](.agents/skills/) that AI coding
+assistants load on demand.
+
+**[`straitjacket`](.agents/skills/straitjacket/SKILL.md)** — context
+containment and exact span retrieval for noisy commands: `ctx run -- <cmd>`,
+`ctx get run:<id>#stdout --lines A:B`, `ctx diff run:<a> run:<b>`.
+
+**[`tokenomics-architect`](.agents/skills/tokenomics-architect/SKILL.md)** —
+picks an architecture, model tier and thinking level for a given task class.
+Routing matrix derived from the sweeps in `reports/`:
+
+| Task class | Recommended architecture |
+|---|---|
+| A — multi-library / algorithmic | Straitjacket Smart Repair |
+| B — enterprise repo bug / git patch | Straitjacket Ultra-Sweet Hybrid |
+| C — web & middleware | Straitjacket Hybrid |
+| D — large CI/CD regression batch | Smart Tiered Cascade |
+
+Thinking budget: `LOW` (~2k–4k tokens) is the default sweet spot for test
+assertion repair; escalate to `MEDIUM` only for algorithmic deadlocks.
+
+---
+
+## 7. Contributing
+
+[`straitjacket_benchmark_contribution_guide.md`](straitjacket_benchmark_contribution_guide.md)
+carries the charter and the pre-commit checklist — including the rules that
+keep a benchmark row honest: name the treatment you actually applied, never
+degrade the baseline to flatter the mechanism, and make sure the arm whose
+treatment *is* the baseline reports a delta of exactly zero.
+
+```bash
+pytest tests/ -q
+```

@@ -27,14 +27,18 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 if HERE not in sys.path:
     sys.path.insert(0, HERE)
 
-# Include straitjacket src if available locally
-SJ_SRC = "/usr/local/google/home/lexha/Desktop/work/prj/99-assets/straitjacket/src"
-if os.path.exists(SJ_SRC) and SJ_SRC not in sys.path:
+# The straitjacket harness is a normal dependency (`pip install ctx-harness`).
+# SJ_SRC still lets a contributor point at a source checkout of the upstream
+# repository instead, e.g. SJ_SRC=/path/to/straitjacket/src.
+SJ_SRC = os.environ.get("SJ_SRC", "")
+if SJ_SRC and os.path.isdir(SJ_SRC) and SJ_SRC not in sys.path:
     sys.path.insert(0, SJ_SRC)
 
 from src.datasets import load_dataset
+from src.evaluator import straitjacket_status, aggregate_containment as _aggregate_containment
 from src.architectures import get_configurations, VARIANT_REGISTRY
-from src.reporter import generate_markdown_report, generate_html_dashboard
+from src.reporter import (allocate_report_paths, generate_markdown_report,
+                          generate_html_dashboard)
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -42,7 +46,8 @@ def main():
                                                     "swebench", "swebench_pro", "swe-bench",
                                                     "webdev", "web-dev"],
                         default="swebench", help="Dataset to evaluate (default: 'swebench')")
-    parser.add_argument("--group", "-g", choices=["all", "single", "combo", "straitjacket", "sj", "nextgen"],
+    parser.add_argument("--group", "-g", choices=["all", "single", "combo", "straitjacket", "sj",
+                                                  "nextgen", "ablation"],
                         default="all", help="Preset variant group to run (default: 'all')")
     parser.add_argument("--variants", "-v", default="",
                         help="Comma-separated variant IDs to run (e.g. 'single_flash36,sj_hybrid,sj_escalation_shield')")
@@ -57,6 +62,13 @@ def main():
     parser.add_argument("--report", "-r", action="store_true", default=True,
                         help="Automatically generate Markdown TCO report and HTML dashboard (default: True)")
     args = parser.parse_args()
+
+    sj_state = straitjacket_status()
+    print(f"straitjacket: backend={sj_state['backend']} ctx={sj_state['ctx_version']} "
+          f"workspace={sj_state['workspace']}"
+          + ("" if sj_state["available"] else f"\n  UNAVAILABLE: {sj_state['reason']}\n"
+             "  straitjacket arms will refuse to run. `pip install ctx-harness` to enable them."),
+          flush=True)
 
     # Normalize dataset name and subfolder paths
     d_norm = args.dataset.lower().replace("-", "_")
@@ -135,9 +147,15 @@ def main():
                     "task_id": tid,
                     "passed": raw_r.get("passed", False),
                     "as_run_usd": raw_r.get("as_run_usd", 0.0),
+                    "triage_usd": raw_r.get("triage_usd", 0.0),
                     "output_tokens": raw_r.get("output_tokens", 0),
                     "total_tokens": raw_r.get("total_tokens", 0),
                     "repair_loops": raw_r.get("repair_loops", 0),
+                    # The containment ledger is a measurement, not a detail:
+                    # dropping it here is what made the reports show pass rate
+                    # and dollars but never context residency.
+                    "containment": raw_r.get("containment"),
+                    "retrievals": raw_r.get("retrievals"),
                     "error": str(raw_r.get("error", ""))[:500]
                 }
                 cache[v_id][tid] = r
@@ -157,8 +175,12 @@ def main():
         cost_per_solved = (tot_usd / passed_cnt) if passed_cnt > 0 else 0.0
         avg_out = tot_out_tok / n if n > 0 else 0.0
 
-        # Estimate triage USD component
-        if "straitjacket" in v_name.lower() or "$0.00" in cfg.get("triage_mode", ""):
+        # Triage USD: prefer what the arm actually spent; the per-repair
+        # estimate is only a fallback for arms that do not report it.
+        measured = sum(r.get("triage_usd", 0.0) for r in results)
+        if measured > 0:
+            triage_usd = round(measured, 6)
+        elif "$0.00" in cfg.get("triage_mode", ""):
             triage_usd = 0.0000
         else:
             repairs = sum(r.get("repair_loops", 0) for r in results)
@@ -167,6 +189,8 @@ def main():
         summary = {
             "id": v_id,
             "name": v_name,
+            "straitjacket": sj_state,
+            "containment": _aggregate_containment(results),
             "category": cfg.get("category", ""),
             "models": cfg.get("models", "N/A"),
             "triage_mode": cfg.get("triage_mode", "$0.00"),
@@ -191,14 +215,19 @@ def main():
             "dataset_name": dataset_name,
             "group": args.group,
             "n": n,
+            "straitjacket": sj_state,
             "summary": summary_rows
         }, f, indent=2)
     print(f"Saved consolidated benchmark metrics to: {out_file}")
 
     # 6. Generate Reports
     if args.report:
-        md_file = generate_markdown_report(summary_rows, dataset_name=dataset_name)
-        html_file = generate_html_dashboard(summary_rows, dataset_name=dataset_name)
+        # One index for the sweep, shared by the markdown and the dashboard.
+        md_path, html_path = allocate_report_paths(dataset_name, n)
+        md_file = generate_markdown_report(summary_rows, dataset_name=dataset_name,
+                                           output_path=md_path)
+        html_file = generate_html_dashboard(summary_rows, dataset_name=dataset_name,
+                                            output_path=html_path)
         print(f"\nGenerated Comparative Reports:")
         print(f"  - Markdown: {md_file}")
         print(f"  - HTML:     {html_file}")

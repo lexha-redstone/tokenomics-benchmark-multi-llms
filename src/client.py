@@ -14,7 +14,7 @@ import urllib.request
 import urllib.parse
 import urllib.error
 from .config import (
-    PRICING, SONNET_ID, GEMINI_36_FLASH_ID, GEMINI_FLASH_ID,
+    PRICING, SONNET_ID, GEMINI_37_FLASH_ID, GEMINI_36_FLASH_ID, GEMINI_FLASH_ID,
     GCP_PROJECT, GCP_LOCATION
 )
 
@@ -131,8 +131,10 @@ def gemini_call(model_id, prompt, max_tokens=2560, thinking_level=None, problem=
         from google.genai import types
         if str(thinking_level).lower() in ("off", "disabled", "none"):
             thinking_level = None
-        if thinking_level is None and model_id in (GEMINI_36_FLASH_ID, GEMINI_FLASH_ID):
-            thinking_level = "minimal"
+        elif str(thinking_level).lower() == "minimal":
+            thinking_level = "low"
+        if thinking_level is None and model_id in (GEMINI_37_FLASH_ID, GEMINI_36_FLASH_ID, GEMINI_FLASH_ID):
+            thinking_level = "low"
 
         if thinking_level:
             tc = types.ThinkingConfig(thinking_level=str(thinking_level).upper())

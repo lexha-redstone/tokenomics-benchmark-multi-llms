@@ -6,21 +6,210 @@ Generates:
   2. Modern Interactive HTML Dashboards with KPI Cards and Charts
 """
 
-import os
 import json
+import os
+import re
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT_DIR = os.path.dirname(_HERE)
+
+# ==============================================================================
+# --- REPORT NAMING ---
+# ==============================================================================
+#
+# Reports are an append-only, chronologically indexed log of sweeps:
+#
+#     reports/NN_<dataset>_<tag>_n<N>.md
+#     reports/NN_<dataset>_<tag>_n<N>.html
+#
+# The index is the run order, so a reader can follow how the numbers evolved
+# without cross-referencing git. A sweep's markdown and dashboard share one
+# index. Fixed filenames were the old convention and meant every sweep
+# silently overwrote the previous one's evidence.
+
+REPORTS_DIR = os.path.join(ROOT_DIR, "reports")
+
+_DATASET_SLUG = {
+    "bigcodebench-hard": "bcb-hard",
+    "swe-bench pro": "swebench-pro",
+    "swebench pro": "swebench-pro",
+    "webdev": "webdev",
+    "web-dev": "webdev",
+}
+
+_INDEX_RE = re.compile(r"^(\d{2})_")
+
+
+def dataset_slug(dataset_name):
+    key = str(dataset_name).strip().lower()
+    if key in _DATASET_SLUG:
+        return _DATASET_SLUG[key]
+    return re.sub(r"[^a-z0-9]+", "-", key).strip("-") or "dataset"
+
+
+def next_report_index(reports_dir=None):
+    """One past the highest index currently in the reports directory."""
+    d = reports_dir or REPORTS_DIR
+    highest = 0
+    if os.path.isdir(d):
+        for name in os.listdir(d):
+            m = _INDEX_RE.match(name)
+            if m:
+                highest = max(highest, int(m.group(1)))
+    return highest + 1
+
+
+def allocate_report_paths(dataset_name, n_tasks, tag="straitjacket", reports_dir=None):
+    """Reserve one chronological index for a sweep. Returns (md_path, html_path).
+
+    Call once per sweep and pass the results to both generators, so the
+    markdown and the dashboard carry the same index.
+    """
+    d = reports_dir or REPORTS_DIR
+    os.makedirs(d, exist_ok=True)
+    idx = next_report_index(d)
+    stem = f"{idx:02d}_{dataset_slug(dataset_name)}_{tag}_n{n_tasks}"
+    return os.path.join(d, stem + ".md"), os.path.join(d, stem + ".html")
+
+
+def _harness_row(summary_rows):
+    for r in summary_rows:
+        sj = r.get("straitjacket")
+        if sj:
+            return sj
+    return None
+
+
+def _write_provenance(f, summary_rows):
+    """State which harness produced the digests. A row labelled with a
+    containment mechanism has to name the mechanism that actually ran."""
+    sj = _harness_row(summary_rows)
+    if not sj:
+        return
+    if sj.get("available"):
+        f.write(f"> **Harness provenance** — digests produced by `ctx-harness` "
+                f"v{sj.get('ctx_version')} via the `{sj.get('backend')}` backend "
+                f"(upstream `ctx.digest` profile registry, unmodified). "
+                f"Uncontained arms send at most {sj.get('raw_cap_chars')} chars of raw output "
+                f"(`SJ_RAW_CAP`).\n\n")
+    else:
+        f.write("> [!WARNING]\n"
+                f"> **Harness unavailable** ({sj.get('reason')}). No straitjacket arm in this "
+                f"report was produced by the real harness.\n\n")
+
+
+def _write_insights(f, summary_rows):
+    """Only assert things about arms that are actually in this report.
+
+    The insights used to be a fixed block naming an LLM-triage arm, an `A4`
+    retrieval arm and `gemini-3.6-flash` regardless of what was run — so an
+    N=100 sweep of seven other variants shipped three claims about rows that
+    were not in the table.
+    """
+    treatments = {t for r in summary_rows
+                  for t in ((r.get("containment") or {}).get("treatments") or [])}
+    f.write("## 3. Key TCO & Architectural Insights\n\n")
+    n = 0
+
+    if "straitjacket" in treatments:
+        n += 1
+        f.write(f"{n}. **Containment, not compression**: the straitjacket arms send the "
+                "harness's own digest for the failing run — profile-detected, "
+                "coverage-attested, and carrying `ctx get` / `ctx search` addresses for "
+                "every omitted region. No triage model is called, so their triage cost is "
+                "$0.0000.\n")
+    if "llm" in treatments:
+        n += 1
+        f.write(f"{n}. **Paid triage is the comparison, not the mechanism**: the LLM-triage "
+                "arm buys the same brevity with a round trip and per-repair tokens; the "
+                "Triage Cost column prices it.\n")
+    if any((r.get("containment") or {}).get("captures") for r in summary_rows):
+        n += 1
+        f.write(f"{n}. **Residency, not just spend**: the containment table reports what each "
+                "arm sent against what the untreated path would have sent. Dollars measure one "
+                "turn; residency measures every turn those bytes would have stayed in the "
+                "transcript. A negative delta is reported as readily as a positive one.\n")
+        n += 1
+        f.write(f"{n}. **Omission is not amnesia**: what the digest leaves out stays retrievable "
+                "at an exact address, so a shorter prompt does not mean lost evidence.\n")
+        n += 1
+        f.write(f"{n}. **Where containment does nothing**: a run whose whole output is a handful "
+                "of lines has nothing to contain, and its delta lands at or below zero. That is "
+                "reported rather than hidden — short output is not automatically good output.\n")
+
+    if summary_rows:
+        best = min((r for r in summary_rows if r.get("passed")),
+                   key=lambda r: r.get("cost_per_solved_usd", float("inf")),
+                   default=None)
+        top = max(summary_rows, key=lambda r: r.get("pass_rate", 0), default=None)
+        if best and top:
+            n += 1
+            f.write(f"{n}. **Cost per solved task**: `{best.get('name')}` is the cheapest per "
+                    f"solved task at `${best.get('cost_per_solved_usd', 0):.4f}`; "
+                    f"`{top.get('name')}` has the highest pass rate at "
+                    f"{top.get('pass_rate', 0):.0%}.\n")
+
+
+def _write_containment_table(f, summary_rows):
+    """Context-residency receipt per configuration."""
+    rows = [r for r in summary_rows if (r.get("containment") or {}).get("captures")]
+    if not rows:
+        return
+    f.write("\n---\n\n")
+    f.write("## 2. Context Containment Receipt\n\n")
+    f.write("Measured by the harness itself for every captured run in the sweep. Every arm "
+            "executes through the harness; `Captured` differs between them because they "
+            "make different numbers of attempts and their candidate solutions print "
+            "different amounts. What the comparison turns on is which payload each arm "
+            "put in front of the model.\n\n"
+            "- **Captured** — everything the execution produced; the store holds all of it.\n"
+            "- **Sent to model** — what this arm actually placed in the repair prompt.\n"
+            "- **Native baseline** — what the *untreated* path would have forwarded for the "
+            "same failures (the failing stream, tail-truncated).\n"
+            "- **Δ vs native** — the A/B advantage. This, not `Captured − Sent`, is what the "
+            "treatment bought: an untreated harness also discards streams it never reads. "
+            "The difference is that discarding is amnesia, while straitjacket's omissions "
+            "are counted in a coverage receipt and remain retrievable by address.\n\n")
+    f.write("| Configuration | Treatment | Profiles | Captures | Captured | Sent to model | "
+            "Native baseline | Δ vs native |\n")
+    f.write("|---|---|---|---|---|---|---|---|\n")
+    blank_receipts = []
+    for r in rows:
+        c = r["containment"]
+        raw = c.get("raw_tokens_est", 0)
+        sent = c.get("evidence_sent_tokens_est", 0)
+        native = c.get("native_baseline_tokens_est", 0)
+        delta = native - sent
+        pct = f" ({delta / native:+.0%})" if native else ""
+        treatments = ", ".join(c.get("treatments") or [])
+        if not treatments:
+            # An arm with captures but no recorded treatment is an
+            # instrumentation gap, not a zero-cost result. Say which.
+            treatments = "**UNRECORDED**"
+            blank_receipts.append(r.get("name", r.get("arm", "Variant")))
+        f.write(f"| **{r.get('name', r.get('arm', 'Variant'))}** | "
+                f"{treatments} | "
+                f"`{', '.join(c.get('profiles') or []) or 'n/a'}` | "
+                f"{c.get('captures', 0)} | "
+                f"`{raw:,}` | "
+                f"**`{sent:,}`** | "
+                f"`{native:,}` | "
+                f"`{delta:+,}`{pct} |\n")
+    if blank_receipts:
+        f.write("\n> [!WARNING]\n"
+                "> **Unrecorded receipts** — " + ", ".join(f"`{n}`" for n in blank_receipts) +
+                " captured runs through the harness but recorded no evidence treatment, so "
+                "their `Sent`/`Native`/`Δ` columns are missing measurements rather than zeros. "
+                "Do not read them as a result.\n")
+
 
 def generate_markdown_report(summary_rows, dataset_name="SWE-bench Pro", output_path=None):
     """
     Generate standard Markdown Comparative TCO Report.
     """
     if not output_path:
-        reports_dir = os.path.join(ROOT_DIR, "reports")
-        os.makedirs(reports_dir, exist_ok=True)
-        fname = f"{dataset_name.lower().replace(' ', '_').replace('-', '_')}_straitjacket_report.md"
-        output_path = os.path.join(reports_dir, fname)
+        n_tasks = summary_rows[0].get("n", 0) if summary_rows else 0
+        output_path = allocate_report_paths(dataset_name, n_tasks)[0]
 
     os.makedirs(os.path.dirname(os.path.abspath(output_path)), exist_ok=True)
 
@@ -30,7 +219,8 @@ def generate_markdown_report(summary_rows, dataset_name="SWE-bench Pro", output_
     with open(output_path, "w", encoding="utf-8") as f:
         f.write(f"# Comparative TCO Report: `straitjacket` on `{dataset_name}` (N={n_tasks})\n\n")
         f.write(f"This report presents the empirical evaluation of multi-model collaboration architectures and "
-                f"`straitjacket` zero-cost structured triage on the **{dataset_name}** benchmark.\n\n")
+                f"`straitjacket` context containment on the **{dataset_name}** benchmark.\n\n")
+        _write_provenance(f, summary_rows)
 
         if total_infra_errors > 0:
             f.write("> [!WARNING]\n")
@@ -39,7 +229,7 @@ def generate_markdown_report(summary_rows, dataset_name="SWE-bench Pro", output_
                     "Below we report both **Raw Pass Rate** and **Effective Pass Rate** (evaluating testable tasks).\n\n")
 
         f.write("## 1. Comparative TCO & Performance Table\n\n")
-        f.write("| Configuration | Models | Triage Mode | Raw Pass Rate | Effective Pass Rate | Total Cost (USD) | Triage Cost (USD) | Cost / Solved Task ($/solved) | Avg Output Tokens |\n")
+        f.write("| Configuration | Models | Evidence Treatment | Raw Pass Rate | Effective Pass Rate | Total Cost (USD) | Triage Cost (USD) | Cost / Solved Task ($/solved) | Avg Output Tokens |\n")
         f.write("|---|---|---|---|---|---|---|---|---|\n")
 
         for r in summary_rows:
@@ -61,11 +251,10 @@ def generate_markdown_report(summary_rows, dataset_name="SWE-bench Pro", output_
 
             f.write(f"| **{name}** | `{models}` | {triage_mode} | {raw_pr} | **{eff_pr}** | `${tot_usd:.4f}` | `${triage_usd:.4f}` | **`${cps:.4f}`** | `{avg_out:.1f}` |\n")
 
+        _write_containment_table(f, summary_rows)
+
         f.write("\n---\n\n")
-        f.write("## 2. Key TCO & Architectural Insights\n\n")
-        f.write("1. **Zero-Cost Triage Elimination**: Straitjacket's deterministic `UnittestProfile` eliminates 100% of triage model overhead ($0.0000 vs. ~$0.0018 per repair) while preserving exact assertion failure coordinates and innermost traceback frames.\n")
-        f.write("2. **Prompt Cache Preservation**: Bounded, deterministic error digests prevent ephemeral prompt mutations across repair loops, keeping prompt prefixes identical across attempts.\n")
-        f.write("3. **Optimal Cost per Solved Task ($/solved)**: Hybrid pipelines combining low-cost generators (`gemini-3.5-flash-lite`) with complexity-adaptive repair (`gemini-3.6-flash` / `claude-sonnet-5`) achieve frontier-level accuracy at a fraction of single-model frontier costs.\n")
+        _write_insights(f, summary_rows)
 
     print(f"Generated Markdown report: {output_path}", flush=True)
     return output_path
@@ -75,10 +264,8 @@ def generate_html_dashboard(summary_rows, dataset_name="SWE-bench Pro", output_p
     Generate modern interactive HTML dashboard.
     """
     if not output_path:
-        reports_dir = os.path.join(ROOT_DIR, "reports")
-        os.makedirs(reports_dir, exist_ok=True)
-        fname = f"{dataset_name.lower().replace(' ', '_').replace('-', '_')}_dashboard.html"
-        output_path = os.path.join(reports_dir, fname)
+        n_tasks = summary_rows[0].get("n", 0) if summary_rows else 0
+        output_path = allocate_report_paths(dataset_name, n_tasks)[1]
 
     os.makedirs(os.path.dirname(os.path.abspath(output_path)), exist_ok=True)
 
@@ -160,7 +347,7 @@ def generate_html_dashboard(summary_rows, dataset_name="SWE-bench Pro", output_p
     <div class="container">
         <header>
             <h1>{dataset_name} Multi-LLM Benchmark Dashboard</h1>
-            <p class="subtitle">Empirical Total Cost of Ownership (TCO) & Straitjacket Zero-Cost Local Triage Evaluation</p>
+            <p class="subtitle">Empirical Total Cost of Ownership (TCO) & Straitjacket Context Containment Evaluation</p>
         </header>
 
         <div class="kpi-grid">

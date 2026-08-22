@@ -20,6 +20,7 @@ from src.config import (
     WEBDEV_SOLVER_ROLE, WEBDEV_ADVISOR_ROLE
 )
 from src.datasets import load_webdev_problems
+from src.evaluator import straitjacket_status
 from src.architectures import (
     run_single, run_read_write, run_cascade, run_hybrid,
     run_hybrid_straitjacket, run_cascade_straitjacket,
@@ -38,6 +39,10 @@ def main():
     parser.add_argument("--n", type=int, default=10, help="Number of tasks to evaluate (default: 10)")
     parser.add_argument("--compare-all", action="store_true", help="Compare key sweet-spot architectures")
     args = parser.parse_args()
+
+    sj = straitjacket_status()
+    print(f"straitjacket: backend={sj['backend']} ctx={sj['ctx_version']}"
+          + ("" if sj["available"] else f" -- {sj['reason']}"))
 
     problems = load_webdev_problems(max_tasks=args.n)
     task_ids = list(problems.keys())[:args.n]
@@ -83,22 +88,30 @@ def main():
             passed_cnt = sum(1 for r in results if r["passed"])
             tot_cost = sum(r["as_run_usd"] for r in results)
             avg_out = sum(r["output_tokens"] for r in results) / n if n else 0
+            items = [r.get("containment") or {} for r in results]
+            raw = sum(i.get("raw_tokens_est", 0) for i in items)
+            dig = sum(i.get("digest_tokens_est", 0) for i in items)
             summaries.append({
                 "name": name, "n": n, "passed": passed_cnt,
                 "pass_rate": passed_cnt / n if n else 0,
                 "total_usd": tot_cost,
                 "cost_per_solved": tot_cost / passed_cnt if passed_cnt else -1.0,
-                "avg_out_tok": avg_out
+                "avg_out_tok": avg_out,
+                "raw_tokens_est": raw,
+                "digest_tokens_est": dig,
+                "tokens_kept_out": max(0, raw - dig),
+                "containment_ratio": round(raw / dig, 2) if dig else None,
             })
 
         print("\n" + "=" * 95)
         print("OVERALL WEB-DEV SWEET-SPOT COMPARISON TABLE")
         print("=" * 95)
-        print(f"{'Configuration':<44} | {'Pass Rate':<10} | {'Total Cost ($)':<14} | {'$/Solved':<10} | {'Avg Out':<8}")
+        print(f"{'Configuration':<44} | {'Pass Rate':<10} | {'Total Cost ($)':<14} | {'$/Solved':<10} | {'Avg Out':<8} | {'Kept out':<9}")
         print("-" * 95)
         for s in summaries:
             cps_str = f"${s['cost_per_solved']:.4f}" if s['cost_per_solved'] >= 0 else "N/A"
-            print(f"{s['name']:<44} | {s['passed']}/{s['n']} ({s['pass_rate']:.0%})  | ${s['total_usd']:<13.5f} | {cps_str:<10} | {s['avg_out_tok']:<8.0f}")
+            kept = f"{s['tokens_kept_out']:,}" if s.get('tokens_kept_out') else "-"
+            print(f"{s['name']:<44} | {s['passed']}/{s['n']} ({s['pass_rate']:.0%})  | ${s['total_usd']:<13.5f} | {cps_str:<10} | {s['avg_out_tok']:<8.0f} | {kept:<9}")
         print("=" * 95)
     else:
         print(f"Run custom arch: {args.arch} on {len(task_ids)} tasks")

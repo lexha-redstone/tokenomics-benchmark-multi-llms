@@ -10,7 +10,8 @@ import os
 # ==============================================================================
 
 # Next-Gen Google Gemini Models
-GEMINI_36_FLASH_ID = "gemini-3.6-flash"
+GEMINI_37_FLASH_ID = "gemini-3.7-flash"
+GEMINI_36_FLASH_ID = GEMINI_37_FLASH_ID  # Redirect any legacy reference to 3.7-flash
 GEMINI_35_FLASH_LITE_ID = "gemini-3.5-flash-lite"
 GEMINI_PRO_ID = "gemini-3.1-pro-preview"
 
@@ -42,7 +43,7 @@ PRICING = {
     SONNET_ID:               {"input": 2.00, "output": 10.00, "cache_read": 0.20,  "cache_write": 2.50},
     
     # Next-Gen Google Gemini Models
-    GEMINI_36_FLASH_ID:      {"input": 1.50, "output": 7.50,  "cache_read": 0.15,  "cache_write": 0.00},
+    GEMINI_37_FLASH_ID:      {"input": 1.50, "output": 7.50,  "cache_read": 0.15,  "cache_write": 0.00},
     GEMINI_35_FLASH_LITE_ID: {"input": 0.30, "output": 2.50,  "cache_read": 0.030, "cache_write": 0.00},
     
     # Baseline / Earlier Gen Models
@@ -94,6 +95,31 @@ TRIAGE_ROLE = (
     "(file \"prog.py\") with their line numbers. DROP unittest boilerplate, separators, and "
     "library-internal frames. Copy identifiers and values VERBATIM -- never paraphrase numbers. "
     "Output plain text only, no code fences.\n\nStderr:\n"
+)
+
+# ==============================================================================
+# --- STRAITJACKET BOUNDED-RETRIEVAL PROTOCOL ---
+# ==============================================================================
+#
+# The containment half of straitjacket is only half the mechanism. The other
+# half is that omission is not amnesia: every digest carries addresses for the
+# regions it left out, and the agent may spend one bounded, local, $0 lookup
+# to recover exactly the region it needs. This protocol exposes that second
+# half to a model. The lookup runs against the frozen artifact -- no re-run,
+# no second flood.
+
+RETRIEVAL_PROTOCOL_ROLE = (
+    "The failing run's COMPLETE output is stored locally and addressable; the digest below is "
+    "an index into it, not a summary of it. Omitted regions are retrievable at zero cost.\n\n"
+    "If the digest already tells you what to fix, fix it now and output the corrected solution.\n"
+    "If, and only if, one specific missing region would change your fix, reply with EXACTLY ONE "
+    "line and nothing else:\n"
+    "    CTX: <command>\n"
+    "where <command> is one of:\n"
+    "    ctx get <handle>#stderr --lines A:B      (or #stdout)\n"
+    "    ctx search <handle> 'PATTERN' --context N\n"
+    "You get ONE lookup. Do not request the whole stream; ask for the span you named a reason "
+    "for.\n\n"
 )
 
 # ==============================================================================

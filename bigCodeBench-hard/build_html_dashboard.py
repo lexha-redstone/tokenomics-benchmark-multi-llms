@@ -1,10 +1,14 @@
 import json, glob, os, shutil
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-HTML_PATH_1 = os.path.join(HERE, "benchmark_report.html")
-HTML_PATH_2 = "/Users/lexha/.gemini/jetski/brain/13962785-7ad3-4650-9dd4-0cb9a31ef91b/benchmark_report.html"
-REPORT_DIR = os.path.join(HERE, "report")
-REPORT_FILE = os.path.join(REPORT_DIR, "benchmark_report_20260709.html")
+ROOT = os.path.dirname(HERE)
+
+# One destination. This used to write three copies -- one beside the script,
+# one into bigCodeBench-hard/report/, and one into a hard-coded absolute path
+# under another machine's home directory -- which is how the repository ended
+# up with byte-identical reports in four places and no canonical one.
+REPORTS_DIR = os.path.join(ROOT, "reports")
+OUTPUT_HTML = os.path.join(REPORTS_DIR, "05_bcb-hard_straitjacket_n30.html")
 
 SPECS = {
     "1. Single: 3.5-Flash (OFF)": {
@@ -566,16 +570,9 @@ html_content = f"""<!DOCTYPE html>
 </html>
 """
 
-with open(HTML_PATH_1, "w") as f:
+os.makedirs(REPORTS_DIR, exist_ok=True)
+with open(OUTPUT_HTML, "w") as f:
     f.write(html_content)
 
-os.makedirs(REPORT_DIR, exist_ok=True)
-shutil.copy(HTML_PATH_1, REPORT_FILE)
-
-print("Saved complete HTML dashboard to:")
-print("  -", HTML_PATH_1)
-print("  -", REPORT_FILE)
-if os.path.exists(os.path.dirname(HTML_PATH_2)):
-    with open(HTML_PATH_2, "w") as f:
-        f.write(html_content)
-    print("  -", HTML_PATH_2)
+print("Dashboard generated:")
+print("  -", OUTPUT_HTML)

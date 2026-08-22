@@ -1,10 +1,38 @@
 # Copyright 2026. Licensed under the Apache License, Version 2.0.
 """
-Unified Evaluator and Straitjacket Zero-Cost Local Triage Engine.
+Unified Evaluator and Straitjacket Context-Containment Bridge.
+
 Handles:
   1. Python function code extraction and sandboxed unit test execution (BigCodeBench & WebDev).
   2. Git patch / unified diff extraction and semantic test verification (SWE-bench Pro).
-  3. Comparison between LLM-based triage ($) and Straitjacket Zero-Cost Local Triage ($0.00).
+  3. Comparison between LLM-based triage ($) and Straitjacket local containment ($0.00).
+
+Containment contract
+--------------------
+Candidate solutions are executed **through** the straitjacket harness
+(``src/straitjacket.py`` → ``ctx.execution.run_capture``), so test output is
+captured at the birth gate: it is stored whole and never returned to the
+caller as an unbounded blob. Every evaluation therefore yields an
+:class:`Evidence` value that carries three distinct things:
+
+* ``str(evidence)``  — the *uncontained* payload an ordinary (native) arm
+  sends to the model, after the native path's own tail truncation;
+* ``evidence.digest`` — the *contained* payload a straitjacket arm sends: the
+  real upstream digest, with its coverage receipt and retrieval addresses;
+* ``evidence.run``    — the addressable handle, so an arm can retrieve an
+  exact region instead of re-flooding.
+
+``Evidence`` subclasses ``str`` so existing call sites that interpolate or
+serialise the error keep working unchanged, while straitjacket-aware call
+sites can reach the digest and the handle.
+
+What is deliberately NOT here
+-----------------------------
+There is no keyword/substring filter producing a "digest". Selecting lines
+because they contain ``"FAIL:"`` or ``"AssertionError"`` is the anti-pattern
+straitjacket exists to replace: it has no coverage receipt, no address for
+what it dropped, and it silently loses the quiet needle. If the harness is
+unavailable, the straitjacket arms refuse to run rather than fabricate one.
 """
 
 import os
@@ -13,8 +41,138 @@ import re
 import subprocess
 import tempfile
 import shutil
+import threading
+
 from .config import GEMINI_35_FLASH_LITE_ID, TRIAGE_ROLE, SWEBENCH_TRIAGE_ROLE
 from .client import dispatch_model
+from . import straitjacket as sj
+
+# run_capture inherits the parent environment, so the capture-determinism
+# settings have to be present before the first child is spawned.
+for _k, _v in sj.CAPTURE_ENV.items():
+    os.environ.setdefault(_k, _v)
+
+
+# ==============================================================================
+# --- EVIDENCE: ONE CAPTURE, TWO TREATMENTS ---
+# ==============================================================================
+
+class Evidence(str):
+    """A captured failure. Behaves as the uncontained error string.
+
+    ``run`` is the :class:`~src.straitjacket.ContainedRun` when the failure
+    came from a real execution through the harness; ``None`` for failures
+    detected before execution (e.g. a response with no function definition),
+    which carry no unbounded output to contain.
+    """
+
+    run = None
+    digest = ""
+    contained = False
+
+    def __new__(cls, native_text, *, run=None, digest="", contained=False):
+        obj = super().__new__(cls, native_text or "")
+        obj.run = run
+        obj.digest = digest or ""
+        obj.contained = bool(contained)
+        return obj
+
+    @property
+    def metrics(self):
+        return self.run.metrics() if self.run is not None else {}
+
+
+def _guard_evidence(message):
+    """A pre-execution guard failure: short, bounded, already its own digest."""
+    return Evidence(message, run=None, digest=message, contained=False)
+
+
+def _from_run(run):
+    """Wrap a harness capture: native payload as the string value, real
+    straitjacket digest alongside it."""
+    _record_capture(run)
+    return Evidence(run.native_payload(), run=run, digest=run.digest, contained=True)
+
+
+# ==============================================================================
+# --- CONTAINMENT LEDGER (per task attempt) ---
+# ==============================================================================
+#
+# straitjacket's own claim is "task success at lower context residency", so a
+# benchmark that only reports pass rate and dollars measures half of it. The
+# ledger records what every capture in one task attempt actually kept out of
+# context, straight from the harness's own accounting.
+
+_ledger = threading.local()
+
+
+def begin_containment():
+    """Start a fresh ledger for one task attempt."""
+    _ledger.items = []
+    _ledger.sent = []
+
+
+def _record_capture(run):
+    items = getattr(_ledger, "items", None)
+    if items is None:
+        items = _ledger.items = []
+    try:
+        items.append(run.metrics())
+    except Exception:
+        pass
+
+
+def record_evidence_sent(evidence, payload, treatment):
+    """Record what an arm put in the repair prompt, and its counterfactual.
+
+    Capture happens for every arm — the harness runs the tests either way —
+    so "raw vs digest" alone does not separate the arms. What separates them
+    is which payload crossed the wire, measured against what the untreated
+    path would have sent *for that same failure*.
+
+    Both numbers are recorded here, at the same moment, for the same event.
+    Sourcing the baseline from captures instead meant summing over a different
+    number of events (a repair loop treats N failures but captures N+1 runs),
+    which made the native arm score a 33% improvement over itself.
+    ``str(evidence)`` is by definition the uncontained payload.
+    """
+    sent = getattr(_ledger, "sent", None)
+    if sent is None:
+        sent = _ledger.sent = []
+    sent.append((
+        treatment,
+        sj.estimate_tokens(len(str(payload).encode("utf-8"))),
+        sj.estimate_tokens(len(str(evidence).encode("utf-8"))),
+    ))
+
+
+def containment_report():
+    """Aggregate the current task attempt's captures."""
+    items = list(getattr(_ledger, "items", []) or [])
+    sent = list(getattr(_ledger, "sent", []) or [])
+    raw = sum(i.get("raw_tokens_est", 0) for i in items)
+    dig = sum(i.get("digest_tokens_est", 0) for i in items)
+    sent_tok = sum(t for _, t, _ in sent)
+    base_tok = sum(b for _, _, b in sent)
+    return {
+        # -- capture side: what the harness held back from the transcript
+        "captures": len(items),
+        "raw_tokens_est": raw,
+        "digest_tokens_est": dig,
+        "tokens_kept_out": max(0, raw - dig),
+        "containment_ratio": round(raw / dig, 2) if dig else None,
+        "profiles": sorted({i.get("sj_profile") for i in items if i.get("sj_profile")}),
+        "backend": next((i.get("sj_backend") for i in items if i.get("sj_backend")), None),
+        "handles": [i.get("sj_handle") for i in items if i.get("sj_handle")],
+        "raw_exact": all(i.get("raw_exact", False) for i in items) if items else None,
+        # -- treatment side: the A/B, event for event
+        "treatment_events": len(sent),
+        "evidence_sent_tokens_est": sent_tok,
+        "native_baseline_tokens_est": base_tok,
+        "delta_vs_native_tokens": base_tok - sent_tok,
+        "treatments": sorted({t for t, _, _ in sent}),
+    }
+
 
 # ==============================================================================
 # --- PYTHON FUNCTION EVALUATION (BigCodeBench-Hard & WebDev) ---
@@ -25,40 +183,88 @@ def extract_code(text):
     m = re.search(r"```(?:python)?\s*(.*?)```", text, re.DOTALL)
     return (m.group(1) if m else text).strip()
 
-_UNITTEST_RUNNER = (
-    "\n\nimport unittest as _ut, sys as _sys\n"
-    "_ut.TestCase.maxDiff = None\n"
-    "_res = _ut.TextTestRunner(verbosity=0).run("
-    "_ut.TestLoader().loadTestsFromTestCase(TestCases))\n"
-    "_sys.exit(0 if _res.wasSuccessful() else 1)\n"
-)
+# The runner tail appended to every candidate program. It lives in
+# src/straitjacket.py because its shape is dictated by capture determinism:
+# identical failing code must produce identical bytes, or the same failure
+# mints a new artifact on every attempt.
+_UNITTEST_RUNNER = sj.DETERMINISTIC_UNITTEST_TAIL
 
 def run_bigcodebench(problem, solution_code):
-    """Execute BigCodeBench unittest suite in a temporary execution sandbox."""
+    """Execute the BigCodeBench unittest suite for one candidate solution.
+
+    Returns ``(passed, evidence)``. When the harness is available the program
+    runs under ``ctx run``: stdout/stderr are content-addressed into the
+    artifact store and the failure comes back as a bounded digest plus a
+    retrieval handle. Otherwise it falls back to a plain subprocess with the
+    native tail truncation, and the evidence is marked ``contained=False``.
+    """
     program = solution_code + "\n\n" + problem["test"] + _UNITTEST_RUNNER
+
+    if sj.available():
+        return _run_bigcodebench_contained(program)
+    return _run_bigcodebench_native(program)
+
+
+def _run_bigcodebench_contained(program):
+    workdir = sj.new_sandbox("bcb")
+    try:
+        (workdir / "prog.py").write_text(program, encoding="utf-8")
+        try:
+            run = sj.contained_run(
+                [sys.executable, "prog.py"],
+                cwd=workdir,
+                timeout=120.0,
+                # Keep the host's absolute interpreter path out of the
+                # manifest and the model-visible digest.
+                record_argv=["python3", "prog.py"],
+                env_extra=sj.CAPTURE_ENV,
+            )
+        except sj.SJUnavailable as e:
+            return False, _guard_evidence(f"harness_error: {e}")
+
+        if run.timed_out:
+            return False, _from_run(run)
+        if run.exit_code == 0:
+            _record_capture(run)
+            return True, Evidence("", run=run, digest=run.digest, contained=True)
+        return False, _from_run(run)
+    finally:
+        sj.drop_sandbox(workdir)
+
+
+def _run_bigcodebench_native(program):
+    """Uncontained execution path (harness disabled). Kept so the benchmark
+    can still run the non-straitjacket arms without ctx-harness installed."""
     workdir = tempfile.mkdtemp(prefix="bcb_")
     path = os.path.join(workdir, "prog.py")
     with open(path, "w", encoding="utf-8") as f:
         f.write(program)
     try:
-        env = {**os.environ, "MPLBACKEND": "Agg"}
+        env = {**os.environ, **sj.CAPTURE_ENV}
         r = subprocess.run([sys.executable, path], capture_output=True, text=True,
                            timeout=120, cwd=workdir, env=env)
         if r.returncode == 0:
-            return True, ""
-        return False, (r.stderr.strip() or "test failed")[-4000:]
+            return True, Evidence("")
+        return False, Evidence(sj.tail_to_cap(r.stderr.strip() or "test failed"))
     except subprocess.TimeoutExpired:
-        return False, "timeout: execution exceeded 120s"
+        return False, Evidence("timeout: execution exceeded 120s")
     except Exception as e:
-        return False, f"execution_error: {e}"
+        return False, Evidence(f"execution_error: {e}")
     finally:
         shutil.rmtree(workdir, ignore_errors=True)
 
+
 def missing_code_error(code, entry_point):
-    """Check if the extracted code defines the requested function entry point."""
+    """Check if the extracted code defines the requested function entry point.
+
+    This is a birth-gate rejection: the candidate is refused before execution,
+    so there is no unbounded output to contain. The message is returned as
+    bounded :class:`Evidence` so downstream treatment is uniform.
+    """
     if f"def {entry_point}" in code:
         return None
-    return f"model response contains no `def {entry_point}` code block"
+    return _guard_evidence(
+        f"model response contains no `def {entry_point}` code block")
 
 # ==============================================================================
 # --- SWE-BENCH PRO PATCH EVALUATION ---
@@ -97,6 +303,34 @@ def _get_failing_test_name(problem):
         return f.strip()
     return "test_regression_suite"
 
+
+def _contain_swe_log(problem, log_text, exit_code=1):
+    """Route a SWE-bench Pro test log through the harness.
+
+    SWE-bench Pro is evaluated semantically here rather than by running the
+    upstream repository's suite, so the log is produced in-process. It is
+    still contained through the real harness: the text is spooled into the
+    artifact store and digested by the upstream profile registry (pytest/v2
+    for a pytest-shaped session), which is what an arm would see if the suite
+    had actually been executed under ``ctx run``.
+    """
+    if not sj.available():
+        return Evidence(sj.tail_to_cap(log_text))
+    repo = (problem or {}).get("repo", "repo")
+    test = _get_failing_test_name(problem)
+    try:
+        run = sj.contain_text(
+            log_text,
+            argv=["pytest", "-q", str(test)],
+            exit_code=exit_code,
+            stream="stdout",
+            cwd=str(repo),
+        )
+    except sj.SJUnavailable:
+        return Evidence(sj.tail_to_cap(log_text))
+    return _from_run(run)
+
+
 def run_swebench_pro_task(problem, candidate_patch):
     """
     Evaluate candidate patch for SWE-bench Pro task.
@@ -104,7 +338,8 @@ def run_swebench_pro_task(problem, candidate_patch):
     """
     is_valid, reason = validate_patch_syntax(candidate_patch)
     if not is_valid:
-        return False, f"PatchSyntaxError: {reason}\nCandidate output:\n{candidate_patch[:500]}"
+        return False, _guard_evidence(
+            f"PatchSyntaxError: {reason}\nCandidate output:\n{candidate_patch[:500]}")
 
     can_patch = str((problem.get("canonical_patch") or problem.get("patch") or "") if problem else "")
     target_files = [re.search(r"\+\+\+ b/(.*?)$", line).group(1)
@@ -120,11 +355,11 @@ def run_swebench_pro_task(problem, candidate_patch):
                 f"AssertionError: patch modified {cand_files} instead of target repository module {target_files}\n"
                 f"Innermost frame: L1 in {target_files[0] if target_files else 'repo'}"
             )
-            return False, err_msg
+            return False, _contain_swe_log(problem, err_msg)
 
     can_adds = [l.strip() for l in can_patch.splitlines() if l.startswith("+") and not l.startswith("+++")]
     if can_adds and any(add in candidate_patch for add in can_adds[:2]):
-        return True, ""
+        return True, Evidence("")
 
     repo_name = problem.get("repo", "sympy/sympy") if problem else "repo"
     err_log = (
@@ -134,78 +369,103 @@ def run_swebench_pro_task(problem, candidate_patch):
         f"+++ actual candidate patch did not resolve failing test assertion in {failing_test}\n"
         f"Innermost traceback: L581 in {repo_name}"
     )
-    return False, err_log
+    return False, _contain_swe_log(problem, err_log)
 
 def missing_patch_error(patch_str):
     is_valid, reason = validate_patch_syntax(patch_str)
     return None if is_valid else reason
 
 # ==============================================================================
-# --- TRIAGE MECHANISMS: LLM TRIAGE VS STRAITJACKET ZERO-COST LOCAL TRIAGE ---
+# --- TRIAGE MECHANISMS: LLM TRIAGE VS STRAITJACKET CONTAINMENT ---
 # ==============================================================================
 
 def triage_error(raw_err, model_id=GEMINI_35_FLASH_LITE_ID, is_swe=False):
     """
     Standard LLM triage ($ costs input + output tokens and API latency).
     Uses a cheap model to compress verbose error logs into a short digest.
+
+    This is the *uncontained* comparison arm: it pays to move the raw log
+    across the wire. ``raw_err`` is used as a plain string, which for an
+    :class:`Evidence` value is exactly the native payload.
     """
     role = SWEBENCH_TRIAGE_ROLE if is_swe else TRIAGE_ROLE
-    prompt = role + "```\n" + raw_err + "\n```"
+    prompt = role + "```\n" + str(raw_err) + "\n```"
     text, usage, dt = dispatch_model(model_id, prompt, max_tokens=768)
-    digest = text.strip() or raw_err[-1200:]
+    digest = text.strip() or str(raw_err)[-1200:]
     return digest[:1200], usage, dt
 
-def triage_error_straitjacket(raw_err, problem=None, cwd="/tmp"):
+
+def triage_error_straitjacket(raw_err, problem=None, cwd=None):
     """
-    Straitjacket Zero-Cost Local Triage ($0.000000 and 0ms latency).
-    Uses UnittestProfile from straitjacket harness to deterministically parse and extract
-    failing test names, assertion diffs, and innermost traceback frames.
+    Straitjacket containment ($0.000000, no API call).
+
+    Returns the digest the upstream harness already produced for this
+    execution — profile-detected, coverage-attested, and carrying retrieval
+    addresses for everything it left out. Nothing is re-summarised here and
+    no line is selected by keyword.
+
+    ``raw_err`` is normally the :class:`Evidence` returned by the evaluator.
+    A plain string reaching this function means the failure was captured
+    outside the harness; it is contained now (birth gate missed, entry gate
+    still enforced) rather than keyword-filtered.
     """
     usage = {"as_run_usd": 0.0, "input": 0, "output": 0, "total_tokens": 0}
-    
-    # Try importing real straitjacket UnittestProfile if available
-    try:
-        from ctx.digest.moreprofs import UnittestProfile
-        from ctx.digest.base import DigestContext, StreamView
-        from unittest.mock import MagicMock
 
-        ws = MagicMock()
-        manifest = {
-            "cwd": cwd,
-            "argv": ["python3", "-m", "unittest", "prog.py"],
-            "result": {"exitCode": 1, "signal": None, "timedOut": False},
-        }
-        ctx = DigestContext(
-            ws=ws,
-            manifest=manifest,
-            stdout=StreamView("stdout", 0, 0, "text/plain", "", True),
-            stderr=StreamView("stderr", len(raw_err), len(raw_err.splitlines()), "text/plain", raw_err, True),
-            dense=True,
-            suggestion_cap=0,
-        )
-        digest = UnittestProfile().render(ctx)
-        return digest, usage, 0.0
-    except Exception:
-        pass
+    if isinstance(raw_err, Evidence) and raw_err.digest:
+        return raw_err.digest, usage, 0.0
 
-    # Built-in deterministic zero-cost fallback parser matching UnittestProfile format
-    lines = []
-    for line in raw_err.splitlines():
-        if any(k in line for k in ["FAIL:", "FAILED", "ERROR:", "AssertionError", "SyntaxError", 
-                                  "Innermost", "---", "+++", "@@", "Traceback", "File ", "modified", "line "]):
-            lines.append(line.strip())
+    text = str(raw_err or "")
+    if not text.strip():
+        return "", usage, 0.0
 
-    failing_test = _get_failing_test_name(problem) if problem else "unittest"
-    repo_name = problem.get("repo", "repo") if problem else ""
+    if sj.available():
+        try:
+            run = sj.contain_text(
+                text,
+                argv=["python3", "-m", "unittest", "prog.py"],
+                exit_code=1,
+                stream="stderr",
+                cwd=str((problem or {}).get("repo", ".")) if problem else ".",
+            )
+            _record_capture(run)
+            return run.digest, usage, 0.0
+        except sj.SJUnavailable:
+            pass
 
-    digest_body = "\n".join(lines[:20]) if lines else raw_err[-800:]
-    if repo_name:
-        digest = (
-            f"Straitjacket UnittestProfile (Zero-Cost Local Triage):\n"
-            f"  Target failing test: {failing_test} | Repo: {repo_name}\n"
-            f"  Assertion & Regression Profile:\n{digest_body}"
-        )
-    else:
-        digest = f"Straitjacket UnittestProfile (Zero-Cost Local Triage):\n{digest_body}"
+    # The harness is genuinely unavailable. Do not invent a digest: say so and
+    # hand back the evidence unchanged, so the arm's numbers are never
+    # attributed to a containment mechanism that did not run.
+    sj.require()  # raises SJUnavailable with install instructions
+    return text, usage, 0.0  # pragma: no cover - require() always raises here
 
-    return digest, usage, 0.0
+
+def aggregate_containment(results):
+    """Sum per-task containment ledgers into one row-level receipt.
+
+    One definition, used by every runner: a benchmark row that reports pass
+    rate and dollars but not context residency is reporting half of what the
+    harness is for.
+    """
+    items = [r.get("containment") or {} for r in results]
+    raw = sum(i.get("raw_tokens_est", 0) for i in items)
+    dig = sum(i.get("digest_tokens_est", 0) for i in items)
+    sent = sum(i.get("evidence_sent_tokens_est", 0) for i in items)
+    base = sum(i.get("native_baseline_tokens_est", 0) for i in items)
+    return {
+        "captures": sum(i.get("captures", 0) for i in items),
+        "treatment_events": sum(i.get("treatment_events", 0) for i in items),
+        "raw_tokens_est": raw,
+        "digest_tokens_est": dig,
+        "evidence_sent_tokens_est": sent,
+        "native_baseline_tokens_est": base,
+        "delta_vs_native_tokens": base - sent,
+        "tokens_kept_out": max(0, raw - dig),
+        "containment_ratio": round(raw / dig, 2) if dig else None,
+        "profiles": sorted({p for i in items for p in (i.get("profiles") or [])}),
+        "treatments": sorted({t for i in items for t in (i.get("treatments") or [])}),
+    }
+
+
+def straitjacket_status():
+    """Harness provenance for result files and reports."""
+    return sj.status()

@@ -10,6 +10,9 @@ cryptography>=49.0.0
 cffi>=2.1.0
 
 # --- Straitjacket Harness & Validation Invariants ---
+# The real context-containment harness. The straitjacket benchmark arms refuse
+# to run without it rather than fabricate a digest -- see src/straitjacket.py.
+ctx-harness>=0.35.1
 pathspec>=0.12.0
 jsonschema>=4.23.0
 pytest>=8.3.0

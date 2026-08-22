@@ -47,7 +47,7 @@ def run_g1_pure_lite_budget(problem):
     loops = 0
 
     if not passed:
-        triage_digest = triage_error_straitjacket(err)
+        triage_digest, _, _ = triage_error_straitjacket(err)
         prompt2 = (f"Problem:\n```python\n{problem['complete_prompt']}\n```\n\n"
                    f"Current code:\n```python\n{code}\n```\n\n"
                    f"Unittest error:\n```\n{triage_digest}\n```\n\n"
@@ -82,12 +82,12 @@ def run_g2_smart_tiered_cascade(problem):
     loops = 0
 
     if not passed:
-        triage_digest = triage_error_straitjacket(err)
+        triage_digest, _, _ = triage_error_straitjacket(err)
         prompt2 = (f"Problem:\n```python\n{problem['complete_prompt']}\n```\n\n"
                    f"Current code:\n```python\n{code}\n```\n\n"
                    f"Unittest error:\n```\n{triage_digest}\n```\n\n"
                    "Fix bug using concise reasoning. Output COMPLETE python code block.")
-        sol2, u2, _ = dispatch_model(GEMINI_36_FLASH_ID, prompt2, thinking_level="minimal")
+        sol2, u2, _ = dispatch_model(GEMINI_37_FLASH_ID, prompt2, thinking_level="low")
         tot_usd += u2["as_run_usd"]
         tot_out += u2["output"]
         code2 = extract_code(sol2)
@@ -96,7 +96,7 @@ def run_g2_smart_tiered_cascade(problem):
         if passed2:
             code, passed, err = code2, True, ""
         else:
-            triage_digest2 = triage_error_straitjacket(err2)
+            triage_digest2, _, _ = triage_error_straitjacket(err2)
             prompt3 = (f"Problem:\n```python\n{problem['complete_prompt']}\n```\n\n"
                        f"Current code:\n```python\n{code2}\n```\n\n"
                        f"Unittest error:\n```\n{triage_digest2}\n```\n\n"
@@ -136,7 +136,7 @@ def run_g3_advisor_executor(problem):
     loops = 0
 
     if not passed:
-        triage_digest = triage_error_straitjacket(err)
+        triage_digest, _, _ = triage_error_straitjacket(err)
         prompt2 = (f"Problem:\n```python\n{problem['complete_prompt']}\n```\n\n"
                    f"Current code:\n```python\n{code}\n```\n\n"
                    f"Unittest error:\n```\n{triage_digest}\n```\n\n"
@@ -194,8 +194,8 @@ def run_g4_dual_candidate_verifier(problem):
             "error": ""
         }
 
-    triageA = triage_error_straitjacket(errA)
-    triageB = triage_error_straitjacket(errB)
+    triageA, _, _ = triage_error_straitjacket(errA)
+    triageB, _, _ = triage_error_straitjacket(errB)
     synth_prompt = (f"Problem:\n```python\n{problem['complete_prompt']}\n```\n\n"
                     f"Candidate A failed with:\n{triageA}\n\n"
                     f"Candidate B failed with:\n{triageB}\n\n"
@@ -225,7 +225,7 @@ def run_g5_max_perf_gemini(problem):
     loops = 0
 
     if not passed:
-        triage_digest = triage_error_straitjacket(err)
+        triage_digest, _, _ = triage_error_straitjacket(err)
         prompt2 = (f"Problem:\n```python\n{problem['complete_prompt']}\n```\n\n"
                    f"Current code:\n```python\n{code}\n```\n\n"
                    f"Unittest error:\n```\n{triage_digest}\n```\n\n"
@@ -239,7 +239,7 @@ def run_g5_max_perf_gemini(problem):
         if passed2:
             code, passed, err = code2, True, ""
         else:
-            triage_digest2 = triage_error_straitjacket(err2)
+            triage_digest2, _, _ = triage_error_straitjacket(err2)
             prompt3 = (f"Problem:\n```python\n{problem['complete_prompt']}\n```\n\n"
                        f"Current code:\n```python\n{code2}\n```\n\n"
                        f"Unittest error:\n```\n{triage_digest2}\n```\n\n"
@@ -274,7 +274,7 @@ def run_c1_claude_sonnet_baseline(problem):
     loops = 0
 
     if not passed:
-        triage_digest = triage_error_straitjacket(err)
+        triage_digest, _, _ = triage_error_straitjacket(err)
         prompt2 = (f"Problem:\n```python\n{problem['complete_prompt']}\n```\n\n"
                    f"Current code:\n```python\n{code}\n```\n\n"
                    f"Unittest error:\n```\n{triage_digest}\n```\n\n"
@@ -309,7 +309,7 @@ def run_c2_claude_frontier_opus(problem):
     loops = 0
 
     if not passed:
-        triage_digest = triage_error_straitjacket(err)
+        triage_digest, _, _ = triage_error_straitjacket(err)
         prompt2 = (f"Problem:\n```python\n{problem['complete_prompt']}\n```\n\n"
                    f"Current code:\n```python\n{code}\n```\n\n"
                    f"Unittest error:\n```\n{triage_digest}\n```\n\n"

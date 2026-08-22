@@ -13,7 +13,7 @@ The benchmark follows the **Straitjacket Benchmark Charter** and **Tokenomics In
 1. **Receipts Before Doctrine**: Performance and cost claims must be backed by reproducible empirical receipts (JSON run logs + Markdown/HTML reports), not adjectives.
 2. **Total Cost of Ownership (TCO) & Cost per Solved Task ($/solved)**: Raw accuracy is meaningless without cost accounting. The primary metric is:
    $$\text{Cost per Solved Task} = \frac{\sum \text{as\_run\_usd}}{\text{Total Solved Tasks}}$$
-3. **Zero-Cost Triage Elimination**: In multi-turn repair loops, raw stack traces or LLM-based triage (`triage_error`) inflate token cost and latency. `straitjacket`'s deterministic `UnittestProfile` compresses test failures into bounded ~60–80 token digests locally at **$0.0000 cost and 0ms API latency**.
+3. **Context Containment**: In multi-turn repair loops, raw stack traces inflate every later turn's prompt, and LLM-based triage (`triage_error`) buys brevity with a paid round trip. `straitjacket` captures the run at its birth gate and hands the repair turn a bounded, coverage-attested digest from the upstream profile registry (`unittest/v1`, `pytest/v2`, …) at **$0.0000 and no API call** — with `ctx get` / `ctx search` addresses for everything it omitted, so shorter does not mean lost.
 4. **Prompt Cache Prefix Warming**: Deterministic stripping of ephemeral paths, timestamps, and ANSI escape codes keeps prompt prefixes identical across attempts, maintaining high prompt cache hit rates.
 5. **External Corpora as Teachers, Never Referees**: Benchmark tasks provide real hostile outputs and failure structures to evaluate architectural resilience.
 
@@ -21,7 +21,9 @@ The benchmark follows the **Straitjacket Benchmark Charter** and **Tokenomics In
 
 ## 2. Repository Architecture & Layout
 
-The repository is organized into a shared core library (`src/`), centralized reports (`reports/`), analysis utilities (`tools/`), and dataset-specific benchmarks:
+The repository separates **explanations** (`docs/`) from **results** (`reports/`),
+with a shared core library (`src/`), analysis utilities (`tools/`), and
+dataset-specific benchmark directories:
 
 ```
 benchmark-using-multi-LLMs/
@@ -36,21 +38,25 @@ benchmark-using-multi-LLMs/
 │   ├── __init__.py
 │   ├── config.py                                # Centralized model IDs, pricing, and prompt roles
 │   ├── client.py                                # Vertex AI Gemini & Claude client with retry & fallback
-│   ├── evaluator.py                             # Python unittest & git patch evaluators + SJ triage
+│   ├── straitjacket.py                          # Bridge to the real ctx-harness (capture, digest, retrieval)
+│   ├── evaluator.py                             # Python unittest & git patch evaluators + contained evidence
 │   ├── datasets.py                              # Unified dataset loaders (BCB, SWE-bench Pro, WebDev)
 │   ├── architectures.py                         # Modular multi-LLM architecture pipelines & registry
 │   └── reporter.py                              # Markdown TCO report & interactive HTML dashboard generator
 │
-├── reports/                                     # 📊 ALL GENERATED REPORTS & DASHBOARDS (.md, .html)
-│   ├── comprehensive_multi_llm_benchmark_report_20260806.md  # 🌟 Master Cross-Dataset Synthesis Report
-│   ├── straitjacket_n30_comparative_tco_report.md            # BigCodeBench-Hard N=30 Audited Report
-│   ├── n50_gemini_vs_claude_tco_report.md                    # BigCodeBench-Hard N=50 Comprehensive Report
-│   ├── swe_bench_pro_straitjacket_report.md                  # SWE-bench Pro Comparative Report
-│   ├── swe_bench_pro_dashboard.html                          # SWE-bench Pro Interactive HTML Dashboard
-│   ├── bigcodebench_hard_dashboard.html                      # BigCodeBench Interactive HTML Dashboard
-│   └── webdev_dashboard.html                                 # WebDev Interactive HTML Dashboard
+├── docs/                                        # 📚 Methodology & design docs (not results)
+│   ├── straitjacket-implementation.md           # The harness bridge, and how it differs from upstream
+│   ├── pipeline-architecture.md                 # How one task flows through the system
+│   └── *-sweetspot-methodology.md               # Per-dataset experiment design
+│
+├── reports/                                     # 📊 RUN RESULTS ONLY, indexed by execution order
+│   ├── README.md                                # The index — start here
+│   └── NN_<dataset>_<tag>_n<N>.{md,html}        # Append-only; a sweep never overwrites an earlier one
+│
+├── tests/                                       # Contract tests for the straitjacket bridge
 │
 ├── tools/                                       # 🛠️ Post-Processing, Auditing & Pricing Scripts
+│   ├── index_reports.py                         # Assigns report indices & regenerates reports/README.md
 │   ├── generate_n30_report.py                   # Audits N=30 BCB raw vs effective pass rates
 │   ├── generate_n50_report.py                   # Audits N=50 BCB Gemini vs Claude comparison
 │   └── update_all_reports_pricing.py            # Recalculates metrics with active Vertex AI pricing
@@ -137,7 +143,19 @@ python3 run_benchmark.py --dataset swebench --group all --n 30 --no-cache --repo
 1. **Implement the Pipeline in `src/architectures.py`**:
    - Structure the function to accept a `problem` dict.
    - Use `dispatch_model(model_id, prompt, thinking_level=..., problem=...)` for LLM calls.
-   - Use `triage_error_straitjacket(err, problem=...)` for zero-cost test failure triage.
+   - Name the evidence treatment rather than hard-coding it: take an
+     `error_treatment` parameter and call
+     `_treat_error(err, error_treatment, problem=problem, is_swe=is_swe)`.
+     It dispatches to `native` (raw tail), `llm` (paid triage model), or
+     `straitjacket` (the harness's own digest). The registry's `triage_mode`
+     label **must** name the treatment the arm actually applies.
+   - Decorate the arm with `@_arm()`, or `@_arm(sj_required=True)` if it claims
+     containment — the decorator resets the per-task containment ledger and,
+     for straitjacket arms, refuses to start when `ctx-harness` is missing.
+   - Never re-summarise, keyword-filter, or tail-truncate a failure yourself.
+     `run_bigcodebench` already returns `Evidence` carrying the real digest and
+     an addressable handle; producing a second "digest" on top of it is the
+     anti-pattern this suite exists to measure against.
    - Return standard metrics dict:
    ```python
    def run_my_custom_pipeline(problem, planner_model=GEMINI_36_FLASH_ID, executor_model=GEMINI_35_FLASH_LITE_ID):
@@ -153,9 +171,11 @@ python3 run_benchmark.py --dataset swebench --group all --n 30 --no-cache --repo
            "seconds": round(elapsed, 1),
            "error": "" if passed else err,
            "repair_loops": loop_count,
-           "triage_usd": 0.0,
+           "triage_usd": round(triage_usd, 6),   # what the treatment actually spent
            "patch": candidate_code_or_patch,
        }
+       # `@_arm()` appends "containment": the harness's own accounting of raw
+       # tokens captured, digest tokens rendered, and evidence tokens sent.
    ```
 2. **Register the Variant in `VARIANT_REGISTRY` in `src/architectures.py`**:
    ```python
@@ -214,8 +234,13 @@ Every benchmark run produces a JSON record matching this structure:
 
 ### Auto-Generated Reports in `reports/`
 
-- **Markdown Report (`reports/<dataset>_straitjacket_report.md`)**: Formatted comparative TCO table, $/solved rankings, error breakdown (distinguishing environment/quota errors from algorithmic bugs).
-- **Interactive HTML Dashboard (`reports/<dataset>_dashboard.html`)**: Mobile-responsive dashboard with KPI scorecards, pass rate bar charts, and detailed architecture specifications.
+Reports are an append-only log indexed by execution order, so a new sweep never
+overwrites an earlier one's evidence. After a run, adopt the new files and
+refresh the index with `python3 tools/index_reports.py --apply`.
+
+
+- **Markdown Report (`reports/NN_<dataset>_<tag>_n<N>.md`)**: Formatted comparative TCO table, $/solved rankings, error breakdown (distinguishing environment/quota errors from algorithmic bugs).
+- **Interactive HTML Dashboard (`reports/NN_<dataset>_<tag>_n<N>.html`)**: Mobile-responsive dashboard with KPI scorecards, pass rate bar charts, and detailed architecture specifications.
 
 ---
 
@@ -225,7 +250,13 @@ Before submitting a Pull Request or committing changes:
 
 - [ ] **No Duplicate Logic**: Client calls, pricing definitions, and triage harnesses reside strictly in `src/`.
 - [ ] **Deterministic Fallback**: Running without active GCP credentials falls back gracefully to deterministic simulation without raising unhandled exceptions.
-- [ ] **Zero-Cost Triage Integrity**: All `*_straitjacket` variants must declare `$0.0000` triage cost and 0 additional triage tokens.
+- [ ] **Containment Integrity**: Every digest in a `*_straitjacket` variant comes from the upstream harness via `src/straitjacket.py`. No local re-implementation, no keyword or head/tail selection, no arm that silently degrades when `ctx-harness` is absent.
+- [ ] **Truth in Labelling**: A variant's `triage_mode` names the treatment it actually applies (`native` / `llm` / `straitjacket`), and its reported `triage_usd` is what it actually spent.
+- [ ] **Fair Baseline**: The uncontained arm gets the failing stream, truncated once by `SJ_RAW_CAP` and nowhere else. Never re-truncate inside an arm, and never hand the native path stdout chatter it would not otherwise have forwarded — degrading the baseline biases every comparison toward straitjacket.
+- [ ] **No Re-flooding the Harness**: Nothing on the per-task path may materialise a whole captured stream. Use `ContainedRun.raw_tail(stream, nbytes)`; `raw_stdout` / `raw_stderr` are unbounded and exist for tests and debugging only.
+- [ ] **Reproducible Evidence**: Identical failing code produces an identical run handle across processes. If you add a runner or an evaluator, pin whatever it prints that is not evidence (elapsed times, PIDs, temp paths, hash-ordered output) — otherwise every attempt mints a fresh artifact for the same failure.
+- [ ] **Self-Consistent Receipt**: An arm whose treatment *is* the baseline must report `delta_vs_native_tokens == 0`. The A/B is `native_baseline − sent`, counted over the same events; `captured − sent` is a larger number and is not the A/B.
+- [ ] **Contract Tests Pass**: `pytest tests/test_straitjacket_integration.py -q` is green on the `library` backend.
 - [ ] **No Hardcoded Absolute Paths**: All file lookups must use relative paths or `os.path.dirname(os.path.abspath(__file__))`.
 - [ ] **Requirements Up to Date**: Any newly introduced package is pinned in `requirements.txt`.
 - [ ] **Clean Git Workspace**: No stray `.DS_Store`, `__pycache__`, or scratch scripts left untracked.

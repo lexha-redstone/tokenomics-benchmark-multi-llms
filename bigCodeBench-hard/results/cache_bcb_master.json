@@ -7123,6 +7123,40 @@
       },
       "retrievals": null,
       "error": ""
+    },
+    "BigCodeBench/129": {
+      "task_id": "BigCodeBench/129",
+      "passed": true,
+      "as_run_usd": 0.061635,
+      "triage_usd": 0.0,
+      "output_tokens": 1926,
+      "total_tokens": 4623,
+      "repair_loops": 1,
+      "containment": {
+        "captures": 2,
+        "raw_tokens_est": 298,
+        "digest_tokens_est": 266,
+        "tokens_kept_out": 32,
+        "containment_ratio": 1.12,
+        "profiles": [
+          "unittest/v1"
+        ],
+        "backend": "library",
+        "handles": [
+          "run:ca62344d9b79",
+          "run:4089d69fb1a7"
+        ],
+        "raw_exact": true,
+        "treatment_events": 1,
+        "evidence_sent_tokens_est": 183,
+        "native_baseline_tokens_est": 273,
+        "delta_vs_native_tokens": 90,
+        "treatments": [
+          "straitjacket"
+        ]
+      },
+      "retrievals": null,
+      "error": ""
     }
   }
 }

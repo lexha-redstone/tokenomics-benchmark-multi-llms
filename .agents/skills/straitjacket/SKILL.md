@@ -79,3 +79,35 @@ ctx get run:8d8335db6848#stdout --lines 1280:1300
 - **Prompt Prefix Caching:** Because `straitjacket` strips non-deterministic noise (locale, temp paths, timestamps, PIDs), identical test failures produce **byte-identical digests** — guaranteed when the captured bytes, focus query, profile version, and policy version are all unchanged. This prevents prompt prefix drift across multi-turn repair attempts, preserving prompt cache hit rates (measured **96.5–98.1%**, versus 80.6–84.2% for a transcript-rewriting proxy).
 - **Compression ratio is not the billing ratio.** Digests collapse floods **8×–151×** (small outputs correctly pass through at ~1×), but measured end-to-end savings in live A/Bs are **−30% billed tokens / −17% cost**. Do not restate the compression ratio as a cost reduction.
 - **Diffing True Signal:** Always prefer `ctx diff run:A run:B` over manual inspection when checking whether a code edit resolved a specific test regression.
+
+---
+
+## 5. How This Repository Uses `ctx` (Benchmark Harness)
+
+This benchmark suite does not shell out to `ctx` per benchmark task; it calls the
+same upstream code in-process through `src/straitjacket.py`, which is the only
+place allowed to produce a straitjacket digest here.
+
+| Skill concept | Where it lands in this repo |
+|---|---|
+| `ctx run -- <cmd>` | `src.straitjacket.contained_run()` → `ctx.execution.run_capture` + `ctx.digest.render_run_digest` |
+| the digest | `Evidence.digest` (what a contained arm sends to the model) |
+| the raw output | `Evidence` as a plain string (what an uncontained arm sends) — read back from the artifact store, never from a pipe |
+| `ctx get` / `ctx search` | `ContainedRun.get()` / `.search()`, exposed to the model as the `CTX:` protocol in `run_contained_retrieval_cascade` |
+| `ctx diff run:A run:B` | `ContainedRun.diff()` |
+| `ctx gain` | the per-arm **Context Containment Receipt** in every generated report |
+
+Two rules this repository enforces on top of the skill:
+
+1. **Never hand-roll a digest.** Selecting lines because they contain `FAIL:` or
+   `AssertionError`, or slicing `stderr[-4000:]`, produces shorter output with no
+   coverage receipt and no address for what was dropped. `pytest
+   tests/test_straitjacket_integration.py` fails if that pattern reappears.
+2. **Refuse rather than pretend.** If `ctx-harness` is not installed, arms that
+   claim containment raise `SJUnavailable` instead of degrading to something
+   digest-shaped. A benchmark row must credit the mechanism that actually ran.
+3. **Do not degrade the baseline to flatter the mechanism.** The uncontained arm
+   gets the failing stream truncated once (`SJ_RAW_CAP`). Feeding it stdout
+   chatter it never used to forward, or measuring its baseline with a different
+   budget than it actually sends, makes containment look better than it is. The
+   receipt reports `Δ vs native`, and the native arm's own delta must be `+0`.

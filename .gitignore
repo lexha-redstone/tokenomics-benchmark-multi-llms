@@ -74,3 +74,9 @@ Thumbs.db
 *.tmp
 *.temp
 _instructions/
+
+# --- Straitjacket harness workspace & artifact store ---
+# The default lives in ~/.cache/tokenomics-sj (short paths keep traceback line
+# numbers inside the digest's evidence budget). This only matters if SJ_HOME is
+# pointed back into the repo.
+.straitjacket/

@@ -47,7 +47,7 @@ coverage:
 next:
   ctx get run:8d8335db6848#stdout --lines 1280:1300
 ```
-- **Header & Stats:** Shows total lines, byte size, and estimated tokens saved from the context window.
+- **Header & Stats:** Shows total lines, byte size, and the estimated token count of the **raw** captured output — i.e. what was kept out of the context window, not the size of the digest itself.
 - **Failing Tests Census:** Lists every failing test with its exact `file:line` coordinates.
 - **Assertion Profile / Shown Spans:** Displays the deterministic core assertion or error snippet with ephemeral noise (timestamps, PIDs, ANSI colors) removed.
 - **Next (Span Address):** Provides an exact command to retrieve any omitted byte range.
@@ -69,12 +69,13 @@ ctx get run:8d8335db6848#stdout --lines 1280:1300
 | `ctx run -- <cmd>` | Execute a command, capture raw stdout/stderr locally, and output a bounded digest. | `ctx run -- pytest tests/` |
 | `ctx get run:<id>#<stream> --lines <start>:<end>` | Retrieve an exact line range from a stored execution run without re-execution. | `ctx get run:8d8#stdout --lines 45:90` |
 | `ctx diff run:<id1> run:<id2>` | Compare two execution runs, stripping ephemeral noise to show true signal diffs. | `ctx diff run:8d8 run:9f2` |
-| `ctx search <query>` | Perform bounded semantic/keyword search over captured artifacts and repository files. | `ctx search "AssertionError: token"` |
-| `ctx stats` | Check local artifact storage and total token savings accumulated across the session. | `ctx stats` |
+| `ctx search <handle> <pattern...>` | Bounded multi-pattern search over one captured artifact or repo path. The handle is **required** and comes first; patterns are regex by default (`--fixed` for literals). Not a semantic/embedding search. | `ctx search run:8d8#stdout "AssertionError" "token"` |
+| `ctx gain` | Cumulative token/cost savings accumulated from capture telemetry. | `ctx gain` |
 
 ---
 
 ## 4. Why Determinism & Prompt Cache Preservation Matter
 
-- **Prompt Prefix Caching:** Because `straitjacket` strips non-deterministic noise (locale, temp paths, timestamps), identical test failures produce **byte-identical digests**. This prevents prompt prefix drift across multi-turn repair attempts, preserving prompt cache hit rates (typically 96–98%) and lowering API token costs by up to 10×.
+- **Prompt Prefix Caching:** Because `straitjacket` strips non-deterministic noise (locale, temp paths, timestamps, PIDs), identical test failures produce **byte-identical digests** — guaranteed when the captured bytes, focus query, profile version, and policy version are all unchanged. This prevents prompt prefix drift across multi-turn repair attempts, preserving prompt cache hit rates (measured **96.5–98.1%**, versus 80.6–84.2% for a transcript-rewriting proxy).
+- **Compression ratio is not the billing ratio.** Digests collapse floods **8×–151×** (small outputs correctly pass through at ~1×), but measured end-to-end savings in live A/Bs are **−30% billed tokens / −17% cost**. Do not restate the compression ratio as a cost reduction.
 - **Diffing True Signal:** Always prefer `ctx diff run:A run:B` over manual inspection when checking whether a code edit resolved a specific test regression.

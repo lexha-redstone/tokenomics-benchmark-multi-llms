@@ -45,8 +45,8 @@ if ROOT not in sys.path:
     sys.path.insert(0, ROOT)
 
 from src.classeval import assemble_class
-from src.datasets import (CLASSEVAL_DEFAULT_SPLIT, CLASSEVAL_NLTK_CORPORA,
-                          classeval_install_hint, classeval_missing_modules,
+from src.datasets import (CLASSEVAL_DEFAULT_SPLIT, classeval_install_hint,
+                          classeval_missing_modules, classeval_nltk_gaps,
                           classeval_required_modules, load_classeval_problems,
                           quarantine_path)
 from src.evaluator import run_classeval_class, run_classeval_method
@@ -93,25 +93,6 @@ def classify(evidence_text):
     return "gold_fails"          # real, but cause not auto-identifiable
 
 
-def _missing_corpora():
-    """nltk corpora that pip does not install and `nltk.data.find` cannot see."""
-    try:
-        import nltk
-    except Exception:
-        return list(CLASSEVAL_NLTK_CORPORA)
-    probes = {"punkt": "tokenizers/punkt",
-              "averaged_perceptron_tagger": "taggers/averaged_perceptron_tagger",
-              "wordnet": "corpora/wordnet",
-              "omw-1.4": "corpora/omw-1.4"}
-    gap = []
-    for name in CLASSEVAL_NLTK_CORPORA:
-        try:
-            nltk.data.find(probes.get(name, f"corpora/{name}"))
-        except Exception:
-            gap.append(name)
-    return gap
-
-
 def check_dependencies(args):
     """Report the dataset's third-party imports. True when all are importable.
 
@@ -128,18 +109,21 @@ def check_dependencies(args):
         state = "MISSING" if name in missing else "ok"
         print(f"  {name:<14}{len(tasks):>3} task(s)  {state}")
 
-    corpora_gap = _missing_corpora() if "nltk" in required else []
+    # Asked of the installed nltk, not read from a list: the resource ids
+    # moved between releases, so a hardcoded list is wrong on some version.
+    corpora_gap = classeval_nltk_gaps() if "nltk" in required else []
     if not missing and not corpora_gap:
         print("  all present\n")
         return True
 
     if corpora_gap and not missing:
-        print(f"\n  nltk is installed but {len(corpora_gap)} corpus/corpora are not: "
-              f"{', '.join(corpora_gap)}")
-        print("  fix:  python3 -c \"import nltk; "
-              f"[nltk.download(c) for c in {tuple(corpora_gap)!r}]\"")
-        print("\n  Same class of problem as a missing package: the task is fine, "
-              "this\n  machine cannot run it.\n")
+        names = ", ".join(f"{g['collection']}/{g['resource']}" for g in corpora_gap)
+        print(f"\n  nltk is installed but {len(corpora_gap)} data resource(s) are not: {names}")
+        print("  fix:  python3 tools/fetch_nltk_data.py --install")
+        print("\n  That tool fetches the zips over ordinary HTTPS, so it works behind a"
+              "\n  proxy -- nltk's own downloader refuses a proxied fetch (CWE-918)."
+              "\n  Same class of problem as a missing package: the task is fine, this"
+              "\n  machine cannot run it.\n")
         return False
 
     blocked = sorted({t for tasks in missing.values() for t in tasks})
@@ -148,11 +132,11 @@ def check_dependencies(args):
     print(f"  fix:  {classeval_install_hint(missing)}")
     print(f"  or:   pip install -r {rel(os.path.join(ROOT, 'classeval', 'requirements.txt'))}")
     if corpora_gap:
-        print(f"  nltk corpora also missing: {', '.join(corpora_gap)}")
-    if "nltk" in missing or "nltk" in required:
-        corpora = ",".join(repr(c) for c in CLASSEVAL_NLTK_CORPORA)
-        print("  nltk also needs its corpora:\n"
-              f"        python3 -c \"import nltk; [nltk.download(c) for c in ({corpora})]\"")
+        names = ", ".join(f"{g['collection']}/{g['resource']}" for g in corpora_gap)
+        print(f"  nltk data also missing: {names}")
+    if "nltk" in missing or corpora_gap:
+        print("  nltk data (works behind a proxy, unlike nltk.download):\n"
+              "        python3 tools/fetch_nltk_data.py --install")
     print("\n  These tasks are NOT broken -- this machine cannot run them. Quarantining"
           "\n  them would shrink the benchmark and make these numbers incomparable with"
           "\n  a fully provisioned machine. Install and re-run, or pass"

@@ -299,8 +299,20 @@ against 6 on a provisioned one.
 
 ```bash
 pip install -r classeval/requirements.txt
-python3 -c "import nltk; [nltk.download(c) for c in ('punkt','averaged_perceptron_tagger','wordnet','omw-1.4')]"
+python3 tools/fetch_nltk_data.py --install
 ```
+
+`nltk` needs data files that pip does not install, and **`nltk.download()` does
+not work behind a proxy** — recent versions refuse a proxied fetch because they
+cannot pin the validated IP when the proxy performs the egress
+(`Security Violation [pathsec.urlopen] … CWE-918`). `fetch_nltk_data.py` pulls
+the same package zips over ordinary HTTPS, which honours `HTTPS_PROXY` like any
+other client, so it needs no opt-out of that security control. Which resources
+it fetches is asked of the installed nltk rather than hardcoded — the ids moved
+between releases (`pos_tag` wanted `averaged_perceptron_tagger` before nltk 3.9
+and `averaged_perceptron_tagger_eng` after; `word_tokenize` moved from `punkt`
+to `punkt_tab`), so any fixed list is wrong on some version. Run it without
+`--install` to see what is missing first.
 
 ```bash
 # Check without running anything: what the split imports, and what is missing here.

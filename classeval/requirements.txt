@@ -22,5 +22,16 @@ PyPDF2             # PyPDF2        ClassEval_69
 reportlab          # reportlab     ClassEval_69
 nltk               # nltk          ClassEval_52
 
-# nltk also needs corpora, which pip does not install:
-#   python3 -c "import nltk; [nltk.download(c) for c in ('punkt','averaged_perceptron_tagger','wordnet','omw-1.4')]"
+# nltk also needs data files, which pip does not install. Do NOT hardcode the
+# resource names: they moved between nltk releases (`pos_tag` wanted
+# `averaged_perceptron_tagger` before 3.9 and `averaged_perceptron_tagger_eng`
+# after; `word_tokenize` moved from `punkt` to `punkt_tab`), so any fixed list
+# is wrong on some installed version. Ask the installed nltk instead:
+#
+#   python3 tools/fetch_nltk_data.py            # what is missing here
+#   python3 tools/fetch_nltk_data.py --install  # fetch it
+#
+# That fetches the package zips over ordinary HTTPS and so honours HTTPS_PROXY.
+# `nltk.download()` refuses to run behind a proxy at all -- it cannot pin the
+# validated IP when a proxy performs the egress, and fails with
+# "Security Violation [pathsec.urlopen] ... (CWE-918)".

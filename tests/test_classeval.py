@@ -368,6 +368,50 @@ def test_requirements_file_covers_every_required_module():
         assert pip_name in listed, f"{name} ({pip_name}) missing from requirements.txt"
 
 
+def test_nltk_gaps_are_probed_not_hardcoded():
+    """The resource ids moved between nltk releases, so the check has to ask
+    the installed nltk what it wants. A hardcoded list sent one reader to
+    download `averaged_perceptron_tagger` when `pos_tag` wanted
+    `averaged_perceptron_tagger_eng`."""
+    from src.datasets import classeval_nltk_gaps
+    gaps = classeval_nltk_gaps()
+    assert isinstance(gaps, list)
+    for g in gaps:
+        assert g["resource"], "a gap with no resource id is not actionable"
+        assert g["needed_by"] in {"word_tokenize", "pos_tag", "WordNetLemmatizer"}
+        assert g["collection"] in {"taggers", "tokenizers", "corpora", ""}
+
+
+def test_nltk_gaps_is_empty_without_nltk(monkeypatch):
+    """A missing package is reported once, by the module check -- not a second
+    time as a data problem."""
+    import builtins
+    from src import datasets as ds
+    real_import = builtins.__import__
+
+    def blocked(name, *a, **kw):
+        if name == "nltk" or name.startswith("nltk."):
+            raise ImportError("blocked for test")
+        return real_import(name, *a, **kw)
+
+    monkeypatch.setattr(builtins, "__import__", blocked)
+    assert ds.classeval_nltk_gaps() == []
+
+
+def test_fetch_tool_builds_the_right_url():
+    import importlib.util
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    spec = importlib.util.spec_from_file_location(
+        "fetch_nltk_data", os.path.join(root, "tools", "fetch_nltk_data.py"))
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    assert mod.BASE.startswith("https://")
+    assert mod.FALLBACK_COLLECTION["punkt_tab"] == "tokenizers"
+    assert mod.FALLBACK_COLLECTION["averaged_perceptron_tagger_eng"] == "taggers"
+    dest = mod.default_dest()
+    assert os.path.isabs(dest) or dest.startswith("~")
+
+
 def test_the_control_arm_exists():
     """A routed arm without its flat control cannot support any claim about
     difficulty routing, so its absence is a test failure, not an omission."""

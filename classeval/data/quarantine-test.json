@@ -1,9 +1,9 @@
 {
   "_comment": "Environment-specific. Regenerate on each machine; do not copy between them. A `missing_module:*` reason means a package is absent, not that the task is broken -- see classeval/requirements.txt.",
   "split": "test",
-  "generated": "2026-08-24T07:53:45",
+  "generated": "2026-08-24T08:19:02",
   "python": "3.13.12",
-  "repeat": 3,
+  "repeat": 2,
   "n_tasks": 100,
   "n_quarantined": 8,
   "missing_modules": [
@@ -68,15 +68,12 @@
       "integration_only": false,
       "evidence": "...\n    )\nAttributeError: `np.mat` was removed in the NumPy 2.0 release. Use `np.asmatrix` instead.\n\n======================================================================\nERROR: test_fleiss_kappa_5 (__main__.KappaCalculatorTestFleissKappa.test_fleiss_kappa_5)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"~/.cache/tokenomics-sj/ws"
     },
-    "ClassEval_52": {
-      "reason": "missing_corpus",
-      "methods": [
-        "lemmatize_sentence",
-        "get_pos_tag"
-      ],
+    "ClassEval_58": {
+      "reason": "flaky",
+      "methods": [],
       "methods_missing_from_dataset": [],
-      "integration_only": false,
-      "evidence": "/usr/local/share/nltk_data'\n    - '/usr/lib/nltk_data'\n    - '/usr/local/lib/nltk_data'\n**********************************************************************\n\n\n======================================================================\nERROR: test_main (__main__.LemmatizationTestMain.test_main)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  "
+      "integration_only": true,
+      "evidence": "======================================================================\nFAIL: test_generate_mine_sweeper_map (__main__.MinesweeperGameTestGenerateMineSweeperMap.test_generate_mine_sweeper_map)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"~/.cache/tokenomics-sj/ws/w0/prog.py\", line 79, in test_generate_mine_sweeper_map\n    self.ass"
     },
     "ClassEval_69": {
       "reason": "missing_module:PyPDF2",

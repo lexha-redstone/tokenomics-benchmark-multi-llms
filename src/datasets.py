@@ -228,8 +228,65 @@ CLASSEVAL_PIP_NAMES = {
     "docx": "python-docx",
 }
 
-# nltk needs corpora as well as the package; see classeval/requirements.txt.
-CLASSEVAL_NLTK_CORPORA = ("punkt", "averaged_perceptron_tagger", "wordnet", "omw-1.4")
+# nltk needs data as well as the package, and the resource IDS MOVED between
+# releases: `pos_tag` wanted `averaged_perceptron_tagger` before nltk 3.9 and
+# `averaged_perceptron_tagger_eng` after it, and `word_tokenize` moved from
+# `punkt` to `punkt_tab`. Any hardcoded list is therefore wrong on some
+# installed version, whichever list you pick -- documenting the pre-3.9 names
+# here once already sent a reader to download data that would not satisfy the
+# call.
+#
+# So the operations the dataset actually performs are probed instead, and the
+# installed nltk is asked what IT wants. That cannot drift.
+CLASSEVAL_NLTK_PROBES = (
+    ("word_tokenize", lambda nltk: nltk.word_tokenize("The cats are running")),
+    ("pos_tag", lambda nltk: nltk.pos_tag(["The", "cats", "are", "running"])),
+    ("WordNetLemmatizer",
+     lambda nltk: nltk.stem.WordNetLemmatizer().lemmatize("running", pos="v")),
+)
+
+_NLTK_ATTEMPTED_RE = re.compile(r"Attempted to load\s+'([^']+)'")
+_NLTK_RESOURCE_RE = re.compile(r"Resource\s+\W*([\w.-]+)\W*\s+not found")
+
+
+def classeval_nltk_gaps():
+    """nltk data the installed version needs for ClassEval but cannot find.
+
+    Returns a list of dicts with `resource`, `collection`, `path` and
+    `needed_by`. Empty when nltk is absent -- a missing package is reported by
+    :func:`classeval_missing_modules`, and reporting it twice as two different
+    problems helps nobody.
+    """
+    try:
+        import nltk
+        import nltk.stem  # noqa: F401  (lazily imported by nltk itself)
+    except Exception:
+        return []
+
+    gaps, seen = [], set()
+    for label, probe in CLASSEVAL_NLTK_PROBES:
+        try:
+            probe(nltk)
+            continue
+        except LookupError as exc:
+            text = str(exc)
+        except Exception:
+            continue          # not a data problem; the gold run will surface it
+
+        attempted = _NLTK_ATTEMPTED_RE.search(text)
+        resource = _NLTK_RESOURCE_RE.search(text)
+        path = (attempted.group(1).strip("/") if attempted else "")
+        rid = resource.group(1) if resource else (path.split("/")[-1] if path else "")
+        if not rid or rid in seen:
+            continue
+        seen.add(rid)
+        gaps.append({
+            "resource": rid,
+            "collection": path.split("/")[0] if "/" in path else "",
+            "path": path,
+            "needed_by": label,
+        })
+    return gaps
 
 
 def classeval_required_modules(problems=None, split=CLASSEVAL_DEFAULT_SPLIT):

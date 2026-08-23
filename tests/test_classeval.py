@@ -320,6 +320,54 @@ def test_quarantine_is_applied_when_present():
     assert not (set(kept) & set(excluded))
 
 
+# ==============================================================================
+# --- ENVIRONMENT, NOT TASK ---
+# ==============================================================================
+
+def test_required_modules_are_read_from_the_data():
+    """Hardcoding the list would let a refreshed split quietly need something
+    the requirements file never mentions."""
+    from src.datasets import classeval_required_modules
+    req = classeval_required_modules()
+    assert "numpy" in req, "numpy is used by several tasks"
+    for name, tasks in req.items():
+        assert tasks, f"{name} listed with no task"
+        assert all(t.startswith("ClassEval_") for t in tasks)
+    import sys as _sys
+    assert not (set(req) & set(_sys.stdlib_module_names)), "stdlib leaked in"
+
+
+def test_install_hint_uses_pip_names_not_import_names():
+    """`pip install PIL` fails; the package is Pillow. A hint that cannot be
+    pasted is worse than none."""
+    from src.datasets import classeval_install_hint
+    hint = classeval_install_hint({"PIL": ["x"], "bs4": ["y"], "docx": ["z"],
+                                   "numpy": ["w"]})
+    assert "Pillow" in hint and "beautifulsoup4" in hint and "python-docx" in hint
+    assert "numpy" in hint
+    assert " PIL" not in hint and "bs4" not in hint
+
+
+def test_install_hint_is_empty_when_nothing_is_missing():
+    from src.datasets import classeval_install_hint
+    assert classeval_install_hint({}) == ""
+
+
+def test_requirements_file_covers_every_required_module():
+    """The requirements file and the dataset must not drift apart."""
+    from src.datasets import CLASSEVAL_PIP_NAMES, classeval_required_modules
+    req_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                            "classeval", "requirements.txt")
+    if not os.path.exists(req_path):
+        pytest.skip("classeval/requirements.txt not present")
+    with open(req_path, encoding="utf-8") as f:
+        listed = {line.split("#")[0].strip().lower()
+                  for line in f if line.split("#")[0].strip()}
+    for name in classeval_required_modules():
+        pip_name = CLASSEVAL_PIP_NAMES.get(name, name).lower()
+        assert pip_name in listed, f"{name} ({pip_name}) missing from requirements.txt"
+
+
 def test_the_control_arm_exists():
     """A routed arm without its flat control cannot support any claim about
     difficulty routing, so its absence is a test failure, not an omission."""

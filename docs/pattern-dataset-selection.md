@@ -168,12 +168,25 @@ It was the cheapest to wire in, it is the only candidate with clean per-sub-task
 attribution, and its labelled dependency tiers mean a win can be explained
 rather than just observed.
 
-Wiring it up surfaced one thing the survey did not predict: **9 of the 100
-classes cannot be scored on a clean machine**, and two of those fail *only* for
-the per-method arms, because `methods_info` omits a method the class needs. That
-is not a constant subtracted from every arm -- it is a bias against the exact
-arms the experiment compares. `tools/classeval_preflight.py` runs gold first and
-quarantines them, which leaves 91 scorable tasks. If H1 does not show up on
+Wiring it up surfaced two things the survey did not predict.
+
+**Some classes cannot be scored, and not for the same reason.** On a provisioned
+machine six fail with their own gold solution -- gold written against NumPy 1.x,
+a test that resolves a hostname, a flaky random-map task, and two whose
+`methods_info` omits a method the class needs. That last pair fails *only* for
+the per-method arms, so it is not a constant subtracted from every arm but a
+bias against the exact arms being compared. `tools/classeval_preflight.py` runs
+gold first and quarantines them.
+
+**On a bare machine the count doubles, and that is an environment problem
+wearing a benchmark's clothes.** ClassEval's tasks import ten third-party
+packages; without them 12 tasks fail with `ModuleNotFoundError` and would be
+quarantined as if defective. Two machines would then measure different task sets
+and their pass rates would not be comparable. The preflight therefore checks
+imports *before* running anything, refuses to proceed while a package is
+missing, and prints the `pip install` line -- `classeval/requirements.txt` is
+derived from the data rather than hand-listed, and a test fails if the two
+drift apart. If H1 does not show up on
 ClassEval — 71 of 100 tasks carrying a real difficulty gradient, with method-level
 scoring — then difficulty routing is unlikely to be rescued by a harder dataset,
 and the cheaper conclusion is that the finding generalises.

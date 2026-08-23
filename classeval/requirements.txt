@@ -1,0 +1,26 @@
+# Third-party packages ClassEval's own tasks and tests import.
+#
+# These are NOT optional extras. A package that is missing does not make a task
+# unscorable -- it makes the machine unscorable, and `tools/classeval_preflight.py`
+# would otherwise quarantine the task and quietly shrink the benchmark. Two
+# machines with different packages installed measure different task sets, so
+# their pass rates cannot be compared. Install these before the first sweep.
+#
+# Derived from the dataset, not hand-listed: see `classeval_required_modules()`
+# in src/datasets.py, and re-derive after any split refresh with
+#   python3 tools/classeval_preflight.py --deps-only
+#
+# package            import name    tasks
+numpy              # numpy         ClassEval_30, _51, _57, _59, _93
+pandas             # pandas        ClassEval_28
+gensim             # gensim        ClassEval_44, _93
+beautifulsoup4     # bs4           ClassEval_44
+Pillow             # PIL           ClassEval_45
+python-docx        # docx          ClassEval_34
+openpyxl           # openpyxl      ClassEval_38
+PyPDF2             # PyPDF2        ClassEval_69
+reportlab          # reportlab     ClassEval_69
+nltk               # nltk          ClassEval_52
+
+# nltk also needs corpora, which pip does not install:
+#   python3 -c "import nltk; [nltk.download(c) for c in ('punkt','averaged_perceptron_tagger','wordnet','omw-1.4')]"

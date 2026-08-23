@@ -38,6 +38,8 @@ ROOT = os.path.dirname(HERE)
 if ROOT not in sys.path:
     sys.path.insert(0, ROOT)
 
+from src.paths import display as rel
+
 DEFAULT_RESULTS = os.path.join(ROOT, "bigCodeBench-hard", "results", "archive",
                                "bcb_n100_instrumented_20260822T2129.json")
 N50_DIR = os.path.join(ROOT, "bigCodeBench-hard", "results")
@@ -94,7 +96,7 @@ def main():
         data = json.load(f)
     arms = {s["id"]: s for s in data["summary"]}
 
-    print(f"results: {args.results}")
+    print(f"results: {rel(args.results)}")
     print(f"N = {data.get('n')}\n")
 
     print("PER-TURN BREAKDOWN")

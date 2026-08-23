@@ -8,10 +8,13 @@ import os
 import sys
 import json
 import ast
+import importlib.util
 import re
 import urllib.request
 import urllib.parse
 import urllib.error
+
+from .paths import display as _rel
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT_DIR = os.path.dirname(_HERE)
@@ -42,7 +45,7 @@ def ensure_bcb_dataset(split=BCB_DEFAULT_SPLIT):
     if os.path.exists(path):
         return path
 
-    print(f"Fetching {BCB_DATASET} [{split}] from HuggingFace -> {path}", flush=True)
+    print(f"Fetching {BCB_DATASET} [{split}] from HuggingFace -> {_rel(path)}", flush=True)
     rows, offset, total = [], 0, None
     while total is None or offset < total:
         q = urllib.parse.urlencode({
@@ -62,7 +65,7 @@ def ensure_bcb_dataset(split=BCB_DEFAULT_SPLIT):
     with open(path, "w", encoding="utf-8") as f:
         for row in rows:
             f.write(json.dumps({k: row.get(k) for k in _BCB_KEEP_FIELDS}) + "\n")
-    print(f"  saved {len(rows)} tasks to {path}", flush=True)
+    print(f"  saved {len(rows)} tasks to {_rel(path)}", flush=True)
     return path
 
 def load_bcb_problems(split=BCB_DEFAULT_SPLIT, max_tasks=None):
@@ -113,9 +116,9 @@ def load_swebench_pro_problems(split="test", max_tasks=None):
                     problems[iid] = row
                     if max_tasks and len(problems) >= max_tasks:
                         break
-        print(f"Loaded {len(problems)} SWE-bench Pro tasks from {path}")
+        print(f"Loaded {len(problems)} SWE-bench Pro tasks from {_rel(path)}")
     else:
-        print(f"[Notice] SWE-bench Pro dataset file not found at {path}.")
+        print(f"[Notice] SWE-bench Pro dataset file not found at {_rel(path)}.")
         
     return problems
 
@@ -149,7 +152,7 @@ def load_webdev_problems(max_tasks=None):
         with open(path, "w", encoding="utf-8") as f:
             for row in web_rows:
                 f.write(json.dumps(row) + "\n")
-        print(f"Filtered and saved {len(web_rows)} Web-Dev tasks to {path}")
+        print(f"Filtered and saved {len(web_rows)} Web-Dev tasks to {_rel(path)}")
 
     problems = {}
     with open(path, "r", encoding="utf-8") as f:
@@ -160,7 +163,7 @@ def load_webdev_problems(max_tasks=None):
                 problems[d["task_id"]] = d
                 if max_tasks and len(problems) >= max_tasks:
                     break
-    print(f"Loaded {len(problems)} Web-Dev tasks from {path}")
+    print(f"Loaded {len(problems)} Web-Dev tasks from {_rel(path)}")
     return problems
 
 # ==============================================================================
@@ -210,6 +213,67 @@ def classeval_tier(dependencies):
     return "field_dep"
 
 
+# ClassEval's tasks import third-party packages, and a package that is not
+# installed does not make the task unscorable -- it makes the MACHINE
+# unscorable. That distinction matters more here than it looks: quarantining
+# those tasks silently shrinks the benchmark, and two machines with different
+# packages installed then measure different task sets, so their numbers cannot
+# be compared at all. Ten packages cover every task; installing them is the fix,
+# and dropping the tasks is not.
+#
+# import name -> pip name, for the ones that differ.
+CLASSEVAL_PIP_NAMES = {
+    "PIL": "Pillow",
+    "bs4": "beautifulsoup4",
+    "docx": "python-docx",
+}
+
+# nltk needs corpora as well as the package; see classeval/requirements.txt.
+CLASSEVAL_NLTK_CORPORA = ("punkt", "averaged_perceptron_tagger", "wordnet", "omw-1.4")
+
+
+def classeval_required_modules(problems=None, split=CLASSEVAL_DEFAULT_SPLIT):
+    """Third-party top-level modules the dataset imports, mapped to task ids.
+
+    Read out of the data rather than hardcoded, so a refreshed split cannot
+    quietly need something this list does not mention.
+    """
+    if problems is None:
+        problems = load_classeval_problems(split=split, apply_quarantine=False)
+    stdlib = set(getattr(sys, "stdlib_module_names", ()))
+    found = {}
+    for prob in problems.values():
+        text = "\n".join([
+            "\n".join(prob.get("import_statement") or []),
+            prob.get("test", "") or "",
+            prob.get("solution_code", "") or "",
+        ])
+        for m in re.finditer(
+                r"^\s*(?:import\s+([A-Za-z_][\w.]*)|from\s+([A-Za-z_][\w.]*)\s+import)",
+                text, re.M):
+            name = (m.group(1) or m.group(2)).split(".")[0]
+            if name in stdlib or name == "__future__":
+                continue
+            found.setdefault(name, set()).add(prob["task_id"])
+    return {k: sorted(v) for k, v in sorted(found.items(),
+                                            key=lambda kv: (-len(kv[1]), kv[0]))}
+
+
+def classeval_missing_modules(problems=None, split=CLASSEVAL_DEFAULT_SPLIT):
+    """Of those, the ones this interpreter cannot import. Empty is the goal."""
+    required = classeval_required_modules(problems, split=split)
+    return {name: tasks for name, tasks in required.items()
+            if importlib.util.find_spec(name) is None}
+
+
+def classeval_install_hint(missing):
+    """The exact command that closes the gap, or "" when there is none."""
+    if not missing:
+        return ""
+    pkgs = sorted({CLASSEVAL_PIP_NAMES.get(name, name) for name in missing})
+    return "pip install " + " ".join(pkgs)
+
+
 def ensure_classeval_dataset(split=CLASSEVAL_DEFAULT_SPLIT):
     """Ensure the ClassEval split is present locally, fetching from HF if needed."""
     data_dir = os.path.join(ROOT_DIR, "classeval", "data")
@@ -218,7 +282,7 @@ def ensure_classeval_dataset(split=CLASSEVAL_DEFAULT_SPLIT):
     if os.path.exists(path):
         return path
 
-    print(f"Fetching {CLASSEVAL_DATASET} [{split}] from HuggingFace -> {path}", flush=True)
+    print(f"Fetching {CLASSEVAL_DATASET} [{split}] from HuggingFace -> {_rel(path)}", flush=True)
     rows, offset, total = [], 0, None
     while total is None or offset < total:
         q = urllib.parse.urlencode({
@@ -238,7 +302,7 @@ def ensure_classeval_dataset(split=CLASSEVAL_DEFAULT_SPLIT):
     with open(path, "w", encoding="utf-8") as f:
         for row in rows:
             f.write(json.dumps({k: row.get(k) for k in _CE_KEEP_FIELDS}) + "\n")
-    print(f"  saved {len(rows)} classes to {path}", flush=True)
+    print(f"  saved {len(rows)} classes to {_rel(path)}", flush=True)
     return path
 
 
@@ -360,7 +424,7 @@ def load_classeval_problems(split=CLASSEVAL_DEFAULT_SPLIT, max_tasks=None,
                 " -- gold does not pass here)")
     elif apply_quarantine and not os.path.exists(quarantine_path(split)):
         note = "  [no preflight run yet: python3 tools/classeval_preflight.py --write]"
-    print(f"Loaded {len(problems)} ClassEval tasks from {path}{note}")
+    print(f"Loaded {len(problems)} ClassEval tasks from {_rel(path)}{note}")
     return problems
 
 

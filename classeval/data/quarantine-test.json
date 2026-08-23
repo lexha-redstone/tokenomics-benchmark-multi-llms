@@ -1,10 +1,15 @@
 {
+  "_comment": "Environment-specific. Regenerate on each machine; do not copy between them. A `missing_module:*` reason means a package is absent, not that the task is broken -- see classeval/requirements.txt.",
   "split": "test",
-  "generated": "2026-08-23T19:10:00",
+  "generated": "2026-08-24T07:53:45",
   "python": "3.13.12",
   "repeat": 3,
   "n_tasks": 100,
-  "n_quarantined": 9,
+  "n_quarantined": 8,
+  "missing_modules": [
+    "PyPDF2",
+    "reportlab"
+  ],
   "tasks": {
     "ClassEval_17": {
       "reason": "gold_fails",
@@ -13,7 +18,7 @@
       ],
       "methods_missing_from_dataset": [],
       "integration_only": false,
-      "evidence": "======================================================================\nFAIL: test_get_upcoming_events_5 (__main__.CalendarTestGetUpcomingEvents.test_get_upcoming_events_5)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 279, in test_get_upcoming_events_5\n    self.assertEqual(cal"
+      "evidence": "======================================================================\nFAIL: test_get_upcoming_events_5 (__main__.CalendarTestGetUpcomingEvents.test_get_upcoming_events_5)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"~/.cache/tokenomics-sj/ws/w0/prog.py\", line 279, in test_get_upcoming_events_5\n    self.assertEqual(calendar.get_u"
     },
     "ClassEval_25": {
       "reason": "assembly_gap",
@@ -24,7 +29,7 @@
         "set_cookies"
       ],
       "integration_only": false,
-      "evidence": "======================================================================\nERROR: test_set_cookies (__main__.CookiesUtilTestSetCookies.test_set_cookies)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 162, in test_set_cookies\n    self.cookies_util.set_cookies(request)\n    ^^^^^^^^^^"
+      "evidence": "======================================================================\nERROR: test_set_cookies (__main__.CookiesUtilTestSetCookies.test_set_cookies)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"~/.cache/tokenomics-sj/ws/w0/prog.py\", line 162, in test_set_cookies\n    self.cookies_util.set_cookies(request)\n    ^^^^^^^^^^^^^^^^^^^^^"
     },
     "ClassEval_31": {
       "reason": "gold_fails",
@@ -33,7 +38,7 @@
       ],
       "methods_missing_from_dataset": [],
       "integration_only": false,
-      "evidence": "======================================================================\nFAIL: test_correlation_coefficient_4 (__main__.DataStatistics4TestCorrelationCoefficient.test_correlation_coefficient_4)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 63, in test_correlation_coefficient_4\n "
+      "evidence": "======================================================================\nFAIL: test_correlation_coefficient_4 (__main__.DataStatistics4TestCorrelationCoefficient.test_correlation_coefficient_4)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"~/.cache/tokenomics-sj/ws/w0/prog.py\", line 63, in test_correlation_coefficient_4\n    self.ass"
     },
     "ClassEval_48": {
       "reason": "network",
@@ -42,7 +47,7 @@
       ],
       "methods_missing_from_dataset": [],
       "integration_only": false,
-      "evidence": "======================================================================\nFAIL: test_get_hostname_2 (__main__.IpUtilTestGetHostname.test_get_hostname_2)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 84, in test_get_hostname_2\n    self.assertEqual(result, None)\n    ~~~~~~~~~~~~~~~"
+      "evidence": "======================================================================\nFAIL: test_get_hostname_2 (__main__.IpUtilTestGetHostname.test_get_hostname_2)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"~/.cache/tokenomics-sj/ws/w0/prog.py\", line 84, in test_get_hostname_2\n    self.assertEqual(result, None)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^"
     },
     "ClassEval_49": {
       "reason": "assembly_gap",
@@ -61,7 +66,7 @@
       ],
       "methods_missing_from_dataset": [],
       "integration_only": false,
-      "evidence": "...\n    )\nAttributeError: `np.mat` was removed in the NumPy 2.0 release. Use `np.asmatrix` instead.\n\n======================================================================\nERROR: test_fleiss_kappa_5 (__main__.KappaCalculatorTestFleissKappa.test_fleiss_kappa_5)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/token"
+      "evidence": "...\n    )\nAttributeError: `np.mat` was removed in the NumPy 2.0 release. Use `np.asmatrix` instead.\n\n======================================================================\nERROR: test_fleiss_kappa_5 (__main__.KappaCalculatorTestFleissKappa.test_fleiss_kappa_5)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"~/.cache/tokenomics-sj/ws"
     },
     "ClassEval_52": {
       "reason": "missing_corpus",
@@ -73,22 +78,15 @@
       "integration_only": false,
       "evidence": "/usr/local/share/nltk_data'\n    - '/usr/lib/nltk_data'\n    - '/usr/local/lib/nltk_data'\n**********************************************************************\n\n\n======================================================================\nERROR: test_main (__main__.LemmatizationTestMain.test_main)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  "
     },
-    "ClassEval_58": {
-      "reason": "flaky",
-      "methods": [],
-      "methods_missing_from_dataset": [],
-      "integration_only": true,
-      "evidence": "======================================================================\nFAIL: test_minesweeper_main_2 (__main__.MinesweeperGameTestMain.test_minesweeper_main_2)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 240, in test_minesweeper_main_2\n    self.assertEqual(2, mine_num)\n    ~"
-    },
     "ClassEval_69": {
-      "reason": "missing_module",
+      "reason": "missing_module:PyPDF2",
       "methods": [
         "merge_pdfs",
         "extract_text_from_pdfs"
       ],
       "methods_missing_from_dataset": [],
       "integration_only": false,
-      "evidence": "Traceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 1, in <module>\n    import PyPDF2\nModuleNotFoundError: No module named 'PyPDF2'"
+      "evidence": "Traceback (most recent call last):\n  File \"~/.cache/tokenomics-sj/ws/w0/prog.py\", line 1, in <module>\n    import PyPDF2\nModuleNotFoundError: No module named 'PyPDF2'"
     }
   }
 }

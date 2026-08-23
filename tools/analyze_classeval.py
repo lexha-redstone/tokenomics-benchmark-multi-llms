@@ -39,6 +39,10 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
+if ROOT not in sys.path:
+    sys.path.insert(0, ROOT)
+
+from src.paths import display as rel
 RESULTS_DIR = os.path.join(ROOT, "classeval", "results")
 # run_benchmark names the file after the --group it was given, so a sweep run
 # with --group classeval and one run with explicit --variants land in different
@@ -94,7 +98,7 @@ def main():
     args.results = args.results or _default_results()
 
     if not os.path.exists(args.results):
-        print(f"no results at {args.results}\n"
+        print(f"no results at {rel(args.results)}\n"
               "run: python3 run_benchmark.py --dataset classeval --group classeval "
               "--n 91 --report")
         return 1
@@ -103,7 +107,7 @@ def main():
         data = json.load(f)
     arms = {s["id"]: s for s in data["summary"]}
     n = data.get("n", 0)
-    print(f"results: {args.results}\nN = {n} tasks\n")
+    print(f"results: {rel(args.results)}\nN = {n} tasks\n")
 
     print("HEADLINE")
     print(f"  {'arm':<20}{'class pass':>12}{'method pass':>14}{'total $':>10}"

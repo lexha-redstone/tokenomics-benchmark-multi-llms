@@ -290,12 +290,32 @@ model that wrote that method. The reasoning is in
 [dataset selection for pattern tests](docs/pattern-dataset-selection.md); the
 arms are in [`src/classeval.py`](src/classeval.py).
 
-**Run the preflight once, before any sweep.** Nine of the hundred classes cannot
-be scored on a clean machine — a missing optional import, an undownloaded
-corpus, gold written against NumPy 1.x, one flaky random-map task, and two whose
-`methods_info` omits a method the class needs. Left in, they are charged to the
-models; the last two are charged *only* to the per-method arms, which biases the
-exact comparison being made.
+**Install the dataset's dependencies first.** ClassEval's tasks import ten
+third-party packages. A package that is missing does not make a task unscorable
+— it makes the *machine* unscorable, and quarantining those tasks would silently
+shrink the benchmark so that two machines measure different task sets and their
+pass rates stop being comparable. On a bare environment that is 12 tasks lost,
+against 6 on a provisioned one.
+
+```bash
+pip install -r classeval/requirements.txt
+python3 -c "import nltk; [nltk.download(c) for c in ('punkt','averaged_perceptron_tagger','wordnet','omw-1.4')]"
+```
+
+```bash
+# Check without running anything: what the split imports, and what is missing here.
+python3 tools/classeval_preflight.py --deps-only
+```
+
+The preflight refuses to run (exit 2) while a package is missing, and prints the
+exact `pip install` line — pass `--accept-missing-deps` to proceed anyway and
+take the smaller task set knowingly.
+
+**Then run the preflight.** Even fully provisioned, a handful of classes cannot
+be scored: gold written against NumPy 1.x, a test that resolves a hostname, one
+flaky random-map task, and two whose `methods_info` omits a method the class
+needs. Left in, they are charged to the models — and the last two are charged
+*only* to the per-method arms, which biases the exact comparison being made.
 
 ```bash
 python3 tools/classeval_preflight.py --write --repeat 3
@@ -303,7 +323,10 @@ python3 tools/classeval_preflight.py --write --repeat 3
 
 It runs ClassEval's own gold solutions, and writes the tasks gold cannot pass to
 `classeval/data/quarantine-test.json`, which the loader then honours. Tasks are
-excluded, never edited, and each exclusion records its reason.
+excluded, never edited, and each exclusion records its reason — a
+`missing_module:PyPDF2` reason names the package, so it can be fixed rather than
+accepted. **The quarantine file is environment-specific: regenerate it on each
+machine, do not copy it between them.**
 
 ```bash
 # Smoke test: 2 tasks, the hypothesis arm and the shape it has to beat.

@@ -271,6 +271,11 @@ def generate_html_dashboard(summary_rows, dataset_name="SWE-bench Pro", output_p
 
     sorted_rows = sorted(summary_rows, key=lambda x: (-x.get("pass_rate", 0), x.get("total_as_run_usd", 999)))
     best_perf = sorted_rows[0] if sorted_rows else {}
+    # `n` is 0 for a sweep where every task was dropped, or one launched with
+    # --n 0. Reaching a division by zero there loses the whole dashboard for a
+    # run whose only honest content is "nothing completed".
+    best_perf_pct = ((best_perf.get("passed", 0) / best_perf["n"]) * 100
+                     if best_perf.get("n") else 0.0)
     best_value = min(sorted_rows, key=lambda x: x.get("cost_per_solved_usd", 999) if x.get("passed", 0) > 0 else 999) if sorted_rows else {}
     lowest_cost = min(sorted_rows, key=lambda x: x.get("total_as_run_usd", 999)) if sorted_rows else {}
 
@@ -353,7 +358,7 @@ def generate_html_dashboard(summary_rows, dataset_name="SWE-bench Pro", output_p
         <div class="kpi-grid">
             <div class="kpi-card" style="border-top-color:#3b82f6;">
                 <div class="kpi-label">Top Performer</div>
-                <div class="kpi-val">{(best_perf.get('passed',0)/best_perf.get('n',1))*100:.1f}%</div>
+                <div class="kpi-val">{best_perf_pct:.1f}%</div>
                 <div class="kpi-sub">{best_perf.get('name', 'N/A')}</div>
             </div>
             <div class="kpi-card" style="border-top-color:#10b981;">

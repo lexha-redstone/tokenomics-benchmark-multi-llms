@@ -15,8 +15,12 @@ ROOT = HERE
 if ROOT not in sys.path:
     sys.path.insert(0, ROOT)
 
-SJ_SRC = "/usr/local/google/home/lexha/Desktop/work/prj/99-assets/straitjacket/src"
-if SJ_SRC not in sys.path:
+# The harness is an ordinary dependency (`pip install ctx-harness`). SJ_SRC is
+# the same escape hatch run_benchmark.py offers: point it at a source checkout
+# of the upstream repository instead. It used to be a hardcoded absolute path
+# to one contributor's machine, which made this script unrunnable anywhere else.
+SJ_SRC = os.environ.get("SJ_SRC", "")
+if SJ_SRC and os.path.isdir(SJ_SRC) and SJ_SRC not in sys.path:
     sys.path.insert(0, SJ_SRC)
 
 BCB_HARD_DIR = os.path.join(ROOT, "bigCodeBench-hard")

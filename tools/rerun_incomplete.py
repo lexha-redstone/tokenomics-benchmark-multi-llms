@@ -38,6 +38,8 @@ ROOT = os.path.dirname(HERE)
 if ROOT not in sys.path:
     sys.path.insert(0, ROOT)
 
+from src.paths import display as rel
+
 from src.architectures import get_configurations
 from src.datasets import load_dataset
 
@@ -124,8 +126,8 @@ def main():
         if miss:
             gaps[v] = miss
 
-    print(f"cache:   {cache_file}")
-    print(f"results: {results_file}" + ("" if os.path.exists(results_file) else "  (absent)"))
+    print(f"cache:   {rel(cache_file)}")
+    print(f"results: {rel(results_file)}" + ("" if os.path.exists(results_file) else "  (absent)"))
     print(f"tasks:   {len(task_ids)} | variants: {len(variants)}")
     print("note:    run this AFTER the sweep exits -- a variant the sweep has "
           "not reached\n         yet is indistinguishable here from one that "

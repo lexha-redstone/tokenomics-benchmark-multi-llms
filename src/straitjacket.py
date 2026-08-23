@@ -81,6 +81,7 @@ __all__ = [
     "raw_cap",
     "tail_to_cap",
     "DETERMINISTIC_UNITTEST_TAIL",
+    "unittest_tail",
     "CAPTURE_ENV",
     "new_sandbox",
     "drop_sandbox",
@@ -229,6 +230,65 @@ _res = _ut.TextTestRunner(verbosity=0, stream=_SteadyStream(_sys.stderr)).run(
     _ut.TestLoader().loadTestsFromTestCase(TestCases))
 _sys.exit(0 if _res.wasSuccessful() else 1)
 '''
+
+# The BCB tail above names one fixed class because BigCodeBench always emits
+# exactly `TestCases`. ClassEval instead ships one test class per method plus a
+# class-level integration class, and the point of running it is to score those
+# separately, so the tail has to be told which classes to load.
+#
+# It is a separate function rather than a parameter on the constant above
+# because DETERMINISTIC_UNITTEST_TAIL's bytes are part of BCB's capture
+# identity: the same failing program must keep hashing to the same artifact
+# across runs, and editing the tail would silently re-mint every one of them.
+_UNITTEST_TAIL_MULTI = '''
+
+import re as _re, sys as _sys, unittest as _ut
+_ut.TestCase.maxDiff = None
+
+
+class _SteadyStream:
+    """stderr proxy that pins the runner's elapsed-time digits."""
+
+    _RAN = _re.compile(r"(Ran \\d+ tests? in )[\\d.]+s")
+
+    def __init__(self, stream):
+        self._stream = stream
+
+    def write(self, text):
+        self._stream.write(self._RAN.sub(r"\\g<1>0.000s", text))
+
+    def flush(self):
+        self._stream.flush()
+
+
+_wanted = %(classes)s
+_missing = [_n for _n in _wanted if _n not in globals()]
+if _missing:
+    _sys.stderr.write("MissingTestClass: %%s not defined by the candidate\\n" %% _missing)
+    _sys.exit(1)
+
+_suite = _ut.TestSuite()
+for _n in _wanted:
+    _suite.addTests(_ut.TestLoader().loadTestsFromTestCase(globals()[_n]))
+_res = _ut.TextTestRunner(verbosity=0, stream=_SteadyStream(_sys.stderr)).run(_suite)
+_sys.exit(0 if _res.wasSuccessful() else 1)
+'''
+
+
+def unittest_tail(test_classes) -> str:
+    """Deterministic runner tail that loads exactly ``test_classes``.
+
+    ``test_classes`` is an ordered sequence of class names that the program
+    text is expected to define. A name the candidate never defined exits 1 with
+    a one-line reason rather than raising ``NameError`` from inside the loader,
+    because the harness digests that line and the model has to be able to act
+    on it.
+    """
+    names = [str(t) for t in test_classes]
+    if not names:
+        raise ValueError("unittest_tail() needs at least one test class name")
+    return _UNITTEST_TAIL_MULTI % {"classes": repr(names)}
+
 
 # Environment every captured child inherits. Both entries exist to keep the
 # child from writing run-to-run noise into the artifact: a GUI backend fails or
@@ -495,6 +555,33 @@ class ContainedRun:
             "delta_vs_native_tokens": nat_tok - dig_tok,
             "raw_exact": self.raw_exact,
         }
+
+    # -- typed facts ---------------------------------------------------------
+
+    def evidence_graph(self):
+        """Upstream's typed extraction for this run, or ``None``.
+
+        The digest is prose meant for a model; this is the same evidence as
+        structured data — failing identities, failure classes, `file:line`
+        loci — produced by the *profile's own* ``extract()``. Routing logic
+        reads this instead of regexing the digest, so a router never
+        re-derives evidence the harness already typed.
+
+        Returns a ``ctx.evidence.EvidenceGraph``. Profiles without a fact
+        tier (``text/v1``) return ``None``, which is itself a signal: nothing
+        recognised the output as a test run.
+        """
+        if self.backend != "library" or not self._manifest:
+            return None
+        try:
+            from ctx.digest import detect_profile
+            from ctx.digest.base import DigestContext
+
+            ctx = DigestContext.load(_store, _ws, self._manifest, focus=None)
+            profile, _ = detect_profile(ctx)
+            return profile.extract(ctx)
+        except Exception:
+            return None
 
     # -- bounded retrieval (omission without amnesia) ------------------------
     def get(self, stream: str = "stderr", lines: tuple[int, int] | None = None,

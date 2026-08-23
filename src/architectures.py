@@ -1085,6 +1085,156 @@ def run_dual_verifier_cascade_straitjacket(problem, lite_model=GEMINI_35_FLASH_L
 # --- VARIANT REGISTRY ---
 # ==============================================================================
 
+
+# ==============================================================================
+# --- TIERED ROUTER: gemini-3.7-flash centric, frontier model on demand ---
+# ==============================================================================
+#
+# One parameterised ladder that every routing-study arm configures, so the arms
+# differ only in the variables under test and never in incidental code.
+#
+#   tiers        the cheap rungs, in order: [(model_id, thinking_level), ...]
+#   gate         when the frontier model may be called (src/routing.py)
+#   frontier     the model reserved for hard tasks
+#   frontier_mode
+#                "repair" -> frontier fixes the current candidate
+#                "fresh"  -> frontier re-solves the problem from scratch,
+#                            told only that cheaper models failed
+#
+# Every repair turn is fed the straitjacket contained digest, so the routing
+# variable is isolated from the evidence-treatment variable.
+
+def _repair_prompt(problem, sol, digest, label="Straitjacket Triaged Error Digest"):
+    is_swe = _is_swebench_problem(problem)
+    role = SWEBENCH_REPAIR_ROLE if is_swe else REPAIR_ROLE
+    statement = problem.get("problem_statement", problem.get("complete_prompt", ""))
+    return (
+        role
+        + f"Problem:\n```\n{statement}\n```\n\n"
+        + f"Current solution:\n```\n{sol}\n```\n\n"
+        + f"{label}:\n```\n{digest}\n```\n\n"
+        + "Write the complete corrected solution."
+    )
+
+
+def _fresh_prompt(problem, digest, attempts):
+    """Ask the frontier model to start over rather than patch a dead end.
+
+    A candidate that several cheaper models failed to repair is often the
+    wrong approach, not a nearly-right one — repairing it anchors the frontier
+    model to that approach. This arm tests whether abandoning it does better.
+    """
+    base = _build_initial_prompt(problem, role_type="solver")
+    return (
+        base
+        + f"\n\nNOTE: {attempts} cheaper model attempts failed on this task. "
+        + "The most recent failure, as a bounded test digest:\n"
+        + f"```\n{digest}\n```\n\n"
+        + "Do not assume the previous approach was close. Solve it your own way."
+    )
+
+
+@_arm(sj_required=True)
+def run_tiered_router(problem, tiers=None, gate="after_ladder",
+                      frontier=OPUS_5_ID, frontier_mode="repair",
+                      frontier_max_calls=1, error_treatment="straitjacket"):
+    """Escalating ladder of cheap tiers with an evidence-gated frontier tier.
+
+    Returns the standard metrics dict plus ``routing``: which rungs ran,
+    whether the frontier model was invoked, and what the gate saw each time.
+    """
+    from .routing import GATES, EscalationTrace, classify
+
+    tiers = list(tiers or [(GEMINI_35_FLASH_LITE_ID, None),
+                           (GEMINI_37_FLASH_ID, "low")])
+    gate_fn = GATES[gate] if isinstance(gate, str) else gate
+    trace = EscalationTrace()
+
+    # --- rung 0: the first (cheapest) tier generates -----------------------
+    gen_model, gen_think = tiers[0]
+    prompt = _build_initial_prompt(problem, role_type="solver")
+    text, usage, dt = dispatch_model(gen_model, prompt, thinking_level=gen_think,
+                                     problem=problem)
+    trace.rungs.append(f"{gen_model}/{gen_think or 'off'}")
+    passed, err, sol = _eval_solution(problem, text)
+
+    tot_usd, tot_out = usage["as_run_usd"], usage["output"]
+    tot_tok, tot_dt = usage["total_tokens"], dt
+    loop = 0
+    frontier_calls = 0
+    difficulty = None
+
+    if passed:
+        trace.solved_at = trace.rungs[-1]
+
+    # --- escalating repair turns ------------------------------------------
+    while not passed:
+        difficulty = classify(err, previous=difficulty)
+        if (getattr(gate_fn, "requires_typed_evidence", False)
+                and difficulty is not None and not difficulty.typed
+                and not trace.degraded):
+            # An evidence gate without typed evidence is a counter gate wearing
+            # the wrong label. Say so rather than publishing the row as-is.
+            trace.degraded = True
+            _warn_once(
+                f"{gate if isinstance(gate, str) else gate_fn.__name__}: no typed "
+                "evidence available (profile has no fact tier, or SJ_BACKEND is not "
+                "'library'). This arm is falling back to ladder-exhaustion "
+                "behaviour and is NOT testing the evidence gate."
+            )
+        escalate, why = gate_fn(difficulty, loop + 1, len(tiers))
+        if escalate and frontier_calls >= frontier_max_calls:
+            escalate, why = False, f"frontier budget spent ({frontier_max_calls})"
+        trace.record(loop + 1, difficulty, escalate, why)
+
+        if escalate:
+            target, think = frontier, None
+        elif loop + 1 < len(tiers):
+            target, think = tiers[loop + 1]
+        else:
+            break  # cheap rungs exhausted and the gate said no
+
+        digest, tr_usage, _ = _treat_error(err, error_treatment, problem=problem)
+        tot_usd += tr_usage["as_run_usd"]
+        tot_out += tr_usage["output"]
+        tot_tok += tr_usage["total_tokens"]
+
+        if escalate and frontier_mode == "fresh":
+            repair_prompt = _fresh_prompt(problem, digest, loop + 1)
+        else:
+            repair_prompt = _repair_prompt(problem, sol, digest,
+                                           _EVIDENCE_LABEL[error_treatment])
+
+        r_text, r_usage, r_dt = dispatch_model(target, repair_prompt,
+                                               thinking_level=think, problem=problem)
+        tot_usd += r_usage["as_run_usd"]
+        tot_out += r_usage["output"]
+        tot_tok += r_usage["total_tokens"]
+        tot_dt += r_dt
+        loop += 1
+        trace.rungs.append(f"{target}/{think or 'off'}")
+        if escalate:
+            frontier_calls += 1
+            trace.frontier_used = True
+            trace.frontier_rung = loop
+
+        passed, err, sol = _eval_solution(problem, r_text)
+        if passed:
+            trace.solved_at = trace.rungs[-1]
+
+    return {
+        "passed": passed,
+        "as_run_usd": round(tot_usd, 6),
+        "output_tokens": tot_out,
+        "total_tokens": tot_tok,
+        "seconds": round(tot_dt, 1),
+        "error": "" if passed else err,
+        "repair_loops": loop,
+        "triage_usd": 0.0,
+        "routing": trace.as_dict(),
+        "patch": sol,
+    }
+
 VARIANT_REGISTRY = {
     # --- SINGLE MODELS ---
     "single_flash_lite": {
@@ -1228,6 +1378,141 @@ VARIANT_REGISTRY = {
             p, gen_model=GEMINI_35_FLASH_LITE_ID, esc_model=GEMINI_37_FLASH_ID),
     },
 
+    # --- ROUTING STUDY -----------------------------------------------------
+    # Goal: the best accuracy-per-dollar combination of gemini-3.5-flash-lite,
+    # gemini-3.7-flash (thinking low/medium/high) and claude-opus-5, where
+    # opus-5 is reserved for tasks the Gemini tiers cannot solve.
+    #
+    # Grounding (BigCodeBench-Hard N=100, results/archive/bcb_n100_*.json):
+    #   opus-5 alone            76%  at $0.0463/solved
+    #   perfect flash|opus router ceiling  79%
+    #   21 tasks solved by neither -> 79% is the practical ceiling
+    #   cascade tasks still failing at loop 2 passed only 15% of the time,
+    #   so "survived the cheap ladder" is a strong hard-task signal.
+    #
+    # Read the group in three blocks: R1-R3 calibrate the thinking axis,
+    # R4-R5 establish the Gemini-only ceiling, R6-R10 vary how opus-5 enters.
+
+    # -- R0: frontier single-model baselines, at the SAME repair budget -----
+    # The study asks whether a Gemini ladder with gated Opus beats just using
+    # a frontier model. That comparison is only clean if both sides get the
+    # same number of attempts, so these run three rungs like every other arm
+    # in the group rather than the two that `single_sonnet5` / `single_opus5`
+    # use. Those two remain available via --variants for continuity with
+    # report 12, but they are NOT the in-study baseline.
+    "r0a_sonnet5_solo": {
+        "id": "r0a_sonnet5_solo",
+        "name": "R0a. Baseline: claude-sonnet-5 solo (3 rungs)",
+        "category": "6. gemini-3.7 + opus-5 routing study",
+        "triage_mode": "Straitjacket contained digest ($0.00)",
+        "models": "Claude Sonnet-5 x3",
+        "fn": lambda p: run_tiered_router(
+            p, tiers=[(SONNET_ID, None)] * 3, gate="never"),
+    },
+    "r0b_opus5_solo": {
+        "id": "r0b_opus5_solo",
+        "name": "R0b. Baseline: claude-opus-5 solo (3 rungs)",
+        "category": "6. gemini-3.7 + opus-5 routing study",
+        "triage_mode": "Straitjacket contained digest ($0.00)",
+        "models": "Claude Opus-5 x3",
+        "fn": lambda p: run_tiered_router(
+            p, tiers=[(OPUS_5_ID, None)] * 3, gate="never"),
+    },
+
+    # -- R1-R2: what is a thinking token worth on 3.7-flash? ---------------
+    "r1_f37_low": {
+        "id": "r1_f37_low",
+        "name": "R1. 3.7-Flash solo (thinking=low)",
+        "category": "6. gemini-3.7 + opus-5 routing study",
+        "triage_mode": "Straitjacket contained digest ($0.00)",
+        "models": "Gemini 3.7 Flash (low) x3",
+        "fn": lambda p: run_tiered_router(
+            p, tiers=[(GEMINI_37_FLASH_ID, "low"), (GEMINI_37_FLASH_ID, "low"), (GEMINI_37_FLASH_ID, "low")], gate="never"),
+    },
+    "r2_f37_medium": {
+        "id": "r2_f37_medium",
+        "name": "R2. 3.7-Flash solo (thinking=medium)",
+        "category": "6. gemini-3.7 + opus-5 routing study",
+        "triage_mode": "Straitjacket contained digest ($0.00)",
+        "models": "Gemini 3.7 Flash (medium) x3",
+        "fn": lambda p: run_tiered_router(
+            p, tiers=[(GEMINI_37_FLASH_ID, "medium"), (GEMINI_37_FLASH_ID, "medium"), (GEMINI_37_FLASH_ID, "medium")], gate="never"),
+    },
+
+    # -- R4-R5: the Gemini-only ceiling, with and without the Lite tier ----
+    "r4_gemini_ladder": {
+        "id": "r4_gemini_ladder",
+        "name": "R4. Gemini ladder: Lite -> 3.7(low) -> 3.7(medium)",
+        "category": "6. gemini-3.7 + opus-5 routing study",
+        "triage_mode": "Straitjacket contained digest ($0.00)",
+        "models": "Lite -> 3.7 Flash low -> 3.7 Flash medium",
+        "fn": lambda p: run_tiered_router(
+            p, tiers=[(GEMINI_35_FLASH_LITE_ID, None), (GEMINI_37_FLASH_ID, "low"), (GEMINI_37_FLASH_ID, "medium")], gate="never"),
+    },
+    "r5_gemini_think_ladder": {
+        "id": "r5_gemini_think_ladder",
+        "name": "R5. Gemini thinking ladder: 3.7 low -> medium -> high (no Lite)",
+        "category": "6. gemini-3.7 + opus-5 routing study",
+        "triage_mode": "Straitjacket contained digest ($0.00)",
+        "models": "3.7 Flash low -> medium -> high",
+        "fn": lambda p: run_tiered_router(
+            p, tiers=[(GEMINI_37_FLASH_ID, "low"), (GEMINI_37_FLASH_ID, "medium"), (GEMINI_37_FLASH_ID, "high")], gate="never"),
+    },
+
+    # -- R6-R8: when should opus-5 be allowed in? --------------------------
+    "r6_opus_after_ladder": {
+        "id": "r6_opus_after_ladder",
+        "name": "R6. Gemini ladder -> Opus-5 (only after every Gemini rung fails)",
+        "category": "6. gemini-3.7 + opus-5 routing study",
+        "triage_mode": "Straitjacket contained digest ($0.00)",
+        "models": "Lite -> 3.7 low -> 3.7 medium -> Opus-5",
+        "fn": lambda p: run_tiered_router(
+            p, tiers=[(GEMINI_35_FLASH_LITE_ID, None), (GEMINI_37_FLASH_ID, "low"), (GEMINI_37_FLASH_ID, "medium")],
+            gate="after_ladder", frontier=OPUS_5_ID),
+    },
+    "r7_opus_after_1": {
+        "id": "r7_opus_after_1",
+        "name": "R7. 3.7(medium) -> Opus-5 on the first failure (aggressive)",
+        "category": "6. gemini-3.7 + opus-5 routing study",
+        "triage_mode": "Straitjacket contained digest ($0.00)",
+        "models": "3.7 Flash medium -> Opus-5",
+        "fn": lambda p: run_tiered_router(
+            p, tiers=[(GEMINI_37_FLASH_ID, "medium"), (GEMINI_37_FLASH_ID, "medium")],
+            gate="after_1", frontier=OPUS_5_ID),
+    },
+    "r8_opus_after_2": {
+        "id": "r8_opus_after_2",
+        "name": "R8. 3.7 low -> medium -> Opus-5 after two failures",
+        "category": "6. gemini-3.7 + opus-5 routing study",
+        "triage_mode": "Straitjacket contained digest ($0.00)",
+        "models": "3.7 low -> 3.7 medium -> Opus-5",
+        "fn": lambda p: run_tiered_router(
+            p, tiers=[(GEMINI_37_FLASH_ID, "low"), (GEMINI_37_FLASH_ID, "medium"), (GEMINI_37_FLASH_ID, "high")],
+            gate="after_2", frontier=OPUS_5_ID),
+    },
+
+    # -- R9-R10: gate on the evidence rather than on a counter -------------
+    "r9_opus_on_evidence": {
+        "id": "r9_opus_on_evidence",
+        "name": "R9. Gemini ladder -> Opus-5 when the digest says the failure is hard",
+        "category": "6. gemini-3.7 + opus-5 routing study",
+        "triage_mode": "Straitjacket digest + evidence-gated escalation ($0.00)",
+        "models": "Lite -> 3.7 low -> 3.7 medium -> Opus-5 (evidence gate)",
+        "fn": lambda p: run_tiered_router(
+            p, tiers=[(GEMINI_35_FLASH_LITE_ID, None), (GEMINI_37_FLASH_ID, "low"), (GEMINI_37_FLASH_ID, "medium")],
+            gate="evidence", frontier=OPUS_5_ID),
+    },
+    "r10_opus_fresh_solve": {
+        "id": "r10_opus_fresh_solve",
+        "name": "R10. Gemini ladder -> Opus-5 re-solves from scratch (not a repair)",
+        "category": "6. gemini-3.7 + opus-5 routing study",
+        "triage_mode": "Straitjacket contained digest ($0.00)",
+        "models": "Lite -> 3.7 low -> 3.7 medium -> Opus-5 (fresh solve)",
+        "fn": lambda p: run_tiered_router(
+            p, tiers=[(GEMINI_35_FLASH_LITE_ID, None), (GEMINI_37_FLASH_ID, "low"), (GEMINI_37_FLASH_ID, "medium")],
+            gate="after_ladder", frontier=OPUS_5_ID, frontier_mode="fresh"),
+    },
+
     "sj_dual_verifier": {
         "id": "sj_dual_verifier",
         "name": "13. Straitjacket Dual-Verifier Cascade (4-Tier Synergy)",
@@ -1238,24 +1523,41 @@ VARIANT_REGISTRY = {
     },
 }
 
+def _registry(dataset="swebench"):
+    """Variant registry for a dataset.
+
+    ClassEval's arms live in src/classeval.py and are merged in lazily: that
+    module imports `_arm` and `_treat_error` from this one, so importing it at
+    module scope here would be circular.
+    """
+    reg = dict(VARIANT_REGISTRY)
+    if str(dataset).lower().replace("-", "_") in ("classeval", "class_eval", "ce"):
+        from .classeval import CLASSEVAL_VARIANTS
+        reg.update(CLASSEVAL_VARIANTS)
+    return reg
+
+
 def get_configurations(dataset="swebench", group="all", variant_keys=None):
     """
     Retrieve list of benchmark configurations matching dataset, group filter, or specific variant keys.
     """
+    VARIANT_REGISTRY_ = _registry(dataset)
     if variant_keys:
         keys = [k.strip() for k in variant_keys if k.strip()]
         selected = []
         for k in keys:
-            if k in VARIANT_REGISTRY:
-                selected.append(VARIANT_REGISTRY[k])
+            if k in VARIANT_REGISTRY_:
+                selected.append(VARIANT_REGISTRY_[k])
             else:
                 # Find matching by partial ID or name
-                matches = [v for v in VARIANT_REGISTRY.values() if k.lower() in v["id"].lower() or k.lower() in v["name"].lower()]
+                matches = [v for v in VARIANT_REGISTRY_.values() if k.lower() in v["id"].lower() or k.lower() in v["name"].lower()]
                 if matches:
                     selected.extend(matches)
         return selected
 
-    all_configs = list(VARIANT_REGISTRY.values())
+    all_configs = list(VARIANT_REGISTRY_.values())
+    if group in ("classeval", "ce", "routing_subtask"):
+        return [c for c in all_configs if "7. ClassEval" in c["category"]]
     if group == "single":
         return [c for c in all_configs if "1. Single" in c["category"]]
     elif group == "combo":
@@ -1266,5 +1568,7 @@ def get_configurations(dataset="swebench", group="all", variant_keys=None):
         return [c for c in all_configs if "4. Next-Gen" in c["category"]]
     elif group in ("ablation", "ablate"):
         return [c for c in all_configs if "5. Evidence-treatment" in c["category"]]
+    elif group in ("router", "routing"):
+        return [c for c in all_configs if "6. gemini-3.7 + opus-5" in c["category"]]
     
     return all_configs

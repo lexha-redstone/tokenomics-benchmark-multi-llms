@@ -1,0 +1,887 @@
+{
+  "dataset": "bcb",
+  "dataset_name": "BigCodeBench-Hard",
+  "group": "router",
+  "n": 1,
+  "straitjacket": {
+    "backend": "library",
+    "available": true,
+    "ctx_version": "0.35.1",
+    "reason": "",
+    "workspace": "/Users/lexha/.cache/tokenomics-sj/ws",
+    "state_home": "/Users/lexha/.cache/tokenomics-sj/state",
+    "raw_cap_chars": 2500,
+    "frame_budget": {
+      "sandbox_prog_path": "/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py",
+      "frame_chars_used": 95,
+      "frame_chars_budget": 160,
+      "frame_fits": true
+    }
+  },
+  "summary": [
+    {
+      "id": "r1_f37_low",
+      "name": "R1. 3.7-Flash solo (thinking=low)",
+      "straitjacket": {
+        "backend": "library",
+        "available": true,
+        "ctx_version": "0.35.1",
+        "reason": "",
+        "workspace": "/Users/lexha/.cache/tokenomics-sj/ws",
+        "state_home": "/Users/lexha/.cache/tokenomics-sj/state",
+        "raw_cap_chars": 2500,
+        "frame_budget": {
+          "sandbox_prog_path": "/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py",
+          "frame_chars_used": 95,
+          "frame_chars_budget": 160,
+          "frame_fits": true
+        }
+      },
+      "containment": {
+        "captures": 2,
+        "treatment_events": 1,
+        "raw_tokens_est": 792,
+        "digest_tokens_est": 266,
+        "evidence_sent_tokens_est": 181,
+        "native_baseline_tokens_est": 528,
+        "delta_vs_native_tokens": 347,
+        "tokens_kept_out": 526,
+        "containment_ratio": 2.98,
+        "profiles": [
+          "unittest/v1"
+        ],
+        "treatments": [
+          "straitjacket"
+        ]
+      },
+      "category": "6. gemini-3.7 + opus-5 routing study",
+      "models": "Gemini 3.7 Flash (low) x3",
+      "triage_mode": "Straitjacket contained digest ($0.00)",
+      "n": 1,
+      "passed": 1,
+      "pass_rate": 1.0,
+      "total_as_run_usd": 0.012856,
+      "total_triage_usd": 0.0,
+      "cost_per_solved_usd": 0.012856,
+      "avg_output_tokens": 1328.0,
+      "seconds": 15.9,
+      "results": [
+        {
+          "task_id": "BigCodeBench/13",
+          "passed": true,
+          "as_run_usd": 0.012856,
+          "triage_usd": 0.0,
+          "output_tokens": 1328,
+          "total_tokens": 3259,
+          "repair_loops": 1,
+          "containment": {
+            "captures": 2,
+            "raw_tokens_est": 792,
+            "digest_tokens_est": 266,
+            "tokens_kept_out": 526,
+            "containment_ratio": 2.98,
+            "profiles": [
+              "unittest/v1"
+            ],
+            "backend": "library",
+            "handles": [
+              "run:fc3550980086",
+              "run:18ed54dc3192"
+            ],
+            "raw_exact": true,
+            "treatment_events": 1,
+            "evidence_sent_tokens_est": 181,
+            "native_baseline_tokens_est": 528,
+            "delta_vs_native_tokens": 347,
+            "treatments": [
+              "straitjacket"
+            ]
+          },
+          "retrievals": null,
+          "routing": {
+            "degraded": false,
+            "rungs": [
+              "gemini-3.7-flash/low",
+              "gemini-3.7-flash/low"
+            ],
+            "decisions": [
+              {
+                "attempt": 1,
+                "difficulty": {
+                  "level": "local",
+                  "reasons": [
+                    "1 failing identity/identities"
+                  ],
+                  "failing": 1,
+                  "failure_classes": [
+                    "AssertionError"
+                  ],
+                  "profile": "unittest/v1",
+                  "typed": true
+                },
+                "escalate": false,
+                "why": "frontier disabled"
+              }
+            ],
+            "frontier_used": false,
+            "frontier_rung": null,
+            "solved_at": "gemini-3.7-flash/low"
+          },
+          "error": ""
+        }
+      ]
+    },
+    {
+      "id": "r2_f37_medium",
+      "name": "R2. 3.7-Flash solo (thinking=medium)",
+      "straitjacket": {
+        "backend": "library",
+        "available": true,
+        "ctx_version": "0.35.1",
+        "reason": "",
+        "workspace": "/Users/lexha/.cache/tokenomics-sj/ws",
+        "state_home": "/Users/lexha/.cache/tokenomics-sj/state",
+        "raw_cap_chars": 2500,
+        "frame_budget": {
+          "sandbox_prog_path": "/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py",
+          "frame_chars_used": 95,
+          "frame_chars_budget": 160,
+          "frame_fits": true
+        }
+      },
+      "containment": {
+        "captures": 1,
+        "treatment_events": 0,
+        "raw_tokens_est": 264,
+        "digest_tokens_est": 85,
+        "evidence_sent_tokens_est": 0,
+        "native_baseline_tokens_est": 0,
+        "delta_vs_native_tokens": 0,
+        "tokens_kept_out": 179,
+        "containment_ratio": 3.11,
+        "profiles": [
+          "unittest/v1"
+        ],
+        "treatments": []
+      },
+      "category": "6. gemini-3.7 + opus-5 routing study",
+      "models": "Gemini 3.7 Flash (medium) x3",
+      "triage_mode": "Straitjacket contained digest ($0.00)",
+      "n": 1,
+      "passed": 1,
+      "pass_rate": 1.0,
+      "total_as_run_usd": 0.020718,
+      "total_triage_usd": 0.0,
+      "cost_per_solved_usd": 0.020718,
+      "avg_output_tokens": 2665.0,
+      "seconds": 16.5,
+      "results": [
+        {
+          "task_id": "BigCodeBench/13",
+          "passed": true,
+          "as_run_usd": 0.020718,
+          "triage_usd": 0.0,
+          "output_tokens": 2665,
+          "total_tokens": 3152,
+          "repair_loops": 0,
+          "containment": {
+            "captures": 1,
+            "raw_tokens_est": 264,
+            "digest_tokens_est": 85,
+            "tokens_kept_out": 179,
+            "containment_ratio": 3.11,
+            "profiles": [
+              "unittest/v1"
+            ],
+            "backend": "library",
+            "handles": [
+              "run:c3f3fa39ab99"
+            ],
+            "raw_exact": true,
+            "treatment_events": 0,
+            "evidence_sent_tokens_est": 0,
+            "native_baseline_tokens_est": 0,
+            "delta_vs_native_tokens": 0,
+            "treatments": []
+          },
+          "retrievals": null,
+          "routing": {
+            "degraded": false,
+            "rungs": [
+              "gemini-3.7-flash/medium"
+            ],
+            "decisions": [],
+            "frontier_used": false,
+            "frontier_rung": null,
+            "solved_at": "gemini-3.7-flash/medium"
+          },
+          "error": ""
+        }
+      ]
+    },
+    {
+      "id": "r4_gemini_ladder",
+      "name": "R4. Gemini ladder: Lite -> 3.7(low) -> 3.7(medium)",
+      "straitjacket": {
+        "backend": "library",
+        "available": true,
+        "ctx_version": "0.35.1",
+        "reason": "",
+        "workspace": "/Users/lexha/.cache/tokenomics-sj/ws",
+        "state_home": "/Users/lexha/.cache/tokenomics-sj/state",
+        "raw_cap_chars": 2500,
+        "frame_budget": {
+          "sandbox_prog_path": "/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py",
+          "frame_chars_used": 95,
+          "frame_chars_budget": 160,
+          "frame_fits": true
+        }
+      },
+      "containment": {
+        "captures": 1,
+        "treatment_events": 0,
+        "raw_tokens_est": 24,
+        "digest_tokens_est": 83,
+        "evidence_sent_tokens_est": 0,
+        "native_baseline_tokens_est": 0,
+        "delta_vs_native_tokens": 0,
+        "tokens_kept_out": 0,
+        "containment_ratio": 0.29,
+        "profiles": [
+          "unittest/v1"
+        ],
+        "treatments": []
+      },
+      "category": "6. gemini-3.7 + opus-5 routing study",
+      "models": "Lite -> 3.7 Flash low -> 3.7 Flash medium",
+      "triage_mode": "Straitjacket contained digest ($0.00)",
+      "n": 1,
+      "passed": 1,
+      "pass_rate": 1.0,
+      "total_as_run_usd": 0.002381,
+      "total_triage_usd": 0.0,
+      "cost_per_solved_usd": 0.002381,
+      "avg_output_tokens": 894.0,
+      "seconds": 5.9,
+      "results": [
+        {
+          "task_id": "BigCodeBench/13",
+          "passed": true,
+          "as_run_usd": 0.002381,
+          "triage_usd": 0.0,
+          "output_tokens": 894,
+          "total_tokens": 1381,
+          "repair_loops": 0,
+          "containment": {
+            "captures": 1,
+            "raw_tokens_est": 24,
+            "digest_tokens_est": 83,
+            "tokens_kept_out": 0,
+            "containment_ratio": 0.29,
+            "profiles": [
+              "unittest/v1"
+            ],
+            "backend": "library",
+            "handles": [
+              "run:6889a238cb2d"
+            ],
+            "raw_exact": true,
+            "treatment_events": 0,
+            "evidence_sent_tokens_est": 0,
+            "native_baseline_tokens_est": 0,
+            "delta_vs_native_tokens": 0,
+            "treatments": []
+          },
+          "retrievals": null,
+          "routing": {
+            "degraded": false,
+            "rungs": [
+              "gemini-3.5-flash-lite/off"
+            ],
+            "decisions": [],
+            "frontier_used": false,
+            "frontier_rung": null,
+            "solved_at": "gemini-3.5-flash-lite/off"
+          },
+          "error": ""
+        }
+      ]
+    },
+    {
+      "id": "r5_gemini_think_ladder",
+      "name": "R5. Gemini thinking ladder: 3.7 low -> medium -> high (no Lite)",
+      "straitjacket": {
+        "backend": "library",
+        "available": true,
+        "ctx_version": "0.35.1",
+        "reason": "",
+        "workspace": "/Users/lexha/.cache/tokenomics-sj/ws",
+        "state_home": "/Users/lexha/.cache/tokenomics-sj/state",
+        "raw_cap_chars": 2500,
+        "frame_budget": {
+          "sandbox_prog_path": "/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py",
+          "frame_chars_used": 95,
+          "frame_chars_budget": 160,
+          "frame_fits": true
+        }
+      },
+      "containment": {
+        "captures": 2,
+        "treatment_events": 1,
+        "raw_tokens_est": 792,
+        "digest_tokens_est": 266,
+        "evidence_sent_tokens_est": 181,
+        "native_baseline_tokens_est": 528,
+        "delta_vs_native_tokens": 347,
+        "tokens_kept_out": 526,
+        "containment_ratio": 2.98,
+        "profiles": [
+          "unittest/v1"
+        ],
+        "treatments": [
+          "straitjacket"
+        ]
+      },
+      "category": "6. gemini-3.7 + opus-5 routing study",
+      "models": "3.7 Flash low -> medium -> high",
+      "triage_mode": "Straitjacket contained digest ($0.00)",
+      "n": 1,
+      "passed": 1,
+      "pass_rate": 1.0,
+      "total_as_run_usd": 0.022311,
+      "total_triage_usd": 0.0,
+      "cost_per_solved_usd": 0.022311,
+      "avg_output_tokens": 2588.0,
+      "seconds": 20.2,
+      "results": [
+        {
+          "task_id": "BigCodeBench/13",
+          "passed": true,
+          "as_run_usd": 0.022311,
+          "triage_usd": 0.0,
+          "output_tokens": 2588,
+          "total_tokens": 4522,
+          "repair_loops": 1,
+          "containment": {
+            "captures": 2,
+            "raw_tokens_est": 792,
+            "digest_tokens_est": 266,
+            "tokens_kept_out": 526,
+            "containment_ratio": 2.98,
+            "profiles": [
+              "unittest/v1"
+            ],
+            "backend": "library",
+            "handles": [
+              "run:24c4c73c43e8",
+              "run:b13ccd7169ab"
+            ],
+            "raw_exact": true,
+            "treatment_events": 1,
+            "evidence_sent_tokens_est": 181,
+            "native_baseline_tokens_est": 528,
+            "delta_vs_native_tokens": 347,
+            "treatments": [
+              "straitjacket"
+            ]
+          },
+          "retrievals": null,
+          "routing": {
+            "degraded": false,
+            "rungs": [
+              "gemini-3.7-flash/low",
+              "gemini-3.7-flash/medium"
+            ],
+            "decisions": [
+              {
+                "attempt": 1,
+                "difficulty": {
+                  "level": "local",
+                  "reasons": [
+                    "1 failing identity/identities"
+                  ],
+                  "failing": 1,
+                  "failure_classes": [
+                    "AssertionError"
+                  ],
+                  "profile": "unittest/v1",
+                  "typed": true
+                },
+                "escalate": false,
+                "why": "frontier disabled"
+              }
+            ],
+            "frontier_used": false,
+            "frontier_rung": null,
+            "solved_at": "gemini-3.7-flash/medium"
+          },
+          "error": ""
+        }
+      ]
+    },
+    {
+      "id": "r6_opus_after_ladder",
+      "name": "R6. Gemini ladder -> Opus-5 (only after every Gemini rung fails)",
+      "straitjacket": {
+        "backend": "library",
+        "available": true,
+        "ctx_version": "0.35.1",
+        "reason": "",
+        "workspace": "/Users/lexha/.cache/tokenomics-sj/ws",
+        "state_home": "/Users/lexha/.cache/tokenomics-sj/state",
+        "raw_cap_chars": 2500,
+        "frame_budget": {
+          "sandbox_prog_path": "/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py",
+          "frame_chars_used": 95,
+          "frame_chars_budget": 160,
+          "frame_fits": true
+        }
+      },
+      "containment": {
+        "captures": 1,
+        "treatment_events": 0,
+        "raw_tokens_est": 24,
+        "digest_tokens_est": 83,
+        "evidence_sent_tokens_est": 0,
+        "native_baseline_tokens_est": 0,
+        "delta_vs_native_tokens": 0,
+        "tokens_kept_out": 0,
+        "containment_ratio": 0.29,
+        "profiles": [
+          "unittest/v1"
+        ],
+        "treatments": []
+      },
+      "category": "6. gemini-3.7 + opus-5 routing study",
+      "models": "Lite -> 3.7 low -> 3.7 medium -> Opus-5",
+      "triage_mode": "Straitjacket contained digest ($0.00)",
+      "n": 1,
+      "passed": 1,
+      "pass_rate": 1.0,
+      "total_as_run_usd": 0.002361,
+      "total_triage_usd": 0.0,
+      "cost_per_solved_usd": 0.002361,
+      "avg_output_tokens": 886.0,
+      "seconds": 6.5,
+      "results": [
+        {
+          "task_id": "BigCodeBench/13",
+          "passed": true,
+          "as_run_usd": 0.002361,
+          "triage_usd": 0.0,
+          "output_tokens": 886,
+          "total_tokens": 1373,
+          "repair_loops": 0,
+          "containment": {
+            "captures": 1,
+            "raw_tokens_est": 24,
+            "digest_tokens_est": 83,
+            "tokens_kept_out": 0,
+            "containment_ratio": 0.29,
+            "profiles": [
+              "unittest/v1"
+            ],
+            "backend": "library",
+            "handles": [
+              "run:6889a238cb2d"
+            ],
+            "raw_exact": true,
+            "treatment_events": 0,
+            "evidence_sent_tokens_est": 0,
+            "native_baseline_tokens_est": 0,
+            "delta_vs_native_tokens": 0,
+            "treatments": []
+          },
+          "retrievals": null,
+          "routing": {
+            "degraded": false,
+            "rungs": [
+              "gemini-3.5-flash-lite/off"
+            ],
+            "decisions": [],
+            "frontier_used": false,
+            "frontier_rung": null,
+            "solved_at": "gemini-3.5-flash-lite/off"
+          },
+          "error": ""
+        }
+      ]
+    },
+    {
+      "id": "r7_opus_after_1",
+      "name": "R7. 3.7(medium) -> Opus-5 on the first failure (aggressive)",
+      "straitjacket": {
+        "backend": "library",
+        "available": true,
+        "ctx_version": "0.35.1",
+        "reason": "",
+        "workspace": "/Users/lexha/.cache/tokenomics-sj/ws",
+        "state_home": "/Users/lexha/.cache/tokenomics-sj/state",
+        "raw_cap_chars": 2500,
+        "frame_budget": {
+          "sandbox_prog_path": "/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py",
+          "frame_chars_used": 95,
+          "frame_chars_budget": 160,
+          "frame_fits": true
+        }
+      },
+      "containment": {
+        "captures": 1,
+        "treatment_events": 0,
+        "raw_tokens_est": 254,
+        "digest_tokens_est": 85,
+        "evidence_sent_tokens_est": 0,
+        "native_baseline_tokens_est": 0,
+        "delta_vs_native_tokens": 0,
+        "tokens_kept_out": 169,
+        "containment_ratio": 2.99,
+        "profiles": [
+          "unittest/v1"
+        ],
+        "treatments": []
+      },
+      "category": "6. gemini-3.7 + opus-5 routing study",
+      "models": "3.7 Flash medium -> Opus-5",
+      "triage_mode": "Straitjacket contained digest ($0.00)",
+      "n": 1,
+      "passed": 1,
+      "pass_rate": 1.0,
+      "total_as_run_usd": 0.031713,
+      "total_triage_usd": 0.0,
+      "cost_per_solved_usd": 0.031713,
+      "avg_output_tokens": 4131.0,
+      "seconds": 24.1,
+      "results": [
+        {
+          "task_id": "BigCodeBench/13",
+          "passed": true,
+          "as_run_usd": 0.031713,
+          "triage_usd": 0.0,
+          "output_tokens": 4131,
+          "total_tokens": 4618,
+          "repair_loops": 0,
+          "containment": {
+            "captures": 1,
+            "raw_tokens_est": 254,
+            "digest_tokens_est": 85,
+            "tokens_kept_out": 169,
+            "containment_ratio": 2.99,
+            "profiles": [
+              "unittest/v1"
+            ],
+            "backend": "library",
+            "handles": [
+              "run:4cf4ad24927f"
+            ],
+            "raw_exact": true,
+            "treatment_events": 0,
+            "evidence_sent_tokens_est": 0,
+            "native_baseline_tokens_est": 0,
+            "delta_vs_native_tokens": 0,
+            "treatments": []
+          },
+          "retrievals": null,
+          "routing": {
+            "degraded": false,
+            "rungs": [
+              "gemini-3.7-flash/medium"
+            ],
+            "decisions": [],
+            "frontier_used": false,
+            "frontier_rung": null,
+            "solved_at": "gemini-3.7-flash/medium"
+          },
+          "error": ""
+        }
+      ]
+    },
+    {
+      "id": "r8_opus_after_2",
+      "name": "R8. 3.7 low -> medium -> Opus-5 after two failures",
+      "straitjacket": {
+        "backend": "library",
+        "available": true,
+        "ctx_version": "0.35.1",
+        "reason": "",
+        "workspace": "/Users/lexha/.cache/tokenomics-sj/ws",
+        "state_home": "/Users/lexha/.cache/tokenomics-sj/state",
+        "raw_cap_chars": 2500,
+        "frame_budget": {
+          "sandbox_prog_path": "/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py",
+          "frame_chars_used": 95,
+          "frame_chars_budget": 160,
+          "frame_fits": true
+        }
+      },
+      "containment": {
+        "captures": 2,
+        "treatment_events": 1,
+        "raw_tokens_est": 792,
+        "digest_tokens_est": 266,
+        "evidence_sent_tokens_est": 181,
+        "native_baseline_tokens_est": 528,
+        "delta_vs_native_tokens": 347,
+        "tokens_kept_out": 526,
+        "containment_ratio": 2.98,
+        "profiles": [
+          "unittest/v1"
+        ],
+        "treatments": [
+          "straitjacket"
+        ]
+      },
+      "category": "6. gemini-3.7 + opus-5 routing study",
+      "models": "3.7 low -> 3.7 medium -> Opus-5",
+      "triage_mode": "Straitjacket contained digest ($0.00)",
+      "n": 1,
+      "passed": 1,
+      "pass_rate": 1.0,
+      "total_as_run_usd": 0.026617,
+      "total_triage_usd": 0.0,
+      "cost_per_solved_usd": 0.026617,
+      "avg_output_tokens": 3156.0,
+      "seconds": 23.3,
+      "results": [
+        {
+          "task_id": "BigCodeBench/13",
+          "passed": true,
+          "as_run_usd": 0.026617,
+          "triage_usd": 0.0,
+          "output_tokens": 3156,
+          "total_tokens": 5121,
+          "repair_loops": 1,
+          "containment": {
+            "captures": 2,
+            "raw_tokens_est": 792,
+            "digest_tokens_est": 266,
+            "tokens_kept_out": 526,
+            "containment_ratio": 2.98,
+            "profiles": [
+              "unittest/v1"
+            ],
+            "backend": "library",
+            "handles": [
+              "run:2a5047aab38f",
+              "run:ad4e04a47262"
+            ],
+            "raw_exact": true,
+            "treatment_events": 1,
+            "evidence_sent_tokens_est": 181,
+            "native_baseline_tokens_est": 528,
+            "delta_vs_native_tokens": 347,
+            "treatments": [
+              "straitjacket"
+            ]
+          },
+          "retrievals": null,
+          "routing": {
+            "degraded": false,
+            "rungs": [
+              "gemini-3.7-flash/low",
+              "gemini-3.7-flash/medium"
+            ],
+            "decisions": [
+              {
+                "attempt": 1,
+                "difficulty": {
+                  "level": "local",
+                  "reasons": [
+                    "1 failing identity/identities"
+                  ],
+                  "failing": 1,
+                  "failure_classes": [
+                    "AssertionError"
+                  ],
+                  "profile": "unittest/v1",
+                  "typed": true
+                },
+                "escalate": false,
+                "why": "1 failed attempts (< 2)"
+              }
+            ],
+            "frontier_used": false,
+            "frontier_rung": null,
+            "solved_at": "gemini-3.7-flash/medium"
+          },
+          "error": ""
+        }
+      ]
+    },
+    {
+      "id": "r9_opus_on_evidence",
+      "name": "R9. Gemini ladder -> Opus-5 when the digest says the failure is hard",
+      "straitjacket": {
+        "backend": "library",
+        "available": true,
+        "ctx_version": "0.35.1",
+        "reason": "",
+        "workspace": "/Users/lexha/.cache/tokenomics-sj/ws",
+        "state_home": "/Users/lexha/.cache/tokenomics-sj/state",
+        "raw_cap_chars": 2500,
+        "frame_budget": {
+          "sandbox_prog_path": "/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py",
+          "frame_chars_used": 95,
+          "frame_chars_budget": 160,
+          "frame_fits": true
+        }
+      },
+      "containment": {
+        "captures": 1,
+        "treatment_events": 0,
+        "raw_tokens_est": 24,
+        "digest_tokens_est": 83,
+        "evidence_sent_tokens_est": 0,
+        "native_baseline_tokens_est": 0,
+        "delta_vs_native_tokens": 0,
+        "tokens_kept_out": 0,
+        "containment_ratio": 0.29,
+        "profiles": [
+          "unittest/v1"
+        ],
+        "treatments": []
+      },
+      "category": "6. gemini-3.7 + opus-5 routing study",
+      "models": "Lite -> 3.7 low -> 3.7 medium -> Opus-5 (evidence gate)",
+      "triage_mode": "Straitjacket digest + evidence-gated escalation ($0.00)",
+      "n": 1,
+      "passed": 1,
+      "pass_rate": 1.0,
+      "total_as_run_usd": 0.002504,
+      "total_triage_usd": 0.0,
+      "cost_per_solved_usd": 0.002504,
+      "avg_output_tokens": 943.0,
+      "seconds": 7.1,
+      "results": [
+        {
+          "task_id": "BigCodeBench/13",
+          "passed": true,
+          "as_run_usd": 0.002504,
+          "triage_usd": 0.0,
+          "output_tokens": 943,
+          "total_tokens": 1430,
+          "repair_loops": 0,
+          "containment": {
+            "captures": 1,
+            "raw_tokens_est": 24,
+            "digest_tokens_est": 83,
+            "tokens_kept_out": 0,
+            "containment_ratio": 0.29,
+            "profiles": [
+              "unittest/v1"
+            ],
+            "backend": "library",
+            "handles": [
+              "run:6889a238cb2d"
+            ],
+            "raw_exact": true,
+            "treatment_events": 0,
+            "evidence_sent_tokens_est": 0,
+            "native_baseline_tokens_est": 0,
+            "delta_vs_native_tokens": 0,
+            "treatments": []
+          },
+          "retrievals": null,
+          "routing": {
+            "degraded": false,
+            "rungs": [
+              "gemini-3.5-flash-lite/off"
+            ],
+            "decisions": [],
+            "frontier_used": false,
+            "frontier_rung": null,
+            "solved_at": "gemini-3.5-flash-lite/off"
+          },
+          "error": ""
+        }
+      ]
+    },
+    {
+      "id": "r10_opus_fresh_solve",
+      "name": "R10. Gemini ladder -> Opus-5 re-solves from scratch (not a repair)",
+      "straitjacket": {
+        "backend": "library",
+        "available": true,
+        "ctx_version": "0.35.1",
+        "reason": "",
+        "workspace": "/Users/lexha/.cache/tokenomics-sj/ws",
+        "state_home": "/Users/lexha/.cache/tokenomics-sj/state",
+        "raw_cap_chars": 2500,
+        "frame_budget": {
+          "sandbox_prog_path": "/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py",
+          "frame_chars_used": 95,
+          "frame_chars_budget": 160,
+          "frame_fits": true
+        }
+      },
+      "containment": {
+        "captures": 1,
+        "treatment_events": 0,
+        "raw_tokens_est": 24,
+        "digest_tokens_est": 83,
+        "evidence_sent_tokens_est": 0,
+        "native_baseline_tokens_est": 0,
+        "delta_vs_native_tokens": 0,
+        "tokens_kept_out": 0,
+        "containment_ratio": 0.29,
+        "profiles": [
+          "unittest/v1"
+        ],
+        "treatments": []
+      },
+      "category": "6. gemini-3.7 + opus-5 routing study",
+      "models": "Lite -> 3.7 low -> 3.7 medium -> Opus-5 (fresh solve)",
+      "triage_mode": "Straitjacket contained digest ($0.00)",
+      "n": 1,
+      "passed": 1,
+      "pass_rate": 1.0,
+      "total_as_run_usd": 0.002586,
+      "total_triage_usd": 0.0,
+      "cost_per_solved_usd": 0.002586,
+      "avg_output_tokens": 976.0,
+      "seconds": 4.8,
+      "results": [
+        {
+          "task_id": "BigCodeBench/13",
+          "passed": true,
+          "as_run_usd": 0.002586,
+          "triage_usd": 0.0,
+          "output_tokens": 976,
+          "total_tokens": 1463,
+          "repair_loops": 0,
+          "containment": {
+            "captures": 1,
+            "raw_tokens_est": 24,
+            "digest_tokens_est": 83,
+            "tokens_kept_out": 0,
+            "containment_ratio": 0.29,
+            "profiles": [
+              "unittest/v1"
+            ],
+            "backend": "library",
+            "handles": [
+              "run:6889a238cb2d"
+            ],
+            "raw_exact": true,
+            "treatment_events": 0,
+            "evidence_sent_tokens_est": 0,
+            "native_baseline_tokens_est": 0,
+            "delta_vs_native_tokens": 0,
+            "treatments": []
+          },
+          "retrievals": null,
+          "routing": {
+            "degraded": false,
+            "rungs": [
+              "gemini-3.5-flash-lite/off"
+            ],
+            "decisions": [],
+            "frontier_used": false,
+            "frontier_rung": null,
+            "solved_at": "gemini-3.5-flash-lite/off"
+          },
+          "error": ""
+        }
+      ]
+    }
+  ]
+}

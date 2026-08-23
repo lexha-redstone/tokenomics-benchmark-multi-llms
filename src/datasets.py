@@ -8,6 +8,7 @@ import os
 import sys
 import json
 import ast
+import re
 import urllib.request
 import urllib.parse
 import urllib.error
@@ -163,6 +164,207 @@ def load_webdev_problems(max_tasks=None):
     return problems
 
 # ==============================================================================
+# --- CLASSEVAL DATASET LOADER ---
+# ==============================================================================
+#
+# ClassEval is here for one reason BigCodeBench-Hard cannot serve: a task is a
+# CLASS, not a function, so it decomposes into several methods whose difficulty
+# differs, and every method ships its own test class. That is what makes
+# per-sub-task attribution possible -- see docs/pattern-dataset-selection.md.
+#
+# The difficulty tier is NOT inferred here. It is read off the dataset's own
+# `dependencies` annotation, so a routing result can be reported against a label
+# the benchmark authors assigned rather than one this repository invented.
+
+CLASSEVAL_DATASET = "FudanSELab/ClassEval"
+CLASSEVAL_CONFIG = "default"
+CLASSEVAL_DEFAULT_SPLIT = "test"
+_CE_KEEP_FIELDS = ("task_id", "skeleton", "test", "solution_code", "import_statement",
+                   "class_name", "class_description", "class_constructor", "fields",
+                   "methods_info", "test_classes")
+
+# Ordered most-constrained first: a method that calls another method is the
+# hardest thing in the class regardless of what else it touches, because it can
+# only be written correctly once its callee's contract is settled.
+CLASSEVAL_TIERS = ("standalone", "method_dep", "field_lib", "lib_dep", "field_dep")
+
+# Rank is what a difficulty router sorts on. Two tiers share rank 1 because the
+# dataset gives no basis for separating them.
+CLASSEVAL_TIER_RANK = {"standalone": 0, "lib_dep": 1, "field_dep": 1,
+                       "field_lib": 2, "method_dep": 3}
+
+
+def classeval_tier(dependencies):
+    """Map one method's `dependencies` annotation onto a difficulty tier."""
+    d = dependencies or {}
+    if d.get("Standalone"):
+        return "standalone"
+    if d.get("method_dependencies"):
+        return "method_dep"
+    if d.get("field_dependencies") and d.get("lib_dependencies"):
+        return "field_lib"
+    if d.get("lib_dependencies"):
+        return "lib_dep"
+    if d.get("field_dependencies"):
+        return "field_dep"
+    return "field_dep"
+
+
+def ensure_classeval_dataset(split=CLASSEVAL_DEFAULT_SPLIT):
+    """Ensure the ClassEval split is present locally, fetching from HF if needed."""
+    data_dir = os.path.join(ROOT_DIR, "classeval", "data")
+    os.makedirs(data_dir, exist_ok=True)
+    path = os.path.join(data_dir, f"ClassEval-{split}.jsonl")
+    if os.path.exists(path):
+        return path
+
+    print(f"Fetching {CLASSEVAL_DATASET} [{split}] from HuggingFace -> {path}", flush=True)
+    rows, offset, total = [], 0, None
+    while total is None or offset < total:
+        q = urllib.parse.urlencode({
+            "dataset": CLASSEVAL_DATASET, "config": CLASSEVAL_CONFIG,
+            "split": split, "offset": offset, "length": 50
+        })
+        with urllib.request.urlopen("https://datasets-server.huggingface.co/rows?" + q,
+                                    timeout=120, context=_ssl_ctx()) as r:
+            d = json.loads(r.read())
+        batch = d.get("rows", [])
+        total = d.get("num_rows_total", len(batch))
+        if not batch:
+            break
+        rows.extend(b["row"] for b in batch)
+        offset += len(batch)
+
+    with open(path, "w", encoding="utf-8") as f:
+        for row in rows:
+            f.write(json.dumps({k: row.get(k) for k in _CE_KEEP_FIELDS}) + "\n")
+    print(f"  saved {len(rows)} classes to {path}", flush=True)
+    return path
+
+
+def _classeval_decorators(skeleton):
+    """Map method name -> its decorator lines, read off the skeleton.
+
+    `methods_info[*].solution_code` is unreliable here: for a decorated method
+    the extractor sometimes keeps `@staticmethod` and sometimes drops it (in
+    ClassEval_3, `count_all` keeps it and `count` does not). Assembling a class
+    method-by-method from those strings therefore silently loses decorators and
+    the class fails with "takes 2 positional arguments but 3 were given" --
+    a defect of the assembly, not of the model that wrote the body. The
+    skeleton, which is also what the model is shown, always carries them.
+    """
+    out, pending = {}, []
+    for raw in (skeleton or "").splitlines():
+        line = raw.strip()
+        if line.startswith("@"):
+            pending.append(line)
+            continue
+        m = re.match(r"def\s+([A-Za-z_]\w*)\s*\(", line)
+        if m:
+            if pending:
+                out[m.group(1)] = list(pending)
+            pending = []
+        elif line:
+            pending = []
+    return out
+
+
+def _classeval_subtasks(row):
+    """Normalise `methods_info` into the sub-task shape the arms and the
+    reporter both consume. Keeps the raw annotation alongside the tier so a
+    disputed tier can always be re-derived."""
+    out = []
+    decorators = _classeval_decorators(row.get("skeleton", ""))
+    for m in row.get("methods_info") or []:
+        deps = m.get("dependencies") or {}
+        tier = classeval_tier(deps)
+        name = m.get("method_name", "")
+        out.append({
+            "name": name,
+            "decorators": decorators.get(name, []),
+            "tier": tier,
+            "rank": CLASSEVAL_TIER_RANK.get(tier, 1),
+            "description": m.get("method_description", ""),
+            "test_class": str(m.get("test_class", "") or "").strip(),
+            "test_code": m.get("test_code", ""),
+            "solution_code": m.get("solution_code", ""),
+            "dependencies": deps,
+        })
+    return out
+
+
+def quarantine_path(split=CLASSEVAL_DEFAULT_SPLIT):
+    """Where `tools/classeval_preflight.py` records tasks gold cannot pass."""
+    return os.path.join(ROOT_DIR, "classeval", "data", f"quarantine-{split}.json")
+
+
+def load_quarantine(split=CLASSEVAL_DEFAULT_SPLIT):
+    """Task ids the environment cannot score, mapped to why. Empty if unrun."""
+    path = quarantine_path(split)
+    if not os.path.exists(path):
+        return {}
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            return json.load(f).get("tasks", {})
+    except Exception:
+        return {}
+
+
+def load_classeval_problems(split=CLASSEVAL_DEFAULT_SPLIT, max_tasks=None,
+                            apply_quarantine=True):
+    """Load ClassEval tasks as a dictionary keyed by task_id.
+
+    Each problem carries a `subtasks` list -- one entry per method, with the
+    tier, the method's own test class, and that class's source. `integration_tests`
+    holds the test classes belonging to no single method; they are the ones that
+    only fail when the methods do not compose, which is precisely the failure a
+    planner is supposed to prevent.
+   
+    Tasks whose own gold solution fails in this environment are excluded, using
+    the file `tools/classeval_preflight.py` writes. Six of the hundred fail for
+    reasons that belong to the machine rather than to any model -- a missing
+    optional import, an undownloaded corpus, gold written against NumPy 1.x --
+    and scoring an arm against those measures the environment. Pass
+    `apply_quarantine=False` to see the raw set (which is what the preflight
+    itself must do).
+    """
+    path = ensure_classeval_dataset(split)
+    excluded = load_quarantine(split) if apply_quarantine else {}
+    skipped = 0
+    problems = {}
+    with open(path, "r", encoding="utf-8") as f:
+        for line in f:
+            if not line.strip():
+                continue
+            row = json.loads(line)
+            if row.get("task_id") in excluded:
+                skipped += 1
+                continue
+            row["dataset_type"] = "classeval"
+            imports = row.get("import_statement") or []
+            row["import_block"] = "\n".join(imports) if isinstance(imports, list) else str(imports)
+            row["subtasks"] = _classeval_subtasks(row)
+            # `test_classes` carries stray whitespace on at least one row
+            # (ClassEval_97 ships " Words2NumbersTestMain"), which the runner
+            # tail would then fail to resolve as a name.
+            row["test_classes"] = [str(t).strip() for t in (row.get("test_classes") or [])
+                                   if str(t).strip()]
+            owned = {s["test_class"] for s in row["subtasks"]}
+            row["integration_tests"] = [t for t in row["test_classes"] if t not in owned]
+            problems[row["task_id"]] = row
+            if max_tasks and len(problems) >= max_tasks:
+                break
+    note = ""
+    if skipped:
+        note = (f" ({skipped} excluded by {os.path.basename(quarantine_path(split))}"
+                " -- gold does not pass here)")
+    elif apply_quarantine and not os.path.exists(quarantine_path(split)):
+        note = "  [no preflight run yet: python3 tools/classeval_preflight.py --write]"
+    print(f"Loaded {len(problems)} ClassEval tasks from {path}{note}")
+    return problems
+
+
+# ==============================================================================
 # --- UNIFIED DATASET DISPATCHER ---
 # ==============================================================================
 
@@ -173,6 +375,7 @@ def load_dataset(dataset_name, split=None, max_tasks=None):
       - 'bcb', 'bigcodebench', 'bigcodebench-hard'
       - 'swebench', 'swebench_pro', 'swe-bench'
       - 'webdev', 'web-dev'
+      - 'classeval', 'class-eval'
     """
     name = dataset_name.lower().replace("-", "_")
     if name in ("bcb", "bigcodebench", "bigcodebench_hard"):
@@ -183,5 +386,9 @@ def load_dataset(dataset_name, split=None, max_tasks=None):
         return load_swebench_pro_problems(split=s, max_tasks=max_tasks)
     elif name in ("webdev", "web_dev"):
         return load_webdev_problems(max_tasks=max_tasks)
+    elif name in ("classeval", "class_eval", "ce"):
+        s = split or CLASSEVAL_DEFAULT_SPLIT
+        return load_classeval_problems(split=s, max_tasks=max_tasks)
     else:
-        raise ValueError(f"Unknown dataset name: '{dataset_name}'. Supported: 'bcb', 'swebench', 'webdev'.")
+        raise ValueError(f"Unknown dataset name: '{dataset_name}'. "
+                         "Supported: 'bcb', 'swebench', 'webdev', 'classeval'.")

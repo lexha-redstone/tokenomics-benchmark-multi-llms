@@ -19,6 +19,7 @@ Regenerate this index with `python3 tools/index_reports.py --apply`.
 | 09 | inferred | SWE-bench Pro | N=30 | [md](09_swebench-pro_live-api_n30.md) | [html](09_swebench-pro_live-api_n30.html) | Live Vertex AI run; adds claude-opus-4.8. |
 | 10 | inferred | WebDev | N=2 | [md](10_webdev_straitjacket_n2.md) | [html](10_webdev_straitjacket_n2.html) | Straitjacket smoke run on web/networking tasks. |
 | 11 | 2026-08-06 | cross-dataset | N=10/30/50 | [md](11_synthesis_cross-dataset.md) | — | Synthesis of every sweep up to that date. |
+| 12 | 2026-08-22 | BigCodeBench-Hard | N=100 | [md](12_bcb-hard_straitjacket_n100.md) | [html](12_bcb-hard_straitjacket_n100.html) | Largest sweep. gemini-3.7 + claude-opus-5, full containment receipt. |
 
 `inferred` dates: exact run timestamps were not recorded for those sweeps.
 Their order is derived from task count and model generation, which is why it

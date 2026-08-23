@@ -1,5 +1,12 @@
 # Web-Dev "Sweet Spot" Benchmark Guideline: Low-Cost, High-Performance LLM Architecture Search
 
+> **Note on file references below.** This document predates the current
+> layout. Scripts it names lived in an earlier repository (`benchmark-using-multi-LLMs/`,
+> `claude-code-cli-gemini-tools/`) and are not part of this checkout; the modern
+> equivalents are `run_benchmark.py` plus the variant registry in `src/architectures.py`.
+> The links are flattened to plain names so they no longer point at a dead absolute path.
+
+
 This document outlines the guidelines, architectural strategies, and test harness setup for identifying the optimal **"Sweet Spot"**—the most cost-effective combination of LLM models, task-splitting patterns, and repair strategies for automated software engineering on **Web Development (Web-Dev)** tasks.
 
 ---
@@ -134,7 +141,7 @@ Web development tasks require both a high-level understanding of project layout 
 All insights must be reproducible. The python runner `bench_webdev_sweetspot_runner.py` is configured to run these evaluations programmatically.
 
 ### Reference Code Map
-* **Web-Dev Sweet Spot Runner**: `bench_webdev_sweetspot_runner.py` (to be created in this directory, adapted from [bench_sweetspot_runner.py](file:///Users/lexha/Documents/work/codes/prj/17-tokenomics/benchmark-using-multi-LLMs/bigCodeBench-hard/bench_sweetspot_runner.py)).
+* **Web-Dev Sweet Spot Runner**: `bench_webdev_sweetspot_runner.py` (to be created in this directory, adapted from `bench_sweetspot_runner.py`).
 * **Docker Test Harness Runner**: Script integrating with the Docker containers created by Web-Bench to apply code diffs and parse stdout/stderr from `jest`/`vitest`.
 
 ### Execution Commands

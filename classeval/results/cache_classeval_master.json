@@ -1,0 +1,468 @@
+{
+  "ce_route_by_tier": {
+    "ClassEval_0": {
+      "task_id": "ClassEval_0",
+      "passed": false,
+      "as_run_usd": 0.039896,
+      "triage_usd": 0.0,
+      "output_tokens": 4684,
+      "total_tokens": 10348,
+      "repair_loops": 1,
+      "simulated_calls": 0,
+      "containment": {
+        "captures": 10,
+        "raw_tokens_est": 2001,
+        "digest_tokens_est": 1503,
+        "tokens_kept_out": 498,
+        "containment_ratio": 1.33,
+        "profiles": [
+          "unittest/v1"
+        ],
+        "backend": "library",
+        "handles": [
+          "run:0394fad88dcd",
+          "run:6889a238cb2d",
+          "run:25a5bfca2861",
+          "run:f2208422e944",
+          "run:0a95ac32eb65",
+          "run:4c708dd4abbd",
+          "run:6889a238cb2d",
+          "run:6889a238cb2d",
+          "run:f2208422e944",
+          "run:35e05f83c048"
+        ],
+        "raw_exact": true,
+        "treatment_events": 1,
+        "evidence_sent_tokens_est": 287,
+        "native_baseline_tokens_est": 625,
+        "delta_vs_native_tokens": 338,
+        "treatments": [
+          "straitjacket"
+        ]
+      },
+      "retrievals": null,
+      "routing": null,
+      "subtasks": [
+        {
+          "name": "filter",
+          "tier": "method_dep",
+          "rank": 3,
+          "model_id": "claude-sonnet-5",
+          "passed": false,
+          "as_run_usd": 0.016475
+        },
+        {
+          "name": "is_start_with",
+          "tier": "standalone",
+          "rank": 0,
+          "model_id": "gemini-3.5-flash-lite",
+          "passed": true,
+          "as_run_usd": 0.000566
+        },
+        {
+          "name": "get_jwt_user",
+          "tier": "lib_dep",
+          "rank": 1,
+          "model_id": "gemini-3.7-flash",
+          "passed": true,
+          "as_run_usd": 0.02224
+        },
+        {
+          "name": "set_current_user_info_and_log",
+          "tier": "lib_dep",
+          "rank": 1,
+          "model_id": "gemini-3.5-flash-lite",
+          "passed": true,
+          "as_run_usd": 0.000615
+        }
+      ],
+      "subtask_summary": {
+        "by_tier": {
+          "method_dep": {
+            "n": 1,
+            "passed": 0,
+            "usd": 0.016475,
+            "pass_rate": 0.0
+          },
+          "standalone": {
+            "n": 1,
+            "passed": 1,
+            "usd": 0.000566,
+            "pass_rate": 1.0
+          },
+          "lib_dep": {
+            "n": 2,
+            "passed": 2,
+            "usd": 0.022855,
+            "pass_rate": 1.0
+          }
+        },
+        "by_model": {
+          "claude-sonnet-5": {
+            "n": 1,
+            "passed": 0,
+            "usd": 0.016475,
+            "pass_rate": 0.0
+          },
+          "gemini-3.5-flash-lite": {
+            "n": 2,
+            "passed": 2,
+            "usd": 0.001181,
+            "pass_rate": 1.0
+          },
+          "gemini-3.7-flash": {
+            "n": 1,
+            "passed": 1,
+            "usd": 0.02224,
+            "pass_rate": 1.0
+          }
+        },
+        "n_subtasks": 4,
+        "passed_subtasks": 3
+      },
+      "error": "======================================================================\nFAIL: test_filter_7 (__main__.AccessGatewayFilterTestFilter.test_filter_7)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 142, in test_filter_7\n    self.assertIsNone(res)\n    ~~~~~~~~~~~~~~~~~^^^^^\nAssertionError: False is not None\n\n======================================================================\nFAI"
+    },
+    "ClassEval_1": {
+      "task_id": "ClassEval_1",
+      "passed": true,
+      "as_run_usd": 0.009013,
+      "triage_usd": 0.0,
+      "output_tokens": 887,
+      "total_tokens": 4537,
+      "repair_loops": 0,
+      "simulated_calls": 0,
+      "containment": {
+        "captures": 6,
+        "raw_tokens_est": 144,
+        "digest_tokens_est": 498,
+        "tokens_kept_out": 0,
+        "containment_ratio": 0.29,
+        "profiles": [
+          "unittest/v1"
+        ],
+        "backend": "library",
+        "handles": [
+          "run:6889a238cb2d",
+          "run:6889a238cb2d",
+          "run:6889a238cb2d",
+          "run:6889a238cb2d",
+          "run:6889a238cb2d",
+          "run:e6010236c3bc"
+        ],
+        "raw_exact": true,
+        "treatment_events": 0,
+        "evidence_sent_tokens_est": 0,
+        "native_baseline_tokens_est": 0,
+        "delta_vs_native_tokens": 0,
+        "treatments": []
+      },
+      "retrievals": null,
+      "routing": null,
+      "subtasks": [
+        {
+          "name": "calculate_circle_area",
+          "tier": "field_lib",
+          "rank": 2,
+          "model_id": "gemini-3.7-flash",
+          "passed": true,
+          "as_run_usd": 0.002499
+        },
+        {
+          "name": "calculate_sphere_area",
+          "tier": "field_lib",
+          "rank": 2,
+          "model_id": "gemini-3.7-flash",
+          "passed": true,
+          "as_run_usd": 0.002325
+        },
+        {
+          "name": "calculate_cylinder_area",
+          "tier": "field_lib",
+          "rank": 2,
+          "model_id": "gemini-3.7-flash",
+          "passed": true,
+          "as_run_usd": 0.003078
+        },
+        {
+          "name": "calculate_sector_area",
+          "tier": "field_dep",
+          "rank": 1,
+          "model_id": "gemini-3.5-flash-lite",
+          "passed": true,
+          "as_run_usd": 0.000525
+        },
+        {
+          "name": "calculate_annulus_area",
+          "tier": "lib_dep",
+          "rank": 1,
+          "model_id": "gemini-3.5-flash-lite",
+          "passed": true,
+          "as_run_usd": 0.000586
+        }
+      ],
+      "subtask_summary": {
+        "by_tier": {
+          "field_lib": {
+            "n": 3,
+            "passed": 3,
+            "usd": 0.007902,
+            "pass_rate": 1.0
+          },
+          "field_dep": {
+            "n": 1,
+            "passed": 1,
+            "usd": 0.000525,
+            "pass_rate": 1.0
+          },
+          "lib_dep": {
+            "n": 1,
+            "passed": 1,
+            "usd": 0.000586,
+            "pass_rate": 1.0
+          }
+        },
+        "by_model": {
+          "gemini-3.7-flash": {
+            "n": 3,
+            "passed": 3,
+            "usd": 0.007902,
+            "pass_rate": 1.0
+          },
+          "gemini-3.5-flash-lite": {
+            "n": 2,
+            "passed": 2,
+            "usd": 0.001111,
+            "pass_rate": 1.0
+          }
+        },
+        "n_subtasks": 5,
+        "passed_subtasks": 5
+      },
+      "error": ""
+    }
+  },
+  "ce_cascade": {
+    "ClassEval_0": {
+      "task_id": "ClassEval_0",
+      "passed": false,
+      "as_run_usd": 0.117904,
+      "triage_usd": 0.0,
+      "output_tokens": 15804,
+      "total_tokens": 18517,
+      "repair_loops": 2,
+      "simulated_calls": 0,
+      "containment": {
+        "captures": 10,
+        "raw_tokens_est": 1045,
+        "digest_tokens_est": 1196,
+        "tokens_kept_out": 0,
+        "containment_ratio": 0.87,
+        "profiles": [
+          "unittest/v1"
+        ],
+        "backend": "library",
+        "handles": [
+          "run:ced53a671252",
+          "run:6889a238cb2d",
+          "run:6889a238cb2d",
+          "run:f2208422e944",
+          "run:1417fa4a4acc",
+          "run:e0d93321ac85",
+          "run:6889a238cb2d",
+          "run:6889a238cb2d",
+          "run:f2208422e944",
+          "run:adf2654f5bbf"
+        ],
+        "raw_exact": true,
+        "treatment_events": 2,
+        "evidence_sent_tokens_est": 349,
+        "native_baseline_tokens_est": 450,
+        "delta_vs_native_tokens": 101,
+        "treatments": [
+          "straitjacket"
+        ]
+      },
+      "retrievals": null,
+      "routing": null,
+      "subtasks": [
+        {
+          "name": "filter",
+          "tier": "method_dep",
+          "model_id": "gemini-3.7-flash",
+          "passed": false,
+          "reason": "no class definition",
+          "as_run_usd": 0.0
+        },
+        {
+          "name": "is_start_with",
+          "tier": "standalone",
+          "model_id": "gemini-3.7-flash",
+          "passed": false,
+          "reason": "no class definition",
+          "as_run_usd": 0.0
+        },
+        {
+          "name": "get_jwt_user",
+          "tier": "lib_dep",
+          "model_id": "gemini-3.7-flash",
+          "passed": false,
+          "reason": "no class definition",
+          "as_run_usd": 0.0
+        },
+        {
+          "name": "set_current_user_info_and_log",
+          "tier": "lib_dep",
+          "model_id": "gemini-3.7-flash",
+          "passed": false,
+          "reason": "no class definition",
+          "as_run_usd": 0.0
+        }
+      ],
+      "subtask_summary": {
+        "by_tier": {
+          "method_dep": {
+            "n": 1,
+            "passed": 0,
+            "usd": 0.0,
+            "pass_rate": 0.0
+          },
+          "standalone": {
+            "n": 1,
+            "passed": 0,
+            "usd": 0.0,
+            "pass_rate": 0.0
+          },
+          "lib_dep": {
+            "n": 2,
+            "passed": 0,
+            "usd": 0.0,
+            "pass_rate": 0.0
+          }
+        },
+        "by_model": {
+          "gemini-3.7-flash": {
+            "n": 4,
+            "passed": 0,
+            "usd": 0.0,
+            "pass_rate": 0.0
+          }
+        },
+        "n_subtasks": 4,
+        "passed_subtasks": 0
+      },
+      "error": "model response contains no `class AccessGatewayFilter` definition"
+    },
+    "ClassEval_1": {
+      "task_id": "ClassEval_1",
+      "passed": true,
+      "as_run_usd": 0.00197,
+      "triage_usd": 0.0,
+      "output_tokens": 715,
+      "total_tokens": 1322,
+      "repair_loops": 0,
+      "simulated_calls": 0,
+      "containment": {
+        "captures": 6,
+        "raw_tokens_est": 144,
+        "digest_tokens_est": 498,
+        "tokens_kept_out": 0,
+        "containment_ratio": 0.29,
+        "profiles": [
+          "unittest/v1"
+        ],
+        "backend": "library",
+        "handles": [
+          "run:6889a238cb2d",
+          "run:6889a238cb2d",
+          "run:6889a238cb2d",
+          "run:6889a238cb2d",
+          "run:6889a238cb2d",
+          "run:e6010236c3bc"
+        ],
+        "raw_exact": true,
+        "treatment_events": 0,
+        "evidence_sent_tokens_est": 0,
+        "native_baseline_tokens_est": 0,
+        "delta_vs_native_tokens": 0,
+        "treatments": []
+      },
+      "retrievals": null,
+      "routing": null,
+      "subtasks": [
+        {
+          "name": "calculate_circle_area",
+          "tier": "field_lib",
+          "rank": 2,
+          "model_id": "gemini-3.5-flash-lite",
+          "passed": true,
+          "as_run_usd": 0.0
+        },
+        {
+          "name": "calculate_sphere_area",
+          "tier": "field_lib",
+          "rank": 2,
+          "model_id": "gemini-3.5-flash-lite",
+          "passed": true,
+          "as_run_usd": 0.0
+        },
+        {
+          "name": "calculate_cylinder_area",
+          "tier": "field_lib",
+          "rank": 2,
+          "model_id": "gemini-3.5-flash-lite",
+          "passed": true,
+          "as_run_usd": 0.0
+        },
+        {
+          "name": "calculate_sector_area",
+          "tier": "field_dep",
+          "rank": 1,
+          "model_id": "gemini-3.5-flash-lite",
+          "passed": true,
+          "as_run_usd": 0.0
+        },
+        {
+          "name": "calculate_annulus_area",
+          "tier": "lib_dep",
+          "rank": 1,
+          "model_id": "gemini-3.5-flash-lite",
+          "passed": true,
+          "as_run_usd": 0.0
+        }
+      ],
+      "subtask_summary": {
+        "by_tier": {
+          "field_lib": {
+            "n": 3,
+            "passed": 3,
+            "usd": 0.0,
+            "pass_rate": 1.0
+          },
+          "field_dep": {
+            "n": 1,
+            "passed": 1,
+            "usd": 0.0,
+            "pass_rate": 1.0
+          },
+          "lib_dep": {
+            "n": 1,
+            "passed": 1,
+            "usd": 0.0,
+            "pass_rate": 1.0
+          }
+        },
+        "by_model": {
+          "gemini-3.5-flash-lite": {
+            "n": 5,
+            "passed": 5,
+            "usd": 0.0,
+            "pass_rate": 1.0
+          }
+        },
+        "n_subtasks": 5,
+        "passed_subtasks": 5
+      },
+      "error": ""
+    }
+  }
+}

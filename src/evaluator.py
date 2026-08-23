@@ -267,6 +267,94 @@ def missing_code_error(code, entry_point):
         f"model response contains no `def {entry_point}` code block")
 
 # ==============================================================================
+# --- CLASSEVAL CLASS / METHOD EVALUATION ---
+# ==============================================================================
+#
+# BigCodeBench scores one function with one verdict. ClassEval scores a class,
+# and the whole reason it is here is that the verdict can be taken per METHOD:
+# each method owns a test class, so a pass can be attributed to whichever model
+# wrote that method. That attribution is what turns "the routed arm won" into
+# "the cheap model was routed 60 standalone methods and got 47 of them".
+#
+# The candidate program is assembled the same way for both granularities --
+# candidate class + the row's complete test source -- and only the runner tail
+# differs, naming which test classes to load. Keeping the program text
+# identical between a per-method run and a class-level run means the two
+# numbers are comparable; selecting the tests by slicing the source instead
+# would quietly change what the candidate is compiled against.
+
+
+def run_classeval_tests(problem, class_code, test_classes):
+    """Run exactly ``test_classes`` against a candidate class. Returns
+    ``(passed, evidence)``.
+
+    ``test_classes`` may be one method's test class, several, or every class in
+    the row -- the caller decides the granularity.
+    """
+    names = [t for t in (test_classes or []) if t]
+    if not names:
+        return False, _guard_evidence("no test class named for this ClassEval task")
+
+    program = (class_code + "\n\n" + problem.get("test", "")
+               + sj.unittest_tail(names))
+
+    if sj.available():
+        return _run_bigcodebench_contained(program)
+    return _run_bigcodebench_native(program)
+
+
+def run_classeval_method(problem, class_code, subtask):
+    """Score one method of a candidate class against that method's own tests."""
+    return run_classeval_tests(problem, class_code, [subtask.get("test_class")])
+
+
+def run_classeval_class(problem, class_code):
+    """Score a candidate class against every test class in the row.
+
+    This is ClassEval's own class-level metric and it is strictly harder than
+    "every method passed its own tests": 89 of the 100 rows carry an extra
+    integration test class that belongs to no single method, and it is the one
+    that fails when methods are individually correct but do not compose.
+    """
+    return run_classeval_tests(problem, class_code, problem.get("test_classes") or [])
+
+
+def missing_class_error(code, class_name):
+    """Birth gate: refuse a candidate that never defined the required class.
+
+    Same contract as :func:`missing_code_error` -- rejected before execution,
+    returned as bounded Evidence so the repair turn is fed the same shape of
+    payload whichever gate stopped it.
+    """
+    if re.search(rf"^\s*class\s+{re.escape(str(class_name))}\b", code or "", re.M):
+        return None
+    return _guard_evidence(
+        f"model response contains no `class {class_name}` definition")
+
+
+def classeval_subtask_summary(subtask_records):
+    """Aggregate per-method records into per-tier and per-model tallies.
+
+    The per-tier split is the measurement the routing hypothesis lives or dies
+    on: an arm that routed `standalone` methods to a cheap model has to show
+    that the cheap model actually passed them.
+    """
+    by_tier, by_model = {}, {}
+    for r in subtask_records or []:
+        for key, bucket in ((r.get("tier", "?"), by_tier), (r.get("model_id", "?"), by_model)):
+            b = bucket.setdefault(key, {"n": 0, "passed": 0, "usd": 0.0})
+            b["n"] += 1
+            b["passed"] += 1 if r.get("passed") else 0
+            b["usd"] = round(b["usd"] + float(r.get("as_run_usd", 0.0) or 0.0), 6)
+    for bucket in (by_tier, by_model):
+        for b in bucket.values():
+            b["pass_rate"] = round(b["passed"] / b["n"], 3) if b["n"] else 0.0
+    return {"by_tier": by_tier, "by_model": by_model,
+            "n_subtasks": len(subtask_records or []),
+            "passed_subtasks": sum(1 for r in (subtask_records or []) if r.get("passed"))}
+
+
+# ==============================================================================
 # --- SWE-BENCH PRO PATCH EVALUATION ---
 # ==============================================================================
 

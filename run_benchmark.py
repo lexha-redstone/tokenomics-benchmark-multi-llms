@@ -35,7 +35,11 @@ if SJ_SRC and os.path.isdir(SJ_SRC) and SJ_SRC not in sys.path:
     sys.path.insert(0, SJ_SRC)
 
 from src.datasets import load_dataset
-from src.evaluator import straitjacket_status, aggregate_containment as _aggregate_containment
+from src.client import (DispatchError, reset_simulated_calls,
+                        simulated_calls, simulation_allowed)
+from src.evaluator import (straitjacket_status,
+                           aggregate_containment as _aggregate_containment,
+                           classeval_subtask_summary as _classeval_subtask_summary)
 from src.architectures import get_configurations, VARIANT_REGISTRY
 from src.reporter import (allocate_report_paths, generate_markdown_report,
                           generate_html_dashboard)
@@ -44,10 +48,12 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--dataset", "-d", choices=["bcb", "bigcodebench", "bigcodebench-hard",
                                                     "swebench", "swebench_pro", "swe-bench",
-                                                    "webdev", "web-dev"],
+                                                    "webdev", "web-dev",
+                                                    "classeval", "class-eval", "ce"],
                         default="swebench", help="Dataset to evaluate (default: 'swebench')")
     parser.add_argument("--group", "-g", choices=["all", "single", "combo", "straitjacket", "sj",
-                                                  "nextgen", "ablation"],
+                                                  "nextgen", "ablation", "router",
+                                                  "classeval", "ce"],
                         default="all", help="Preset variant group to run (default: 'all')")
     parser.add_argument("--variants", "-v", default="",
                         help="Comma-separated variant IDs to run (e.g. 'single_flash36,sj_hybrid,sj_escalation_shield')")
@@ -55,6 +61,13 @@ def main():
                         help="Number of tasks to evaluate (default: 30)")
     parser.add_argument("--split", "-s", default=None,
                         help="Dataset split (default: dataset standard)")
+    parser.add_argument("--allow-simulation", action="store_true",
+                        help="on an unrecoverable API failure, substitute SIMULATED output "
+                             "instead of discarding and retrying the task. Off by default: a "
+                             "504 or an expired credential must not become a datapoint.")
+    parser.add_argument("--task-retries", type=int, default=3,
+                        help="how many times to re-attempt a task whose API calls failed "
+                             "(default: 3). The partial record is discarded each time.")
     parser.add_argument("--no-cache", action="store_true",
                         help="Ignore local task cache and force live re-evaluation")
     parser.add_argument("--out", "-o", default="",
@@ -62,6 +75,11 @@ def main():
     parser.add_argument("--report", "-r", action="store_true", default=True,
                         help="Automatically generate Markdown TCO report and HTML dashboard (default: True)")
     args = parser.parse_args()
+
+    if args.allow_simulation:
+        os.environ["ALLOW_SIMULATION"] = "1"
+        print("WARNING: --allow-simulation is on. Failed API calls will be replaced by "
+              "simulated output, marked `simulated: true` in the results.", flush=True)
 
     sj_state = straitjacket_status()
     print(f"straitjacket: backend={sj_state['backend']} ctx={sj_state['ctx_version']} "
@@ -80,6 +98,10 @@ def main():
         dataset_name = "SWE-bench Pro"
         ds_key = "swebench"
         ds_folder = "swebench_pro"
+    elif d_norm in ("classeval", "class_eval", "ce"):
+        dataset_name = "ClassEval"
+        ds_key = "classeval"
+        ds_folder = "classeval"
     else:
         dataset_name = "WebDev"
         ds_key = "webdev"
@@ -127,6 +149,7 @@ def main():
         print(f"[{c_idx}/{len(configs)}] RUNNING: {v_name}")
         t0 = time.time()
         results = []
+        failed_tasks = []
         passed_cnt = 0
         tot_usd = 0.0
         tot_triage_usd = 0.0
@@ -142,7 +165,33 @@ def main():
                 status_str = "PASS" if r.get("passed") else "FAIL"
                 print(f"  [{t_idx}/{n}] {tid} ... [CACHED] {status_str} | cost=${r.get('as_run_usd', 0.0):.5f} | out_tok={r.get('output_tokens', 0)}", flush=True)
             else:
-                raw_r = fn(prob)
+                # A task whose API calls failed is not a result. Drop the partial
+                # record and re-attempt it; only persist what completed.
+                raw_r, dispatch_err = None, None
+                for attempt in range(1, args.task_retries + 1):
+                    try:
+                        reset_simulated_calls()
+                        raw_r = fn(prob)
+                        break
+                    except DispatchError as e:
+                        dispatch_err = e
+                        if attempt < args.task_retries:
+                            wait = min(15 * attempt, 60)
+                            print(f"  [{t_idx}/{n}] {tid} ... {e.kind.upper()} FAILURE "
+                                  f"(attempt {attempt}/{args.task_retries}); discarding the "
+                                  f"partial record, retrying in {wait}s", flush=True)
+                            time.sleep(wait)
+                        else:
+                            print(f"  [{t_idx}/{n}] {tid} ... GAVE UP after "
+                                  f"{args.task_retries} attempts: {e}", flush=True)
+
+                if raw_r is None:
+                    # Recorded as an incomplete task, never as a pass or a fail,
+                    # and deliberately NOT written to the cache.
+                    failed_tasks.append({"task_id": tid, "kind": dispatch_err.kind,
+                                         "error": str(dispatch_err)})
+                    continue
+
                 r = {
                     "task_id": tid,
                     "passed": raw_r.get("passed", False),
@@ -154,15 +203,28 @@ def main():
                     # The containment ledger is a measurement, not a detail:
                     # dropping it here is what made the reports show pass rate
                     # and dollars but never context residency.
+                    # Provenance, so no later audit has to infer whether this
+                    # record came from a live call.
+                    "simulated_calls": simulated_calls(),
                     "containment": raw_r.get("containment"),
                     "retrievals": raw_r.get("retrievals"),
+                    "routing": raw_r.get("routing"),
+                    # ClassEval scores a task per method. Dropping these would
+                    # leave only the class-level verdict, and the whole reason
+                    # that dataset is here is that a pass can be attributed to
+                    # the model that wrote the method.
+                    "subtasks": raw_r.get("subtasks"),
+                    "subtask_summary": raw_r.get("subtask_summary"),
                     "error": str(raw_r.get("error", ""))[:500]
                 }
                 cache[v_id][tid] = r
                 with open(cache_file, "w", encoding="utf-8") as cf:
                     json.dump(cache, cf, indent=2)
                 status_str = "PASS" if r["passed"] else "FAIL"
-                print(f"  [{t_idx}/{n}] {tid} ... {status_str} | cost=${r['as_run_usd']:.5f} | out_tok={r['output_tokens']}", flush=True)
+                sub = r.get("subtask_summary") or {}
+                sub_str = (f" | methods={sub.get('passed_subtasks', 0)}/{sub.get('n_subtasks', 0)}"
+                           if sub.get("n_subtasks") else "")
+                print(f"  [{t_idx}/{n}] {tid} ... {status_str} | cost=${r['as_run_usd']:.5f} | out_tok={r['output_tokens']}{sub_str}", flush=True)
 
             results.append(r)
             if r["passed"]:
@@ -171,9 +233,12 @@ def main():
             tot_out_tok += r["output_tokens"]
 
         dt = time.time() - t0
-        pass_rate = (passed_cnt / n) if n > 0 else 0.0
+        # Rates are over tasks that actually completed. Counting a dropped task
+        # as a failure would silently understate the arm.
+        n_done = len(results) or n
+        pass_rate = (passed_cnt / n_done) if n_done > 0 else 0.0
         cost_per_solved = (tot_usd / passed_cnt) if passed_cnt > 0 else 0.0
-        avg_out = tot_out_tok / n if n > 0 else 0.0
+        avg_out = tot_out_tok / n_done if n_done > 0 else 0.0
 
         # Triage USD: prefer what the arm actually spent; the per-repair
         # estimate is only a fallback for arms that do not report it.
@@ -186,15 +251,33 @@ def main():
             repairs = sum(r.get("repair_loops", 0) for r in results)
             triage_usd = round(repairs * 0.0018, 5)
 
+        # Roll the per-method records up once per arm, so a report can show
+        # pass rate BY TIER without re-reading every task record.
+        sub_records = [sr for r in results for sr in (r.get("subtasks") or [])]
+        subtask_rollup = _classeval_subtask_summary(sub_records) if sub_records else None
+
+        simulated = sum(1 for t in results if t.get("simulated_calls"))
+        if failed_tasks:
+            print(f"  !! {len(failed_tasks)} task(s) never completed and are EXCLUDED "
+                  f"from this row: {', '.join(t['task_id'] for t in failed_tasks[:5])}"
+                  + (" ..." if len(failed_tasks) > 5 else ""), flush=True)
+
         summary = {
             "id": v_id,
             "name": v_name,
             "straitjacket": sj_state,
+            # Provenance for the row: how many tasks completed, how many were
+            # dropped, and whether any datapoint is simulated rather than live.
+            "completed": len(results),
+            "incomplete_tasks": failed_tasks,
+            "simulated_tasks": simulated,
+            "simulation_allowed": simulation_allowed(),
             "containment": _aggregate_containment(results),
+            "subtask_rollup": subtask_rollup,
             "category": cfg.get("category", ""),
             "models": cfg.get("models", "N/A"),
             "triage_mode": cfg.get("triage_mode", "$0.00"),
-            "n": n,
+            "n": n_done,
             "passed": passed_cnt,
             "pass_rate": round(pass_rate, 3),
             "total_as_run_usd": round(tot_usd, 6),

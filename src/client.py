@@ -8,6 +8,7 @@ import os
 import json
 import time
 import ssl
+import random
 import re
 import hashlib
 import urllib.request
@@ -27,8 +28,15 @@ def _ssl_ctx():
     except Exception:
         return ssl.create_default_context()
 
-def _vertex_access_token():
-    """Retrieve or refresh Google Cloud OAuth access token for Vertex AI."""
+def _vertex_access_token(force_refresh=False):
+    """Retrieve or refresh the Vertex AI OAuth token.
+
+    ``force_refresh`` discards the cached token, which is what an auth-classed
+    API failure needs: the cache may hold a token the server has already
+    rejected.
+    """
+    if force_refresh:
+        _vertex_token["tok"], _vertex_token["exp"] = None, 0.0
     if _vertex_token["tok"] and _vertex_token["exp"] - 60 > time.time():
         return _vertex_token["tok"]
     try:
@@ -42,6 +50,117 @@ def _vertex_access_token():
     except Exception:
         return None
 
+# ==============================================================================
+# --- FAILURE POLICY: refuse rather than fabricate ---
+# ==============================================================================
+#
+# This module used to answer every unrecoverable API failure with
+# `_fallback_dispatch`, a deterministic simulator. It priced its invented token
+# counts with the REAL rate card and returned them in the ordinary usage dict,
+# so a simulated task was indistinguishable from a live one in the results
+# JSON — a 504 or an expired credential quietly became a benchmark datapoint.
+#
+# Simulation is now opt-in. By default a failure raises `DispatchError`, the
+# runner drops the partial record, and the task is retried. When simulation IS
+# requested it stamps `usage["simulated"] = True`, so the contamination is
+# always visible downstream.
+
+
+class DispatchError(RuntimeError):
+    """A model call could not be completed. Carries whether a retry is sane."""
+
+    def __init__(self, message, *, model_id=None, kind="permanent", attempts=0):
+        super().__init__(message)
+        self.model_id = model_id
+        self.kind = kind          # "transient" | "auth" | "permanent"
+        self.attempts = attempts
+
+
+# Simulated calls since the last reset. The runner reads this per task so a
+# cached record states its own provenance instead of leaving a later audit to
+# infer it from pass-rate implausibility.
+_sim_calls = {"n": 0}
+
+
+def reset_simulated_calls():
+    _sim_calls["n"] = 0
+
+
+def simulated_calls():
+    return _sim_calls["n"]
+
+
+def simulation_allowed():
+    """Simulation runs only when explicitly asked for.
+
+    `--allow-simulation` on the runner, or ALLOW_SIMULATION=1 in the
+    environment. Anything else and a failed call is a failed call.
+    """
+    return os.environ.get("ALLOW_SIMULATION", "").strip().lower() in ("1", "true", "yes")
+
+
+# Retry budget for failures that are worth retrying. 504s and token refreshes
+# routinely need longer than the 2s+3s the old loop allowed.
+MAX_ATTEMPTS = int(os.environ.get("DISPATCH_MAX_ATTEMPTS", "5"))
+BACKOFF_BASE = float(os.environ.get("DISPATCH_BACKOFF_BASE", "2.0"))
+BACKOFF_CAP = float(os.environ.get("DISPATCH_BACKOFF_CAP", "60"))
+
+_TRANSIENT_MARKERS = (
+    "504", "503", "502", "500", "429", "gateway", "timeout", "timed out",
+    "deadline", "temporarily", "unavailable", "resource exhausted",
+    "connection reset", "connection aborted", "broken pipe", "rate limit",
+    "internal error",
+)
+_AUTH_MARKERS = (
+    "401", "403", "unauthenticated", "unauthorized", "permission denied",
+    "invalid_grant", "invalid authentication", "credential", "reauth",
+    "access token", "expired",
+)
+
+
+def classify_error(exc):
+    """transient (retry), auth (refresh then retry), or permanent (give up)."""
+    text = f"{type(exc).__name__}: {exc}".lower()
+    code = getattr(exc, "code", None)
+    if code in (500, 502, 503, 504, 429):
+        return "transient"
+    if code in (401, 403):
+        return "auth"
+    if any(m in text for m in _AUTH_MARKERS):
+        return "auth"
+    if any(m in text for m in _TRANSIENT_MARKERS):
+        return "transient"
+    return "permanent"
+
+
+def _sleep_for(attempt):
+    delay = min(BACKOFF_BASE ** attempt, BACKOFF_CAP)
+    # Jitter so parallel arms do not retry in lockstep against a struggling API.
+    return delay * (0.7 + 0.6 * random.random())
+
+
+def _give_up(model_id, exc, kind, attempts, prompt, max_tokens, thinking_level, problem):
+    """One exit for every unrecoverable call."""
+    hint = ""
+    if kind == "auth":
+        hint = ("  Credentials look expired — run:\n"
+                "    gcloud auth application-default login\n")
+    if simulation_allowed():
+        print(f"[{model_id}] {kind} failure after {attempts} attempts ({exc}). "
+              f"ALLOW_SIMULATION is set: substituting SIMULATED output.", flush=True)
+        _sim_calls["n"] += 1
+        text, usage, dt = _fallback_dispatch(model_id, prompt, max_tokens,
+                                             thinking_level, problem=problem)
+        usage = dict(usage)
+        usage["simulated"] = True
+        return text, usage, dt
+    raise DispatchError(
+        f"{model_id}: {kind} failure after {attempts} attempt(s): {exc}\n{hint}"
+        "  This record will be discarded and retried. Pass --allow-simulation "
+        "only if you deliberately want simulated results.",
+        model_id=model_id, kind=kind, attempts=attempts)
+
+
 _CLAUDE_THINKING_BUDGET = {"low": 2048, "medium": 4096, "high": 8192}
 
 def claude_api_call(model_id, prompt, max_tokens=2560, thinking_level=None, problem=None):
@@ -50,7 +169,10 @@ def claude_api_call(model_id, prompt, max_tokens=2560, thinking_level=None, prob
     """
     token = _vertex_access_token()
     if not token:
-        return _fallback_dispatch(model_id, prompt, max_tokens, thinking_level, problem=problem)
+        token = _vertex_access_token(force_refresh=True)
+    if not token:
+        return _give_up(model_id, "no Vertex AI access token", "auth", 0,
+                        prompt, max_tokens, thinking_level, problem)
 
     host = ("aiplatform.googleapis.com" if GCP_LOCATION == "global"
             else f"{GCP_LOCATION}-aiplatform.googleapis.com")
@@ -71,7 +193,8 @@ def claude_api_call(model_id, prompt, max_tokens=2560, thinking_level=None, prob
 
     body = json.dumps(payload).encode("utf-8")
     
-    for attempt in range(3):
+    last_exc = None
+    for attempt in range(MAX_ATTEMPTS):
         try:
             req = urllib.request.Request(url, data=body, headers={
                 "Authorization": f"Bearer {token}",
@@ -97,13 +220,21 @@ def claude_api_call(model_id, prompt, max_tokens=2560, thinking_level=None, prob
             }
             return text, usage, dt
         except Exception as e:
-            if attempt == 2:
-                print(f"[Claude API Warning] Call failed ({e}). Falling back to simulation.", flush=True)
-                return _fallback_dispatch(model_id, prompt, max_tokens, thinking_level, problem=problem)
-            sleep_time = (2 ** attempt) + 1
-            time.sleep(sleep_time)
-            
-    return _fallback_dispatch(model_id, prompt, max_tokens, thinking_level, problem=problem)
+            last_exc = e
+            kind = classify_error(e)
+            if kind == "permanent" or attempt == MAX_ATTEMPTS - 1:
+                return _give_up(model_id, e, kind, attempt + 1,
+                                prompt, max_tokens, thinking_level, problem)
+            if kind == "auth":
+                # The cached token may be exactly what the server rejected.
+                token = _vertex_access_token(force_refresh=True) or token
+            delay = _sleep_for(attempt)
+            print(f"[{model_id}] {kind} failure ({e}); retry "
+                  f"{attempt + 2}/{MAX_ATTEMPTS} in {delay:.1f}s", flush=True)
+            time.sleep(delay)
+
+    return _give_up(model_id, last_exc or "exhausted retries", "transient",
+                    MAX_ATTEMPTS, prompt, max_tokens, thinking_level, problem)
 
 _gemini_client = None
 
@@ -125,7 +256,8 @@ def gemini_call(model_id, prompt, max_tokens=2560, thinking_level=None, problem=
     """
     client = _gemini()
     if not client:
-        return _fallback_dispatch(model_id, prompt, max_tokens, thinking_level, problem=problem)
+        return _give_up(model_id, "Vertex AI Gemini client unavailable", "auth", 0,
+                        prompt, max_tokens, thinking_level, problem)
 
     try:
         from google.genai import types
@@ -148,7 +280,8 @@ def gemini_call(model_id, prompt, max_tokens=2560, thinking_level=None, problem=
             http_options=types.HttpOptions(timeout=90000)
         )
 
-        for attempt in range(3):
+        last_exc = None
+        for attempt in range(MAX_ATTEMPTS):
             try:
                 t0 = time.time()
                 resp = client.models.generate_content(
@@ -169,15 +302,27 @@ def gemini_call(model_id, prompt, max_tokens=2560, thinking_level=None, problem=
                 }
                 return (resp.text or ""), usage, dt
             except Exception as e:
-                if attempt == 2:
-                    print(f"[Gemini API Warning] Call failed ({e}). Falling back to simulation.", flush=True)
-                    return _fallback_dispatch(model_id, prompt, max_tokens, thinking_level, problem=problem)
-                sleep_time = (2 ** attempt) + 1
-                time.sleep(sleep_time)
-    except Exception:
-        return _fallback_dispatch(model_id, prompt, max_tokens, thinking_level, problem=problem)
+                last_exc = e
+                kind = classify_error(e)
+                if kind == "permanent" or attempt == MAX_ATTEMPTS - 1:
+                    return _give_up(model_id, e, kind, attempt + 1,
+                                    prompt, max_tokens, thinking_level, problem)
+                if kind == "auth":
+                    global _gemini_client
+                    _gemini_client = None      # rebuild against fresh credentials
+                    client = _gemini() or client
+                delay = _sleep_for(attempt)
+                print(f"[{model_id}] {kind} failure ({e}); retry "
+                      f"{attempt + 2}/{MAX_ATTEMPTS} in {delay:.1f}s", flush=True)
+                time.sleep(delay)
+    except DispatchError:
+        raise
+    except Exception as e:
+        return _give_up(model_id, e, classify_error(e), 1,
+                        prompt, max_tokens, thinking_level, problem)
 
-    return _fallback_dispatch(model_id, prompt, max_tokens, thinking_level, problem=problem)
+    return _give_up(model_id, last_exc or "exhausted retries", "transient",
+                    MAX_ATTEMPTS, prompt, max_tokens, thinking_level, problem)
 
 def _fallback_dispatch(model_id, prompt, max_tokens=2560, thinking_level=None, problem=None):
     """

@@ -1,7 +1,7 @@
 # Pipeline Architecture
 
 How a single benchmark task travels from dataset row to scored result, and how
-the seventeen registered architecture variants differ from one another.
+the registered architecture variants differ from one another.
 
 ---
 
@@ -136,6 +136,17 @@ identical prompts, identical evaluation; only step 5 differs.
 
 ```bash
 python3 run_benchmark.py --dataset bcb --group ablation --n 30 --report
+```
+
+### Category 6 — gemini-3.7 + opus-5 routing study
+One parameterised ladder (`run_tiered_router`) configured ten ways, to find the
+best accuracy-per-dollar combination of `gemini-3.5-flash-lite`,
+`gemini-3.7-flash` (thinking low/medium/high) and `claude-opus-5` reserved for
+hard tasks. Escalation can be gated on an attempt counter or on the harness's
+typed evidence. See [routing-study.md](routing-study.md).
+
+```bash
+python3 run_benchmark.py --dataset bcb --group router --n 50 --report --no-cache
 ```
 
 ---

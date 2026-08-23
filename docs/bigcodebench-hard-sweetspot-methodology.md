@@ -1,5 +1,12 @@
 # BigCodeBench "Sweet Spot" Benchmark Guideline: Low-Cost, High-Performance LLM Architecture Search
 
+> **Note on file references below.** This document predates the current
+> layout. Scripts it names lived in an earlier repository (`benchmark-using-multi-LLMs/`,
+> `claude-code-cli-gemini-tools/`) and are not part of this checkout; the modern
+> equivalents are `run_benchmark.py` plus the variant registry in `src/architectures.py`.
+> The links are flattened to plain names so they no longer point at a dead absolute path.
+
+
 This document outlines the guidelines, architectural strategies, and test harness setup for identifying the optimal **"Sweet Spot"**—the most cost-effective combination of LLM models, task-splitting patterns, and repair strategies for automated software engineering on **BigCodeBench-Hard** (first 10 tasks).
 
 ---
@@ -124,16 +131,16 @@ Instead of relying on a single expensive model for an entire coding workflow, we
 All insights must be reproducible via automated test code. The repository contains reference benchmark scripts and a unified runner:
 
 ### Reference Code Map
-* **Unified Sweet Spot Runner**: [bench_sweetspot_runner.py](file:///Users/lexha/Documents/work/codes/prj/17-tokenomics/benchmark-using-multi-LLMs/bigCodeBench-hard/bench_sweetspot_runner.py)
+* **Unified Sweet Spot Runner**: `bench_sweetspot_runner.py`
 * **Single-Model & Repair Harnesses**:
-  - [single_model_bench_bcb.py](file:///Users/lexha/Documents/work/codes/prj/17-tokenomics/benchmark-using-multi-LLMs/bigCodeBench-hard/single_model_bench_bcb.py)
-  - [single_model_bench_bcb_repair_escalation.py](file:///Users/lexha/Documents/work/codes/prj/17-tokenomics/benchmark-using-multi-LLMs/bigCodeBench-hard/single_model_bench_bcb_repair_escalation.py)
-  - [advisor_executor_bench_bcb.py](file:///Users/lexha/Documents/work/codes/prj/17-tokenomics/benchmark-using-multi-LLMs/bigCodeBench-hard/advisor_executor_bench_bcb.py)
+  - `single_model_bench_bcb.py`
+  - `single_model_bench_bcb_repair_escalation.py`
+  - `advisor_executor_bench_bcb.py`
 * **API-Only Offload Suites**:
-  - [bcb_common_api.py](file:///Users/lexha/Documents/work/codes/prj/17-tokenomics/claude-code-cli-gemini-tools/api-mode/bcb_common_api.py)
-  - [bench_b_gen_offload_cascade.py](file:///Users/lexha/Documents/work/codes/prj/17-tokenomics/claude-code-cli-gemini-tools/api-mode/bench_b_gen_offload_cascade.py)
-  - [bench_c_error_triage_offload.py](file:///Users/lexha/Documents/work/codes/prj/17-tokenomics/claude-code-cli-gemini-tools/api-mode/bench_c_error_triage_offload.py)
-  - [bench_d_combo_offload.py](file:///Users/lexha/Documents/work/codes/prj/17-tokenomics/claude-code-cli-gemini-tools/api-mode/bench_d_combo_offload.py)
+  - `bcb_common_api.py`
+  - `bench_b_gen_offload_cascade.py`
+  - `bench_c_error_triage_offload.py`
+  - `bench_d_combo_offload.py`
 
 ### Execution Commands
 

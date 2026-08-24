@@ -119,17 +119,23 @@ sets while reporting comparable-looking pass rates. FeatureBench has more ways t
 fail, not fewer — an image that will not pull, a `test_patch` that will not
 apply, a workdir that is not where the loader guessed.
 
-**Step 1 — check what `repo_settings` actually holds.** The loader derives the
-repository's in-image path from it, and a wrong binding would change what every
-arm is scored on:
+**Step 1 — see what `repo_settings` actually holds.** Runs without Docker:
 
 ```bash
 python3 tools/featurebench_preflight.py --settings
 ```
 
-If the printed `repo_workdir` is not where the repo lives inside the image, bind
-the correct key in `_fb_workdir` ([src/datasets.py](../src/datasets.py)). Gold
-will fail on every row until it is right — which is exactly what step 3 catches.
+Checked against the real fast split, the 40 keys are `repository`, `commit`,
+`base_image`, `install`, `pip_packages`, **`test_cmd`**, `timeout_run`,
+`library_name` … and **nothing path-like**. So:
+
+- The **test command comes from the row** (`test_cmd`), not from a hardcoded
+  pytest line — otherwise the arms would be scored on a command the benchmark
+  never specified. Timeouts come from `timeout_run` the same way.
+- The **repository's in-image path is discovered at run time**, not guessed:
+  `FeatureBenchEnv` reads the image's own `WORKDIR` via `docker inspect`, then
+  confirms it with `git rev-parse --show-toplevel`. `/workspace/<library_name>`
+  is only a last resort if both fail, and step 3 catches it if it is wrong.
 
 **Step 2 — pull the images.**
 
@@ -220,24 +226,32 @@ python3 run_benchmark.py --dataset featurebench --variants fb_single_opus --n 20
 
 ## 5. Cost, and how to not be surprised by it
 
-FeatureBench problem statements run **6k–77k characters**. That is 10–100× a
-BCB-Hard prompt, and input tokens dominate in a way they never did on the other
-datasets. Modelled from [`src/config.py`](../src/config.py)'s pricing at a ~5k
-token statement and ~8k token repair prompts:
+FeatureBench problem statements run **6k–77k characters** — the sample row is
+43,308, i.e. ~11k tokens. That is 10–100× a BCB-Hard prompt, and input tokens
+dominate in a way they never did on the other datasets. Modelled from
+[`src/config.py`](../src/config.py)'s pricing at ~10k-token statements and
+~15k-token repair prompts:
 
 | Arm | n=20 | n=100 |
 |---|---|---|
-| `fb_single_flash` | ~$2 | ~$10 |
-| `fb_single_sonnet` | ~$3 | ~$13 |
-| `fb_cascade` | ~$4 | ~$19 |
-| `fb_evidence_gate` | ~$5 | ~$26 |
-| `fb_plan_exec` | ~$3 | ~$16 |
-| **`--group featurebench` total** | **~$17** | **~$84** |
-| `fb_single_opus` (opt-in) | ~$7 | ~$33 |
+| `fb_single_flash` | ~$3 | ~$17 |
+| `fb_single_sonnet` | ~$5 | ~$23 |
+| `fb_cascade` | ~$7 | ~$33 |
+| `fb_evidence_gate` | ~$9 | ~$45 |
+| `fb_plan_exec` | ~$5 | ~$27 |
+| **`--group featurebench` total** | **~$29** | **~$146** |
+| `fb_single_opus` (opt-in) | ~$12 | ~$57 |
 
 Treat these as an order of magnitude. The N=148 routing study overshot its own
-pre-run estimate by ~1.3×, and the statement-length spread here is much wider
-than anything that estimate was built on. **Start at `--n 20`.**
+pre-run estimate by ~1.3×, and the statement-length spread here (6k–77k chars)
+is far wider than anything that estimate was built on. **Start at `--n 20`.**
+
+`fb_evidence_gate` is the most expensive multi-model arm rather than the
+cheapest, which inverts its N=148 position. That is expected and is not a bug:
+when the gate fires early it holds the frontier rung for the remaining
+attempts, and here there is no expensive middle rung for it to skip — on
+BCB-Hard its saving came precisely from skipping `gemini-3.7-flash (medium)`.
+Whether it earns that back in resolved tasks is the measurement.
 
 Wall-clock is the other budget: 3 oracle calls × ~57 s × tasks × arms. At n=20
 across five arms that is roughly 5 container-hours before model latency.

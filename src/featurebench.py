@@ -90,6 +90,13 @@ FRONTIER = OPUS_5_ID
 
 MAX_ORACLE_CALLS = 3
 
+# The sample row's gold patch is 51k chars (~13k tokens) and the schema tops out
+# at 227k, so the 8192 this started at truncated a correct answer into an
+# inapplicable one. 32k is a practical ceiling rather than a comfortable one:
+# some rows' gold exceeds any output budget a model can hit in one turn, which
+# is part of why frontier models resolve only 20-47% here.
+MAX_PATCH_TOKENS = 32768
+
 SOLVER_ROLE = (
     "You are a senior engineer implementing a complete feature in an existing "
     "repository. Read the feature request and produce the COMPLETE unified git "
@@ -190,7 +197,7 @@ def _ladder(problem, tiers, gate="after_ladder", frontier=FRONTIER,
         model, think = tiers[0]
         text, usage, _ = dispatch_model(
             model, _solve_prompt(problem, EXECUTOR_ROLE if plan else SOLVER_ROLE, plan),
-            max_tokens=8192, thinking_level=think, problem=problem)
+            max_tokens=MAX_PATCH_TOKENS, thinking_level=think, problem=problem)
         _spend(acc, usage)
         trace.rungs.append(f"{model}/{think or 'off'}")
         held = (model, think)
@@ -235,7 +242,7 @@ def _ladder(problem, tiers, gate="after_ladder", frontier=FRONTIER,
             _spend(acc, tr_usage)
             r_text, r_usage, _ = dispatch_model(
                 target, _repair_prompt(problem, patch, digest, plan),
-                max_tokens=8192, thinking_level=think, problem=problem)
+                max_tokens=MAX_PATCH_TOKENS, thinking_level=think, problem=problem)
             _spend(acc, r_usage)
             trace.rungs.append(f"{target}/{think or 'off'}")
             if escalate:

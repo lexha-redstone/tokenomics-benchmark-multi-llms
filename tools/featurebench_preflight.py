@@ -86,6 +86,21 @@ def show_settings(problems):
     print("\nresolved repo_workdir (what the executor will use):")
     for w, n in workdirs.most_common(10):
         print(f"  {w:40} {n}")
+    # The keys the executor actually depends on. Printed with their values
+    # because binding a wrong shape here silently changes what every arm is
+    # scored on -- the same reason the key list above is inspected rather than
+    # assumed.
+    print("\nexecution-relevant values (first row that has them):")
+    for key in ("test_cmd", "timeout_run", "timeout_one", "timeout_collect",
+                "library_name", "repository", "install", "pip_packages"):
+        for p in problems.values():
+            v = (p.get("settings") or {}).get(key)
+            if v not in (None, "", [], {}):
+                print(f"  {key:20} {str(v)[:220]!r}")
+                break
+        else:
+            print(f"  {key:20} (absent or empty on every row)")
+
     sample = next(iter(problems.values()), None)
     if sample:
         print(f"\nsample row `{sample.get('instance_id')}`:")
@@ -95,9 +110,9 @@ def show_settings(problems):
         print(f"  PASS_TO_PASS  {sample.get('PASS_TO_PASS')}")
         print(f"  statement     {len(sample.get('problem_statement') or '')} chars")
         print(f"  gold patch    {len(sample.get('patch') or '')} chars")
-    print("\nIf `repo_workdir` above is not where the repository lives inside the "
-          "image, bind the right key in src/datasets.py:_fb_workdir -- gold will "
-          "fail on every row until it is right, which is what this preflight is for.")
+    print("\n`repo_workdir` above is only the fallback. At run time the executor "
+          "reads the image's own WORKDIR (`docker inspect`) and falls back to the "
+          "git root, so the printed guess is used only if both are unavailable.")
 
 
 def pull_images(problems):

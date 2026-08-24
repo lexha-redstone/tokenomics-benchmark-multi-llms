@@ -454,15 +454,20 @@ class FeatureBenchEnv:
     attempt starts from the same base.
     """
 
-    def __init__(self, problem, timeout=900.0):
+    def __init__(self, problem, timeout=None):
+        from .datasets import fb_timeout
         self.problem = problem
-        self.timeout = float(timeout)
+        self.timeout = float(timeout) if timeout else fb_timeout(problem, "timeout_run")
         self.image = problem.get("image_name") or ""
+        # Only a fallback. `_resolve_workdir` replaces it from the image itself
+        # once the container is up -- `repo_settings` carries no path key, so a
+        # guess here would decide what every arm is scored on.
         self.workdir = problem.get("repo_workdir") or "/workspace"
         self.name = f"{FB_CONTAINER_PREFIX}-{os.getpid()}-{abs(hash(problem.get('instance_id', ''))) % 10 ** 8}"
         self.sandbox = None
         self.started = False
         self.setup_error = ""
+        self.workdir_unverified = False
 
     # -- lifecycle ---------------------------------------------------------
     def __enter__(self):
@@ -509,6 +514,8 @@ class FeatureBenchEnv:
             raise RuntimeError(
                 f"docker run failed for {self.image}: {(p.stderr or '').strip()[-300:]}")
 
+        self._resolve_workdir()
+
         base = self.problem.get("base_commit") or ""
         if base:
             self._sh(f"git checkout -f {base} 2>/dev/null || true", check=False)
@@ -522,6 +529,33 @@ class FeatureBenchEnv:
                 raise RuntimeError("the dataset's own test_patch did not apply")
         self._sh("git config user.email fb@local && git config user.name fb && "
                  "git add -A && git commit -q -m fb-tests --allow-empty")
+
+    def _resolve_workdir(self):
+        """Find the repository inside the running container.
+
+        Authoritative sources first: the image's own `WORKDIR`, then the git
+        root reachable from it. `repo_settings` has no path key -- checked
+        across all 100 rows of the fast split -- so the constructor's
+        `/workspace/<name>` is a last resort, not the plan.
+        """
+        p = subprocess.run(
+            ["docker", "inspect", "-f", "{{.Config.WorkingDir}}", self.image],
+            capture_output=True, text=True, timeout=60)
+        candidate = (p.stdout or "").strip()
+        for probe in (candidate, self.workdir):
+            if not probe or probe == "/":
+                continue
+            q = subprocess.run(
+                ["docker", "exec", "-w", probe, self.name, "bash", "-lc",
+                 "git rev-parse --show-toplevel"],
+                capture_output=True, text=True, timeout=60)
+            root = (q.stdout or "").strip()
+            if q.returncode == 0 and root:
+                self.workdir = root
+                return
+        # Neither worked: leave the fallback in place and let gold fail loudly
+        # in the preflight rather than scoring arms against the wrong tree.
+        self.workdir_unverified = True
 
     def _write(self, path, text):
         """Materialise a file inside the container without a shell quoting hazard."""
@@ -572,17 +606,20 @@ class FeatureBenchEnv:
                 pass
 
     def _pytest(self):
+        from .datasets import fb_test_command
         files = featurebench_test_files(self.problem)
         if not files:
             return False, _guard_evidence("row names no FAIL_TO_PASS test file")
-        argv = ["docker", "exec", "-w", self.workdir, self.name,
-                "python", "-m", "pytest", "-q", "--tb=short", "-p", "no:cacheprovider",
-                *files]
+        # Every row ships its own `test_cmd`; using a hardcoded pytest line
+        # would score the arms on a command the benchmark never specified.
+        cmd = fb_test_command(self.problem)
+        shell = f"{cmd} {' '.join(files)}"
+        argv = ["docker", "exec", "-w", self.workdir, self.name, "bash", "-lc", shell]
         run = sj.contained_run(argv, cwd=self.sandbox, timeout=self.timeout,
                                # Keep the container name (which carries a pid)
                                # out of the recorded argv, or every attempt
                                # digests as a different command.
-                               record_argv=["python", "-m", "pytest", "-q", *files])
+                               record_argv=cmd.split() + files)
         return run.exit_code == 0, _from_run(run)
 
 

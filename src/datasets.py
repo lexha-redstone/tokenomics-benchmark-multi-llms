@@ -529,18 +529,42 @@ def _fb_repo_settings(raw):
 
 
 def _fb_workdir(settings, repo):
-    """Where the repository lives inside its image.
+    """Last-resort guess at where the repository lives inside its image.
 
-    Read from `repo_settings` when it says so; otherwise `/workspace/<name>`,
-    which is what the published images use. The preflight fails loudly on gold
-    if this is wrong for a row, so a bad guess cannot reach a scored arm.
+    `repo_settings` does **not** carry a workdir -- verified across all 100 rows
+    of the fast split, whose keys are `repository`, `commit`, `base_image`,
+    `install`, `test_cmd`, ... and nothing path-like. So this is a fallback
+    only: `FeatureBenchEnv` resolves the real location at container start from
+    the image's own `WORKDIR` and then from the git root, both of which are
+    authoritative. Guessing was the original design and the preflight was built
+    to catch it; the data said not to guess at all.
     """
-    for key in ("workdir", "work_dir", "repo_dir", "repo_path", "root", "cwd"):
-        v = settings.get(key)
-        if isinstance(v, str) and v.strip():
-            return v.strip()
-    name = str(repo or "").split("/")[-1] or "repo"
+    name = str(settings.get("library_name") or "").strip() \
+        or str(repo or "").split("/")[-1] or "repo"
     return f"/workspace/{name}"
+
+
+def fb_test_command(problem):
+    """The command that runs a row's tests, from the dataset rather than guessed.
+
+    Every row carries `test_cmd`. Falling back to a hardcoded pytest invocation
+    would score the arms on a command the benchmark never specified.
+    """
+    settings = problem.get("settings") or {}
+    cmd = settings.get("test_cmd")
+    if isinstance(cmd, (list, tuple)):
+        cmd = " ".join(str(c) for c in cmd)
+    cmd = str(cmd or "").strip()
+    return cmd or "python -m pytest -q --tb=short -p no:cacheprovider"
+
+
+def fb_timeout(problem, key="timeout_run", default=900.0):
+    """Per-row timeout from `repo_settings`, which ships several."""
+    v = (problem.get("settings") or {}).get(key)
+    try:
+        return float(v) if v else float(default)
+    except (TypeError, ValueError):
+        return float(default)
 
 
 def load_featurebench_problems(split=FEATUREBENCH_DEFAULT_SPLIT, max_tasks=None,

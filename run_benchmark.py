@@ -3,15 +3,18 @@
 """
 Master Unified Benchmark Runner for Multi-LLM Tokenomics & Straitjacket Evaluation.
 
-Runs end-to-end evaluation for any target dataset (BigCodeBench-Hard, SWE-bench Pro, WebDev)
+Runs end-to-end evaluation for any target dataset (BigCodeBench-Hard, WebDev, ClassEval)
 and specified variant configurations/groups, with automatic Markdown report and HTML dashboard generation.
 
 Usage Examples:
-  # Run SWE-bench Pro on 30 tasks with all Straitjacket variants + generate reports:
-  python3 run_benchmark.py --dataset swebench --group straitjacket --n 30 --report
+  # Run BigCodeBench-Hard on 100 tasks with all Straitjacket variants + generate reports:
+  python3 run_benchmark.py --dataset bcb --group straitjacket --n 100 --report
 
   # Run BigCodeBench-Hard on 10 tasks with specific variants:
-  python3 run_benchmark.py --dataset bcb --variants single_flash36,sj_hybrid,sj_smart_repair --n 10 --report
+  python3 run_benchmark.py --dataset bcb --variants single_flash37,sj_hybrid,sj_smart_repair --n 10 --report
+
+  # Run the ClassEval sub-task routing comparison:
+  python3 run_benchmark.py --dataset classeval --group classeval --n 91 --report
 
   # Run WebDev single-model baseline comparisons:
   python3 run_benchmark.py --dataset webdev --group single --n 10 --report
@@ -45,10 +48,9 @@ from src.sweep import load_cache, run_arm, print_scoreboard
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--dataset", "-d", choices=["bcb", "bigcodebench", "bigcodebench-hard",
-                                                    "swebench", "swebench_pro", "swe-bench",
                                                     "webdev", "web-dev",
                                                     "classeval", "class-eval", "ce"],
-                        default="swebench", help="Dataset to evaluate (default: 'swebench')")
+                        default="bcb", help="Dataset to evaluate (default: 'bcb')")
     parser.add_argument("--group", "-g", choices=["all", "single", "combo", "straitjacket", "sj",
                                                   "nextgen", "ablation", "router",
                                                   "classeval", "ce"],
@@ -92,10 +94,6 @@ def main():
         dataset_name = "BigCodeBench-Hard"
         ds_key = "bcb"
         ds_folder = "bigCodeBench-hard"
-    elif d_norm in ("swebench", "swebench_pro", "swe_bench"):
-        dataset_name = "SWE-bench Pro"
-        ds_key = "swebench"
-        ds_folder = "swebench_pro"
     elif d_norm in ("classeval", "class_eval", "ce"):
         dataset_name = "ClassEval"
         ds_key = "classeval"

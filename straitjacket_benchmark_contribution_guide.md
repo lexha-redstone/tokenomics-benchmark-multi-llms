@@ -6,7 +6,7 @@
 
 ## 1. Overview & Core Philosophy
 
-This repository evaluates **Multi-LLM collaboration architectures, cascading strategies, and context containment harnesses** across real-world software engineering benchmarks ([BigCodeBench-Hard](bigCodeBench-hard), [SWE-bench Pro](swebench_pro), and [WebDev](webdev)).
+This repository evaluates **Multi-LLM collaboration architectures, cascading strategies, and context containment harnesses** across real-world software engineering benchmarks ([BigCodeBench-Hard](bigCodeBench-hard), [WebDev](webdev), and [ClassEval](classeval)).
 
 The benchmark follows the **Straitjacket Benchmark Charter** and **Tokenomics Initiative** principles:
 
@@ -40,7 +40,7 @@ benchmark-using-multi-LLMs/
 │   ├── client.py                                # Vertex AI Gemini & Claude client with retry & fallback
 │   ├── straitjacket.py                          # Bridge to the real ctx-harness (capture, digest, retrieval)
 │   ├── evaluator.py                             # Python unittest & git patch evaluators + contained evidence
-│   ├── datasets.py                              # Unified dataset loaders (BCB, SWE-bench Pro, WebDev)
+│   ├── datasets.py                              # Unified dataset loaders (BCB, WebDev, ClassEval)
 │   ├── architectures.py                         # Modular multi-LLM architecture pipelines & registry
 │   └── reporter.py                              # Markdown TCO report & interactive HTML dashboard generator
 │
@@ -66,16 +66,15 @@ benchmark-using-multi-LLMs/
 │   ├── results/                                 # Raw JSON metrics & run caches
 │   └── bench_runner.py                          # Dataset runner adapter
 │
-├── swebench_pro/                                # Dataset 2: SWE-bench Pro (Enterprise repo patch resolution)
-│   ├── data/                                    # Downloaded/cached SWE-bench Pro dataset (.jsonl)
+├── webdev/                                      # Dataset 2: WebDev (a library-filtered BCB-Hard subset)
+│   ├── data/                                    # Local WebDev dataset (.jsonl)
 │   ├── results/                                 # Raw JSON metrics & run caches
-│   ├── bench_runner.py                          # SWE-bench Pro runner adapter
-│   └── run_swebench_pro_sweetspot.py            # Master SWE-bench Pro runner adapter
+│   └── bench_runner.py                          # WebDev runner adapter
 │
-└── webdev/                                      # Dataset 3: WebDev (Web & networking tasks)
-    ├── data/                                    # Local WebDev dataset (.jsonl)
+└── classeval/                                   # Dataset 3: ClassEval (class generation, scored per method)
+    ├── data/                                    # ClassEval dataset + quarantine-<split>.json
     ├── results/                                 # Raw JSON metrics & run caches
-    └── bench_runner.py                          # WebDev runner adapter
+    └── requirements.txt                         # The ten packages ClassEval's own tasks import
 ```
 
 ---
@@ -87,25 +86,25 @@ The primary entry point is `run_benchmark.py`, which allows running any dataset,
 ### Basic Usage
 
 ```bash
-# 1. Run SWE-bench Pro on 30 tasks with all Straitjacket variants and auto-generate reports
-python3 run_benchmark.py --dataset swebench --group straitjacket --n 30 --report
+# 1. Run BigCodeBench-Hard on 100 tasks with all Straitjacket variants and auto-generate reports
+python3 run_benchmark.py --dataset bcb --group straitjacket --n 100 --report
 
 # 2. Run BigCodeBench-Hard on 10 tasks with specific variants
-python3 run_benchmark.py --dataset bcb --variants cascade_sj,hybrid_sj,smart_repair_sj --n 10 --report
+python3 run_benchmark.py --dataset bcb --variants sj_cascade,sj_hybrid,sj_smart_repair --n 10 --report
 
 # 3. Run WebDev evaluation across single models
 python3 run_benchmark.py --dataset webdev --group single --n 10 --report
 
-# 4. Run all variants on SWE-bench Pro with fresh execution (no cache)
-python3 run_benchmark.py --dataset swebench --group all --n 30 --no-cache --report
+# 4. Run the ClassEval sub-task routing comparison with fresh execution (no cache)
+python3 run_benchmark.py --dataset classeval --group classeval --n 91 --no-cache --report
 ```
 
 ### Supported CLI Arguments
 
 | Argument | Shorthand | Description | Default |
 |---|---|---|---|
-| `--dataset` | `-d` | Target dataset: `bcb` (BigCodeBench-Hard), `swebench` (SWE-bench Pro), `webdev` | `swebench` |
-| `--group` | `-g` | Preset variant group: `all`, `single`, `combo`, `straitjacket`, `nextgen` | `all` |
+| `--dataset` | `-d` | Target dataset: `bcb` (BigCodeBench-Hard), `webdev`, `classeval` | `bcb` |
+| `--group` | `-g` | Preset variant group: `all`, `single`, `combo`, `straitjacket`, `nextgen`, `ablation`, `router`, `classeval` | `all` |
 | `--variants` | `-v` | Comma-separated list of specific variant IDs or architecture keys | `None` (uses group) |
 | `--n` | `-n` | Number of tasks to evaluate | `30` (or dataset length) |
 | `--split` | `-s` | Dataset split: `test`, `v0.1.4`, `default` | Dataset default |
@@ -183,7 +182,7 @@ python3 run_benchmark.py --dataset swebench --group all --n 30 --no-cache --repo
        id="custom_pipeline_sj",
        name="Custom Pipeline (Flash Plan -> Lite Exec + SJ Triage)",
        category="3. Combination + straitjacket",
-       dataset_compatibility=["bcb", "swebench", "webdev"],
+       dataset_compatibility=["bcb", "webdev", "classeval"],
        fn=run_my_custom_pipeline,
    )
    ```
@@ -195,7 +194,7 @@ python3 run_benchmark.py --dataset swebench --group all --n 30 --no-cache --repo
 1. **Place Raw Data in `<dataset_name>/data/`**:
    - Use standard JSON Lines (`.jsonl`) format.
 2. **Implement Dataset Loader in `src/datasets.py`**:
-   - Provide a clean mapping to standard task fields (`task_id`, `prompt`, `test`, `entry_point` or `repo`, `problem_statement`, `canonical_patch`).
+   - Provide a clean mapping to standard task fields (`task_id`, `complete_prompt`, `test`, `entry_point`).
 3. **Register Evaluation Runner in `src/evaluator.py`**.
 
 ---
@@ -208,7 +207,7 @@ Every benchmark run produces a JSON record matching this structure:
 
 ```json
 {
-  "dataset": "swebench",
+  "dataset": "bcb",
   "group": "straitjacket",
   "n": 30,
   "passed": 23,

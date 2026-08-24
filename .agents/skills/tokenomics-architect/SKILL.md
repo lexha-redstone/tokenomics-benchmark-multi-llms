@@ -80,7 +80,7 @@ flowchart TD
 ### Step 1: Task Classification & Decomposition (`ctx.route/v1`)
 The cheap coordinator (or deterministic fallback) classifies the task and emits an acyclic DAG:
 - **Class A (Algorithmic / Multi-Library)**: Draft (`gemini-3.6-flash`, `low`) -> Triage ($0) -> Repair (`3.5-lite`) -> Escalation (`3.6-flash`, `med`).
-- **Class B (Enterprise Repo Bug / SWE-bench)**: Architect Contract (`claude-sonnet`) -> Patch Exec (`gemini-3.5-lite`) -> Triage ($0) -> Targeted Repair (`claude-opus`).
+- **Class B (Enterprise Repo Bug / multi-file patch)**: Architect Contract (`claude-sonnet`) -> Patch Exec (`gemini-3.5-lite`) -> Triage ($0) -> Targeted Repair (`claude-opus`). **Unvalidated** — this repository has no executed multi-file-patch dataset, so this shape is reasoned from Class A/C, not measured.
 - **Class C (Web / Microservices)**: Plan (`gemini-3.6-flash`) -> Exec (`gemini-3.5-lite`) -> Test & Fix (`gemini-3.6-flash`).
 - **Class D (High-Throughput Batching)**: Cascade `gemini-3.5-lite` -> `gemini-3.6-flash (min)` -> `gemini-3.6-flash (low)`.
 - **Class E (Pure Gemini Native)**: `gemini-3.6-flash` (`low` -> `med` -> `high`).
@@ -116,13 +116,29 @@ The cheap coordinator (or deterministic fallback) classifies the task and emits 
 
 ## 5. Production Benchmark Receipts
 
-| Architecture Pattern | Target Task | Pipeline Configuration | Effective Pass Rate | Cost per Solved Task | Baseline Comparison |
+Read from the two sweeps that are instrumented end to end and reconcile with
+their own raw records: **BigCodeBench-Hard N=100**
+(`reports/12_bcb-hard_straitjacket_n100.md`) and **ClassEval N=91**
+(`reports/17_classeval_opus5_n91.md`). Older per-arm figures quoted elsewhere in
+this repository come from pre-instrumentation sweeps and are not used here.
+
+| Architecture Pattern | Sweep | Pipeline Configuration | Pass Rate | Cost per Solved Task | Read against the frontier |
 |:---|:---|:---|:---:|:---:|:---|
-| **`Straitjacket Smart Repair`** | BigCodeBench-Hard | `gemini-3.6-flash (low)` -> Triage -> `3.5-lite` -> `3.6-flash (med)` | **81.5%** | **$0.0076** | **35x cheaper** than Claude Opus solo. |
-| **`Ultra-Sweet Hybrid`** | SWE-bench Pro | `claude-sonnet` Contract -> `gemini-3.5-lite` Exec -> `claude-opus` Fix | **80.0%** | **$0.00388** | **7.4x cheaper** than direct Opus-5. |
-| **`Straitjacket Hybrid`** | WebDev / APIs | `gemini-3.6-flash` Plan -> `3.5-lite` Exec -> `3.6-flash` Repair | **80.0%** | **$0.0041** | **87% cheaper** than Claude Opus-5. |
-| **`Smart Tiered Cascade`** | CI/CD Batch Bugs | `gemini-3.5-lite` -> `3.6-flash (min)` -> `3.6-flash (low)` | **76.6%** | **$0.0036** | **97.2% cheaper** than single frontier. |
-| **`Pure Gemini 3-Tier`** | Native GCP Stack | `gemini-3.6-flash` (`low` -> `medium` -> `high`) | **83.0%** | **$0.0152** | Matches Opus pass rate at **88% lower cost**. |
+| **`Escalation Shield`** | BCB-Hard N=100 | `gemini-3.5-lite` -> `3.7-flash` -> `claude-sonnet-5` | **68%** | **$0.0282** | 89% of Opus's pass rate at 61% of its $/solved. |
+| **`Straitjacket Hybrid`** | BCB-Hard N=100 | `3.7-flash` Plan -> `3.5-lite` Exec -> `3.7-flash` Repair | 59% | **$0.0277** | cheapest working pipeline; 17 points below Opus. |
+| **`Straitjacket Cascade`** | BCB-Hard N=100 | `gemini-3.5-lite` -> `3.7-flash` | 66% | $0.0339 | — |
+| **`Single: claude-opus-5`** | BCB-Hard N=100 | `claude-opus-5`, self-repair | **76%** | $0.0463 | the accuracy ceiling on this slice. |
+| **`Whole-class Cascade`** | ClassEval N=91 | `3.5-lite` -> `3.7-flash (low)` -> `3.7-flash (med)` | **80%** | $0.0371 | best non-frontier arm on ClassEval. |
+| **`Per-method, one model`** | ClassEval N=91 | every method to `gemini-3.5-flash-lite` | 73% | **$0.0210** | cheapest arm that still clears 70%. |
+| **`Single: claude-opus-5`** | ClassEval N=91 | `claude-opus-5`, whole class | **88%** | $0.0464 | the accuracy ceiling on this slice. |
+
+**Two negative results are load-bearing.** Routing sub-tasks by *labelled
+difficulty* did not beat either the cascade or the one-model control on ClassEval
+(71% at $0.0317, against 73% at $0.0210) — so prefer escalation on a test
+failure over difficulty routing decided in advance. And on BCB-Hard, a repair
+turn that *de-escalates* rescues 16% of failures against 41% for one that
+escalates (z = +3.55, p = 0.0004): the rung the repair turn lands on is what the
+repair budget actually buys.
 
 ---
 

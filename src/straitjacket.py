@@ -714,8 +714,8 @@ def contain_text(text: str, *, argv, exit_code: int = 1, stream: str = "stdout",
                  cwd: str = ".") -> ContainedRun:
     """Contain output that was produced outside the harness.
 
-    Used for evaluators that synthesise a test log rather than executing one
-    (SWE-bench Pro). The text is spooled into the store and digested by the
+    Used for evaluators that synthesise a test log rather than executing one.
+    The text is spooled into the store and digested by the
     *upstream* profile registry through the same ``ctx.invocation/v1``
     manifest the executor publishes — only the inputs are supplied here, no
     selection logic is re-implemented.

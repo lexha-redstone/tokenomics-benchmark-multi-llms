@@ -5,8 +5,10 @@
 > `python3 run_benchmark.py --dataset classeval --group classeval` -- with arms
 > in [`src/classeval.py`](../src/classeval.py), a gold-solution preflight in
 > [`tools/classeval_preflight.py`](../tools/classeval_preflight.py), and the H1
-> verdict in [`tools/analyze_classeval.py`](../tools/analyze_classeval.py). No
-> full sweep has been run yet; only a 2-task smoke test.
+> verdict in [`tools/analyze_classeval.py`](../tools/analyze_classeval.py).
+> **The full N=91 sweep has now run, and H1 is not supported** -- see
+> [§6, the verdict](#6-the-verdict-h1-is-not-supported) and
+> [report 17](../reports/17_classeval_opus5_n91.md).
 > **Companion**: [README §1 — Why the cascade shape suits this dataset](../README.md#why-the-cascade-shape-suits-this-dataset)
 
 ## 1. The hypothesis, stated so it can fail
@@ -58,35 +60,28 @@ result there is not a second observation — it is the same observation on a
 subset. Any cross-dataset claim that leans on BCB-Hard *and* WebDev is leaning
 on one dataset twice.
 
-**SWE-bench Pro in this repo is not executed.** It has the right shape —
-measured over the local 100 tasks:
+**SWE-bench Pro was removed from the repository, and why is worth recording.**
+It had exactly the shape H1 needs — measured over the 100 local tasks before
+deletion, a mean 5 files touched per gold patch, 87% of them multi-file — but it
+was never executed. `run_swebench_pro_task` did not run the repository's tests.
+It checked that the candidate touched one of the gold patch's target files, then
+scored it **pass** if the candidate string contained either of the first two `+`
+lines of the canonical patch. The local JSONL was missing what a real harness
+needs: `FAIL_TO_PASS` and `PASS_TO_PASS` were empty lists and `code_context` was
+an empty string on every row.
 
-```
-problem statement   mean  351 tok    gold patch   mean 2566 tok (median 1707, max 14301)
-files touched       mean    5        multi-file share 87%
-```
+So every SWE-bench Pro number this repository ever printed was a
+**canonical-patch substring score**, not a pass rate — a measure of how closely a
+model reproduced the gold patch's literal text. Combined with the then-current
+simulator, whose SWE branch built diffs out of `canonical_patch`'s own added
+lines, that is how a single-`claude-opus-5` arm came to record **10/10 at 199
+average output tokens**.
 
-A 5-file patch is P1 and almost certainly P2. But `run_swebench_pro_task`
-([src/evaluator.py:334](../src/evaluator.py:334)) does not run the repository's
-tests. It checks that the candidate touched one of the gold patch's target
-files, and then scores it **pass** if the candidate string contains either of
-the first two `+` lines of the canonical patch
-([src/evaluator.py:361](../src/evaluator.py:361)). The local JSONL is missing
-what a real harness would need: `FAIL_TO_PASS` and `PASS_TO_PASS` are empty
-lists and `code_context` is an empty string on every row.
-
-Two consequences, both worth stating plainly:
-
-1. Every SWE-bench Pro number in this repository is a **canonical-patch
-   substring score**, not a pass rate. It rewards reproducing the gold patch's
-   literal text. Combined with the pre-fix simulator — whose SWE branch emitted
-   diffs built from `canonical_patch`'s own added lines
-   ([src/client.py](../src/client.py), `_fallback_dispatch`) — this is how
-   `swebench_pro/results/single_opus5_results.json` came to record **10/10 at
-   199 average output tokens**.
-2. The one dataset here with the structure H1 needs cannot currently answer H1.
-   Fixing that means running the real containerised harness, not writing another
-   arm.
+A proxy that scores like a pass rate and prints beside real pass rates is worse
+than no dataset at all, so the dataset, its arms, its results and its three
+reports (indices 07–09) were **deleted** rather than annotated. Re-adopting
+SWE-bench Pro means running the real containerised harness, not writing another
+arm.
 
 So the honest starting position is: **this repo has one working dataset, and it
 is the one that favours cascades.**
@@ -138,7 +133,7 @@ monolith-vs-planner axis, so there is a published baseline to sit beside.
 | Dataset | Fit | Cost to adopt |
 |---|---|---|
 | **[FeatureBench](https://github.com/LiberCoders/FeatureBench)** (ICLR 2026) 📄 | features spanning multiple commits and PRs, derived by tracing unit tests along a dependency graph — P1/P2/P4, and the multi-test structure suggests P3 | Docker required; **fast split of 100 instances needs no GPU**, ~57 s/instance on gold patches. Claude 4.5 Opus resolves 11%, so headroom is enormous and cheap arms may floor out |
-| **SWE-bench Pro** (real harness) 📄 | already measured above as structurally ideal; the data is already on disk | needs containers + the `FAIL_TO_PASS`/`PASS_TO_PASS` lists this copy lacks. Highest value per unit of work *because the arms already exist* |
+| **SWE-bench Pro** (real harness) 📄 | structurally ideal, as §3 measured before the mock copy was deleted | needs containers, the real `FAIL_TO_PASS`/`PASS_TO_PASS` lists, and a fresh dataset pull. The arms still exist, so the work is harness-side only |
 | **[Commit0](https://github.com/commit-0/commit0)** 📄 | 54 libraries built from a spec against interactive unit tests — the strongest P1/P4 on the list | SOTA reaches 6–29% pass; a `gemini-3.5-flash-lite` rung will likely score ~0, which compresses the very differences being measured |
 
 ### Tier 3 — labelled difficulty, or a different domain
@@ -171,12 +166,13 @@ rather than just observed.
 Wiring it up surfaced two things the survey did not predict.
 
 **Some classes cannot be scored, and not for the same reason.** On a provisioned
-machine six fail with their own gold solution -- gold written against NumPy 1.x,
-a test that resolves a hostname, a flaky random-map task, and two whose
-`methods_info` omits a method the class needs. That last pair fails *only* for
-the per-method arms, so it is not a constant subtracted from every arm but a
-bias against the exact arms being compared. `tools/classeval_preflight.py` runs
-gold first and quarantines them.
+machine 8 of the 100 fail with their own gold solution: two where gold simply
+fails its own tests, one written against NumPy 1.x, one that resolves a
+hostname, one flaky random-map task, and three whose `methods_info` omits a
+method the class needs. That last group fails *only* for the per-method arms, so
+it is not a constant subtracted from every arm but a bias against the exact arms
+being compared. `tools/classeval_preflight.py` runs gold first and quarantines
+them, leaving 92 scorable classes.
 
 **On a bare machine the count doubles, and that is an environment problem
 wearing a benchmark's clothes.** ClassEval's tasks import ten third-party
@@ -216,6 +212,85 @@ confound out from the start is cheaper than controlling for it afterwards.
 same pass rate as the cascade at the same or higher cost per solved task — or
 one whose per-tier breakdown shows the cheap model failing on the very
 `standalone` methods it was routed for. Either result is worth the run.
+
+## 6. The verdict: H1 is not supported
+
+The sweep ran. Nine arms, 91 of the 92 scorable classes, 376 scorable methods,
+live API —
+[report 17](../reports/17_classeval_opus5_n91.md), regenerate the analysis with
+`python3 tools/analyze_classeval.py`.
+
+| Arm | Class pass | Method pass | Total $ | $/solved | Integration gap |
+|---|---|---|---|---|---|
+| `ce_single_opus` (frontier baseline) | **80/91** | 357/376 | $3.7120 | $0.0464 | 0 |
+| `ce_cascade` (**the shape to beat**) | 73/91 | 341/376 | $2.7094 | $0.0371 | 0 |
+| `ce_single_flash` | 70/91 | 334/376 | $2.1593 | $0.0308 | 0 |
+| `ce_plan_exec` | 70/91 | 333/376 | $1.8594 | $0.0266 | 0 |
+| `ce_single_sonnet` | 66/91 | 332/376 | $1.9332 | $0.0293 | 0 |
+| `ce_route_flat` (**the control**) | 66/91 | 340/376 | $1.3886 | **$0.0210** | 1 |
+| `ce_route_by_tier` (**the hypothesis**) | 65/91 | 341/376 | $2.0615 | $0.0317 | 1 |
+| `ce_plan_route` | 65/91 | 337/376 | $2.6631 | $0.0410 | 1 |
+| `ce_single_lite` | 56/91 | 313/376 | $0.4040 | **$0.0072** | 0 |
+
+**H1 asked for one number and did not get it.** `ce_route_by_tier` reaches 71%
+against the cascade's 80% (z = −1.39, p = 0.17 — the gap itself is inside noise
+at this N), and it does *not* buy that with a lower cost per solved task at a
+matched pass rate: $0.0317 vs $0.0371 is 1.17× cheaper for nine points less
+accuracy. H1 predicted a win at matched-or-better accuracy. There is no reading
+of this table that delivers one.
+
+**The control is what makes the result interpretable, and it is the harsher
+half.** `ce_route_flat` runs the identical per-method loop with every method
+sent to the same cheap model. It lands at 66/91 for **$0.0210 per solved task** —
+one class ahead of the routed arm *and* 34% cheaper per solved task. So whatever
+per-method generation is worth here, difficulty routing subtracts from it: the
+routed arm spends $0.67 more in total to end up one class behind the control it
+has to beat. Adding a planner on top (`ce_plan_route`) makes it worse again —
+same 65/91, $0.0410 per solved.
+
+**Why the routing spend does not convert.** Per-model delivery inside
+`ce_route_by_tier`: `gemini-3.5-flash-lite` delivered 206/207 of the methods it
+was routed, `gemini-3.7-flash` 129/146, and `claude-sonnet-5` 6/23 at $0.5107.
+That last row is not a model failing — sonnet only ever holds a *repair* turn
+one rung above flash, so 6/23 is a rescue rate on the residue two cheaper rungs
+already failed. The cheap rung is not the bottleneck this experiment assumed it
+was. It delivers essentially everything routed to it; the cost is concentrated
+in a hard tail that no amount of routing *policy* reaches, because reaching it
+requires a better model, not a better assignment.
+
+The per-tier breakdown says the same thing from the other side. On the
+`method_dep` tier — the hardest, and the one the routing table sends up to
+`gemini-3.7-flash` at medium thinking — the routed arm scores 85/102 against the
+cascade's 90/102 and opus's 94/102. Routing a method to a stronger model does
+not help when what makes the method hard is its dependence on *the other methods
+in the same class*, which a per-method prompt cannot show it.
+
+**The integration gap is the cost of decomposition, and it is real but small.**
+All three per-method arms carry exactly one class where every method passed its
+own test and the assembled class still failed; the whole-class arms carry none.
+One class in 91 is not the reason H1 failed, but it is the failure mode that
+only decomposition can have, and it is worth watching on a dataset with wider
+classes.
+
+**What this licenses, stated narrowly.** ClassEval was picked because it has
+the structure H1 needs and BigCodeBench-Hard lacks: 71 of its 100 classes span
+more than one labelled difficulty tier, and every method is scored separately.
+On that dataset, with per-method attribution, **assigning sub-tasks to models by
+labelled difficulty did not beat escalating the whole task, and did not beat
+sending every sub-task to the cheapest model either.** The per-arm gaps are
+individually inside binomial noise at N=91, so this is a failure to find the
+effect rather than a proof it is zero — but H1 was a directional prediction with
+a specific cost signature, and neither the direction nor the signature is there.
+
+Nothing here contradicts the BCB-Hard finding; it extends it. Escalation buys
+what routing does not, on both datasets tested, because *fail → escalate* uses
+an oracle that has already run and difficulty routing uses a label chosen before
+anything ran.
+
+**Where to look next.** ClassEval has no P4 — a 333-token class fits one window
+and retry is cheap — so H2 is untouched, and the pattern-level question is only
+answered under a cheap oracle. FeatureBench's fast split adds P4 without
+demanding a GPU, and remains the honest next step.
 
 ## Sources
 

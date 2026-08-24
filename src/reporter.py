@@ -31,8 +31,6 @@ REPORTS_DIR = os.path.join(ROOT_DIR, "reports")
 
 _DATASET_SLUG = {
     "bigcodebench-hard": "bcb-hard",
-    "swe-bench pro": "swebench-pro",
-    "swebench pro": "swebench-pro",
     "webdev": "webdev",
     "web-dev": "webdev",
 }
@@ -203,7 +201,7 @@ def _write_containment_table(f, summary_rows):
                 "Do not read them as a result.\n")
 
 
-def generate_markdown_report(summary_rows, dataset_name="SWE-bench Pro", output_path=None):
+def generate_markdown_report(summary_rows, dataset_name="BigCodeBench-Hard", output_path=None):
     """
     Generate standard Markdown Comparative TCO Report.
     """
@@ -259,7 +257,7 @@ def generate_markdown_report(summary_rows, dataset_name="SWE-bench Pro", output_
     print(f"Generated Markdown report: {output_path}", flush=True)
     return output_path
 
-def generate_html_dashboard(summary_rows, dataset_name="SWE-bench Pro", output_path=None):
+def generate_html_dashboard(summary_rows, dataset_name="BigCodeBench-Hard", output_path=None):
     """
     Generate modern interactive HTML dashboard.
     """

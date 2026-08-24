@@ -45,18 +45,31 @@ NOTES = {
            "Straitjacket comparative TCO across all arms."),
     "06": ("inferred", "BigCodeBench-Hard", "N=50",
            "Gemini vs Claude head-to-head."),
-    "07": ("inferred", "SWE-bench Pro", "N=10",
-           "Straitjacket pilot on git-patch resolution."),
-    "08": ("inferred", "SWE-bench Pro", "N=30",
-           "Straitjacket comparative TCO."),
-    "09": ("inferred", "SWE-bench Pro", "N=30",
-           "Live Vertex AI run; adds claude-opus-4.8."),
     "10": ("inferred", "WebDev", "N=2",
            "Straitjacket smoke run on web/networking tasks."),
     "11": ("2026-08-06", "cross-dataset", "N=10/30/50",
            "Synthesis of every sweep up to that date."),
     "12": ("2026-08-22", "BigCodeBench-Hard", "N=100",
            "Largest sweep. gemini-3.7 + claude-opus-5, full containment receipt."),
+    "13": ("2026-08-22", "BigCodeBench-Hard", "N=1",
+           "Routing-study smoke run: the ten R1-R10 ladders, one task."),
+    "15": ("2026-08-23", "ClassEval", "N=2",
+           "ClassEval smoke run: the hypothesis arm and the shape it has to beat."),
+    "16": ("2026-08-24", "ClassEval", "N=91",
+           "Full sub-task routing comparison, eight arms over the scorable classes."),
+    "17": ("2026-08-24", "ClassEval", "N=91",
+           "Same sweep with the claude-opus-5 baseline merged in."),
+}
+
+# Indices whose reports are gone, and why. Printed under the table so a gap in
+# the numbering reads as a decision rather than a missing file.
+WITHDRAWN = {
+    "07": "SWE-bench Pro N=10 — withdrawn: the SWE-bench Pro path never ran the "
+          "repository's tests, so its rows were canonical-patch substring scores, "
+          "not pass rates.",
+    "08": "SWE-bench Pro N=30 — withdrawn for the same reason as 07.",
+    "09": "SWE-bench Pro N=30 (live API) — withdrawn for the same reason as 07.",
+    "14": "never produced a report file.",
 }
 
 
@@ -167,6 +180,12 @@ def write_index(apply_changes):
         html_cell = f"[html]({html})" if html else "—"
         lines.append(f"| {idx} | {date} | {dataset} | {n_tasks} | {md_cell} | "
                      f"{html_cell} | {note} |")
+
+    if WITHDRAWN:
+        lines += ["", "**Gaps in the numbering.** Indices are never reused, so a "
+                  "missing number is a report that was withdrawn:", ""]
+        for idx in sorted(WITHDRAWN):
+            lines.append(f"- **{idx}** — {WITHDRAWN[idx]}")
 
     lines += [
         "",

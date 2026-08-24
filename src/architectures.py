@@ -10,14 +10,12 @@ from .config import (
     GEMINI_FLASH_ID, GEMINI_FLASH_LITE_ID,
     SONNET_ID, OPUS_5_ID, OPUS_48_ID, OPUS_ID,
     SOLVER_ROLE, ADVISOR_ROLE, EXECUTOR_ROLE, REPAIR_ROLE,
-    SWEBENCH_SOLVER_ROLE, SWEBENCH_ADVISOR_ROLE, SWEBENCH_EXECUTOR_ROLE, SWEBENCH_REPAIR_ROLE,
     WEBDEV_SOLVER_ROLE, WEBDEV_ADVISOR_ROLE,
     RETRIEVAL_PROTOCOL_ROLE
 )
 from .client import dispatch_model
 from .evaluator import (
     extract_code, run_bigcodebench, missing_code_error,
-    extract_patch, run_swebench_pro_task, missing_patch_error,
     triage_error, triage_error_straitjacket,
     begin_containment, containment_report, record_evidence_sent,
     straitjacket_status
@@ -61,7 +59,7 @@ _EVIDENCE_LABEL = {
 
 
 def _treat_error(err, treatment="straitjacket", problem=None,
-                 triage_model=GEMINI_35_FLASH_LITE_ID, is_swe=False):
+                 triage_model=GEMINI_35_FLASH_LITE_ID):
     """Apply one error treatment. Returns ``(payload, usage, seconds)``.
 
     The native payload is NOT re-truncated here. ``Evidence`` already carries
@@ -74,7 +72,7 @@ def _treat_error(err, treatment="straitjacket", problem=None,
         # invariant for a plain string that never went through the harness.
         out = (sj.tail_to_cap(err), dict(_ZERO_USAGE), 0.0)
     elif treatment == "llm":
-        out = triage_error(err, model_id=triage_model, is_swe=is_swe)
+        out = triage_error(err, model_id=triage_model)
     elif treatment == "straitjacket":
         out = triage_error_straitjacket(err, problem=problem)
     else:
@@ -146,49 +144,21 @@ def _warn_once(message):
 # --- PROBLEM EVALUATION DISPATCHER HELPER ---
 # ==============================================================================
 
-def _is_swebench_problem(problem):
-    return problem.get("dataset_type") == "swebench" or "instance_id" in problem or "base_commit" in problem
-
 def _build_initial_prompt(problem, role_type="solver"):
-    is_swe = _is_swebench_problem(problem)
-    if is_swe:
-        if role_type == "advisor":
-            return (
-                SWEBENCH_ADVISOR_ROLE +
-                f"Repository: {problem.get('repo', 'enterprise/repo')}\n"
-                f"Problem Statement:\n{problem.get('problem_statement', '')}\n\n"
-                f"Code Context:\n{problem.get('code_context', '')}"
-            )
-        else:
-            return (
-                SWEBENCH_SOLVER_ROLE +
-                f"Repository: {problem.get('repo', 'enterprise/repo')}\n"
-                f"Base Commit: {problem.get('base_commit', '')}\n"
-                f"Problem Statement:\n{problem.get('problem_statement', '')}\n\n"
-                f"Code Context:\n{problem.get('code_context', '')}\n\n"
-                "Generate the COMPLETE unified git patch/diff."
-            )
+    # Python function completion (BCB / WebDev)
+    prompt_text = problem.get("complete_prompt", "")
+    if role_type == "advisor":
+        return ADVISOR_ROLE + f"Problem:\n```python\n{prompt_text}\n```"
     else:
-        # Python function completion (BCB / WebDev)
-        prompt_text = problem.get("complete_prompt", "")
-        if role_type == "advisor":
-            return ADVISOR_ROLE + f"Problem:\n```python\n{prompt_text}\n```"
-        else:
-            return SOLVER_ROLE + f"Problem:\n```python\n{prompt_text}\n```\n\nWrite the complete solution."
+        return SOLVER_ROLE + f"Problem:\n```python\n{prompt_text}\n```\n\nWrite the complete solution."
 
 def _eval_solution(problem, text):
-    is_swe = _is_swebench_problem(problem)
-    if is_swe:
-        patch = extract_patch(text)
-        passed, err = run_swebench_pro_task(problem, patch)
-        return passed, err, patch
-    else:
-        code = extract_code(text)
-        guard = missing_code_error(code, problem.get("entry_point", "task_func"))
-        if guard:
-            return False, guard, code
-        passed, err = run_bigcodebench(problem, code)
-        return passed, err, code
+    code = extract_code(text)
+    guard = missing_code_error(code, problem.get("entry_point", "task_func"))
+    if guard:
+        return False, guard, code
+    passed, err = run_bigcodebench(problem, code)
+    return passed, err, code
 
 # ==============================================================================
 # --- CATEGORY 1: SINGLE MODEL BASELINES ---
@@ -216,31 +186,20 @@ def run_single(problem, model_id=GEMINI_37_FLASH_ID, thinking_level=None, max_lo
 
     while not passed and loop < max_loops:
         loop += 1
-        is_swe = _is_swebench_problem(problem)
-        digest, tr_usage, _ = _treat_error(err, error_treatment, problem=problem, is_swe=is_swe)
+        digest, tr_usage, _ = _treat_error(err, error_treatment, problem=problem)
         tot_usd += tr_usage["as_run_usd"]
         triage_usd += tr_usage["as_run_usd"]
         tot_out += tr_usage["output"]
         tot_tok += tr_usage["total_tokens"]
         label = _EVIDENCE_LABEL[error_treatment]
 
-        if is_swe:
-            repair_prompt = (
-                SWEBENCH_REPAIR_ROLE +
-                f"Repository: {problem.get('repo', '')}\n"
-                f"Problem Statement:\n{problem.get('problem_statement', '')}\n\n"
-                f"Current candidate patch:\n```diff\n{sol}\n```\n\n"
-                f"{label}:\n```\n{digest}\n```\n\n"
-                "Output COMPLETE corrected unified git patch/diff."
-            )
-        else:
-            repair_prompt = (
-                REPAIR_ROLE +
-                f"Problem:\n```python\n{problem.get('complete_prompt', '')}\n```\n\n"
-                f"Current solution:\n```python\n{sol}\n```\n\n"
-                f"{label}:\n```\n{digest}\n```\n\n"
-                "Write the complete corrected solution."
-            )
+        repair_prompt = (
+            REPAIR_ROLE +
+            f"Problem:\n```python\n{problem.get('complete_prompt', '')}\n```\n\n"
+            f"Current solution:\n```python\n{sol}\n```\n\n"
+            f"{label}:\n```\n{digest}\n```\n\n"
+            "Write the complete corrected solution."
+        )
 
         r_text, r_usage, r_dt = dispatch_model(model_id, repair_prompt, thinking_level=thinking_level, problem=problem)
         tot_usd += r_usage["as_run_usd"]
@@ -390,9 +349,8 @@ def run_contained_retrieval_cascade(problem, gen_model=GEMINI_35_FLASH_LITE_ID,
         tot_out += tr_usage["output"]
         tot_tok += tr_usage["total_tokens"]
 
-        is_swe = _is_swebench_problem(problem)
-        role = SWEBENCH_REPAIR_ROLE if is_swe else REPAIR_ROLE
-        statement = problem.get("problem_statement", problem.get("complete_prompt", ""))
+        role = REPAIR_ROLE
+        statement = problem.get("complete_prompt", "")
         base = (
             role
             + (RETRIEVAL_PROTOCOL_ROLE if allow_retrieval else "")
@@ -459,22 +417,11 @@ def run_read_write(problem, planner_model=GEMINI_37_FLASH_ID, executor_model=GEM
     adv_prompt = _build_initial_prompt(problem, role_type="advisor")
     guidance, adv_usage, adv_dt = dispatch_model(planner_model, adv_prompt, max_tokens=1024, problem=problem)
 
-    is_swe = _is_swebench_problem(problem)
-    if is_swe:
-        exec_prompt = (
-            SWEBENCH_EXECUTOR_ROLE +
-            f"Repository: {problem.get('repo', '')}\n"
-            f"Problem Statement:\n{problem.get('problem_statement', '')}\n\n"
-            f"Code Context:\n{problem.get('code_context', '')}\n\n"
-            f"Software Architect Contract Guidance:\n{guidance}\n\n"
-            "Generate the COMPLETE unified git patch/diff."
-        )
-    else:
-        exec_prompt = (
-            EXECUTOR_ROLE +
-            f"Problem:\n```python\n{problem.get('complete_prompt', '')}\n```\n\n"
-            f"Advisor guidance:\n{guidance}\n\nWrite the complete solution."
-        )
+    exec_prompt = (
+        EXECUTOR_ROLE +
+        f"Problem:\n```python\n{problem.get('complete_prompt', '')}\n```\n\n"
+        f"Advisor guidance:\n{guidance}\n\nWrite the complete solution."
+    )
 
     sol_text, exec_usage, exec_dt = dispatch_model(executor_model, exec_prompt, max_tokens=2560, problem=problem)
     passed, err, sol = _eval_solution(problem, sol_text)
@@ -488,31 +435,20 @@ def run_read_write(problem, planner_model=GEMINI_37_FLASH_ID, executor_model=GEM
 
     if not passed:
         loop = 1
-        digest, tr_usage, _ = _treat_error(err, error_treatment, problem=problem, is_swe=is_swe)
+        digest, tr_usage, _ = _treat_error(err, error_treatment, problem=problem)
         tot_usd += tr_usage["as_run_usd"]
         triage_usd += tr_usage["as_run_usd"]
         tot_out += tr_usage["output"]
         tot_tok += tr_usage["total_tokens"]
 
-        if is_swe:
-            repair_prompt = (
-                SWEBENCH_REPAIR_ROLE +
-                f"Repository: {problem.get('repo', '')}\n"
-                f"Problem Statement:\n{problem.get('problem_statement', '')}\n\n"
-                f"Contract:\n{guidance}\n\n"
-                f"Current candidate patch:\n```diff\n{sol}\n```\n\n"
-                f"{_EVIDENCE_LABEL[error_treatment]}:\n```\n{digest}\n```\n\n"
-                "Output COMPLETE corrected unified git patch/diff."
-            )
-        else:
-            repair_prompt = (
-                REPAIR_ROLE +
-                f"Problem:\n```python\n{problem.get('complete_prompt', '')}\n```\n\n"
-                f"Advisor Guidance:\n{guidance}\n\n"
-                f"Current solution:\n```python\n{sol}\n```\n\n"
-                f"Unit test error:\n```\n{digest}\n```\n\n"
-                "Write the complete corrected solution."
-            )
+        repair_prompt = (
+            REPAIR_ROLE +
+            f"Problem:\n```python\n{problem.get('complete_prompt', '')}\n```\n\n"
+            f"Advisor Guidance:\n{guidance}\n\n"
+            f"Current solution:\n```python\n{sol}\n```\n\n"
+            f"Unit test error:\n```\n{digest}\n```\n\n"
+            "Write the complete corrected solution."
+        )
 
         r_text, r_usage, r_dt = dispatch_model(planner_model, repair_prompt, thinking_level="low", problem=problem)
         tot_usd += r_usage["as_run_usd"]
@@ -555,31 +491,19 @@ def run_cascade(problem, gen_model=GEMINI_35_FLASH_LITE_ID, esc_model=GEMINI_37_
         target_model = esc_model if escalated else gen_model
         think_level = "low" if (escalated and target_model in (GEMINI_37_FLASH_ID, GEMINI_FLASH_ID)) else None
 
-        is_swe = _is_swebench_problem(problem)
-        payload, tr_usage, _ = _treat_error(err, error_treatment, problem=problem,
-                                            is_swe=is_swe)
+        payload, tr_usage, _ = _treat_error(err, error_treatment, problem=problem)
         tot_usd += tr_usage["as_run_usd"]
         triage_usd += tr_usage["as_run_usd"]
         tot_out += tr_usage["output"]
         tot_tok += tr_usage["total_tokens"]
 
-        if is_swe:
-            repair_prompt = (
-                SWEBENCH_REPAIR_ROLE +
-                f"Repository: {problem.get('repo', '')}\n"
-                f"Problem Statement:\n{problem.get('problem_statement', '')}\n\n"
-                f"Current candidate patch:\n```diff\n{sol}\n```\n\n"
-                f"{_EVIDENCE_LABEL[error_treatment]}:\n```\n{payload}\n```\n\n"
-                "Output COMPLETE corrected unified git patch/diff."
-            )
-        else:
-            repair_prompt = (
-                REPAIR_ROLE +
-                f"Problem:\n```python\n{problem.get('complete_prompt', '')}\n```\n\n"
-                f"Current solution:\n```python\n{sol}\n```\n\n"
-                f"Unit test error:\n```\n{payload}\n```\n\n"
-                "Write the complete corrected solution."
-            )
+        repair_prompt = (
+            REPAIR_ROLE +
+            f"Problem:\n```python\n{problem.get('complete_prompt', '')}\n```\n\n"
+            f"Current solution:\n```python\n{sol}\n```\n\n"
+            f"Unit test error:\n```\n{payload}\n```\n\n"
+            "Write the complete corrected solution."
+        )
 
         r_text, r_usage, r_dt = dispatch_model(target_model, repair_prompt, thinking_level=think_level, problem=problem)
         tot_usd += r_usage["as_run_usd"]
@@ -608,20 +532,11 @@ def run_hybrid(problem, planner_model=GEMINI_37_FLASH_ID, executor_model=GEMINI_
     adv_prompt = _build_initial_prompt(problem, role_type="advisor")
     guidance, adv_usage, adv_dt = dispatch_model(planner_model, adv_prompt, max_tokens=1024, problem=problem)
 
-    is_swe = _is_swebench_problem(problem)
-    if is_swe:
-        exec_prompt = (
-            SWEBENCH_EXECUTOR_ROLE +
-            f"Repository: {problem.get('repo', '')}\n"
-            f"Problem Statement:\n{problem.get('problem_statement', '')}\n\n"
-            f"Contract Guidance:\n{guidance}\n\nGenerate COMPLETE unified git patch/diff."
-        )
-    else:
-        exec_prompt = (
-            EXECUTOR_ROLE +
-            f"Problem:\n```python\n{problem.get('complete_prompt', '')}\n```\n\n"
-            f"Advisor guidance:\n{guidance}\n\nWrite the complete solution."
-        )
+    exec_prompt = (
+        EXECUTOR_ROLE +
+        f"Problem:\n```python\n{problem.get('complete_prompt', '')}\n```\n\n"
+        f"Advisor guidance:\n{guidance}\n\nWrite the complete solution."
+    )
 
     sol_text, exec_usage, exec_dt = dispatch_model(executor_model, exec_prompt, max_tokens=2560, problem=problem)
     passed, err, sol = _eval_solution(problem, sol_text)
@@ -635,30 +550,19 @@ def run_hybrid(problem, planner_model=GEMINI_37_FLASH_ID, executor_model=GEMINI_
     if not passed:
         loop = 1
         digest, tr_usage, _ = _treat_error(err, error_treatment, problem=problem,
-                                           triage_model=triage_model, is_swe=is_swe)
+                                           triage_model=triage_model)
         tot_usd += tr_usage["as_run_usd"]
         triage_usd += tr_usage["as_run_usd"]
         tot_out += tr_usage["output"]
         tot_tok += tr_usage["total_tokens"]
 
-        if is_swe:
-            repair_prompt = (
-                SWEBENCH_REPAIR_ROLE +
-                f"Repository: {problem.get('repo', '')}\n"
-                f"Problem Statement:\n{problem.get('problem_statement', '')}\n\n"
-                f"Contract:\n{guidance}\n\n"
-                f"Current candidate patch:\n```diff\n{sol}\n```\n\n"
-                f"{_EVIDENCE_LABEL[error_treatment]}:\n```\n{digest}\n```\n\n"
-                "Output COMPLETE corrected unified git patch/diff."
-            )
-        else:
-            repair_prompt = (
-                REPAIR_ROLE +
-                f"Problem:\n```python\n{problem.get('complete_prompt', '')}\n```\n\n"
-                f"Current solution:\n```python\n{sol}\n```\n\n"
-                f"{_EVIDENCE_LABEL[error_treatment]}:\n```\n{digest}\n```\n\n"
-                "Write the complete corrected solution."
-            )
+        repair_prompt = (
+            REPAIR_ROLE +
+            f"Problem:\n```python\n{problem.get('complete_prompt', '')}\n```\n\n"
+            f"Current solution:\n```python\n{sol}\n```\n\n"
+            f"{_EVIDENCE_LABEL[error_treatment]}:\n```\n{digest}\n```\n\n"
+            "Write the complete corrected solution."
+        )
 
         esc_text, esc_usage, _ = dispatch_model(escalate_model, repair_prompt, thinking_level="low", problem=problem)
         tot_usd += esc_usage["as_run_usd"]
@@ -689,20 +593,11 @@ def run_hybrid_straitjacket(problem, planner_model=GEMINI_37_FLASH_ID, executor_
     adv_prompt = _build_initial_prompt(problem, role_type="advisor")
     guidance, adv_usage, adv_dt = dispatch_model(planner_model, adv_prompt, max_tokens=1024, problem=problem)
 
-    is_swe = _is_swebench_problem(problem)
-    if is_swe:
-        exec_prompt = (
-            SWEBENCH_EXECUTOR_ROLE +
-            f"Repository: {problem.get('repo', '')}\n"
-            f"Problem Statement:\n{problem.get('problem_statement', '')}\n\n"
-            f"Contract Guidance:\n{guidance}\n\nGenerate COMPLETE unified git patch/diff."
-        )
-    else:
-        exec_prompt = (
-            EXECUTOR_ROLE +
-            f"Problem:\n```python\n{problem.get('complete_prompt', '')}\n```\n\n"
-            f"Advisor guidance:\n{guidance}\n\nWrite the complete solution."
-        )
+    exec_prompt = (
+        EXECUTOR_ROLE +
+        f"Problem:\n```python\n{problem.get('complete_prompt', '')}\n```\n\n"
+        f"Advisor guidance:\n{guidance}\n\nWrite the complete solution."
+    )
 
     sol_text, exec_usage, exec_dt = dispatch_model(executor_model, exec_prompt, max_tokens=2560, problem=problem)
     passed, err, sol = _eval_solution(problem, sol_text)
@@ -719,24 +614,13 @@ def run_hybrid_straitjacket(problem, planner_model=GEMINI_37_FLASH_ID, executor_
         tot_out += tr_usage["output"]
         tot_tok += tr_usage["total_tokens"]
 
-        if is_swe:
-            repair_prompt = (
-                SWEBENCH_REPAIR_ROLE +
-                f"Repository: {problem.get('repo', '')}\n"
-                f"Problem Statement:\n{problem.get('problem_statement', '')}\n\n"
-                f"Contract:\n{guidance}\n\n"
-                f"Current candidate patch:\n```diff\n{sol}\n```\n\n"
-                f"Straitjacket Zero-Cost Triaged Digest:\n```\n{digest}\n```\n\n"
-                "Output COMPLETE corrected unified git patch/diff."
-            )
-        else:
-            repair_prompt = (
-                REPAIR_ROLE +
-                f"Problem:\n```python\n{problem.get('complete_prompt', '')}\n```\n\n"
-                f"Current solution:\n```python\n{sol}\n```\n\n"
-                f"Straitjacket Triaged Error Digest:\n```\n{digest}\n```\n\n"
-                "Write the complete corrected solution."
-            )
+        repair_prompt = (
+            REPAIR_ROLE +
+            f"Problem:\n```python\n{problem.get('complete_prompt', '')}\n```\n\n"
+            f"Current solution:\n```python\n{sol}\n```\n\n"
+            f"Straitjacket Triaged Error Digest:\n```\n{digest}\n```\n\n"
+            "Write the complete corrected solution."
+        )
 
         esc_text, esc_usage, _ = dispatch_model(escalate_model, repair_prompt, thinking_level="low", problem=problem)
         tot_usd += esc_usage["as_run_usd"]
@@ -780,24 +664,13 @@ def run_cascade_straitjacket(problem, gen_model=GEMINI_35_FLASH_LITE_ID, esc_mod
         tot_out += tr_usage["output"]
         tot_tok += tr_usage["total_tokens"]
 
-        is_swe = _is_swebench_problem(problem)
-        if is_swe:
-            repair_prompt = (
-                SWEBENCH_REPAIR_ROLE +
-                f"Repository: {problem.get('repo', '')}\n"
-                f"Problem Statement:\n{problem.get('problem_statement', '')}\n\n"
-                f"Current candidate patch:\n```diff\n{sol}\n```\n\n"
-                f"Straitjacket Triaged Error Digest:\n```\n{digest}\n```\n\n"
-                "Output COMPLETE corrected unified git patch/diff."
-            )
-        else:
-            repair_prompt = (
-                REPAIR_ROLE +
-                f"Problem:\n```python\n{problem.get('complete_prompt', '')}\n```\n\n"
-                f"Current solution:\n```python\n{sol}\n```\n\n"
-                f"Straitjacket Triaged Error Digest:\n```\n{digest}\n```\n\n"
-                "Write the complete corrected solution."
-            )
+        repair_prompt = (
+            REPAIR_ROLE +
+            f"Problem:\n```python\n{problem.get('complete_prompt', '')}\n```\n\n"
+            f"Current solution:\n```python\n{sol}\n```\n\n"
+            f"Straitjacket Triaged Error Digest:\n```\n{digest}\n```\n\n"
+            "Write the complete corrected solution."
+        )
 
         r_text, r_usage, r_dt = dispatch_model(target_model, repair_prompt, thinking_level=think_level, problem=problem)
         tot_usd += r_usage["as_run_usd"]
@@ -840,10 +713,9 @@ def run_escalation_shield_straitjacket(problem, lite_model=GEMINI_35_FLASH_LITE_
         tot_out += tr_usage["output"]
         tot_tok += tr_usage["total_tokens"]
 
-        is_swe = _is_swebench_problem(problem)
-        role = SWEBENCH_REPAIR_ROLE if is_swe else REPAIR_ROLE
+        role = REPAIR_ROLE
         r1_prompt = (
-            role + f"Problem:\n```\n{problem.get('problem_statement', problem.get('complete_prompt', ''))}\n```\n\n"
+            role + f"Problem:\n```\n{problem.get('complete_prompt', '')}\n```\n\n"
             f"Current candidate:\n```\n{sol}\n```\n\n"
             f"Straitjacket Triaged Error Digest:\n```\n{digest}\n```\n\n"
             "Write the complete corrected solution."
@@ -861,10 +733,9 @@ def run_escalation_shield_straitjacket(problem, lite_model=GEMINI_35_FLASH_LITE_
         tot_out += tr_usage["output"]
         tot_tok += tr_usage["total_tokens"]
 
-        is_swe = _is_swebench_problem(problem)
-        role = SWEBENCH_REPAIR_ROLE if is_swe else REPAIR_ROLE
+        role = REPAIR_ROLE
         r2_prompt = (
-            role + f"Problem:\n```\n{problem.get('problem_statement', problem.get('complete_prompt', ''))}\n```\n\n"
+            role + f"Problem:\n```\n{problem.get('complete_prompt', '')}\n```\n\n"
             f"Current candidate:\n```\n{sol}\n```\n\n"
             f"Straitjacket Triaged Error Digest:\n```\n{digest}\n```\n\n"
             "Write the complete corrected solution."
@@ -909,10 +780,9 @@ def run_smart_repair_straitjacket(problem, flash_model=GEMINI_37_FLASH_ID, lite_
         tot_out += tr_usage["output"]
         tot_tok += tr_usage["total_tokens"]
 
-        is_swe = _is_swebench_problem(problem)
-        role = SWEBENCH_REPAIR_ROLE if is_swe else REPAIR_ROLE
+        role = REPAIR_ROLE
         r1_prompt = (
-            role + f"Problem:\n```\n{problem.get('problem_statement', problem.get('complete_prompt', ''))}\n```\n\n"
+            role + f"Problem:\n```\n{problem.get('complete_prompt', '')}\n```\n\n"
             f"Current candidate:\n```\n{sol}\n```\n\n"
             f"Straitjacket Triaged Error Digest:\n```\n{digest}\n```\n\n"
             "Write the complete corrected solution."
@@ -930,10 +800,9 @@ def run_smart_repair_straitjacket(problem, flash_model=GEMINI_37_FLASH_ID, lite_
         tot_out += tr_usage["output"]
         tot_tok += tr_usage["total_tokens"]
 
-        is_swe = _is_swebench_problem(problem)
-        role = SWEBENCH_REPAIR_ROLE if is_swe else REPAIR_ROLE
+        role = REPAIR_ROLE
         r2_prompt = (
-            role + f"Problem:\n```\n{problem.get('problem_statement', problem.get('complete_prompt', ''))}\n```\n\n"
+            role + f"Problem:\n```\n{problem.get('complete_prompt', '')}\n```\n\n"
             f"Current candidate:\n```\n{sol}\n```\n\n"
             f"Straitjacket Triaged Error Digest:\n```\n{digest}\n```\n\n"
             "Write the complete corrected solution."
@@ -968,20 +837,11 @@ def run_ultra_sweet_straitjacket(problem, sonnet_model=SONNET_ID, lite_model=GEM
     tot_out = adv_usage["output"]
     tot_tok = adv_usage["total_tokens"]
 
-    is_swe = _is_swebench_problem(problem)
-    if is_swe:
-        exec_prompt = (
-            SWEBENCH_EXECUTOR_ROLE +
-            f"Repository: {problem.get('repo', '')}\n"
-            f"Problem Statement:\n{problem.get('problem_statement', '')}\n\n"
-            f"Contract Specification:\n{guidance}\n\nGenerate COMPLETE unified git patch/diff."
-        )
-    else:
-        exec_prompt = (
-            EXECUTOR_ROLE +
-            f"Problem:\n```python\n{problem.get('complete_prompt', '')}\n```\n\n"
-            f"Contract Specification:\n{guidance}\n\nWrite complete solution."
-        )
+    exec_prompt = (
+        EXECUTOR_ROLE +
+        f"Problem:\n```python\n{problem.get('complete_prompt', '')}\n```\n\n"
+        f"Contract Specification:\n{guidance}\n\nWrite complete solution."
+    )
 
     sol_text, exec_usage, _ = dispatch_model(lite_model, exec_prompt, problem=problem)
     tot_usd += exec_usage["as_run_usd"]
@@ -997,9 +857,9 @@ def run_ultra_sweet_straitjacket(problem, sonnet_model=SONNET_ID, lite_model=GEM
         tot_out += tr_usage["output"]
         tot_tok += tr_usage["total_tokens"]
 
-        role = SWEBENCH_REPAIR_ROLE if is_swe else REPAIR_ROLE
+        role = REPAIR_ROLE
         repair_prompt = (
-            role + f"Problem:\n```\n{problem.get('problem_statement', problem.get('complete_prompt', ''))}\n```\n\n"
+            role + f"Problem:\n```\n{problem.get('complete_prompt', '')}\n```\n\n"
             f"Contract:\n{guidance}\n\n"
             f"Current candidate:\n```\n{sol}\n```\n\n"
             f"Straitjacket Triaged Error Digest:\n```\n{digest}\n```\n\n"
@@ -1055,10 +915,9 @@ def run_dual_verifier_cascade_straitjacket(problem, lite_model=GEMINI_35_FLASH_L
         tot_out += tr_usage["output"]
         tot_tok += tr_usage["total_tokens"]
 
-        is_swe = _is_swebench_problem(problem)
-        role = SWEBENCH_REPAIR_ROLE if is_swe else REPAIR_ROLE
+        role = REPAIR_ROLE
         r_prompt = (
-            role + f"Problem:\n```\n{problem.get('problem_statement', problem.get('complete_prompt', ''))}\n```\n\n"
+            role + f"Problem:\n```\n{problem.get('complete_prompt', '')}\n```\n\n"
             f"Current candidate:\n```\n{sol}\n```\n\n"
             f"Straitjacket Triaged Error Digest:\n```\n{digest}\n```\n\n"
             "Write the complete corrected solution."
@@ -1105,9 +964,8 @@ def run_dual_verifier_cascade_straitjacket(problem, lite_model=GEMINI_35_FLASH_L
 # variable is isolated from the evidence-treatment variable.
 
 def _repair_prompt(problem, sol, digest, label="Straitjacket Triaged Error Digest"):
-    is_swe = _is_swebench_problem(problem)
-    role = SWEBENCH_REPAIR_ROLE if is_swe else REPAIR_ROLE
-    statement = problem.get("problem_statement", problem.get("complete_prompt", ""))
+    role = REPAIR_ROLE
+    statement = problem.get("complete_prompt", "")
     return (
         role
         + f"Problem:\n```\n{statement}\n```\n\n"
@@ -1523,7 +1381,7 @@ VARIANT_REGISTRY = {
     },
 }
 
-def _registry(dataset="swebench"):
+def _registry(dataset="bcb"):
     """Variant registry for a dataset.
 
     ClassEval's arms live in src/classeval.py and are merged in lazily: that
@@ -1537,7 +1395,7 @@ def _registry(dataset="swebench"):
     return reg
 
 
-def get_configurations(dataset="swebench", group="all", variant_keys=None):
+def get_configurations(dataset="bcb", group="all", variant_keys=None):
     """
     Retrieve list of benchmark configurations matching dataset, group filter, or specific variant keys.
     """

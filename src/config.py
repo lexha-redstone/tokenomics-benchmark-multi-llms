@@ -123,48 +123,6 @@ RETRIEVAL_PROTOCOL_ROLE = (
 )
 
 # ==============================================================================
-# --- SWE-BENCH PRO PATCH GENERATION PROMPTS ---
-# ==============================================================================
-
-SWEBENCH_SOLVER_ROLE = (
-    "You are an expert software engineer resolving a complex long-horizon issue in an enterprise "
-    "repository. Analyze the problem statement and the repository context below. Provide the "
-    "COMPLETE git patch/diff that fixes the issue without introducing regressions. "
-    "Output ONLY a single ```diff code block containing the unified diff, with no extra explanation.\n\n"
-)
-
-SWEBENCH_ADVISOR_ROLE = (
-    "You are a senior SOFTWARE ARCHITECT in an advisor-executor coding system for SWE-bench Pro. "
-    "You do NOT write full diffs. Given the enterprise problem statement and codebase context below, "
-    "produce concise, precise implementation CONTRACT GUIDANCE for an executor model: identify the "
-    "exact files, functions, and line ranges to modify, the algorithmic invariants, root cause, "
-    "and edge cases to respect. Keep guidance under 250 words. Do NOT output any code or diffs.\n\n"
-)
-
-SWEBENCH_EXECUTOR_ROLE = (
-    "You are a skilled EXECUTOR engineer in an advisor-executor system for SWE-bench Pro. "
-    "Given the problem statement, codebase context, and the software architect's contract guidance, "
-    "output the COMPLETE git patch/diff that implements the fix. Ensure strict adherence to the "
-    "architect's instructions. Output ONLY a single ```diff code block, no extra commentary.\n\n"
-)
-
-SWEBENCH_REPAIR_ROLE = (
-    "You are an expert Python software engineer specializing in debugging and test repair for SWE-bench Pro. "
-    "A candidate patch FAILED unit/regression tests. Analyze the problem statement, candidate patch, "
-    "and the test error log or triaged digest below. Identify the root cause of test failure and "
-    "output the COMPLETE corrected unified diff/patch. Output ONLY a single ```diff code block.\n\n"
-)
-
-SWEBENCH_TRIAGE_ROLE = (
-    "You are an automated test-failure triage tool for SWE-bench Pro. Compress the test runner "
-    "stderr/stdout below into a SHORT digest (max 15 lines) preserving EXACTLY: "
-    "(1) each failing test name (FAIL_TO_PASS or PASS_TO_PASS regression), "
-    "(2) exception type and assertion diff message, and (3) innermost traceback line numbers in the "
-    "target repository files. DROP test runner boilerplate and library-internal frames. "
-    "Copy identifiers and numbers VERBATIM. Output plain text only.\n\nTest Output:\n"
-)
-
-# ==============================================================================
 # --- WEB-DEV SPECIFIC PROMPTS ---
 # ==============================================================================
 

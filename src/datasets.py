@@ -1,6 +1,6 @@
 # Copyright 2026. Licensed under the Apache License, Version 2.0.
 """
-Unified Dataset Loader for BigCodeBench-Hard, SWE-bench Pro, and WebDev Benchmarks.
+Unified Dataset Loader for BigCodeBench-Hard, WebDev, and ClassEval Benchmarks.
 Handles dataset loading, HuggingFace dataset caching, and problem dictionary creation.
 """
 
@@ -80,46 +80,6 @@ def load_bcb_problems(split=BCB_DEFAULT_SPLIT, max_tasks=None):
                 problems[row["task_id"]] = row
                 if max_tasks and len(problems) >= max_tasks:
                     break
-    return problems
-
-# ==============================================================================
-# --- SWE-BENCH PRO DATASET LOADER ---
-# ==============================================================================
-
-SWEBENCH_DATASET = "SWE-bench/SWE-bench_Pro"
-SWEBENCH_PUBLIC_FILE = "SWE-bench_Pro-public-test.jsonl"
-
-def load_swebench_pro_problems(split="test", max_tasks=None):
-    """Load SWE-bench Pro (Public dataset) tasks as a dictionary keyed by instance_id."""
-    data_dir = os.path.join(ROOT_DIR, "swebench_pro", "data")
-    os.makedirs(data_dir, exist_ok=True)
-    path = os.path.join(data_dir, SWEBENCH_PUBLIC_FILE)
-    
-    if not os.path.exists(path):
-        # Check alternative locations
-        for alt in [
-            os.path.join(ROOT_DIR, "swebench-pro", "data", SWEBENCH_PUBLIC_FILE),
-            os.path.join(ROOT_DIR, "data", SWEBENCH_PUBLIC_FILE),
-        ]:
-            if os.path.exists(alt):
-                path = alt
-                break
-
-    problems = {}
-    if os.path.exists(path):
-        with open(path, "r", encoding="utf-8") as f:
-            for line in f:
-                if line.strip():
-                    row = json.loads(line)
-                    row["dataset_type"] = "swebench"
-                    iid = row.get("instance_id") or row.get("task_id")
-                    problems[iid] = row
-                    if max_tasks and len(problems) >= max_tasks:
-                        break
-        print(f"Loaded {len(problems)} SWE-bench Pro tasks from {_rel(path)}")
-    else:
-        print(f"[Notice] SWE-bench Pro dataset file not found at {_rel(path)}.")
-        
     return problems
 
 # ==============================================================================
@@ -494,7 +454,6 @@ def load_dataset(dataset_name, split=None, max_tasks=None):
     Unified dataset dispatcher.
     Supports:
       - 'bcb', 'bigcodebench', 'bigcodebench-hard'
-      - 'swebench', 'swebench_pro', 'swe-bench'
       - 'webdev', 'web-dev'
       - 'classeval', 'class-eval'
     """
@@ -502,9 +461,6 @@ def load_dataset(dataset_name, split=None, max_tasks=None):
     if name in ("bcb", "bigcodebench", "bigcodebench_hard"):
         s = split or BCB_DEFAULT_SPLIT
         return load_bcb_problems(split=s, max_tasks=max_tasks)
-    elif name in ("swebench", "swebench_pro", "swe_bench", "swe_bench_pro"):
-        s = split or "test"
-        return load_swebench_pro_problems(split=s, max_tasks=max_tasks)
     elif name in ("webdev", "web_dev"):
         return load_webdev_problems(max_tasks=max_tasks)
     elif name in ("classeval", "class_eval", "ce"):
@@ -512,4 +468,4 @@ def load_dataset(dataset_name, split=None, max_tasks=None):
         return load_classeval_problems(split=s, max_tasks=max_tasks)
     else:
         raise ValueError(f"Unknown dataset name: '{dataset_name}'. "
-                         "Supported: 'bcb', 'swebench', 'webdev', 'classeval'.")
+                         "Supported: 'bcb', 'webdev', 'classeval'.")

@@ -15,7 +15,7 @@
     },
     {
       "name": "Class B: Enterprise Repository Bug Resolution (Ultra-Sweet Hybrid)",
-      "benchmark": "SWE-bench Pro",
+      "benchmark": "unvalidated — no executed multi-file-patch dataset in this repository",
       "route": {
         "schema": "ctx.route/v1",
         "nodes": [

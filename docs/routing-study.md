@@ -1,5 +1,12 @@
 # Routing Study: gemini-3.7-flash + claude-opus-5 on BigCodeBench-Hard
 
+> **Status: designed and implemented, not yet run at size.** The arms, gates and
+> analysis exist and a one-task smoke run went through
+> ([report 13](../reports/13_bcb-hard_straitjacket_n1.md)), but no N=50 sweep has
+> been executed. Every number below comes from the **N=100 seven-arm sweep**
+> ([report 12](../reports/12_bcb-hard_straitjacket_n100.md)); nothing here is a
+> result of this study yet.
+
 **Question.** Using `gemini-3.5-flash-lite` and `gemini-3.7-flash` as the
 workhorses — with `claude-opus-5` reserved for tasks the Gemini tiers cannot
 solve — which combination gives the best accuracy, and which gives the best

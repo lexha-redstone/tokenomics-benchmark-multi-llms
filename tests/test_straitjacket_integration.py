@@ -234,7 +234,7 @@ def test_native_baseline_reads_the_failing_stream(noisy_run):
 @pytest.mark.skipif(sj.status()["backend"] != "library",
                     reason="contain_text is library-backend only")
 def test_native_baseline_falls_back_to_stdout():
-    """Runners that report on stdout (the SWE-bench pytest shape) still get a
+    """Runners that report on stdout (the pytest shape) still get a
     baseline rather than an empty string."""
     run = sj.contain_text(
         "============================= test session starts ====================\n"

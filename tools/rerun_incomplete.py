@@ -46,8 +46,6 @@ from src.datasets import load_dataset
 DS = {
     "bcb": ("bcb", "bigCodeBench-hard"),
     "bigcodebench": ("bcb", "bigCodeBench-hard"),
-    "swebench": ("swebench", "swebench_pro"),
-    "swebench_pro": ("swebench", "swebench_pro"),
     "webdev": ("webdev", "webdev"),
 }
 

@@ -223,12 +223,13 @@ the treatment — a missing measurement is not a zero.
 
 ### 4.6 Out-of-band containment
 
-SWE-bench Pro is evaluated semantically here rather than by executing the
-upstream repository's suite, so its log is produced in-process.
-`sj.contain_text()` still routes it through the real profile registry by
-spooling it into the store behind the same `ctx.invocation/v1` manifest the
-executor publishes. Only the inputs are supplied; no selection logic is
-re-implemented. Library backend only.
+An evaluator that synthesises a test log rather than executing one still has to
+contain it. `sj.contain_text()` routes such a log through the real profile
+registry by spooling it into the store behind the same `ctx.invocation/v1`
+manifest the executor publishes. Only the inputs are supplied; no selection
+logic is re-implemented. Library backend only. No dataset in the repository
+currently takes this path — every arm executes its candidate for real — so it
+exists for evaluators added later.
 
 ---
 

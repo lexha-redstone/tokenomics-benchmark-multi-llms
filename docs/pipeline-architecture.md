@@ -64,15 +64,15 @@ constant so the comparison means something.
 |---|---|
 | [`src/config.py`](../src/config.py) | Model IDs, pricing table, prompt roles (solver / advisor / executor / repair / triage) |
 | [`src/client.py`](../src/client.py) | `dispatch_model()` — Vertex AI + Anthropic, retry, thinking budgets, usage accounting |
-| [`src/datasets.py`](../src/datasets.py) | Loaders for BigCodeBench-Hard, SWE-bench Pro, WebDev |
+| [`src/datasets.py`](../src/datasets.py) | Loaders for BigCodeBench-Hard, WebDev, ClassEval |
 | [`src/straitjacket.py`](../src/straitjacket.py) | The only bridge to `ctx-harness`: capture, digest, bounded retrieval |
-| [`src/evaluator.py`](../src/evaluator.py) | Sandboxed execution, patch verification, the `Evidence` contract, containment ledger |
+| [`src/evaluator.py`](../src/evaluator.py) | Sandboxed execution, the `Evidence` contract, containment ledger |
 | [`src/architectures.py`](../src/architectures.py) | The variant registry and every pipeline implementation |
 | [`src/reporter.py`](../src/reporter.py) | Markdown TCO report + HTML dashboard, indexed report naming |
 | [`run_benchmark.py`](../run_benchmark.py) | The unified CLI entry point |
 
-Per-dataset directories (`bigCodeBench-hard/`, `swebench_pro/`, `webdev/`) hold
-data, results, a thin runner adapter, and historical one-off sweep scripts.
+Per-dataset directories (`bigCodeBench-hard/`, `webdev/`, `classeval/`) hold
+data, results, and historical one-off sweep scripts.
 
 ---
 

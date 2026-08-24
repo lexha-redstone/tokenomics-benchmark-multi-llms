@@ -1,15 +1,39 @@
 # Comprehensive Multi-LLM Benchmark & Tokenomics Synthesis Report
 
 > **Date**: 2026-08-06  
-> **Evaluation Scope**: BigCodeBench-Hard (N=30 & N=50), SWE-bench Pro (Public Test Set, N=30), WebDev (N=10 & N=30)  
+> **Evaluation Scope**: BigCodeBench-Hard (N=30 & N=50), WebDev (N=10 & N=30)  
 > **Target Framework**: Google Cloud Vertex AI (Gemini 3.6-Flash, 3.5-Flash-Lite) & Anthropic (Claude Sonnet-5, Opus-5) with `straitjacket` Zero-Cost Context Containment  
-> **Status**: Verified Empirical Evidence & Pareto-Optimal Architectural Blueprint
+> **Status**: **Superseded — read the caveats below before quoting any number here.**
+
+> [!WARNING]
+> **This report has been partially withdrawn.** Three things are wrong with it,
+> and they are recorded rather than silently fixed because the report is a dated
+> run log, not a living document.
+>
+> 1. **Its SWE-bench Pro section is gone.** That dataset was never executed in
+>    this repository — a candidate patch was scored by substring-matching it
+>    against the canonical patch — so its rows were proxy scores presented as
+>    pass rates. The dataset, its arms, its results and its own reports (indices
+>    07–09) were deleted; the section they fed has been removed from this report
+>    too. See
+>    [docs/pattern-dataset-selection.md §3](../docs/pattern-dataset-selection.md).
+> 2. **Its BigCodeBench-Hard N=50 table does not reconcile with its own raw
+>    results.** It prints 30/47, 36/47, 37/47 and 39/47 where the archived
+>    per-arm JSONs (`bigCodeBench-hard/results/n50_*.json`) record 15/50, 18/50,
+>    14/50 and 16/50.
+> 3. **It predates the *refuse rather than fabricate* failure policy** in
+>    [`src/client.py`](../src/client.py), so its numbers may include simulated
+>    calls.
+>
+> The current, instrumented BigCodeBench-Hard result is
+> [report 12 (N=100)](12_bcb-hard_straitjacket_n100.md); the current ClassEval
+> result is [report 17 (N=91)](17_classeval_opus5_n91.md).
 
 ---
 
 ## 1. Executive Summary & Core Insights
 
-This comprehensive report synthesizes empirical evaluation results across three major software engineering benchmark suites to identify **which multi-LLM collaboration architectures and context containment strategies achieve the highest task resolution accuracy while minimizing Total Cost of Ownership (TCO) and API spend**.
+This comprehensive report synthesizes empirical evaluation results across the software engineering benchmark suites available at the time to identify **which multi-LLM collaboration architectures and context containment strategies achieve the highest task resolution accuracy while minimizing Total Cost of Ownership (TCO) and API spend**.
 
 ```mermaid
 flowchart TD
@@ -92,31 +116,7 @@ BigCodeBench-Hard evaluates complex multi-library algorithmic and data engineeri
 
 ---
 
-## 3. Benchmark 2: SWE-bench Pro (Enterprise Repository Patch Resolution)
-
-SWE-bench Pro evaluates complex long-horizon enterprise bug resolution requiring full unified git patch generation across repositories (SymPy, Scikit-learn, Sphinx, NodeBB, Qutebrowser).
-
-### Comparative TCO Scoreboard (N=30 Public Test Set)
-
-| Rank | Configuration | Architecture Pattern | Pass Rate | Total Cost (USD) | Triage Cost | Cost / Solved Task ($/solved) |
-|:---:|---|---|:---:|:---:|:---:|:---:|
-| **1 🏆** | **Straitjacket Ultra-Sweet Hybrid** | Sonnet-5 Plan + Lite Exec + Opus-5 Repair | **24/30 (80.0%)** | `$0.0932` | `$0.0000` | **`$0.00388`** |
-| **2 ⭐** | **Straitjacket Escalation Shield** | Lite Draft -> Flash Low -> Sonnet-5 Escalation | **23/30 (76.7%)** | `$0.0892` | `$0.0000` | **`$0.00388`** |
-| **3** | **Straitjacket Smart Repair** | Pure Gemini: 3.6 Flash -> Lite -> Flash (Med) | **22/30 (73.3%)** | `$0.1364` | `$0.0000` | **`$0.00620`** |
-| **4** | **Straitjacket Dual-Verifier Cascade** | 4-Tier: Lite -> Flash -> Sonnet-5 -> Opus-5 | **24/30 (80.0%)** | `$0.1584` | `$0.0000` | **`$0.00660`** |
-| **5** | **Read/Write Split (No SJ)** | 3.6-Flash Plan + 3.5-Lite Exec | 20/30 (66.7%) | `$0.0684` | `$0.0000` | **`$0.00342`** |
-| **6** | **Single: claude-opus-5** | Direct Claude Opus-5 Baseline | 21/30 (70.0%) | `$0.6068` | `$0.0000` | `$0.02890` |
-| **7** | **Single: claude-sonnet-5** | Direct Claude Sonnet-5 Baseline | 19/30 (63.3%) | `$0.2842` | `$0.0000` | `$0.01496` |
-| **8** | **Single: gemini-3.6-flash (Low)** | Direct Gemini 3.6-Flash Baseline | 20/30 (66.7%) | `$0.2460` | `$0.0000` | `$0.01230` |
-| **9** | **Single: gemini-3.5-flash-lite** | Direct Gemini 3.5-Flash-Lite Baseline | 14/30 (46.7%) | `$0.0382` | `$0.0000` | `$0.00273` |
-
-### SWE-bench Pro Winner Breakdown:
-- **Top Performer & Best Value**: **Straitjacket Ultra-Sweet Hybrid** and **Straitjacket Escalation Shield** tied for the lowest cost-per-solved task (**$0.00388 / solved**), resolving **76.7%–80.0%** of tasks.
-- **Frontier Cost Comparison**: Direct single Claude Opus-5 resolved 70.0% of tasks at **$0.02890 / solved** — **7.4x more expensive** while resolving fewer tasks due to lacking multi-turn structured triage.
-
----
-
-## 4. Benchmark 3: WebDev (Web & Networking Systems)
+## 3. Benchmark 2: WebDev (Web & Networking Systems)
 
 WebDev tests real-world networking, REST APIs, HTTP session handling, HTML parsing, web security, and server logic (Flask, Requests, BeautifulSoup, PyQuery, Cryptography, WebSockets).
 
@@ -137,7 +137,7 @@ WebDev tests real-world networking, REST APIs, HTTP session handling, HTML parsi
 
 ---
 
-## 5. Master Cross-Dataset Pareto-Optimal Recommendation Matrix
+## 4. Master Cross-Dataset Pareto-Optimal Recommendation Matrix
 
 | Use Case / Domain | Top Recommended Architecture | Target Models | Pass Rate Range | Expected Cost / Solved | Rationale & Tokenomics Advantage |
 |:--- |:--- |:--- |:---:|:---:|:--- |
@@ -147,7 +147,7 @@ WebDev tests real-world networking, REST APIs, HTTP session handling, HTML parsi
 
 ---
 
-## 6. Directory Organization Reference
+## 5. Directory Organization Reference
 
 All results and presentation reports are organized according to the repository standards:
 
@@ -157,8 +157,6 @@ benchmark-using-multi-LLMs/
 │   ├── comprehensive_multi_llm_benchmark_report_20260806.md  # 🌟 Master Cross-Dataset Synthesis (This Document)
 │   ├── straitjacket_n30_comparative_tco_report.md            # BigCodeBench-Hard N=30 Audited Report
 │   ├── n50_gemini_vs_claude_tco_report.md                    # BigCodeBench-Hard N=50 Comprehensive Report
-│   ├── swe_bench_pro_straitjacket_report.md                  # SWE-bench Pro Comparative Report
-│   ├── swe_bench_pro_dashboard.html                          # SWE-bench Pro Interactive HTML Dashboard
 │   ├── bigcodebench_hard_dashboard.html                      # BigCodeBench Interactive HTML Dashboard
 │   └── webdev_dashboard.html                                 # WebDev Interactive HTML Dashboard
 │
@@ -168,7 +166,6 @@ benchmark-using-multi-LLMs/
 │   └── update_all_reports_pricing.py                # Recalculates metrics with active Vertex AI pricing
 │
 ├── bigCodeBench-hard/results/                       # Raw JSON metrics & caches for BigCodeBench-Hard
-├── swebench_pro/results/                            # Raw JSON metrics & caches for SWE-bench Pro
 └── webdev/results/                                  # Raw JSON metrics & caches for WebDev
 ```
 

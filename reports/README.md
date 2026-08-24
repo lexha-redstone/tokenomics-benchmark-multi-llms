@@ -21,6 +21,7 @@ Regenerate this index with `python3 tools/index_reports.py --apply`.
 | 15 | 2026-08-23 | ClassEval | N=2 | [md](15_classeval_straitjacket_n2.md) | [html](15_classeval_straitjacket_n2.html) | ClassEval smoke run: the hypothesis arm and the shape it has to beat. |
 | 16 | 2026-08-24 | ClassEval | N=91 | [md](16_classeval_straitjacket_n91.md) | [html](16_classeval_straitjacket_n91.html) | Full sub-task routing comparison, eight arms over the scorable classes. |
 | 17 | 2026-08-24 | ClassEval | N=91 | [md](17_classeval_opus5_n91.md) | [html](17_classeval_opus5_n91.html) | Same sweep with the claude-opus-5 baseline merged in. |
+| 19 | 2026-08-24 | BigCodeBench-Hard | N=148 | [md](19_bcb-hard_straitjacket_n148.md) | [html](19_bcb-hard_straitjacket_n148.html) | The routing study, run over the COMPLETE dataset. Eleven arms: gemini-3.7 ladders with claude-opus-5 gated behind them. |
 
 **Gaps in the numbering.** Indices are never reused, so a missing number is a report that was withdrawn:
 
@@ -28,6 +29,7 @@ Regenerate this index with `python3 tools/index_reports.py --apply`.
 - **08** — SWE-bench Pro N=30 — withdrawn for the same reason as 07.
 - **09** — SWE-bench Pro N=30 (live API) — withdrawn for the same reason as 07.
 - **14** — never produced a report file.
+- **18** — a byte-identical duplicate of 19, written by the same sweep. Removed so the N=148 result has one address.
 
 `inferred` dates: exact run timestamps were not recorded for those sweeps.
 Their order is derived from task count and model generation, which is why it

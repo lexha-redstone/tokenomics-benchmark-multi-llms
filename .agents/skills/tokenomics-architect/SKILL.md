@@ -79,11 +79,11 @@ flowchart TD
 
 ### Step 1: Task Classification & Decomposition (`ctx.route/v1`)
 The cheap coordinator (or deterministic fallback) classifies the task and emits an acyclic DAG:
-- **Class A (Algorithmic / Multi-Library)**: Draft (`gemini-3.6-flash`, `low`) -> Triage ($0) -> Repair (`3.5-lite`) -> Escalation (`3.6-flash`, `med`).
+- **Class A (Algorithmic / Multi-Library)**: Draft (`gemini-3.5-lite`) -> Triage ($0) -> Repair (`gemini-3.7-flash`, `low`) -> **Escalate to `claude-opus-5` when the digest reads `broad`/`stalled`**, not after a fixed number of failures. Measured at BCB-Hard N=148: 81.1% at $0.0353/solved.
 - **Class B (Enterprise Repo Bug / multi-file patch)**: Architect Contract (`claude-sonnet`) -> Patch Exec (`gemini-3.5-lite`) -> Triage ($0) -> Targeted Repair (`claude-opus`). **Unvalidated** — this repository has no executed multi-file-patch dataset, so this shape is reasoned from Class A/C, not measured.
-- **Class C (Web / Microservices)**: Plan (`gemini-3.6-flash`) -> Exec (`gemini-3.5-lite`) -> Test & Fix (`gemini-3.6-flash`).
-- **Class D (High-Throughput Batching)**: Cascade `gemini-3.5-lite` -> `gemini-3.6-flash (min)` -> `gemini-3.6-flash (low)`.
-- **Class E (Pure Gemini Native)**: `gemini-3.6-flash` (`low` -> `med` -> `high`).
+- **Class C (Web / Microservices)**: Plan (`gemini-3.7-flash`) -> Exec (`gemini-3.5-lite`) -> Test & Fix (`gemini-3.7-flash`).
+- **Class D (High-Throughput Batching)**: Cascade `gemini-3.5-lite` -> `gemini-3.7-flash (min)` -> `gemini-3.7-flash (low)`.
+- **Class E (Pure Gemini Native)**: `gemini-3.5-lite` -> `gemini-3.7-flash (low)` -> `gemini-3.7-flash (med)` — 73.0% at $0.0362/solved. **Do not use the `low -> med -> high` thinking ladder**: measured at 75.7% for $0.0674/solved, the worst value of any arm tested.
 
 ### Step 2: Capability × Price × Thinking Routing
 - Validates graph acyclicity (`_assert_acyclic`) and bounds (`max_nodes <= 12`).
@@ -116,29 +116,45 @@ The cheap coordinator (or deterministic fallback) classifies the task and emits 
 
 ## 5. Production Benchmark Receipts
 
-Read from the two sweeps that are instrumented end to end and reconcile with
-their own raw records: **BigCodeBench-Hard N=100**
-(`reports/12_bcb-hard_straitjacket_n100.md`) and **ClassEval N=91**
-(`reports/17_classeval_opus5_n91.md`). Older per-arm figures quoted elsewhere in
-this repository come from pre-instrumentation sweeps and are not used here.
+Read from the three sweeps that are instrumented end to end and reconcile with
+their own raw records: **BigCodeBench-Hard N=148**
+(`reports/19_bcb-hard_straitjacket_n148.md`, the complete dataset),
+**BigCodeBench-Hard N=100** (`reports/12_bcb-hard_straitjacket_n100.md`) and
+**ClassEval N=91** (`reports/17_classeval_opus5_n91.md`).
+
+**Rows from different sweeps are not comparable** — attempt budget differs (three
+rungs at N=148, two at N=100), which alone moves `claude-opus-5` from 76% to
+84.5%. Compare within a sweep only.
 
 | Architecture Pattern | Sweep | Pipeline Configuration | Pass Rate | Cost per Solved Task | Read against the frontier |
 |:---|:---|:---|:---:|:---:|:---|
-| **`Escalation Shield`** | BCB-Hard N=100 | `gemini-3.5-lite` -> `3.7-flash` -> `claude-sonnet-5` | **68%** | **$0.0282** | 89% of Opus's pass rate at 61% of its $/solved. |
-| **`Straitjacket Hybrid`** | BCB-Hard N=100 | `3.7-flash` Plan -> `3.5-lite` Exec -> `3.7-flash` Repair | 59% | **$0.0277** | cheapest working pipeline; 17 points below Opus. |
-| **`Straitjacket Cascade`** | BCB-Hard N=100 | `gemini-3.5-lite` -> `3.7-flash` | 66% | $0.0339 | — |
-| **`Single: claude-opus-5`** | BCB-Hard N=100 | `claude-opus-5`, self-repair | **76%** | $0.0463 | the accuracy ceiling on this slice. |
+| **`Evidence-gated escalation`** ⭐ | BCB-Hard N=148 | Lite -> `3.7-flash (low)` -> `3.7-flash (med)` -> `opus-5` **when the digest reads `broad`/`stalled`** | **81.1%** | **$0.0353** | 96% of Opus's pass rate for 74% of its spend. **The recommended default.** |
+| **`Ladder then frontier`** | BCB-Hard N=148 | Lite -> `3.7 low` -> `3.7 med` -> `opus-5` after every rung fails | **84.5%** | $0.0452 | ties Opus-solo exactly, at 99% of its $/solved — the ladder bought nothing. |
+| **`Single: claude-opus-5`** | BCB-Hard N=148 | `claude-opus-5` x3 | **84.5%** | $0.0456 | the accuracy ceiling on the full dataset. |
+| **`Gemini ladder, no frontier`** | BCB-Hard N=148 | Lite -> `3.7 low` -> `3.7 med` | 73.0% | $0.0362 | what you get with no frontier budget at all. |
+| **`3.7-flash (medium) x3`** ❌ | BCB-Hard N=148 | thinking turned up instead of the model | 75.0% | $0.0684 | **costs 33% more than opus-5 and solves 14 fewer tasks.** |
 | **`Whole-class Cascade`** | ClassEval N=91 | `3.5-lite` -> `3.7-flash (low)` -> `3.7-flash (med)` | **80%** | $0.0371 | best non-frontier arm on ClassEval. |
 | **`Per-method, one model`** | ClassEval N=91 | every method to `gemini-3.5-flash-lite` | 73% | **$0.0210** | cheapest arm that still clears 70%. |
 | **`Single: claude-opus-5`** | ClassEval N=91 | `claude-opus-5`, whole class | **88%** | $0.0464 | the accuracy ceiling on this slice. |
 
-**Two negative results are load-bearing.** Routing sub-tasks by *labelled
-difficulty* did not beat either the cascade or the one-model control on ClassEval
-(71% at $0.0317, against 73% at $0.0210) — so prefer escalation on a test
-failure over difficulty routing decided in advance. And on BCB-Hard, a repair
-turn that *de-escalates* rescues 16% of failures against 41% for one that
-escalates (z = +3.55, p = 0.0004): the rung the repair turn lands on is what the
-repair budget actually buys.
+**Four negative results are load-bearing.**
+
+1. **A high-thinking cheap rung is not cheap.** `gemini-3.7-flash` at `medium`
+   emits 6,513 output tokens/task against `claude-opus-5`'s 1,221 — it costs more
+   and scores worse. Escalate the *model*, not the *thinking budget*.
+2. **An attempt-count ladder in front of a frontier model earns nothing** at a
+   three-rung budget: identical pass rate, identical cost. If the frontier model
+   is going to be called, call it on evidence and sooner.
+3. **Routing sub-tasks by labelled difficulty** did not beat the cascade or the
+   one-model control on ClassEval (71% at $0.0317 vs 73% at $0.0210).
+4. **A repair turn that de-escalates** rescues 16% of failures against 41% for
+   one that escalates (z = +3.55, p = 0.0004).
+
+And one positive mechanism worth stating: the evidence gate wins by escalating
+**more often** (45% of tasks vs 29%) but **earlier**, skipping the expensive
+`medium`-thinking rung that was going to fail anyway. Do not read "call the
+frontier model less" as the lesson; the lesson is "stop paying for rungs that
+will not work".
 
 ---
 

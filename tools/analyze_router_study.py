@@ -23,7 +23,19 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-DEFAULT_RESULTS = os.path.join(ROOT, "bigCodeBench-hard", "results", "bcb_all_results.json")
+_RESULTS_DIR = os.path.join(ROOT, "bigCodeBench-hard", "results")
+
+# `run_benchmark.py --group router` writes `bcb_router_results.json`; the
+# general sweep writes `bcb_all_results.json`. Prefer the router file when it
+# exists, because reading the general sweep here silently reports the pattern
+# arms with every frontier column blank -- which looks like a router result
+# that measured nothing.
+DEFAULT_RESULTS = next(
+    (os.path.join(_RESULTS_DIR, name)
+     for name in ("bcb_router_results.json", "bcb_all_results.json")
+     if os.path.exists(os.path.join(_RESULTS_DIR, name))),
+    os.path.join(_RESULTS_DIR, "bcb_all_results.json"),
+)
 
 
 def load(path):

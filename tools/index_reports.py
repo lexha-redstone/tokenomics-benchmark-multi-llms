@@ -59,6 +59,9 @@ NOTES = {
            "Full sub-task routing comparison, eight arms over the scorable classes."),
     "17": ("2026-08-24", "ClassEval", "N=91",
            "Same sweep with the claude-opus-5 baseline merged in."),
+    "19": ("2026-08-24", "BigCodeBench-Hard", "N=148",
+           "The routing study, run over the COMPLETE dataset. Eleven arms: "
+           "gemini-3.7 ladders with claude-opus-5 gated behind them."),
 }
 
 # Indices whose reports are gone, and why. Printed under the table so a gap in
@@ -70,6 +73,8 @@ WITHDRAWN = {
     "08": "SWE-bench Pro N=30 — withdrawn for the same reason as 07.",
     "09": "SWE-bench Pro N=30 (live API) — withdrawn for the same reason as 07.",
     "14": "never produced a report file.",
+    "18": "a byte-identical duplicate of 19, written by the same sweep. Removed "
+          "so the N=148 result has one address.",
 }
 
 

@@ -18,29 +18,124 @@ Vertex AI (Gemini) and Anthropic (Claude).
 
 | | |
 |---|---|
-| 1 | [Key takeaways & best setting](#1-key-takeaways--best-setting) — what the runs found, on both datasets |
+| 1 | [Key takeaways & best setting](#1-key-takeaways--best-setting) — **start here**: the N=148 full-dataset routing result, and the two negative findings inside it |
 | 2 | [Why cascades suit BigCodeBench-Hard](#why-the-cascade-shape-suits-this-dataset) — which architecture pattern wins, and the mechanism behind it |
 | 3 | [What ClassEval was run to falsify](#what-classeval-was-run-to-falsify) — the same question on a dataset built to give the other answer |
 | 4 | [Run a benchmark](#3-run-a-benchmark) — exact files and commands |
-| 5 | [Pipeline architecture](docs/pipeline-architecture.md) — how a task flows through the system |
-| 6 | [Straitjacket implementation](docs/straitjacket-implementation.md) — what it is, and how it differs from upstream |
-| 7 | [Report index](reports/README.md) — every sweep, in execution order |
-| 8 | [Routing study](docs/routing-study.md) — finding the best gemini-3.7 + opus-5 combination |
+| 5 | [Routing study](docs/routing-study.md) — the full N=148 design and its §5 result |
+| 6 | [Pipeline architecture](docs/pipeline-architecture.md) — how a task flows through the system |
+| 7 | [Straitjacket implementation](docs/straitjacket-implementation.md) — what it is, and how it differs from upstream |
+| 8 | [Report index](reports/README.md) — every sweep, in execution order |
 | 9 | [Dataset selection for pattern tests](docs/pattern-dataset-selection.md) — where a non-cascade pattern could win, which datasets can show it, and the ClassEval verdict |
 
-**Two datasets are executed for real here, and both have now been swept at
-size:** BigCodeBench-Hard (N=100, seven arms) and ClassEval (N=91, nine arms).
-They were chosen to disagree — one is a single function with one verdict, the
-other a class of ~4 independently-scored methods with labelled per-method
-difficulty. They did not disagree.
+**Three sweeps carry the findings**, all live API, all with the contained digest
+on every repair turn:
+
+| Sweep | Scope | Question it answers |
+|---|---|---|
+| **BCB-Hard N=148** ([report 19](reports/19_bcb-hard_straitjacket_n148.md)) | the **complete** dataset, 11 arms | how should a frontier model be *gated* behind cheap ones? |
+| **BCB-Hard N=100** ([report 12](reports/12_bcb-hard_straitjacket_n100.md)) | 100-task slice, 7 arms | which *pattern family* wins — cascade, plan-execute, or collaboration? |
+| **ClassEval N=91** ([report 17](reports/17_classeval_opus5_n91.md)) | 91 of 92 scorable classes, 9 arms | does routing *sub-tasks* by labelled difficulty pay? |
+
+BCB-Hard and ClassEval were chosen to disagree — one is a single function with
+one verdict, the other a class of ~4 independently-scored methods with labelled
+per-method difficulty. They did not disagree.
 
 ---
 
 ## 1. Key takeaways & best setting
 
-From the largest sweep — **BigCodeBench-Hard, N=100**, live API
-(`gemini-3.7-flash`, `claude-sonnet-5`, `claude-opus-5`), archived at
-`bigCodeBench-hard/results/archive/bcb_n100_instrumented_20260822T2129.json`:
+### The headline: gate the frontier model on evidence, not on a counter
+
+From **BigCodeBench-Hard at N=148 — every task in the dataset, no sampling**
+([report 19](reports/19_bcb-hard_straitjacket_n148.md)). Every arm gets the same
+three-rung repair budget, so the routing policy is the only variable:
+
+| Arm | Pass rate | Total cost | **$ / solved** | Opus called on | Opus yield |
+|---|---|---|---|---|---|
+| `r6_opus_after_ladder` — Opus only after every Gemini rung fails | **84.5%** | $5.65 | $0.0452 | 29% | 47% |
+| `r0b_opus5_solo` — `claude-opus-5` × 3, no ladder | **84.5%** | $5.70 | $0.0456 | — | — |
+| `r8_opus_after_2` | 84.5% | $5.84 | $0.0467 | 35% | 56% |
+| `r10_opus_fresh_solve` — Opus re-solves instead of repairing | 82.4% | $5.08 | $0.0417 | 27% | 35% |
+| **`r9_opus_on_evidence` — escalate when the digest says the failure is hard** | **81.1%** | **$4.24** | **$0.0353** | 45% | **58%** |
+| `r7_opus_after_1` — escalate on the first failure | 75.7% | $5.58 | $0.0498 | 59% | 59% |
+| `r5_gemini_think_ladder` — 3.7 low → medium → high | 75.7% | $7.55 | $0.0674 | — | — |
+| `r2_f37_medium` — `gemini-3.7-flash` (medium) × 3 | 75.0% | $7.60 | $0.0684 | — | — |
+| `r4_gemini_ladder` — Lite → 3.7 low → 3.7 medium, no Opus | 73.0% | $3.90 | $0.0362 | — | — |
+| `r1_f37_low` — `gemini-3.7-flash` (low) × 3 | 71.6% | $4.27 | $0.0403 | — | — |
+| `r0a_sonnet5_solo` — `claude-sonnet-5` × 3 | 66.9% | $2.86 | $0.0289 | — | — |
+
+**Oracle ceiling across all eleven arms: 135/148 (91%).** Thirteen tasks were
+solved by nothing.
+
+### Three results, and two of them are negative
+
+**1. A high-thinking Gemini rung costs more than Claude Opus-5 and scores
+worse.** This is the most actionable number in the repository:
+
+```
+gemini-3.7-flash (medium) x3   111/148 (75.0%)   $7.60   6,513 avg output tokens
+claude-opus-5 x3               125/148 (84.5%)   $5.70   1,221 avg output tokens
+```
+
+33% more money for 14 fewer solved tasks. The premise of a budget ladder is that
+the cheap tier is cheap; at `medium` thinking on this dataset it is not, because
+it emits 5.3× the output tokens the frontier model does. **Thinking budget, not
+model tier, is the dominant cost term once it is turned up.**
+
+**2. Putting a Gemini ladder in front of Opus saved nothing.**
+`r6_opus_after_ladder` reaches *exactly* Opus-solo's 125/148 at **99% of its
+cost per solved task**. `r8` is the same pass rate and slightly more expensive.
+Given three attempts, Opus solves the tasks the ladder would have reached
+anyway, and the ladder's rungs are overhead on the tasks it cannot. The
+reserve-the-frontier-model intuition that the N=100 slice supported at a
+two-attempt budget **does not survive a three-rung budget on the full dataset**.
+
+**3. The evidence gate is what actually pays — by escalating *more*, not less.**
+`r9_opus_on_evidence` reads the harness's typed failure extraction
+([`src/routing.py`](src/routing.py)) and jumps to Opus when the digest says the
+failure is `broad` or `stalled`. It reaches **96% of Opus-solo's pass rate for
+26% less total spend**, the best `$/solved` of any arm above 70%.
+
+The mechanism is not the one the study predicted. `r9` calls Opus on **45%** of
+tasks against `r6`'s 29% — it escalates *more often* and is cheaper anyway,
+because firing the gate at rung 1 or 2 **skips the `gemini-3.7-flash (medium)`
+rung that was going to fail** — the tier result 1 shows costs more per task than
+Opus. The saving comes from not buying a doomed expensive rung, not from
+rationing the frontier model. Its gate is also the most selective: 58% of what
+it escalated got solved, against 47% for `r6` and 35% for `r10`.
+
+**And a fourth, smaller one:** `r10_opus_fresh_solve` discards the failed
+candidate and re-solves from scratch. Its frontier yield is the worst on the
+board — 35% against `r6`'s 47% at comparable call volume. **Do not throw the
+failing candidate away when you escalate**; the digest is worth more than the
+anchoring costs.
+
+### Best setting depends on what you are optimising
+
+| If you want… | Use | Why |
+|---|---|---|
+| **Best accuracy per dollar — the recommended default** | `r9_opus_on_evidence` | 81.1% at **$0.0353/solved**; 96% of frontier accuracy for 74% of frontier spend |
+| **Highest accuracy** | `r6_opus_after_ladder` or plain `r0b_opus5_solo` | 84.5% either way — if you are paying for Opus anyway, the ladder in front of it is optional |
+| **Cheapest that still works** | `r0a_sonnet5_solo` | $0.0289/solved, but only 66.9% |
+| **No frontier budget at all** | `r4_gemini_ladder` | 73.0% at $0.0362/solved — and note it beats both high-thinking Gemini arms on cost *and* one of them on accuracy |
+
+Reproduce the table with:
+
+```bash
+python3 tools/analyze_router_study.py
+```
+
+Full design, gate definitions and the per-block reasoning:
+[routing study](docs/routing-study.md).
+
+### The pattern-family comparison (N=100)
+
+A separate, earlier sweep over a 100-task slice asked a different question —
+which *shape* of multi-model architecture wins — with a two-attempt budget. Its
+arms are not comparable to the N=148 rows above (different task set, different
+repair budget), and it is kept because it is the only sweep that put cascades,
+plan-and-execute and collaboration side by side:
 
 | Configuration | Pass rate | Total cost | **$ / solved task** |
 |---|---|---|---|
@@ -52,22 +147,23 @@ From the largest sweep — **BigCodeBench-Hard, N=100**, live API
 | Straitjacket Hybrid | 59% | $1.63 | **$0.0277** |
 | Single: `claude-sonnet-5` | 54% | $1.54 | $0.0285 |
 
-### Best setting depends on what you are optimising
-
-| If you want… | Use | Why |
-|---|---|---|
-| **Highest accuracy, cost no object** | `single_opus5` | 76% — nothing else reaches it |
-| **Best accuracy per dollar** | `sj_escalation_shield` | **89% of Opus's pass rate at 61% of its cost per solved task**, and 55% of the absolute spend |
-| **Cheapest working pipeline** | `sj_hybrid` | lowest $/solved at $0.0277; 59% pass rate |
-
-The escalation shield (`gemini-3.5-lite` → `gemini-3.7-flash` → `claude-sonnet-5`,
-each repair turn fed the contained digest) is the recommended default: it keeps
-a frontier model in reserve for the hard tail without paying frontier prices on
-the tasks a cheap model already solves.
+`claude-opus-5` at 76% here and 84.5% at N=148 are not in conflict: two
+variables differ, the task set and the repair budget (two attempts vs three).
 
 ### How much headroom is actually left
 
-Comparing which *tasks* each arm solved, not just how many:
+On the complete dataset, across all eleven N=148 arms, the union of everything
+solved is **135/148 (91%)** — thirteen tasks are out of reach for every model
+and every ladder tested. The best single arm reaches 84.5%, so **the accuracy
+headroom left to any router is about 6 points.**
+
+That is why the N=148 result reads as it does: routing on this dataset is
+overwhelmingly a *cost* play, and the arm that wins on cost (`r9`, $0.0353 vs
+$0.0456) gives up 5 of those 6 points to get there. Anything reporting above 91%
+here would be a measurement error, not a breakthrough.
+
+The earlier 100-task slice showed the same shape at lower absolute numbers, and
+is where the pairwise decomposition was done:
 
 ```
 solved by gemini-3.7-flash but not claude-opus-5 :  3
@@ -79,11 +175,8 @@ perfect flash|opus router ceiling                : 79
 union of all seven arms                          : 87
 ```
 
-21 of the 100 tasks are out of reach for every model tested, so **79% is the
-practical ceiling for a Flash/Opus router** — and Opus alone is already at 76%.
-Routing is therefore mostly a *cost* play: the accuracy headroom is 3 points,
-but Opus only needs to see ~40 of the 100 tasks. That observation is what the
-[routing study](docs/routing-study.md) is built to exploit.
+That observation is what the [routing study](docs/routing-study.md) was built to
+exploit, and §5 of it reports what happened when it did.
 
 ### Why the cascade shape suits this dataset
 
@@ -268,14 +361,37 @@ both it is the most expensive thing per solved task.
 
 ### Caveats worth stating plainly
 
+- **These are with-test-feedback numbers, not leaderboard numbers.** Every arm
+  feeds its repair turn a digest of the *same* test suite that produces the
+  final grade — test names, docstrings, assertion messages. That is the point of
+  the experiment (the question is how failing test output should reach the next
+  model), and it is fair across arms: identical access, identical attempt
+  budget. But published BCB-Hard and ClassEval figures are typically single-shot,
+  so **84.5% for `claude-opus-5` here is not comparable to a public leaderboard
+  row.** Compare arms to each other, never to a leaderboard. It also constrains
+  which datasets can be added next — see
+  [docs/pattern-dataset-selection.md §7.2](docs/pattern-dataset-selection.md).
 - **Containment is not free accuracy.** Replacing a paid triage model with the
   harness's digest removes 100% of triage spend ($0.0000 vs ~$0.0018/repair).
   It does not by itself raise pass rates; it lowers the cost of reaching them.
 - **Containment does nothing when there is nothing to contain.** A failure whose
   whole output is a handful of lines shows a delta at or below zero, and the
   reports print that as readily as a win.
-- **These are 100 tasks on one dataset, and 91 on the other.** Differences of a
-  few points are within noise on both; the BCB-Hard 76 vs 59 spread is not.
+- **The N=148 run checks out, with one asterisk.** Backend `library`,
+  `ctx-harness` 0.35.1, zero simulated tasks, all eleven arms complete over all
+  148 tasks. The asterisk: `r9_opus_on_evidence` records
+  `routing.degraded = true` on 11 of 148 tasks, where one attempt produced a
+  capture with no typed fact tier and the gate declined to escalate for want of
+  evidence. It does not explain `r9`'s 5-task gap to `r6` — both solve 3 of
+  those 11, and only 1 of `r6`'s 9 exclusive wins is among them. Detail in
+  [routing study §5.5](docs/routing-study.md).
+- **Attempt budget is a variable, and it is not held constant across sweeps.**
+  The N=148 router arms get three rungs; the N=100 pattern arms get two. That
+  alone moves `claude-opus-5` from 76% to 84.5%, so **rows from different sweeps
+  must never be put in one table.** Within a sweep every arm has the same budget,
+  which is what makes the arm-vs-arm comparisons sound.
+- **148 tasks on one dataset, 91 on the other.** Differences of a few points are
+  within noise on both; the N=148 spread from 66.9% to 84.5% is not.
 - **Report 11's BigCodeBench-Hard N=50 table does not reconcile with its own raw
   results.** It prints 30/47, 36/47, 37/47, 39/47 where the archived per-arm
   JSONs (`bigCodeBench-hard/results/n50_*.json`) record 15/50, 18/50, 14/50 and
@@ -310,10 +426,14 @@ both it is the most expensive thing per solved task.
   makes two boxes measure different task sets while reporting comparable-looking
   pass rates.
 
-Where a *non*-cascade pattern should still win — and which datasets could show
-it, now that ClassEval has answered and FeatureBench's fast split is the honest
-next step — is worked out in
-[dataset selection for pattern tests](docs/pattern-dataset-selection.md).
+**What is still untested.** Both datasets here run their tests in a sandbox for
+$0, so the finding *escalate on failure rather than plan in advance* has only
+ever been measured where the failure signal is free, instant and exact — which
+is the regime that most favours it. The open question is what happens when retry
+is expensive or the oracle is partial.
+[Dataset selection for pattern tests §7](docs/pattern-dataset-selection.md)
+ranks the candidates and names one — **FeatureBench's 100-instance fast split**
+— as the run that would settle it.
 
 ---
 
@@ -378,17 +498,24 @@ python3 run_benchmark.py --dataset bcb --group ablation --n 30 --report
 ```bash
 # Routing study: gemini-3.7-flash centric ladders with claude-opus-5 reserved
 # for hard tasks. Ten arms; see docs/routing-study.md for what each one asks.
-python3 run_benchmark.py --dataset bcb --group router --n 50 --report --no-cache
+python3 run_benchmark.py --dataset bcb --group router --n 148 --report --no-cache
 python3 tools/analyze_router_study.py
 ```
 
-**The router sweep has not been run at size yet.** Only the N=1 smoke exists
-([report 13](reports/13_bcb-hard_straitjacket_n1.md)), so
-`analyze_router_study.py` currently reports the seven N=100 arms with blank
-frontier columns — those are not router arms, so the columns are blank rather
-than zero. Everything the study is designed to ask is in
-[docs/routing-study.md](docs/routing-study.md); what it has actually answered so
-far is nothing.
+This is the sweep behind [report 19](reports/19_bcb-hard_straitjacket_n148.md)
+and the headline in §1. It ran over the complete 148-task dataset and cost
+**$58.27** for all eleven arms. `analyze_router_study.py` defaults to
+`bigCodeBench-hard/results/bcb_router_results.json` — the file `--group router`
+writes — and prints pass rate, `$/solved`, how often the frontier tier was
+actually invoked, what fraction of those it solved, the Pareto frontier and the
+oracle ceiling. Cheaper subsets are listed in
+[docs/routing-study.md §4](docs/routing-study.md).
+
+**`r9_opus_on_evidence` needs the library backend.** The typed fact tier is read
+from the in-process manifest, so under `SJ_BACKEND=cli` there is nothing to gate
+on and `r9` silently degrades into `r6`. The router detects this, warns, and sets
+`routing.degraded = true` on every affected task — so check that flag before
+quoting an `r9` row.
 
 **Use `--no-cache` whenever you care about the containment receipt.** Cached
 task records from older revisions have no containment field, and a cached run
@@ -556,7 +683,8 @@ python3 -c "import sys;sys.path.insert(0,'.');from src.architectures import VARI
 
 | Artifact | Path |
 |---|---|
-| Consolidated metrics — BCB-Hard | `bigCodeBench-hard/results/bcb_all_results.json` |
+| Consolidated metrics — BCB-Hard | `bigCodeBench-hard/results/bcb_<group>_results.json` |
+| ↳ the routing study specifically | `bigCodeBench-hard/results/bcb_router_results.json` |
 | Per-task cache — BCB-Hard | `bigCodeBench-hard/results/cache_bcb_master.json` |
 | Consolidated metrics — ClassEval | `classeval/results/classeval_classeval_results.json` |
 | Per-task cache — ClassEval | `classeval/results/cache_classeval_master.json` |
@@ -663,19 +791,29 @@ Routing matrix derived from the sweeps in `reports/`:
 
 | Task class | Recommended architecture | Evidence |
 |---|---|---|
-| A — multi-library / algorithmic, one function | Escalation shield: `3.5-lite` → `3.7-flash` → `claude-sonnet-5` | BCB-Hard N=100 — 68% at $0.0282/solved |
+| A — multi-library / algorithmic, one function | **Evidence-gated escalation**: Lite → `3.7-flash (low)` → Opus-5 when the digest reads `broad`/`stalled` | BCB-Hard **N=148** — `r9`, 81.1% at $0.0353/solved |
 | B — a class or module of several methods | Whole-class cascade: `3.5-lite` → `3.7-flash (low)` → `3.7-flash (med)` | ClassEval N=91 — 80% at $0.0371/solved |
-| C — accuracy is the only constraint | `claude-opus-5` alone | 76% (BCB-Hard) / 88% (ClassEval); most expensive per solved on both |
+| C — accuracy is the only constraint | `claude-opus-5` alone, three rungs | 84.5% (BCB-Hard N=148) / 88% (ClassEval); a Gemini ladder in front of it adds nothing |
 | D — large CI/CD regression batch, cost-led | Per-method or per-task loop on one cheap model | ClassEval N=91 — `ce_route_flat`, 73% at $0.0210/solved |
 | E — enterprise repo bug / multi-file git patch | *Unvalidated here.* No executed multi-file-patch dataset remains in this repository | — |
 
-Two rules the sweeps do license: **escalate the repair turn upward, never
-sideways or down** (16% vs 41% rescue rate, p = 0.0004), and **do not pay to
-sort sub-tasks by difficulty before anything has run** — a flat cheap loop beat
-the difficulty-routed one on both accuracy and cost.
+Four rules the sweeps license:
 
-Thinking budget: `LOW` (~2k–4k tokens) is the default sweet spot for test
-assertion repair; escalate to `MEDIUM` only for algorithmic deadlocks.
+1. **Escalate the repair turn upward, never sideways or down** — 16% vs 41%
+   rescue rate, p = 0.0004 (N=100).
+2. **Gate on the failure's evidence, not on a failure counter** — `r9` reaches
+   96% of frontier accuracy for 74% of frontier spend (N=148).
+3. **Watch the thinking budget before the model tier** — `gemini-3.7-flash` at
+   `medium` cost 33% more than `claude-opus-5` and solved 14 fewer tasks (N=148).
+4. **Do not pay to sort sub-tasks by difficulty before anything has run** — a
+   flat cheap loop beat the difficulty-routed one on both accuracy and cost
+   (ClassEval N=91).
+
+Thinking budget: `LOW` is the default sweet spot for test assertion repair, and
+N=148 puts a price on the alternative — `gemini-3.7-flash` at `low` scored 71.6%
+for $4.27, at `medium` 75.0% for $7.60. Three and a half points cost 78% more
+money. Escalate to `MEDIUM` only for algorithmic deadlocks, and prefer
+escalating the *model* over the *thinking budget* when both are available.
 
 ---
 

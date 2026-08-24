@@ -33,6 +33,8 @@ _DATASET_SLUG = {
     "bigcodebench-hard": "bcb-hard",
     "webdev": "webdev",
     "web-dev": "webdev",
+    "featurebench": "featurebench",
+    "feature-bench": "featurebench",
 }
 
 _INDEX_RE = re.compile(r"^(\d{2})_")

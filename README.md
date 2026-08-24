@@ -27,6 +27,7 @@ Vertex AI (Gemini) and Anthropic (Claude).
 | 7 | [Straitjacket implementation](docs/straitjacket-implementation.md) — what it is, and how it differs from upstream |
 | 8 | [Report index](reports/README.md) — every sweep, in execution order |
 | 9 | [Dataset selection for pattern tests](docs/pattern-dataset-selection.md) — where a non-cascade pattern could win, which datasets can show it, and the ClassEval verdict |
+| 10 | [FeatureBench setup](docs/featurebench-setup.md) — the Docker-backed dataset that tests H2, and how to stand it up on Linux |
 
 **Three sweeps carry the findings**, all live API, all with the contained digest
 on every repair turn:
@@ -651,6 +652,53 @@ The equivalent one-off through the master runner, which does **not** merge:
 python3 run_benchmark.py --dataset classeval --variants ce_single_opus --n 91
 ```
 
+### FeatureBench — the expensive-oracle experiment
+
+Every result above was measured where failing is **free**: BCB-Hard and
+ClassEval run their tests in a sandbox for $0 in milliseconds, which is exactly
+the regime that most favours *fail → escalate*. FeatureBench is the first
+dataset here whose oracle costs — an attempt applies a diff inside the
+repository's own container and runs pytest, ~57 s on gold. That makes **H2**
+testable: does escalation still beat front-loaded planning when the routing
+signal stops being free?
+
+**It needs Docker, and it needs a preflight.** Full Linux prerequisites, cost
+model and troubleshooting: **[docs/featurebench-setup.md](docs/featurebench-setup.md)**.
+The upstream `fb` CLI is *not* required — the arms drive Docker directly,
+because the ladder needs the oracle inside the loop rather than after it.
+
+```bash
+python3 tools/featurebench_preflight.py --settings   # what repo_settings holds
+python3 tools/featurebench_preflight.py --pull       # 18 images for 100 instances
+python3 tools/featurebench_preflight.py --write      # run gold, quarantine what fails
+```
+
+```bash
+# Smoke: two rows, the recommended shape and the shape it has to beat.
+python3 run_benchmark.py --dataset featurebench --n 2 \
+    --variants fb_evidence_gate,fb_cascade --no-cache
+
+# The comparison. Five arms. Start small -- see the cost table in the setup doc.
+python3 run_benchmark.py --dataset featurebench --group featurebench \
+    --n 20 --report --no-cache
+```
+
+| Arm | What it is |
+|---|---|
+| `fb_single_flash` / `fb_single_sonnet` | one model writes the feature and repairs it twice |
+| `fb_cascade` | flash → sonnet → opus, escalate whenever a rung fails — the `r6` shape |
+| `fb_evidence_gate` | **the recommended shape** — same tiers, escalate when the digest reads `broad`/`stalled` (`r9`, the N=148 winner) |
+| `fb_plan_exec` | **the H2 challenger** — `claude-opus-5` plans *before* any test runs, then flash implements and repairs |
+| `fb_single_opus` | the frontier baseline — **not** in `--group featurebench`; opt-in, like ClassEval's |
+
+The arm set is built from what the two sweeps that ran at size actually
+rewarded, and what they punished is absent on purpose: **no `gemini-3.5-flash-lite`
+rung** (a wasted attempt now costs a container run, not a fraction of a cent)
+and **no `medium`/`high` thinking ladder** (N=148 measured it at 33% more than
+`claude-opus-5` for 14 fewer solved tasks). Every arm makes **at most 3 oracle
+calls** — the scarce resource here is held constant, and `fb_plan_exec`'s extra
+planning call shows up in dollars where it belongs.
+
 ### WebDev
 
 ```bash
@@ -665,10 +713,10 @@ reading a result there as confirmation of a BCB-Hard result.
 
 | Flag | Values | Meaning |
 |---|---|---|
-| `--dataset` / `-d` | `bcb`, `webdev`, `classeval` | which benchmark (default `bcb`) |
+| `--dataset` / `-d` | `bcb`, `webdev`, `classeval`, `featurebench` | which benchmark (default `bcb`) |
 | `--n` | integer | number of tasks |
 | `--variants` / `-v` | comma-separated ids | exactly which architectures to run |
-| `--group` / `-g` | `all`, `single`, `combo`, `straitjacket`, `nextgen`, `ablation`, `router`, `classeval` | a preset family instead of explicit ids |
+| `--group` / `-g` | `all`, `single`, `combo`, `straitjacket`, `nextgen`, `ablation`, `router`, `classeval`, `featurebench` | a preset family instead of explicit ids |
 | `--no-cache` | flag | ignore cached task results and re-run live |
 | `--report` / `-r` | flag | emit the markdown report and HTML dashboard |
 | `--out` / `-o` | path | override the consolidated JSON path |
@@ -688,6 +736,7 @@ python3 -c "import sys;sys.path.insert(0,'.');from src.architectures import VARI
 | Per-task cache — BCB-Hard | `bigCodeBench-hard/results/cache_bcb_master.json` |
 | Consolidated metrics — ClassEval | `classeval/results/classeval_classeval_results.json` |
 | Per-task cache — ClassEval | `classeval/results/cache_classeval_master.json` |
+| Consolidated metrics — FeatureBench | `featurebench/results/featurebench_featurebench_results.json` |
 | Markdown report | `reports/NN_<dataset>_<tag>_n<N>.md` |
 | HTML dashboard | `reports/NN_<dataset>_<tag>_n<N>.html` |
 
@@ -718,6 +767,7 @@ python3 tools/index_reports.py --apply     # adopt new reports, refresh reports/
 │   ├── evaluator.py                 #   sandboxed execution + the Evidence contract
 │   ├── architectures.py             #   variant registry + every pipeline
 │   ├── classeval.py                 #   ClassEval arms: per-method routing + its control
+│   ├── featurebench.py              #   FeatureBench arms: the expensive-oracle (H2) study
 │   ├── sweep.py                     #   the per-arm run loop, shared by every runner
 │   ├── merge.py                     #   fold a single-arm run back into a sweep's results
 │   └── reporter.py                  #   markdown report + HTML dashboard
@@ -725,6 +775,7 @@ python3 tools/index_reports.py --apply     # adopt new reports, refresh reports/
 ├── docs/                            # ← explanations (methodology, not results)
 │   ├── straitjacket-implementation.md
 │   ├── pipeline-architecture.md
+│   ├── featurebench-setup.md        #   Linux prerequisites for the Docker-backed dataset
 │   ├── routing-study.md
 │   ├── pattern-dataset-selection.md
 │   ├── bigcodebench-hard-sweetspot-methodology.md
@@ -741,6 +792,8 @@ python3 tools/index_reports.py --apply     # adopt new reports, refresh reports/
 │
 ├── bigCodeBench-hard/               # dataset 1: Python function completion  (N=100 swept)
 ├── classeval/                       # dataset 2: class generation, scored per method (N=91 swept)
+│     data/ also holds quarantine-<split>.json, written by the preflight
+├── featurebench/                    # dataset 3: multi-file features, containerised oracle (H2)
 │     data/ also holds quarantine-<split>.json, written by the preflight
 ├── webdev/                          # a library-filtered BCB-Hard subset, not an independent dataset
 │     each: data/  results/  + historical sweep scripts

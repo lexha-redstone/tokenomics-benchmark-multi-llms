@@ -1384,14 +1384,19 @@ VARIANT_REGISTRY = {
 def _registry(dataset="bcb"):
     """Variant registry for a dataset.
 
-    ClassEval's arms live in src/classeval.py and are merged in lazily: that
-    module imports `_arm` and `_treat_error` from this one, so importing it at
-    module scope here would be circular.
+    ClassEval's and FeatureBench's arms live in src/classeval.py and
+    src/featurebench.py and are merged in lazily: those modules import `_arm`
+    and `_treat_error` from this one, so importing them at module scope here
+    would be circular.
     """
     reg = dict(VARIANT_REGISTRY)
-    if str(dataset).lower().replace("-", "_") in ("classeval", "class_eval", "ce"):
+    key = str(dataset).lower().replace("-", "_")
+    if key in ("classeval", "class_eval", "ce"):
         from .classeval import CLASSEVAL_VARIANTS
         reg.update(CLASSEVAL_VARIANTS)
+    elif key in ("featurebench", "feature_bench", "fb"):
+        from .featurebench import FEATUREBENCH_VARIANTS
+        reg.update(FEATUREBENCH_VARIANTS)
     return reg
 
 
@@ -1416,6 +1421,8 @@ def get_configurations(dataset="bcb", group="all", variant_keys=None):
     all_configs = list(VARIANT_REGISTRY_.values())
     if group in ("classeval", "ce", "routing_subtask"):
         return [c for c in all_configs if "7. ClassEval" in c["category"]]
+    if group in ("featurebench", "fb"):
+        return [c for c in all_configs if "8. FeatureBench" in c["category"]]
     if group == "single":
         return [c for c in all_configs if "1. Single" in c["category"]]
     elif group == "combo":

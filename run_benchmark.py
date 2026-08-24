@@ -16,6 +16,9 @@ Usage Examples:
   # Run the ClassEval sub-task routing comparison:
   python3 run_benchmark.py --dataset classeval --group classeval --n 91 --report
 
+  # Run the FeatureBench expensive-oracle study (needs Docker; see docs/featurebench-setup.md):
+  python3 run_benchmark.py --dataset featurebench --group featurebench --n 20 --report
+
   # Run WebDev single-model baseline comparisons:
   python3 run_benchmark.py --dataset webdev --group single --n 10 --report
 """
@@ -49,11 +52,13 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--dataset", "-d", choices=["bcb", "bigcodebench", "bigcodebench-hard",
                                                     "webdev", "web-dev",
-                                                    "classeval", "class-eval", "ce"],
+                                                    "classeval", "class-eval", "ce",
+                                                    "featurebench", "feature-bench", "fb"],
                         default="bcb", help="Dataset to evaluate (default: 'bcb')")
     parser.add_argument("--group", "-g", choices=["all", "single", "combo", "straitjacket", "sj",
                                                   "nextgen", "ablation", "router",
-                                                  "classeval", "ce"],
+                                                  "classeval", "ce",
+                                                  "featurebench", "fb"],
                         default="all", help="Preset variant group to run (default: 'all')")
     parser.add_argument("--variants", "-v", default="",
                         help="Comma-separated variant IDs to run (e.g. 'single_flash36,sj_hybrid,sj_escalation_shield')")
@@ -98,6 +103,10 @@ def main():
         dataset_name = "ClassEval"
         ds_key = "classeval"
         ds_folder = "classeval"
+    elif d_norm in ("featurebench", "feature_bench", "fb"):
+        dataset_name = "FeatureBench"
+        ds_key = "featurebench"
+        ds_folder = "featurebench"
     else:
         dataset_name = "WebDev"
         ds_key = "webdev"

@@ -1,6 +1,6 @@
 # Copyright 2026. Licensed under the Apache License, Version 2.0.
 """
-Unified Dataset Loader for BigCodeBench-Hard, WebDev, and ClassEval Benchmarks.
+Unified Dataset Loader for BigCodeBench-Hard, WebDev, ClassEval and FeatureBench.
 Handles dataset loading, HuggingFace dataset caching, and problem dictionary creation.
 """
 
@@ -446,6 +446,153 @@ def load_classeval_problems(split=CLASSEVAL_DEFAULT_SPLIT, max_tasks=None,
 
 
 # ==============================================================================
+# --- FEATUREBENCH DATASET LOADER ---
+# ==============================================================================
+
+FEATUREBENCH_DATASET = "LiberCoders/FeatureBench"
+FEATUREBENCH_CONFIG = "default"
+FEATUREBENCH_DEFAULT_SPLIT = "fast"
+
+# The row fields this repository uses. `problem_statement` runs to 77k chars on
+# the largest rows, which is the P4 property FeatureBench was adopted for -- so
+# it is kept whole and truncated at prompt-build time, where the budget is
+# visible, rather than silently here.
+_FB_KEEP_FIELDS = (
+    "instance_id", "repo", "base_commit", "problem_statement",
+    "patch", "test_patch", "FAIL_TO_PASS", "PASS_TO_PASS",
+    "image_name", "repo_settings",
+)
+
+
+def featurebench_quarantine_path(split=FEATUREBENCH_DEFAULT_SPLIT):
+    """Where `tools/featurebench_preflight.py` records rows gold cannot pass."""
+    return os.path.join(ROOT_DIR, "featurebench", "data", f"quarantine-{split}.json")
+
+
+def load_featurebench_quarantine(split=FEATUREBENCH_DEFAULT_SPLIT):
+    path = featurebench_quarantine_path(split)
+    if not os.path.exists(path):
+        return {}
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            return json.load(f).get("tasks", {})
+    except Exception:
+        return {}
+
+
+def ensure_featurebench_dataset(split=FEATUREBENCH_DEFAULT_SPLIT):
+    """Ensure the FeatureBench split is present locally, fetching from HF if needed."""
+    data_dir = os.path.join(ROOT_DIR, "featurebench", "data")
+    os.makedirs(data_dir, exist_ok=True)
+    path = os.path.join(data_dir, f"FeatureBench-{split}.jsonl")
+    if os.path.exists(path):
+        return path
+
+    print(f"Fetching {FEATUREBENCH_DATASET} [{split}] from HuggingFace -> {_rel(path)}",
+          flush=True)
+    rows, offset, total = [], 0, None
+    while total is None or offset < total:
+        q = urllib.parse.urlencode({
+            "dataset": FEATUREBENCH_DATASET, "config": FEATUREBENCH_CONFIG,
+            "split": split, "offset": offset, "length": 20,
+        })
+        with urllib.request.urlopen("https://datasets-server.huggingface.co/rows?" + q,
+                                    timeout=180, context=_ssl_ctx()) as r:
+            d = json.loads(r.read())
+        batch = d.get("rows", [])
+        total = d.get("num_rows_total", len(batch))
+        if not batch:
+            break
+        rows.extend(b["row"] for b in batch)
+        offset += len(batch)
+
+    with open(path, "w", encoding="utf-8") as f:
+        for row in rows:
+            f.write(json.dumps({k: row.get(k) for k in _FB_KEEP_FIELDS}) + "\n")
+    print(f"  saved {len(rows)} instances to {_rel(path)}", flush=True)
+    return path
+
+
+def _fb_repo_settings(raw):
+    """`repo_settings` ships as a JSON *string*. Parse it, never guess its keys.
+
+    The preflight prints the keys it actually finds
+    (`tools/featurebench_preflight.py --settings`), because binding a wrong key
+    here would silently change what every arm is scored on.
+    """
+    if isinstance(raw, dict):
+        return raw
+    try:
+        return json.loads(raw) if raw else {}
+    except Exception:
+        return {}
+
+
+def _fb_workdir(settings, repo):
+    """Where the repository lives inside its image.
+
+    Read from `repo_settings` when it says so; otherwise `/workspace/<name>`,
+    which is what the published images use. The preflight fails loudly on gold
+    if this is wrong for a row, so a bad guess cannot reach a scored arm.
+    """
+    for key in ("workdir", "work_dir", "repo_dir", "repo_path", "root", "cwd"):
+        v = settings.get(key)
+        if isinstance(v, str) and v.strip():
+            return v.strip()
+    name = str(repo or "").split("/")[-1] or "repo"
+    return f"/workspace/{name}"
+
+
+def load_featurebench_problems(split=FEATUREBENCH_DEFAULT_SPLIT, max_tasks=None,
+                               apply_quarantine=True):
+    """Load FeatureBench instances as a dictionary keyed by instance_id.
+
+    Each problem carries the fields the container executor needs -- `image_name`,
+    `base_commit`, `test_patch`, `FAIL_TO_PASS`/`PASS_TO_PASS` -- plus a parsed
+    `repo_settings` and the `repo_workdir` derived from it.
+
+    Rows whose own gold patch cannot be scored in this environment are excluded
+    using the file `tools/featurebench_preflight.py` writes: a missing image, a
+    test_patch that will not apply, an image whose pytest cannot collect. As
+    with ClassEval, that file is environment-specific -- regenerate it per
+    machine rather than copying it.
+    """
+    path = ensure_featurebench_dataset(split)
+    excluded = load_featurebench_quarantine(split) if apply_quarantine else {}
+    skipped = 0
+    problems = {}
+    with open(path, "r", encoding="utf-8") as f:
+        for line in f:
+            if not line.strip():
+                continue
+            row = json.loads(line)
+            iid = row.get("instance_id")
+            if iid in excluded:
+                skipped += 1
+                continue
+            row["dataset_type"] = "featurebench"
+            row["task_id"] = iid
+            settings = _fb_repo_settings(row.get("repo_settings"))
+            row["settings"] = settings
+            row["repo_workdir"] = _fb_workdir(settings, row.get("repo"))
+            for key in ("FAIL_TO_PASS", "PASS_TO_PASS"):
+                v = row.get(key) or []
+                row[key] = [v] if isinstance(v, str) else list(v)
+            problems[iid] = row
+            if max_tasks and len(problems) >= max_tasks:
+                break
+    note = ""
+    if skipped:
+        note = (f" ({skipped} excluded by "
+                f"{os.path.basename(featurebench_quarantine_path(split))}"
+                " -- gold does not pass here)")
+    elif apply_quarantine and not os.path.exists(featurebench_quarantine_path(split)):
+        note = "  [no preflight run yet: python3 tools/featurebench_preflight.py --write]"
+    print(f"Loaded {len(problems)} FeatureBench instances from {_rel(path)}{note}")
+    return problems
+
+
+# ==============================================================================
 # --- UNIFIED DATASET DISPATCHER ---
 # ==============================================================================
 
@@ -456,6 +603,7 @@ def load_dataset(dataset_name, split=None, max_tasks=None):
       - 'bcb', 'bigcodebench', 'bigcodebench-hard'
       - 'webdev', 'web-dev'
       - 'classeval', 'class-eval'
+      - 'featurebench', 'feature-bench', 'fb'
     """
     name = dataset_name.lower().replace("-", "_")
     if name in ("bcb", "bigcodebench", "bigcodebench_hard"):
@@ -466,6 +614,9 @@ def load_dataset(dataset_name, split=None, max_tasks=None):
     elif name in ("classeval", "class_eval", "ce"):
         s = split or CLASSEVAL_DEFAULT_SPLIT
         return load_classeval_problems(split=s, max_tasks=max_tasks)
+    elif name in ("featurebench", "feature_bench", "fb"):
+        s = split or FEATUREBENCH_DEFAULT_SPLIT
+        return load_featurebench_problems(split=s, max_tasks=max_tasks)
     else:
         raise ValueError(f"Unknown dataset name: '{dataset_name}'. "
-                         "Supported: 'bcb', 'webdev', 'classeval'.")
+                         "Supported: 'bcb', 'webdev', 'classeval', 'featurebench'.")

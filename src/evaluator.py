@@ -4,7 +4,9 @@ Unified Evaluator and Straitjacket Context-Containment Bridge.
 
 Handles:
   1. Python function code extraction and sandboxed unit test execution (BigCodeBench & WebDev).
-  2. Comparison between LLM-based triage ($) and Straitjacket local containment ($0.00).
+  2. Containerised repository evaluation for FeatureBench: apply a candidate
+     diff inside the task's own Docker image and run its pytest suite.
+  3. Comparison between LLM-based triage ($) and Straitjacket local containment ($0.00).
 
 Containment contract
 --------------------
@@ -351,6 +353,279 @@ def classeval_subtask_summary(subtask_records):
     return {"by_tier": by_tier, "by_model": by_model,
             "n_subtasks": len(subtask_records or []),
             "passed_subtasks": sum(1 for r in (subtask_records or []) if r.get("passed"))}
+
+
+# ==============================================================================
+# --- FEATUREBENCH: CONTAINERISED REPOSITORY EVALUATION ---
+# ==============================================================================
+#
+# The first dataset in this repository whose oracle is *expensive*. BCB-Hard and
+# ClassEval run a sandboxed unittest in well under a second for $0; a
+# FeatureBench attempt applies a patch inside a repository container and runs
+# pytest, which the upstream paper measures at 57.2 s/instance on gold patches.
+# That is the whole point of adopting it -- it is the only P4 axis the repo has
+# (docs/pattern-dataset-selection.md section 7).
+#
+# Two consequences shape this code:
+#
+#   1. **One container per task, not per attempt.** A repair ladder runs up to
+#      three attempts against the same repository; paying container start-up
+#      three times would triple the dominant cost and make the arms measure
+#      Docker rather than the models. `FeatureBenchEnv` starts the container
+#      once, resets the worktree between attempts, and tears it down after.
+#   2. **`docker exec` goes through the harness unchanged.** `sj.contained_run`
+#      takes an argv, so the pytest output is captured at the birth gate by the
+#      same code path BCB-Hard uses. Nothing about containment is
+#      re-implemented for this dataset; the `pytest/v*` profile does the
+#      extraction, which is also what makes the evidence gate work here.
+
+FB_CONTAINER_PREFIX = "tokenomics-fb"
+
+# Two apply strategies, strict first. A model-authored diff that needs fuzz is
+# still a legitimate solve -- SWE-bench's own harness allows the same latitude
+# -- but a patch that fails both is a real failure and is fed back as evidence
+# rather than silently scored zero.
+_APPLY_STRATEGIES = (
+    ["git", "apply", "--verbose"],
+    ["patch", "--batch", "--fuzz=5", "-p1", "-i"],
+)
+
+
+def extract_patch(text):
+    """Pull a unified diff out of a model response.
+
+    Re-introduced for FeatureBench. The identically-named helper that served
+    the deleted SWE-bench Pro path fed a scorer that never ran the repository's
+    tests; this one feeds a real pytest run inside the repository's own
+    container, so the diff is executed rather than string-matched.
+    """
+    m = re.search(r"```(?:diff|patch)\s*\n(.*?)```", text or "", re.DOTALL)
+    if m:
+        return m.group(1).strip("\n")
+    m = re.search(r"```\s*\n(diff --git .*?)```", text or "", re.DOTALL)
+    if m:
+        return m.group(1).strip("\n")
+    # An unfenced diff is common enough to accept, but only from the first
+    # marker onward -- prose before it would break `git apply`.
+    idx = (text or "").find("diff --git ")
+    if idx == -1:
+        idx = (text or "").find("--- ")
+    return (text or "")[idx:].strip("\n") if idx != -1 else ""
+
+
+def missing_patch_error(patch_str):
+    """Birth gate: refuse a response that carries no applicable diff.
+
+    Same contract as :func:`missing_code_error` -- rejected before the
+    container is touched, returned as bounded Evidence so the repair turn is
+    fed the same shape of payload whichever gate stopped it.
+    """
+    text = (patch_str or "").strip()
+    if not text:
+        return _guard_evidence("model response contains no patch")
+    if "--- " not in text or "+++ " not in text:
+        return _guard_evidence(
+            "model response is not a unified diff: no `---`/`+++` file headers")
+    if "@@" not in text:
+        return _guard_evidence(
+            "model response has diff headers but no `@@` hunk -- nothing to apply")
+    return None
+
+
+def docker_available():
+    """(ok, reason). Checked before a sweep rather than failing task by task."""
+    if shutil.which("docker") is None:
+        return False, "`docker` is not on PATH"
+    try:
+        p = subprocess.run(["docker", "info", "--format", "{{.ServerVersion}}"],
+                           capture_output=True, text=True, timeout=30)
+    except Exception as e:                                   # noqa: BLE001
+        return False, f"could not run `docker info`: {e}"
+    if p.returncode != 0:
+        return False, f"`docker info` failed: {(p.stderr or '').strip()[:200]}"
+    return True, f"docker server {(p.stdout or '').strip()}"
+
+
+class FeatureBenchEnv:
+    """One repository container, reused across a task's repair attempts.
+
+    Use as a context manager. `score(patch)` applies a candidate diff, runs the
+    task's tests through the harness, then resets the worktree so the next
+    attempt starts from the same base.
+    """
+
+    def __init__(self, problem, timeout=900.0):
+        self.problem = problem
+        self.timeout = float(timeout)
+        self.image = problem.get("image_name") or ""
+        self.workdir = problem.get("repo_workdir") or "/workspace"
+        self.name = f"{FB_CONTAINER_PREFIX}-{os.getpid()}-{abs(hash(problem.get('instance_id', ''))) % 10 ** 8}"
+        self.sandbox = None
+        self.started = False
+        self.setup_error = ""
+
+    # -- lifecycle ---------------------------------------------------------
+    def __enter__(self):
+        self.sandbox = sj.new_sandbox("fb")
+        try:
+            self._start()
+            self.started = True
+        except Exception as e:                               # noqa: BLE001
+            self.setup_error = str(e)
+        return self
+
+    def __exit__(self, *exc):
+        subprocess.run(["docker", "rm", "-f", self.name],
+                       capture_output=True, text=True, timeout=120)
+        return False
+
+    def _sh(self, script, timeout=None, check=True):
+        """Run a shell snippet inside the container, outside the harness.
+
+        Setup plumbing (checkout, patch application, worktree reset) is not
+        evidence: containing it would put `git apply` chatter into the
+        containment ledger and dilute the receipt the test runs produce.
+        """
+        p = subprocess.run(
+            ["docker", "exec", "-w", self.workdir, self.name, "bash", "-lc", script],
+            capture_output=True, text=True, timeout=timeout or self.timeout)
+        if check and p.returncode != 0:
+            raise RuntimeError(
+                f"{script.splitlines()[0][:60]}: exit {p.returncode}: "
+                f"{((p.stderr or '') + (p.stdout or '')).strip()[-400:]}")
+        return p
+
+    def _start(self):
+        if not self.image:
+            raise RuntimeError("row carries no `image_name`")
+        subprocess.run(["docker", "rm", "-f", self.name],
+                       capture_output=True, text=True, timeout=120)
+        p = subprocess.run(
+            ["docker", "run", "-d", "--name", self.name,
+             "--network", "none",              # the task is offline by construction
+             "-w", self.workdir, self.image, "sleep", "infinity"],
+            capture_output=True, text=True, timeout=self.timeout)
+        if p.returncode != 0:
+            raise RuntimeError(
+                f"docker run failed for {self.image}: {(p.stderr or '').strip()[-300:]}")
+
+        base = self.problem.get("base_commit") or ""
+        if base:
+            self._sh(f"git checkout -f {base} 2>/dev/null || true", check=False)
+        # Stage the tests, then commit them, so a per-attempt `git checkout -- .`
+        # resets the candidate's edits without also reverting the test files the
+        # grade depends on.
+        test_patch = self.problem.get("test_patch") or ""
+        if test_patch.strip():
+            self._write("/tmp/fb_test.patch", test_patch)
+            if not self._try_apply("/tmp/fb_test.patch"):
+                raise RuntimeError("the dataset's own test_patch did not apply")
+        self._sh("git config user.email fb@local && git config user.name fb && "
+                 "git add -A && git commit -q -m fb-tests --allow-empty")
+
+    def _write(self, path, text):
+        """Materialise a file inside the container without a shell quoting hazard."""
+        p = subprocess.run(
+            ["docker", "exec", "-i", self.name, "bash", "-lc", f"cat > {path}"],
+            input=text, capture_output=True, text=True, timeout=self.timeout)
+        if p.returncode != 0:
+            raise RuntimeError(f"could not write {path}: {(p.stderr or '').strip()[-200:]}")
+
+    def _try_apply(self, path):
+        for argv in _APPLY_STRATEGIES:
+            cmd = " ".join(argv) + (f" {path}" if argv[0] == "git" else f" {path}")
+            if self._sh(cmd, check=False).returncode == 0:
+                return True
+        return False
+
+    def reset(self):
+        self._sh("git checkout -- . && git clean -fdq", check=False)
+
+    # -- scoring -----------------------------------------------------------
+    def score(self, patch):
+        """Apply `patch`, run the task's tests, reset. Returns (resolved, evidence).
+
+        `resolved` mirrors FeatureBench's own Resolved Rate: pytest exits 0 over
+        the fail-to-pass and pass-to-pass files together.
+        """
+        if not self.started:
+            return False, _guard_evidence(
+                f"FeatureBench container unavailable: {self.setup_error}")
+        guard = missing_patch_error(patch)
+        if guard:
+            return False, guard
+
+        try:
+            self._write("/tmp/fb_cand.patch", patch)
+            if not self._try_apply("/tmp/fb_cand.patch"):
+                self.reset()
+                return False, _guard_evidence(
+                    "patch did not apply (tried `git apply` then `patch --fuzz=5`). "
+                    "Re-emit the diff against the files as they exist at this commit.")
+            return self._pytest()
+        except Exception as e:                               # noqa: BLE001
+            return False, _guard_evidence(f"FeatureBench execution error: {e}")
+        finally:
+            try:
+                self.reset()
+            except Exception:                                # noqa: BLE001
+                pass
+
+    def _pytest(self):
+        files = featurebench_test_files(self.problem)
+        if not files:
+            return False, _guard_evidence("row names no FAIL_TO_PASS test file")
+        argv = ["docker", "exec", "-w", self.workdir, self.name,
+                "python", "-m", "pytest", "-q", "--tb=short", "-p", "no:cacheprovider",
+                *files]
+        run = sj.contained_run(argv, cwd=self.sandbox, timeout=self.timeout,
+                               # Keep the container name (which carries a pid)
+                               # out of the recorded argv, or every attempt
+                               # digests as a different command.
+                               record_argv=["python", "-m", "pytest", "-q", *files])
+        return run.exit_code == 0, _from_run(run)
+
+
+def featurebench_test_files(problem):
+    """The files pytest is pointed at: fail-to-pass first, then pass-to-pass."""
+    out = []
+    for key in ("FAIL_TO_PASS", "PASS_TO_PASS"):
+        v = problem.get(key) or []
+        if isinstance(v, str):
+            v = [v]
+        out.extend(str(x) for x in v if str(x).strip())
+    seen, uniq = set(), []
+    for f in out:
+        if f not in seen:
+            seen.add(f)
+            uniq.append(f)
+    return uniq
+
+
+_PYTEST_COUNT_RE = re.compile(r"(\d+)\s+(passed|failed|error|errors)")
+
+
+def featurebench_test_ratio(evidence):
+    """Fraction of executed test cases that passed, from pytest's own summary.
+
+    FeatureBench reports a *Passed Rate* beside Resolved Rate precisely because
+    a binary verdict throws away the signal a cheap model still produces on a
+    task it cannot finish. This is the same idea read off the captured summary
+    line; it is named `test_pass_ratio` rather than `passed_rate` because the
+    upstream denominator (fail-to-pass tests only) is not something this code
+    can verify from the output alone.
+
+    Returns None when nothing countable was captured -- a crash before
+    collection, or a patch that never applied.
+    """
+    counts = {}
+    for n, kind in _PYTEST_COUNT_RE.findall(str(evidence or "")):
+        key = "failed" if kind.startswith("error") else kind
+        counts[key] = counts.get(key, 0) + int(n)
+    total = counts.get("passed", 0) + counts.get("failed", 0)
+    if not total:
+        return None
+    return round(counts.get("passed", 0) / total, 4)
 
 
 # ==============================================================================

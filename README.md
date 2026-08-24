@@ -359,12 +359,47 @@ python3 tools/analyze_classeval.py
 | `ce_route_flat` | **the control** — per-method generation, every method to the same model |
 | `ce_route_by_tier` | **the hypothesis** — each method routed by its labelled difficulty tier |
 | `ce_plan_route` | contracts *and* difficulty routing |
+| `ce_single_opus` | the frontier baseline — **not** in `--group classeval`; see below |
 
 `ce_route_flat` is not optional. Without it, a win for `ce_route_by_tier` cannot
 be told apart from "writing the class method-by-method is better", which is a
 different claim — `tools/analyze_classeval.py` refuses to bless the result if
 the control is missing from the sweep. The tier labels come from the dataset's
 own `dependencies` annotation, never from a guess made here.
+
+#### The claude-opus-5 baseline
+
+`ce_single_opus` is the same arm shape as the other singles, run on
+`claude-opus-5`. It is deliberately excluded from `--group classeval`: opus is
+priced 2.5× Sonnet-5 and 17× Gemini 3.7 Flash per output token, so including it
+would reprice every routine sweep. Run it on its own and merge its row into the
+sweep you already have:
+
+```bash
+# Runs only the opus-5 arm over the same 91 tasks, then merges its row into
+# classeval/results/classeval_classeval_results.json and regenerates the reports.
+python3 run_classeval_opus5.py --n 91
+```
+
+The run goes through the same `src/sweep.py` loop, task cache and scoring rules
+as `run_benchmark.py`, so the row is comparable by construction. The merge
+(`src/merge.py`) matches on variant `id`, so re-running the arm **replaces** its
+row instead of adding a second one, keeps a `.bak` of the file it rewrote, and
+prints a warning if any two arms were scored over different task counts.
+
+| Flag | Effect |
+|---|---|
+| `--no-merge` | run the arm, leave the existing results file untouched |
+| `--merge-only` | merge a previous run's output without re-running anything |
+| `--base <path>` | merge into a different sweep results file |
+| `--no-report` | skip regenerating the Markdown/HTML comparison |
+| `--yes` / `-y` | skip the estimated-spend confirmation prompt |
+
+The equivalent one-off through the master runner, which does **not** merge:
+
+```bash
+python3 run_benchmark.py --dataset classeval --variants ce_single_opus --n 91
+```
 
 ### Other datasets
 
@@ -417,6 +452,7 @@ python3 tools/index_reports.py --apply     # adopt new reports, refresh reports/
 ```
 .
 ├── run_benchmark.py                 # ← the entry point for every dataset
+├── run_classeval_opus5.py           #   opt-in single arm: claude-opus-5 on ClassEval, then merge
 │
 ├── src/                             # shared core library
 │   ├── config.py                    #   model ids, pricing, prompt roles
@@ -427,6 +463,8 @@ python3 tools/index_reports.py --apply     # adopt new reports, refresh reports/
 │   ├── evaluator.py                 #   sandboxed execution + the Evidence contract
 │   ├── architectures.py             #   variant registry + every pipeline
 │   ├── classeval.py                 #   ClassEval arms: per-method routing + its control
+│   ├── sweep.py                     #   the per-arm run loop, shared by every runner
+│   ├── merge.py                     #   fold a single-arm run back into a sweep's results
 │   └── reporter.py                  #   markdown report + HTML dashboard
 │
 ├── docs/                            # ← explanations (methodology, not results)

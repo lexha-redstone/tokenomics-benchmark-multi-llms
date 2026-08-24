@@ -495,6 +495,14 @@ def run_ce_plan_route(problem, planner_model=GEMINI_37_FLASH_ID, max_repairs=1):
 
 CATEGORY = "7. ClassEval sub-task routing"
 
+# The opus-5 baseline is deliberately NOT in CATEGORY. `--group classeval` runs
+# every arm in that category on every sweep, and opus-5 is roughly two orders of
+# magnitude more expensive per class than the Gemini rungs -- adding it there
+# would silently reprice the standard sweep. It sits in its own category so it
+# is opt-in: `run_classeval_opus5.py`, or
+# `run_benchmark.py --dataset classeval --variants ce_single_opus`.
+OPUS_CATEGORY = "7b. ClassEval frontier baseline"
+
 CLASSEVAL_VARIANTS = {
     "ce_single_lite": {
         "id": "ce_single_lite", "category": CATEGORY,
@@ -547,5 +555,14 @@ CLASSEVAL_VARIANTS = {
         "models": "3.7 plan + Lite/3.7 routed per method",
         "triage_mode": "Straitjacket ($0.00)",
         "fn": lambda p: run_ce_plan_route(p),
+    },
+    # Same arm shape as C0a/C0b/C0c -- one model writes the whole class and
+    # repairs itself once -- so the frontier row is read against the cheap
+    # singles on equal terms, not against a different architecture.
+    "ce_single_opus": {
+        "id": "ce_single_opus", "category": OPUS_CATEGORY,
+        "name": "C0d. Single: claude-opus-5 (whole class)",
+        "models": "Claude Opus-5", "triage_mode": "Straitjacket ($0.00)",
+        "fn": lambda p: run_ce_single(p, model_id=OPUS_5_ID),
     },
 }

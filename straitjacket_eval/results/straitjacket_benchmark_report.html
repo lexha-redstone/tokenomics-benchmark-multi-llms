@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Straitjacket Multi-LLM Benchmark Report | Gemini 3.7 & 3.5-Flash-Lite</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Chart.js & Mermaid.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+
+  <style>
+    :root {
+      --bg-primary: #0b0f19;
+      --bg-secondary: #111827;
+      --bg-card: rgba(17, 24, 39, 0.85);
+      --bg-card-hover: rgba(31, 41, 55, 0.95);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --border-accent: rgba(59, 130, 246, 0.3);
+      
+      --text-primary: #f9fafb;
+      --text-secondary: #9ca3af;
+      --text-muted: #6b7280;
+      
+      --accent-blue: #3b82f6;
+      --accent-cyan: #06b6d4;
+      --accent-emerald: #10b981;
+      --accent-amber: #f59e0b;
+      --accent-rose: #f43f5e;
+      --accent-purple: #8b5cf6;
+      
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+      --shadow-lg: 0 10px 25px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+      --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      padding: 2.5rem 1.5rem;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    /* Header Section */
+    .header {
+      margin-bottom: 2.5rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .meta-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-bottom: 1rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.35rem 0.75rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+      border-radius: 9999px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      letter-spacing: 0.02em;
+    }
+
+    .badge.blue {
+      background: rgba(59, 130, 246, 0.12);
+      border-color: rgba(59, 130, 246, 0.3);
+      color: #93c5fd;
+    }
+
+    .badge.emerald {
+      background: rgba(16, 185, 129, 0.12);
+      border-color: rgba(16, 185, 129, 0.3);
+      color: #6ee7b7;
+    }
+
+    .badge.amber {
+      background: rgba(245, 158, 11, 0.12);
+      border-color: rgba(245, 158, 11, 0.3);
+      color: #fcd34d;
+    }
+
+    .badge.purple {
+      background: rgba(139, 92, 246, 0.12);
+      border-color: rgba(139, 92, 246, 0.3);
+      color: #c4b5fd;
+    }
+
+    .header-title {
+      font-size: 2.25rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.25;
+      margin-bottom: 0.75rem;
+      color: #ffffff;
+    }
+
+    .header-subtitle {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      max-width: 950px;
+    }
+
+    /* KPI Cards Grid */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .kpi-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      backdrop-filter: blur(12px);
+      box-shadow: var(--shadow-md);
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .kpi-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--border-accent);
+      background: var(--bg-card-hover);
+    }
+
+    .kpi-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--card-accent, var(--accent-blue)), transparent);
+    }
+
+    .kpi-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+
+    .kpi-value {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: #ffffff;
+      margin-bottom: 0.35rem;
+      display: flex;
+      align-items: baseline;
+      gap: 0.5rem;
+    }
+
+    .kpi-sub {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .kpi-highlight {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--accent-emerald);
+    }
+
+    /* Section Styling */
+    .section {
+      margin-bottom: 3rem;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .section-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .section-title-icon {
+      font-size: 1.2rem;
+    }
+
+    /* Tab Controls */
+    .tab-container {
+      display: flex;
+      gap: 0.5rem;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 0.35rem;
+      border-radius: 0.75rem;
+      border: 1px solid var(--border-color);
+    }
+
+    .tab-btn {
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      background: transparent;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .tab-btn:hover {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .tab-btn.active {
+      color: #ffffff;
+      background: var(--accent-blue);
+      box-shadow: 0 2px 8px rgba(59, 130, 246, 0.4);
+    }
+
+    /* Data Tables */
+    .table-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 1rem;
+      overflow-x: auto;
+      box-shadow: var(--shadow-md);
+      margin-bottom: 1.5rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.9rem;
+      min-width: 850px;
+    }
+
+    th {
+      background: rgba(17, 24, 39, 0.95);
+      padding: 1rem 1.25rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid var(--border-color);
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 1.1rem 1.25rem;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-primary);
+      vertical-align: middle;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .model-cell {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .model-name {
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .model-desc {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .rate-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.25rem 0.6rem;
+      border-radius: 0.4rem;
+      font-weight: 700;
+      font-size: 0.85rem;
+      font-family: var(--font-mono);
+    }
+
+    .rate-high {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .rate-mid {
+      background: rgba(59, 130, 246, 0.15);
+      color: #60a5fa;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+
+    .rate-baseline {
+      background: rgba(107, 114, 128, 0.15);
+      color: #9ca3af;
+      border: 1px solid rgba(107, 114, 128, 0.3);
+    }
+
+    .cost-value {
+      font-family: var(--font-mono);
+      font-weight: 600;
+      font-size: 0.92rem;
+    }
+
+    .cost-best {
+      color: #34d399;
+      font-weight: 800;
+    }
+
+    .multiplier-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.25rem 0.55rem;
+      border-radius: 0.375rem;
+      font-size: 0.78rem;
+      font-weight: 700;
+      background: rgba(16, 185, 129, 0.12);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      white-space: nowrap;
+    }
+
+    .multiplier-tag.baseline {
+      background: rgba(107, 114, 128, 0.12);
+      color: #9ca3af;
+      border-color: rgba(107, 114, 128, 0.2);
+    }
+
+    /* Charts Grid */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .chart-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      box-shadow: var(--shadow-md);
+      position: relative;
+    }
+
+    .chart-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .chart-container {
+      position: relative;
+      height: 300px;
+      width: 100%;
+    }
+
+    /* Architecture Deep Dive Cards */
+    .arch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .arch-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      box-shadow: var(--shadow-md);
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .arch-card:hover {
+      border-color: var(--border-accent);
+      transform: translateY(-2px);
+    }
+
+    .arch-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+
+    .arch-name {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .arch-badge {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.2rem 0.5rem;
+      border-radius: 0.375rem;
+      background: rgba(59, 130, 246, 0.15);
+      color: #60a5fa;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+
+    .arch-body {
+      color: var(--text-secondary);
+      font-size: 0.88rem;
+      line-height: 1.55;
+      margin-bottom: 1.25rem;
+      flex-grow: 1;
+    }
+
+    .arch-advantage {
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      border-radius: 0.6rem;
+      padding: 0.75rem 1rem;
+      font-size: 0.82rem;
+      color: #a7f3d0;
+    }
+
+    .arch-advantage strong {
+      color: #34d399;
+    }
+
+    /* Mermaid Diagram Wrapper */
+    .diagram-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 1rem;
+      padding: 1.75rem;
+      box-shadow: var(--shadow-md);
+      margin-bottom: 2.5rem;
+      overflow-x: auto;
+    }
+
+    .mermaid {
+      display: flex;
+      justify-content: center;
+      font-family: var(--font-sans) !important;
+    }
+
+    /* Invariants Grid */
+    .invariants-table {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 1rem;
+      overflow-x: auto;
+      box-shadow: var(--shadow-md);
+    }
+
+    /* Footer */
+    .footer {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .footer a:hover {
+      color: var(--accent-blue);
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 1.5rem 1rem;
+      }
+      .charts-grid {
+        grid-template-columns: 1fr;
+      }
+      .header-title {
+        font-size: 1.75rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    
+    <!-- Header -->
+    <header class="header">
+      <div class="meta-badges">
+        <span class="badge blue">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          Google Cloud Vertex AI
+        </span>
+        <span class="badge emerald">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          Project: my-argolis-prj
+        </span>
+        <span class="badge amber">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Real Straitjacket Harness
+        </span>
+        <span class="badge">Evaluation Date: 2026-08-18</span>
+      </div>
+      <h1 class="header-title">Straitjacket Multi-LLM Benchmark Report</h1>
+      <p class="header-subtitle">
+        Empirical Tokenomics & Architecture Sweep of <strong>Google Gemini 3.7-Flash</strong> and <strong>Gemini 3.5-Flash-Lite</strong> coordinated via <strong>Straitjacket Context Containment</strong> against single-model frontier baselines across 100 benchmark tasks (N=50 BigCodeBench-Hard & N=50 WebDev).
+      </p>
+    </header>
+
+    <!-- Key Performance Indicators -->
+    <div class="kpi-grid">
+      <div class="kpi-card" style="--card-accent: var(--accent-emerald)">
+        <div class="kpi-title">Max $/Solved Efficiency</div>
+        <div class="kpi-value">
+          2.21x
+          <span class="kpi-highlight">Cheaper</span>
+        </div>
+        <div class="kpi-sub">Dual Consensus vs Claude Sonnet-5 ($0.0638 vs $0.1415)</div>
+      </div>
+
+      <div class="kpi-card" style="--card-accent: var(--accent-blue)">
+        <div class="kpi-title">Peak WebDev Pass Rate</div>
+        <div class="kpi-value">
+          44.0%
+          <span class="badge emerald" style="font-size: 0.7rem; padding: 0.15rem 0.4rem;">22/50</span>
+        </div>
+        <div class="kpi-sub">Escalation Shield & Dual Consensus (Sonnet-5: 38.0%)</div>
+      </div>
+
+      <div class="kpi-card" style="--card-accent: var(--accent-cyan)">
+        <div class="kpi-title">Zero-Cost Triage Spend</div>
+        <div class="kpi-value">
+          $0.000000
+        </div>
+        <div class="kpi-sub">100% Free Local Deterministic Unittest Parsing</div>
+      </div>
+
+      <div class="kpi-card" style="--card-accent: var(--accent-purple)">
+        <div class="kpi-title">Prompt Cache Hit Rate</div>
+        <div class="kpi-value">
+          96% – 98%
+        </div>
+        <div class="kpi-sub">Noise-stripped paths preserve static model prefixes</div>
+      </div>
+    </div>
+
+    <!-- Interactive Visualizations -->
+    <div class="section">
+      <div class="section-header">
+        <h2 class="section-title">
+          <span class="section-title-icon">📊</span>
+          Tokenomics Comparative Visualizations
+        </h2>
+      </div>
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="chart-title">
+            <span>Cost per Solved Task ($/Solved)</span>
+            <span class="badge blue">Lower is Better</span>
+          </div>
+          <div class="chart-container">
+            <canvas id="costPerSolvedChart"></canvas>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-title">
+            <span>Pass Rate (%) & Total Expenditure ($)</span>
+            <span class="badge emerald">Higher Pass & Lower Cost</span>
+          </div>
+          <div class="chart-container">
+            <canvas id="passRateCostChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Comparative Data Tables with Tab Switcher -->
+    <div class="section">
+      <div class="section-header">
+        <h2 class="section-title">
+          <span class="section-title-icon">🔬</span>
+          Comprehensive Evaluation Matrix
+        </h2>
+        <div class="tab-container">
+          <button class="tab-btn active" onclick="switchTab('bcb')">BigCodeBench-Hard (N=50)</button>
+          <button class="tab-btn" onclick="switchTab('webdev')">WebDev Suite (N=50)</button>
+        </div>
+      </div>
+
+      <!-- Tab 1: BigCodeBench-Hard -->
+      <div id="tab-bcb" class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Architecture / Arm</th>
+              <th>Category</th>
+              <th>Pass Rate</th>
+              <th>Solved</th>
+              <th>Total Cost ($)</th>
+              <th>Cost / Solved ($)</th>
+              <th>Avg Output</th>
+              <th>Sonnet-5 Efficiency</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div class="model-cell">
+                  <span class="model-name">Control: Claude Sonnet-5 Single</span>
+                  <span class="model-desc">Single-turn frontier model baseline</span>
+                </div>
+              </td>
+              <td><span class="badge">Baseline</span></td>
+              <td><span class="rate-badge rate-baseline">18.0%</span></td>
+              <td style="font-family: var(--font-mono)">9 / 50</td>
+              <td class="cost-value">$1.2737</td>
+              <td class="cost-value">$0.14152</td>
+              <td style="font-family: var(--font-mono); color: var(--text-secondary)">2,170</td>
+              <td><span class="multiplier-tag baseline">1.0x (Baseline)</span></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="model-cell">
+                  <span class="model-name">Control: Gemini 3.7-Flash Single</span>
+                  <span class="model-desc">Single-turn with dynamic thinking budget</span>
+                </div>
+              </td>
+              <td><span class="badge">Baseline</span></td>
+              <td><span class="rate-badge rate-mid">24.0%</span></td>
+              <td style="font-family: var(--font-mono)">12 / 50</td>
+              <td class="cost-value">$1.1873</td>
+              <td class="cost-value">$0.09894</td>
+              <td style="font-family: var(--font-mono); color: var(--text-secondary)">2,898</td>
+              <td><span class="multiplier-tag">1.43x cheaper</span></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="model-cell">
+                  <span class="model-name">1. Smart Tiered Cascade</span>
+                  <span class="model-desc">2-Tier: 3.5-Flash-Lite Draft &rarr; 3.7-Flash Thinking</span>
+                </div>
+              </td>
+              <td><span class="badge blue">Core Multi-LLM</span></td>
+              <td><span class="rate-badge rate-high">26.0%</span></td>
+              <td style="font-family: var(--font-mono); font-weight: 700; color: #34d399">13 / 50</td>
+              <td class="cost-value">$0.8538</td>
+              <td class="cost-value cost-best">$0.06568</td>
+              <td style="font-family: var(--font-mono); color: var(--text-secondary)">2,487</td>
+              <td><span class="multiplier-tag">2.15x cheaper</span></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="model-cell">
+                  <span class="model-name">2. Straitjacket Smart Repair</span>
+                  <span class="model-desc">Advisor 3.7 &rarr; Executor 3.5-Lite &rarr; Surgical Repair</span>
+                </div>
+              </td>
+              <td><span class="badge blue">Core Multi-LLM</span></td>
+              <td><span class="rate-badge rate-mid">16.0%</span></td>
+              <td style="font-family: var(--font-mono)">8 / 50</td>
+              <td class="cost-value cost-best">$0.6489</td>
+              <td class="cost-value">$0.08111</td>
+              <td style="font-family: var(--font-mono); color: var(--text-secondary)">1,723</td>
+              <td><span class="multiplier-tag">1.75x cheaper</span></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="model-cell">
+                  <span class="model-name">3. Straitjacket Escalation Shield</span>
+                  <span class="model-desc">3-Tier: Lite Draft &rarr; Lite Self-Repair &rarr; 3.7 Reasoning</span>
+                </div>
+              </td>
+              <td><span class="badge blue">Core Multi-LLM</span></td>
+              <td><span class="rate-badge rate-mid">20.0%</span></td>
+              <td style="font-family: var(--font-mono)">10 / 50</td>
+              <td class="cost-value">$1.2234</td>
+              <td class="cost-value">$0.12234</td>
+              <td style="font-family: var(--font-mono); color: var(--text-secondary)">3,820</td>
+              <td><span class="multiplier-tag">1.16x cheaper</span></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="model-cell">
+                  <span class="model-name">4. Straitjacket DAG Wave Orchestrator</span>
+                  <span class="model-desc">ctx.route/v1 Topological Waves + CAS Checkpoint</span>
+                </div>
+              </td>
+              <td><span class="badge purple">DAG / Route</span></td>
+              <td><span class="rate-badge rate-mid">20.0%</span></td>
+              <td style="font-family: var(--font-mono)">10 / 50</td>
+              <td class="cost-value">$0.8669</td>
+              <td class="cost-value">$0.08669</td>
+              <td style="font-family: var(--font-mono); color: var(--text-secondary)">2,315</td>
+              <td><span class="multiplier-tag">1.63x cheaper</span></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="model-cell">
+                  <span class="model-name">5. Straitjacket Dual-Candidate Consensus</span>
+                  <span class="model-desc">Parallel 3.5-Lite Candidates &rarr; ctx diff &rarr; 3.7 Synthesis</span>
+                </div>
+              </td>
+              <td><span class="badge amber">Consensus Diff</span></td>
+              <td><span class="rate-badge rate-high">26.0%</span></td>
+              <td style="font-family: var(--font-mono); font-weight: 700; color: #34d399">13 / 50</td>
+              <td class="cost-value">$0.8303</td>
+              <td class="cost-value cost-best">$0.06387</td>
+              <td style="font-family: var(--font-mono); color: var(--text-secondary)">2,640</td>
+              <td><span class="multiplier-tag">2.21x cheaper</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Tab 2: WebDev Suite -->
+      <div id="tab-webdev" class="table-container" style="display: none;">
+        <table>
+          <thead>
+            <tr>
+              <th>Architecture / Arm</th>
+              <th>Category</th>
+              <th>Pass Rate</th>
+              <th>Solved</th>
+              <th>Total Cost ($)</th>
+              <th>Cost / Solved ($)</th>
+              <th>Avg Output</th>
+              <th>Sonnet-5 Efficiency</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div class="model-cell">
+                  <span class="model-name">Control: Claude Sonnet-5 Single</span>
+                  <span class="model-desc">Single-turn frontier model baseline</span>
+                </div>
+              </td>
+              <td><span class="badge">Baseline</span></td>
+              <td><span class="rate-badge rate-baseline">38.0%</span></td>
+              <td style="font-family: var(--font-mono)">19 / 50</td>
+              <td class="cost-value">$1.2699</td>
+              <td class="cost-value">$0.06684</td>
+              <td style="font-family: var(--font-mono); color: var(--text-secondary)">2,194</td>
+              <td><span class="multiplier-tag baseline">1.0x (Baseline)</span></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="model-cell">
+                  <span class="model-name">Control: Gemini 3.7-Flash Single</span>
+                  <span class="model-desc">Single-turn with dynamic thinking budget</span>
+                </div>
+              </td>
+              <td><span class="badge">Baseline</span></td>
+              <td><span class="rate-badge rate-mid">42.0%</span></td>
+              <td style="font-family: var(--font-mono)">21 / 50</td>
+              <td class="cost-value">$1.0920</td>
+              <td class="cost-value">$0.05200</td>
+              <td style="font-family: var(--font-mono); color: var(--text-secondary)">2,662</td>
+              <td><span class="multiplier-tag">1.28x cheaper</span></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="model-cell">
+                  <span class="model-name">1. Smart Tiered Cascade</span>
+                  <span class="model-desc">2-Tier: 3.5-Flash-Lite Draft &rarr; 3.7-Flash Thinking</span>
+                </div>
+              </td>
+              <td><span class="badge blue">Core Multi-LLM</span></td>
+              <td><span class="rate-badge rate-mid">38.0%</span></td>
+              <td style="font-family: var(--font-mono)">19 / 50</td>
+              <td class="cost-value">$0.8784</td>
+              <td class="cost-value">$0.04623</td>
+              <td style="font-family: var(--font-mono); color: var(--text-secondary)">2,557</td>
+              <td><span class="multiplier-tag">1.45x cheaper</span></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="model-cell">
+                  <span class="model-name">2. Straitjacket Smart Repair</span>
+                  <span class="model-desc">Advisor 3.7 &rarr; Executor 3.5-Lite &rarr; Surgical Repair</span>
+                </div>
+              </td>
+              <td><span class="badge blue">Core Multi-LLM</span></td>
+              <td><span class="rate-badge rate-high">40.0%</span></td>
+              <td style="font-family: var(--font-mono)">20 / 50</td>
+              <td class="cost-value cost-best">$0.6270</td>
+              <td class="cost-value cost-best">$0.03135</td>
+              <td style="font-family: var(--font-mono); color: var(--text-secondary)">1,731</td>
+              <td><span class="multiplier-tag">2.13x cheaper</span></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="model-cell">
+                  <span class="model-name">3. Straitjacket Escalation Shield</span>
+                  <span class="model-desc">3-Tier: Lite Draft &rarr; Lite Self-Repair &rarr; 3.7 Reasoning</span>
+                </div>
+              </td>
+              <td><span class="badge blue">Core Multi-LLM</span></td>
+              <td><span class="rate-badge rate-high">44.0%</span></td>
+              <td style="font-family: var(--font-mono); font-weight: 700; color: #34d399">22 / 50</td>
+              <td class="cost-value">$1.3142</td>
+              <td class="cost-value">$0.05974</td>
+              <td style="font-family: var(--font-mono); color: var(--text-secondary)">4,091</td>
+              <td><span class="multiplier-tag">1.12x cheaper</span></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="model-cell">
+                  <span class="model-name">4. Straitjacket DAG Wave Orchestrator</span>
+                  <span class="model-desc">ctx.route/v1 Topological Waves + CAS Checkpoint</span>
+                </div>
+              </td>
+              <td><span class="badge purple">DAG / Route</span></td>
+              <td><span class="rate-badge rate-mid">42.0%</span></td>
+              <td style="font-family: var(--font-mono)">21 / 50</td>
+              <td class="cost-value">$0.7514</td>
+              <td class="cost-value">$0.03578</td>
+              <td style="font-family: var(--font-mono); color: var(--text-secondary)">2,032</td>
+              <td><span class="multiplier-tag">1.87x cheaper</span></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="model-cell">
+                  <span class="model-name">5. Straitjacket Dual-Candidate Consensus</span>
+                  <span class="model-desc">Parallel 3.5-Lite Candidates &rarr; ctx diff &rarr; 3.7 Synthesis</span>
+                </div>
+              </td>
+              <td><span class="badge amber">Consensus Diff</span></td>
+              <td><span class="rate-badge rate-high">44.0%</span></td>
+              <td style="font-family: var(--font-mono); font-weight: 700; color: #34d399">22 / 50</td>
+              <td class="cost-value">$0.7577</td>
+              <td class="cost-value cost-best">$0.03444</td>
+              <td style="font-family: var(--font-mono); color: var(--text-secondary)">2,498</td>
+              <td><span class="multiplier-tag">1.94x cheaper</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Architecture Visual Flowchart -->
+    <div class="section">
+      <div class="section-header">
+        <h2 class="section-title">
+          <span class="section-title-icon">⚡</span>
+          Multi-LLM Execution Routing & Containment Flow
+        </h2>
+      </div>
+      <div class="diagram-card">
+        <div class="mermaid">
+flowchart LR
+    classDef lite fill:#1e293b,stroke:#3b82f6,stroke-width:2px,color:#93c5fd;
+    classDef frontier fill:#312e81,stroke:#8b5cf6,stroke-width:2px,color:#c7d2fe;
+    classDef sj fill:#064e3b,stroke:#10b981,stroke-width:2px,color:#6ee7b7;
+    classDef success fill:#047857,stroke:#34d399,stroke-width:2px,color:#ffffff;
+
+    subgraph Cascade ["1. Smart Tiered Cascade"]
+        A1["Gemini 3.5-Lite Draft"]:::lite --> S1{"Test Pass?"}:::sj
+        S1 -->|"Yes ($0.001)"| Solved1["Solved"]:::success
+        S1 -->|"No: Zero-Cost Triage"| A2["Gemini 3.7 Thinking Repair"]:::frontier
+        A2 --> Solved2["Solved"]:::success
+    end
+
+    subgraph Repair ["2. Smart Repair (Advisor-Executor)"]
+        B1["Gemini 3.7 Contract"]:::frontier --> B2["Gemini 3.5-Lite Code"]:::lite
+        B2 --> S2{"Test Pass?"}:::sj
+        S2 -->|"Yes"| Solved3["Solved"]:::success
+        S2 -->|"No: Exact Frame"| B3["Gemini 3.7 Surgical Patch"]:::frontier
+    end
+
+    subgraph Consensus ["3. Dual-Candidate Consensus"]
+        C1["Lite Cand A"]:::lite & C2["Lite Cand B"]:::lite --> D1["ctx diff Profile"]:::sj
+        D1 --> C3["Gemini 3.7 Synthesis"]:::frontier --> Solved4["Solved"]:::success
+    end
+        </div>
+      </div>
+    </div>
+
+    <!-- Architecture Deep Dive Cards -->
+    <div class="section">
+      <div class="section-header">
+        <h2 class="section-title">
+          <span class="section-title-icon">🏛️</span>
+          Architectural Mechanics & Empirical Advantages
+        </h2>
+      </div>
+      <div class="arch-grid">
+        <div class="arch-card">
+          <div class="arch-header">
+            <h3 class="arch-name">Smart Tiered Cascade</h3>
+            <span class="arch-badge">2-Tier Flow</span>
+          </div>
+          <div class="arch-body">
+            Dispatches initial drafting to <code>gemini-3.5-flash-lite</code> ($0.30 / $2.50 per 1M). Simple tasks succeed immediately at sub-cent spend (~$0.001). Only upon failure does Straitjacket harness escalate with exact stack trace to <code>gemini-3.7-flash</code> thinking model.
+          </div>
+          <div class="arch-advantage">
+            <strong>Key Benefit:</strong> Slashes Cost per Solved task by <strong>2.15x</strong> on BigCodeBench-Hard while improving pass rate to 26.0%.
+          </div>
+        </div>
+
+        <div class="arch-card">
+          <div class="arch-header">
+            <h3 class="arch-name">Straitjacket Smart Repair</h3>
+            <span class="arch-badge">Advisor-Executor</span>
+          </div>
+          <div class="arch-body">
+            <code>gemini-3.7-flash</code> acts as an architect generating a strict &lt;200-word contract specification. <code>gemini-3.5-flash-lite</code> writes the implementation. On test failure, Straitjacket triage routes the exact assertion error to 3.7-Flash for surgical repair.
+          </div>
+          <div class="arch-advantage">
+            <strong>Key Benefit:</strong> Lowest cost per solved task in WebDev suite at <strong>$0.0313/task</strong> (2.13x cheaper than Claude Sonnet-5).
+          </div>
+        </div>
+
+        <div class="arch-card">
+          <div class="arch-header">
+            <h3 class="arch-name">Dual-Candidate Consensus</h3>
+            <span class="arch-badge">Parallel Diff</span>
+          </div>
+          <div class="arch-body">
+            Generates two independent low-cost candidate implementations in parallel with 3.5-Lite, diffs their runtime failure signatures deterministically using <code>ctx diff</code>, and feeds the comparative delta to 3.7-Flash for high-confidence resolution.
+          </div>
+          <div class="arch-advantage">
+            <strong>Key Benefit:</strong> Tied for highest pass rate on both benchmarks (26.0% BCB, 44.0% WebDev) while maintaining <strong>2.21x</strong> cost efficiency.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Invariants Table -->
+    <div class="section">
+      <div class="section-header">
+        <h2 class="section-title">
+          <span class="section-title-icon">🔒</span>
+          Straitjacket Context Containment Invariants
+        </h2>
+      </div>
+      <div class="invariants-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Containment Dimension</th>
+              <th>Standard Multi-Turn LLM Triage</th>
+              <th>Straitjacket Context Harness</th>
+              <th>Measured Impact</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Triage Cost per Turn</strong></td>
+              <td>~$0.0018 – $0.0035 (LLM prompt/output)</td>
+              <td><span class="cost-best">$0.000000</span> (Local UnittestProfile)</td>
+              <td><span class="multiplier-tag">100% Free Triage</span></td>
+            </tr>
+            <tr>
+              <td><strong>Prompt Prefix Stability</strong></td>
+              <td>Mutates on every turn with temp paths/timestamps</td>
+              <td>Normalized deterministic digest</td>
+              <td><span class="multiplier-tag">96% – 98% Cache Hit Rate</span></td>
+            </tr>
+            <tr>
+              <td><strong>Context Window Bloat</strong></td>
+              <td>Appends full 5,000-line test logs blindly</td>
+              <td>Bounded 4-part digest (&lt;200 tokens)</td>
+              <td><span class="multiplier-tag">&gt;90% Token Reduction</span></td>
+            </tr>
+            <tr>
+              <td><strong>Failure Coordinate Accuracy</strong></td>
+              <td>Probabilistic LLM hallucination of line numbers</td>
+              <td>Exact <code>file:line</code> AST frame coordinates</td>
+              <td><span class="multiplier-tag">Zero Hallucination</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div>
+        Generated by <strong>Jetski Agentic Framework</strong> with <code>google-antigravity</code> SDK &amp; Straitjacket Harness.
+      </div>
+      <div>
+        <a href="file:///usr/local/google/home/lexha/Desktop/work/prj/17-tokenomics/benchmark-using-multi-LLMs/straitjacket_eval/results/aggregate_benchmark_summary.json" target="_blank">View Raw JSON Data</a> &bull;
+        <a href="file:///usr/local/google/home/lexha/Desktop/work/prj/17-tokenomics/benchmark-using-multi-LLMs/straitjacket_eval/results/straitjacket_benchmark_report.md" target="_blank">View Markdown Report</a>
+      </div>
+    </footer>
+
+  </div>
+
+  <script>
+    // Initialize Mermaid
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'dark',
+      themeVariables: {
+        darkMode: true,
+        background: '#111827',
+        primaryColor: '#1e293b',
+        primaryTextColor: '#f9fafb',
+        primaryBorderColor: '#3b82f6',
+        lineColor: '#64748b',
+        secondaryColor: '#312e81',
+        tertiaryColor: '#064e3b'
+      }
+    });
+
+    // Tab Switching Logic
+    function switchTab(tabId) {
+      document.getElementById('tab-bcb').style.display = tabId === 'bcb' ? 'block' : 'none';
+      document.getElementById('tab-webdev').style.display = tabId === 'webdev' ? 'block' : 'none';
+      
+      const buttons = document.querySelectorAll('.tab-btn');
+      buttons.forEach((btn, idx) => {
+        if ((tabId === 'bcb' && idx === 0) || (tabId === 'webdev' && idx === 1)) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+    }
+
+    // Chart.js Data & Render
+    const labels = [
+      'Claude Sonnet-5',
+      'Gemini 3.7-Flash',
+      'Smart Tiered Cascade',
+      'Smart Repair',
+      'Escalation Shield',
+      'DAG Wave',
+      'Dual Consensus'
+    ];
+
+    // Cost Per Solved Chart
+    const ctxCost = document.getElementById('costPerSolvedChart').getContext('2d');
+    new Chart(ctxCost, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: 'BigCodeBench-Hard ($/Solved)',
+            data: [0.1415, 0.0989, 0.0657, 0.0811, 0.1223, 0.0867, 0.0639],
+            backgroundColor: 'rgba(59, 130, 246, 0.75)',
+            borderColor: '#3b82f6',
+            borderWidth: 1,
+            borderRadius: 6
+          },
+          {
+            label: 'WebDev Suite ($/Solved)',
+            data: [0.0668, 0.0520, 0.0462, 0.0313, 0.0597, 0.0358, 0.0344],
+            backgroundColor: 'rgba(16, 185, 129, 0.75)',
+            borderColor: '#10b981',
+            borderWidth: 1,
+            borderRadius: 6
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'top',
+            labels: { color: '#9ca3af', font: { family: 'Plus Jakarta Sans', size: 11, weight: '600' } }
+          },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                return context.dataset.label + ': $' + context.raw.toFixed(4) + ' / solved';
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            grid: { color: 'rgba(255, 255, 255, 0.05)' },
+            ticks: { color: '#9ca3af', font: { family: 'Plus Jakarta Sans', size: 10 } }
+          },
+          y: {
+            grid: { color: 'rgba(255, 255, 255, 0.05)' },
+            ticks: {
+              color: '#9ca3af',
+              font: { family: 'JetBrains Mono', size: 10 },
+              callback: function(value) { return '$' + value.toFixed(2); }
+            }
+          }
+        }
+      }
+    });
+
+    // Pass Rate & Cost Chart
+    const ctxPass = document.getElementById('passRateCostChart').getContext('2d');
+    new Chart(ctxPass, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            type: 'bar',
+            label: 'BigCodeBench-Hard Pass Rate (%)',
+            data: [18.0, 24.0, 26.0, 16.0, 20.0, 20.0, 26.0],
+            backgroundColor: 'rgba(139, 92, 246, 0.65)',
+            borderColor: '#8b5cf6',
+            borderWidth: 1,
+            borderRadius: 6,
+            yAxisID: 'y'
+          },
+          {
+            type: 'bar',
+            label: 'WebDev Pass Rate (%)',
+            data: [38.0, 42.0, 38.0, 40.0, 44.0, 42.0, 44.0],
+            backgroundColor: 'rgba(6, 182, 212, 0.65)',
+            borderColor: '#06b6d4',
+            borderWidth: 1,
+            borderRadius: 6,
+            yAxisID: 'y'
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'top',
+            labels: { color: '#9ca3af', font: { family: 'Plus Jakarta Sans', size: 11, weight: '600' } }
+          },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                return context.dataset.label + ': ' + context.raw.toFixed(1) + '%';
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            grid: { color: 'rgba(255, 255, 255, 0.05)' },
+            ticks: { color: '#9ca3af', font: { family: 'Plus Jakarta Sans', size: 10 } }
+          },
+          y: {
+            grid: { color: 'rgba(255, 255, 255, 0.05)' },
+            ticks: {
+              color: '#9ca3af',
+              font: { family: 'JetBrains Mono', size: 10 },
+              callback: function(value) { return value + '%'; }
+            },
+            max: 50
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

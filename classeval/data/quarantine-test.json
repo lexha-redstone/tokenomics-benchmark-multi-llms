@@ -1,15 +1,12 @@
 {
   "_comment": "Environment-specific. Regenerate on each machine; do not copy between them. A `missing_module:*` reason means a package is absent, not that the task is broken -- see classeval/requirements.txt.",
   "split": "test",
-  "generated": "2026-08-24T08:19:02",
-  "python": "3.13.12",
-  "repeat": 2,
+  "generated": "2026-08-23T23:21:45",
+  "python": "3.13.14",
+  "repeat": 3,
   "n_tasks": 100,
   "n_quarantined": 8,
-  "missing_modules": [
-    "PyPDF2",
-    "reportlab"
-  ],
+  "missing_modules": [],
   "tasks": {
     "ClassEval_17": {
       "reason": "gold_fails",
@@ -18,7 +15,7 @@
       ],
       "methods_missing_from_dataset": [],
       "integration_only": false,
-      "evidence": "======================================================================\nFAIL: test_get_upcoming_events_5 (__main__.CalendarTestGetUpcomingEvents.test_get_upcoming_events_5)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"~/.cache/tokenomics-sj/ws/w0/prog.py\", line 279, in test_get_upcoming_events_5\n    self.assertEqual(calendar.get_u"
+      "evidence": "======================================================================\nFAIL: test_get_upcoming_events_5 (__main__.CalendarTestGetUpcomingEvents.test_get_upcoming_events_5)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/tmp/bcb_i482x9fo/prog.py\", line 279, in test_get_upcoming_events_5\n    self.assertEqual(calendar.get_upcoming_eve"
     },
     "ClassEval_25": {
       "reason": "assembly_gap",
@@ -29,7 +26,7 @@
         "set_cookies"
       ],
       "integration_only": false,
-      "evidence": "======================================================================\nERROR: test_set_cookies (__main__.CookiesUtilTestSetCookies.test_set_cookies)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"~/.cache/tokenomics-sj/ws/w0/prog.py\", line 162, in test_set_cookies\n    self.cookies_util.set_cookies(request)\n    ^^^^^^^^^^^^^^^^^^^^^"
+      "evidence": "======================================================================\nERROR: test_set_cookies (__main__.CookiesUtilTestSetCookies.test_set_cookies)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/tmp/bcb_14b2o8nk/prog.py\", line 162, in test_set_cookies\n    self.cookies_util.set_cookies(request)\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAt"
     },
     "ClassEval_31": {
       "reason": "gold_fails",
@@ -38,7 +35,7 @@
       ],
       "methods_missing_from_dataset": [],
       "integration_only": false,
-      "evidence": "======================================================================\nFAIL: test_correlation_coefficient_4 (__main__.DataStatistics4TestCorrelationCoefficient.test_correlation_coefficient_4)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"~/.cache/tokenomics-sj/ws/w0/prog.py\", line 63, in test_correlation_coefficient_4\n    self.ass"
+      "evidence": "======================================================================\nFAIL: test_correlation_coefficient_4 (__main__.DataStatistics4TestCorrelationCoefficient.test_correlation_coefficient_4)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/tmp/bcb_ew_vsjl6/prog.py\", line 63, in test_correlation_coefficient_4\n    self.assertEqual(Da"
     },
     "ClassEval_48": {
       "reason": "network",
@@ -47,7 +44,7 @@
       ],
       "methods_missing_from_dataset": [],
       "integration_only": false,
-      "evidence": "======================================================================\nFAIL: test_get_hostname_2 (__main__.IpUtilTestGetHostname.test_get_hostname_2)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"~/.cache/tokenomics-sj/ws/w0/prog.py\", line 84, in test_get_hostname_2\n    self.assertEqual(result, None)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^"
+      "evidence": "======================================================================\nFAIL: test_get_hostname_2 (__main__.IpUtilTestGetHostname.test_get_hostname_2)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/tmp/bcb_b7ihqhx5/prog.py\", line 84, in test_get_hostname_2\n    self.assertEqual(result, None)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^\nAssert"
     },
     "ClassEval_49": {
       "reason": "assembly_gap",
@@ -56,7 +53,7 @@
         "matches_requirements"
       ],
       "integration_only": true,
-      "evidence": "rience\"}, ['skill5', 'skill6']), False)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAttributeError: 'JobMarketplace' object has no attribute 'matches_requirements'\n\n======================================================================\nERROR: test_matches_requirements_4 (__main__.JobMarketplaceTestMatchesRequirements.test_matches_requirements_4)\n---------------------------------------"
+      "evidence": "matches_requirements({\"name\": \"Tom\", \"skills\": ['skill1', 'skill2'], \"experience\": \"experience\"}, ['skill5', 'skill6']), False)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAttributeError: 'JobMarketplace' object has no attribute 'matches_requirements'\n\n======================================================================\nERROR: test_matches_requirements_4 (__main__.JobMarketplaceTest"
     },
     "ClassEval_51": {
       "reason": "library_drift",
@@ -66,24 +63,21 @@
       ],
       "methods_missing_from_dataset": [],
       "integration_only": false,
-      "evidence": "...\n    )\nAttributeError: `np.mat` was removed in the NumPy 2.0 release. Use `np.asmatrix` instead.\n\n======================================================================\nERROR: test_fleiss_kappa_5 (__main__.KappaCalculatorTestFleissKappa.test_fleiss_kappa_5)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"~/.cache/tokenomics-sj/ws"
+      "evidence": "py\", line 778, in __getattr__\n    raise AttributeError(\n    ...<3 lines>...\n    )\nAttributeError: `np.mat` was removed in the NumPy 2.0 release. Use `np.asmatrix` instead.\n\n======================================================================\nERROR: test_fleiss_kappa_5 (__main__.KappaCalculatorTestFleissKappa.test_fleiss_kappa_5)\n-------------------------------------------------------------------"
     },
     "ClassEval_58": {
       "reason": "flaky",
       "methods": [],
       "methods_missing_from_dataset": [],
       "integration_only": true,
-      "evidence": "======================================================================\nFAIL: test_generate_mine_sweeper_map (__main__.MinesweeperGameTestGenerateMineSweeperMap.test_generate_mine_sweeper_map)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"~/.cache/tokenomics-sj/ws/w0/prog.py\", line 79, in test_generate_mine_sweeper_map\n    self.ass"
+      "evidence": "======================================================================\nFAIL: test_generate_mine_sweeper_map (__main__.MinesweeperGameTestGenerateMineSweeperMap.test_generate_mine_sweeper_map)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/tmp/bcb_6h5bt6bv/prog.py\", line 79, in test_generate_mine_sweeper_map\n    self.assertEqual(2,"
     },
     "ClassEval_69": {
-      "reason": "missing_module:PyPDF2",
-      "methods": [
-        "merge_pdfs",
-        "extract_text_from_pdfs"
-      ],
+      "reason": "assembly_gap",
+      "methods": [],
       "methods_missing_from_dataset": [],
-      "integration_only": false,
-      "evidence": "Traceback (most recent call last):\n  File \"~/.cache/tokenomics-sj/ws/w0/prog.py\", line 1, in <module>\n    import PyPDF2\nModuleNotFoundError: No module named 'PyPDF2'"
+      "integration_only": true,
+      "evidence": "DF2/_utils.py\", line 369, in deprecation_with_replacement\n    deprecation(DEPR_MSG_HAPPENED.format(old_name, removed_in, new_name))\n    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"~/Desktop/work/.venv/lib/python3.13/site-packages/PyPDF2/_utils.py\", line 351, in deprecation\n    raise DeprecationError(msg)\nPyPDF2.errors.DeprecationError: PdfFileReader is deprecated "
     }
   }
 }

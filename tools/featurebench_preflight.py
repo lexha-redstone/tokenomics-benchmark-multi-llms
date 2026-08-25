@@ -463,6 +463,30 @@ def debug_instance(problems, iid):
 
         gold = problem.get("patch") or ""
         if gold.strip():
+            # Does the gold patch carry the graded tests itself? `test_patch`
+            # turned out to be a *deletion* diff (it removes the fail-to-pass
+            # file, which is how the image ships), so the new test content has
+            # to come from somewhere -- this says where.
+            e._write("/tmp/fb_gold_dbg.patch", gold)
+            show("what does the GOLD patch claim to change?",
+                 "git apply --stat /tmp/fb_gold_dbg.patch 2>&1 | tail -15")
+            show("does reversing test_patch differ from HEAD's version?",
+                 f"git checkout -- {f2p} 2>/dev/null; "
+                 f"md5sum {f2p} 2>/dev/null; "
+                 f"rm -f {f2p}; git apply -R /tmp/fb_dbg.patch 2>&1 | tail -3; "
+                 f"echo 'after reverse:'; md5sum {f2p} 2>/dev/null || "
+                 f"echo '(reverse did not produce it)'")
+            # The benchmark's own flow, with none of this repo's intervention:
+            # image as shipped -> apply the solution patch -> run.
+            show("PRISTINE FLOW: image as shipped + gold only, no test staging",
+                 "git checkout -- . >/dev/null 2>&1; git clean -fdq; "
+                 f"rm -f {f2p}; "
+                 "git apply /tmp/fb_gold_dbg.patch 2>&1 | tail -3; "
+                 f"echo '-- does {f2p} exist after gold?:'; ls -l {f2p} 2>&1 | tail -1; "
+                 f"echo '-- run:'; {fb_test_command(problem)} {' '.join(files)} "
+                 "2>&1 | tail -6", timeout=900)
+            e._sh("git checkout -- . && git clean -fdq", check=False)
+        if gold.strip():
             e._write("/tmp/fb_gold.patch", gold)
             applied = e._try_apply("/tmp/fb_gold.patch")
             print(f"\n--- gold patch applies? " + "-" * 47)

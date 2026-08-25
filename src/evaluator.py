@@ -507,7 +507,11 @@ class FeatureBenchEnv:
                        capture_output=True, text=True, timeout=120)
         p = subprocess.run(
             ["docker", "run", "-d", "--name", self.name,
-             "--network", "none",              # the task is offline by construction
+             # Hermetic would be nicer, but `--network none` also blocks any
+             # dependency the image expects to resolve at run time, and turns a
+             # fixable setup problem into an unexplained import error. Set
+             # FB_NETWORK=none to force isolation once a split is known good.
+             "--network", os.environ.get("FB_NETWORK", "bridge"),
              "-w", self.workdir, self.image, "sleep", "infinity"],
             capture_output=True, text=True, timeout=self.timeout)
         if p.returncode != 0:
@@ -515,20 +519,44 @@ class FeatureBenchEnv:
                 f"docker run failed for {self.image}: {(p.stderr or '').strip()[-300:]}")
 
         self._resolve_workdir()
+        self._sh("git config user.email fb@local && git config user.name fb",
+                 check=False)
 
         base = self.problem.get("base_commit") or ""
         if base:
-            self._sh(f"git checkout -f {base} 2>/dev/null || true", check=False)
-        # Stage the tests, then commit them, so a per-attempt `git checkout -- .`
-        # resets the candidate's edits without also reverting the test files the
-        # grade depends on.
+            head = self._sh("git rev-parse HEAD", check=False).stdout.strip()
+            # These are per-instance images, so HEAD is usually already right.
+            # Checking out unconditionally would move a correctly prepared tree.
+            if not head.startswith(base[:12]):
+                self._sh(f"git checkout -f {base} 2>/dev/null || true", check=False)
+
+        # Materialise the graded test files, then take the tree back to base.
+        #
+        # Order matters and it is not the obvious one. FeatureBench applies the
+        # *solution* patch to the base tree and only then restores the
+        # fail-to-pass test file. Applying `test_patch` first -- the obvious
+        # reading -- makes every gold patch that also touches a test file
+        # conflict, because the context it was generated against is already
+        # gone. So the test files are staged aside here and copied back over
+        # each candidate in `score()`.
         test_patch = self.problem.get("test_patch") or ""
         if test_patch.strip():
             self._write("/tmp/fb_test.patch", test_patch)
             if not self._try_apply("/tmp/fb_test.patch"):
                 raise RuntimeError("the dataset's own test_patch did not apply")
-        self._sh("git config user.email fb@local && git config user.name fb && "
-                 "git add -A && git commit -q -m fb-tests --allow-empty")
+        files = featurebench_test_files(self.problem)
+        if files:
+            self._sh("rm -rf /tmp/fb_tests && mkdir -p /tmp/fb_tests && "
+                     + " && ".join(f"cp --parents {f} /tmp/fb_tests/ 2>/dev/null || true"
+                                   for f in files),
+                     check=False)
+        self._sh("git checkout -- . && git clean -fdq", check=False)
+        self._sh("git add -A && git commit -q -m fb-base --allow-empty", check=False)
+
+    def _restore_tests(self):
+        """Copy the graded test files back over whatever the candidate did."""
+        self._sh("[ -d /tmp/fb_tests ] && cp -a /tmp/fb_tests/. ./ || true",
+                 check=False)
 
     def _resolve_workdir(self):
         """Find the repository inside the running container.
@@ -596,6 +624,7 @@ class FeatureBenchEnv:
                 return False, _guard_evidence(
                     "patch did not apply (tried `git apply` then `patch --fuzz=5`). "
                     "Re-emit the diff against the files as they exist at this commit.")
+            self._restore_tests()
             return self._pytest()
         except Exception as e:                               # noqa: BLE001
             return False, _guard_evidence(f"FeatureBench execution error: {e}")

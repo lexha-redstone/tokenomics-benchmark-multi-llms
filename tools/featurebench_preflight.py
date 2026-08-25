@@ -334,6 +334,93 @@ def pull_images(problems, timeout=7200, only=None):
     return failed
 
 
+DEBUG_STEPS = """
+=== 1. image WORKDIR ==========================================================
+docker inspect -f {{.Config.WorkingDir}} IMAGE
+=== 2. resolved workdir + git state ===========================================
+pwd; git rev-parse --show-toplevel; git log --oneline -1; git status --short | head -20
+=== 3. is the repo importable as installed? ===================================
+python -c "import LIB, sys; print(LIB.__file__)"
+pip show LIB 2>/dev/null | head -4
+=== 4. do the named test files exist? =========================================
+ls -l FILES
+=== 5. what the test command does BEFORE any patch ============================
+TESTCMD FILES
+"""
+
+
+def debug_instance(problems, iid):
+    """Walk one row's container setup step by step and print what happens.
+
+    Written because gold quarantining on every row is a *setup* symptom, not a
+    dataset one, and the failure classes (`missing_module`, `gold_patch_conflict`)
+    point at different steps. Guessing between them costs a 10 GB pull per guess.
+    """
+    problem = problems.get(iid)
+    if problem is None:
+        print(f"no such instance: {iid}", file=sys.stderr)
+        return 2
+
+    from src.datasets import fb_test_command
+    lib = (problem.get("settings") or {}).get("library_name") \
+        or str(problem.get("repo", "")).split("/")[-1]
+    files = featurebench_test_files(problem)
+    env = FeatureBenchEnv(problem)
+    print(f"instance   {iid}")
+    print(f"image      {problem.get('image_name')}")
+    print(f"repo       {problem.get('repo')}  @ {problem.get('base_commit', '')[:12]}")
+    print(f"test_cmd   {fb_test_command(problem)!r}")
+    print(f"F2P/P2P    {files}")
+    print(f"gold patch {len(problem.get('patch') or '')} chars, "
+          f"test_patch {len(problem.get('test_patch') or '')} chars")
+
+    with env as e:
+        if not e.started:
+            # The container usually exists even when setup failed part-way --
+            # a test_patch that would not apply, say. Keep inspecting rather
+            # than stopping at the first symptom.
+            print(f"\nSETUP FAILED: {e.setup_error}")
+            probe = subprocess.run(["docker", "exec", e.name, "true"],
+                                   capture_output=True, timeout=60)
+            if probe.returncode != 0:
+                print("container is not running either -- nothing to inspect.")
+                return 2
+            print("container is up; continuing to inspect it anyway.\n")
+        print(f"\nresolved workdir: {e.workdir}"
+              + ("   (UNVERIFIED -- neither image WORKDIR nor a git root worked)"
+                 if getattr(e, "workdir_unverified", False) else ""))
+
+        def show(title, script, timeout=300):
+            print(f"\n--- {title} " + "-" * max(0, 68 - len(title)))
+            r = e._sh(script, check=False, timeout=timeout)
+            out = ((r.stdout or "") + (r.stderr or "")).strip()
+            print(out[:1800] or "(no output)")
+            print(f"[exit {r.returncode}]")
+            return r
+
+        show("git state", "pwd; git rev-parse --show-toplevel; "
+                          "git log --oneline -1; echo '--- dirty files:'; "
+                          "git status --short | head -20")
+        show(f"import {lib}",
+             f"python -c 'import {lib}; print({lib}.__file__)' 2>&1 | tail -3; "
+             f"pip show {lib} 2>/dev/null | head -3")
+        show("named test files exist?",
+             "ls -l " + " ".join(files) if files else "echo '(no test files named)'")
+        show("test command BEFORE any patch (tree is base+test_patch)",
+             f"{fb_test_command(problem)} {' '.join(files)} 2>&1 | tail -25", timeout=900)
+
+    print("\nRead it like this:")
+    print("  step 'import' fails            -> the package is not installed for this")
+    print("                                    interpreter; `repo_settings.install`")
+    print("                                    may need running, or the workdir is wrong")
+    print("  test files missing             -> test_patch did not land where expected")
+    print("  BEFORE-patch run already green -> the gold patch is being applied on top")
+    print("                                    of an already-solved tree (ordering bug)")
+    print("  BEFORE-patch run errors on     -> import/collection problem, not a patch")
+    print("    collection                      problem; gold can never resolve it")
+    return 0
+
+
 def _requested_tasks(spec):
     """Same --tasks grammar as run_benchmark.py: a list, or @path to one per line."""
     spec = (spec or "").strip()
@@ -431,6 +518,10 @@ def main():
     ap.add_argument("--tasks", default="",
                     help="verify gold on exactly these task ids: a comma list or "
                          "@path to one per line. Same grammar as run_benchmark.py.")
+    ap.add_argument("--debug", default="", metavar="INSTANCE_ID",
+                    help="walk one row's container setup step by step and print "
+                         "what happens, then stop. Use when gold quarantines "
+                         "everything -- that is a setup symptom, not a dataset one.")
     ap.add_argument("--ready", action="store_true",
                     help="which instances can run with the images already "
                          "present locally, then stop")
@@ -469,6 +560,13 @@ def main():
             return 2
         report_ready(problems, args.ready_out)
         return 0
+
+    if args.debug:
+        ok, why = docker_available()
+        print(f"docker: {why}")
+        if not ok:
+            return 2
+        return debug_instance(problems, args.debug)
 
     if args.top_images:
         # Deliberately works without Docker: choosing what to pull is a planning

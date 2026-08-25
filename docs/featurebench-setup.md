@@ -401,6 +401,21 @@ verified against a live install.
 
 ## 7. Troubleshooting
 
+**Gold quarantines on every row.** That is a setup symptom, not a dataset one.
+Walk one row's container step by step rather than guessing — each guess
+otherwise costs a pull:
+
+```bash
+python3 tools/featurebench_preflight.py --debug <instance_id>
+```
+
+It prints the resolved workdir, the git state, whether the library imports for
+the container's interpreter, whether the named test files exist, and what the
+row's own `test_cmd` does *before* any patch is applied. The last one is the
+most informative: if the tests already error at collection on a clean tree, no
+patch can ever resolve the row and the problem is the environment, not the
+model.
+
 | Symptom | Cause |
 |---|---|
 | `docker: permission denied` | §2.2 — you are not in the `docker` group |
@@ -409,3 +424,10 @@ verified against a live install.
 | `patch did not apply` from a model, repeatedly | expected and informative; it is fed back as evidence, and a model that cannot emit an applicable diff is a real finding on this dataset |
 | `fb_evidence_gate` results look identical to `fb_cascade` | check `routing.degraded` — the backend is probably not `library` |
 | very slow | confirm x86-64 (§2.4), and that images are pre-pulled so the first task is not also a download |
+| `missing_module` on every row | the library is not importable for the container's interpreter — run `--debug` step 3. `repo_settings` carries an `install` command that these images are assumed to have already run |
+| `gold_patch_conflict` on every row | the tree the patch is applied to is not the one it was generated against. Check `--debug` step 2: HEAD should be the row's `base_commit`, and the working tree clean |
+
+**Network.** Containers run on the default bridge. `--network none` would be
+more hermetic, but it also blocks anything the image resolves at run time and
+turns a fixable setup problem into an unexplained import error. Once a split is
+known good, `FB_NETWORK=none` forces isolation.

@@ -840,15 +840,60 @@ def swebench_pro_scripts_dir(instance_id):
     return swebench_pro_dir("run_scripts", str(instance_id))
 
 
-def _sbp_cached(url, path, refresh=False):
+def _sbp_cached(url, path, refresh=False, validate=None):
+    """Fetch-and-cache one upstream file, validating *before* it is persisted.
+
+    The order matters and used to be wrong. `_sbp_cached` wrote whatever the
+    fetch returned and `ensure_swebench_pro_scripts` checked the content
+    afterwards, so a body that was not the file -- a 404 page, a truncated
+    read -- was written to disk first and only then rejected. Every later run
+    found the file present, skipped the fetch, re-read the same bad bytes and
+    raised again: one transient network fault pinned an instance at
+    "unavailable" permanently, and for `parser.py`, which had no check at all,
+    it pinned the instance at 0% with a suite that reported nothing.
+
+    So: validate the fetched text, and only then move it into place, with
+    `os.replace` so a crash mid-write cannot leave a half file behind either.
+    """
     if not refresh and os.path.exists(path):
         with open(path, "r", encoding="utf-8") as f:
-            return f.read()
+            cached = f.read()
+        if validate is None or validate(cached):
+            return cached
+        # A cache entry that fails its own validator is poison, not content.
+        # Drop it and re-fetch rather than raising forever.
+        try:
+            os.remove(path)
+        except OSError:
+            pass
     os.makedirs(os.path.dirname(path), exist_ok=True)
     text = _fetch(url).decode("utf-8", "replace")
-    with open(path, "w", encoding="utf-8") as f:
+    if validate is not None and not validate(text):
+        raise RuntimeError(
+            f"fetched {url} does not look like the file it should be "
+            f"({len(text)} chars); refusing to cache it")
+    tmp = f"{path}.tmp-{os.getpid()}"
+    with open(tmp, "w", encoding="utf-8") as f:
         f.write(text)
+    os.replace(tmp, path)
     return text
+
+
+def _looks_like_run_script(text):
+    """Upstream's per-instance runner always defines `run_all_tests`."""
+    return "run_all_tests" in (text or "")
+
+
+def _looks_like_parser(text):
+    """Upstream's per-instance parser is a Python script that writes the verdict.
+
+    Checked for the same reason the run script is: a `parser.py` that is really
+    an error page produces no `output.json`, `sbp_resolution` reads `{}`, and
+    the row grades as "reported: 0" — indistinguishable, in the results file,
+    from a candidate patch that broke the suite.
+    """
+    t = text or ""
+    return "def " in t and ("json" in t or "output" in t)
 
 
 def _sbp_env_exports(instance_id, refresh=False):
@@ -887,12 +932,11 @@ def ensure_swebench_pro_scripts(instance_id, refresh=False):
     d = swebench_pro_scripts_dir(instance_id)
     base = f"{SWEBENCH_PRO_SCRIPTS_RAW}/run_scripts/{instance_id}"
     run_script = _sbp_cached(f"{base}/run_script.sh",
-                             os.path.join(d, "run_script.sh"), refresh=refresh)
+                             os.path.join(d, "run_script.sh"), refresh=refresh,
+                             validate=_looks_like_run_script)
     parser = _sbp_cached(f"{base}/parser.py",
-                         os.path.join(d, "parser.py"), refresh=refresh)
-    if "run_all_tests" not in run_script:
-        raise RuntimeError(f"{instance_id}: fetched run_script.sh looks wrong "
-                           f"(no `run_all_tests`); got {len(run_script)} chars")
+                         os.path.join(d, "parser.py"), refresh=refresh,
+                         validate=_looks_like_parser)
     return {"run_script": run_script, "parser": parser,
             "env_exports": _sbp_env_exports(instance_id, refresh=refresh),
             "dir": d}

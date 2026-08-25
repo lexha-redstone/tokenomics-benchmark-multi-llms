@@ -82,6 +82,7 @@ def main():
                                                   "nextgen", "ablation", "router",
                                                   "classeval", "ce",
                                                   "featurebench", "fb",
+                                                  "fb_grounded", "fb-grounded", "grounded",
                                                   "swebench-pro", "swebench_pro", "sbp",
                                                   "sbp_candidates", "sbp-candidates", "candidates"],
                         default="all", help="Preset variant group to run (default: 'all')")

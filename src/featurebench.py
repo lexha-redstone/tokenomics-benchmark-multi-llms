@@ -74,12 +74,16 @@ Two consequences of holding that constant, both deliberate:
   cost a fraction of a cent rather than the resource under study.)
 """
 
+import os
+import re
+
 from .config import GEMINI_37_FLASH_ID, SONNET_ID, OPUS_5_ID
 from .client import dispatch_model
 from .evaluator import (FeatureBenchEnv, extract_patch, featurebench_test_files,
                         featurebench_test_ratio)
 from .architectures import _arm, _treat_error
-from .routing import GATES, EscalationTrace, classify
+from .routing import (GATES, EscalationTrace, classify,
+                      frontier_is_reachable)
 
 # The ladder, cheapest first. One place, so "one rung up" is defined once.
 TIERS = [
@@ -88,7 +92,18 @@ TIERS = [
 ]
 FRONTIER = OPUS_5_ID
 
-MAX_ORACLE_CALLS = 2
+# Three, not two. `_ladder` evaluates its gate once per repair turn, so a budget
+# of K oracle calls yields K-1 evaluations at attempts 1..K-1, and every gate
+# compares `attempt` against `len(tiers)` -- which is 2. At K=2 the only
+# evaluation is `attempt == 1`, no gate can answer "escalate", and the frontier
+# rung is unreachable code for every arm that has one.
+#
+# `docs/featurebench-n48-lessons.md` §2 is the audit of what that produced:
+# report 20's arms did not share a budget, three rows are labelled as
+# architectures they did not run, and the H2 challenger was compared against
+# rivals that had an extra oracle call. `unreachable_frontier_arms` below is
+# rule 2 of that document's §8, asserted rather than remembered.
+MAX_ORACLE_CALLS = int(os.environ.get("FB_MAX_ORACLE_CALLS", "3"))
 
 # The sample row's gold patch is 51k chars (~13k tokens) and the schema tops out
 # at 227k, so the 8192 this started at truncated a correct answer into an
@@ -149,6 +164,34 @@ DIFF_CONTRACT_REPAIR_ROLE = (
     "Output ONLY ONE ```diff code block.\n\n"
 )
 
+GROUNDED_SOLVER_ROLE = (
+    "You are a senior engineer implementing a complete feature in an existing "
+    "repository. The current contents of the relevant files are quoted below.\n"
+    "RULES FOR THE DIFF:\n"
+    "1. Every context line and every `-` line you write for an EXISTING file must "
+    "be copied character-for-character from the quoted text, including indentation.\n"
+    "2. Include at least 3 lines of real context above and below each change, so "
+    "the hunk can be located even if the line numbers are off.\n"
+    "3. For a file that is NOT quoted above, treat it as absent: create it with "
+    "`--- /dev/null` and `+++ b/<path>`. Never invent the contents of a file you "
+    "were not shown.\n"
+    "4. Use `a/` and `b/` prefixes and relative paths (no `/testbed/`).\n"
+    "5. Output ONLY ONE ```diff code block, spanning every file you change.\n\n"
+)
+
+GROUNDED_REPAIR_ROLE = (
+    "You are a senior engineer repairing a failed patch. The current contents of "
+    "the relevant files are quoted below, and the previous attempt's failure "
+    "follows them.\n"
+    "If the failure says the patch did NOT apply, the applier prints the exact "
+    "text it searched for and could not find. Compare that block against the "
+    "quoted file and copy the real bytes -- do not re-guess them.\n"
+    "If the failure is a test error, fix the cause and re-emit the whole patch.\n"
+    "The repository is reset to the base commit before your patch is applied, so "
+    "always emit the COMPLETE diff, never an increment.\n"
+    "Output ONLY ONE ```diff code block.\n\n"
+)
+
 MANIFEST_ROLE = (
     "You are a senior software architect. Read the feature request below and extract a structured "
     "FILE AND INTERFACE MANIFEST.\n"
@@ -169,15 +212,184 @@ def _context(problem):
     )
 
 
-def _solve_prompt(problem, role=SOLVER_ROLE, plan=""):
-    plan_block = f"\nArchitect's implementation plan:\n{plan}\n" if plan else ""
-    return role + _context(problem) + plan_block
+# ==============================================================================
+# --- REPOSITORY GROUNDING ---
+# ==============================================================================
+#
+# The deepest defect the N=48 sweep exposed was not in the routing policy, the
+# budget or the labels. It was in `_context`: the model was given the repository
+# *name*, the base commit, the test filenames and the feature request, and then
+# asked for a unified diff. A unified diff for an existing file is a claim about
+# bytes that are already on disk -- `git apply` matches the context lines
+# literally -- so a model that has never seen the file is guessing them. 331 of
+# the 353 recorded failures (94%) were `patch did not apply`, and the two arms
+# built to fix it (F4's diff contract, F6's manifest) both worked on diff
+# *syntax*, which was never the thing that was wrong.
+#
+# Grounding closes that. Before the first attempt it quotes the files the row is
+# about, read out of the row's own container at the row's own base commit, so
+# the context lines the model writes can be copied rather than invented.
+#
+# Two deliberate limits:
+#
+#   * **The graded test files are not quoted by default.** They are the API
+#     contract the row is scored on, and quoting them would change what the
+#     benchmark measures rather than how well the harness measures it. Set
+#     `FB_GROUND_TESTS=1` to include them, and say so in the report if you do.
+#   * **Grounding is an enrichment, never a precondition.** A container that
+#     cannot be read yields an empty block and the arm runs the blind prompt, so
+#     a grounding failure shows up as a `grounding` receipt with `chars: 0`
+#     rather than as a task failure.
+
+FB_GROUNDING_CHARS = int(os.environ.get("FB_GROUNDING_CHARS", "48000"))
+FB_GROUNDING_PER_FILE = int(os.environ.get("FB_GROUNDING_PER_FILE", "16000"))
+FB_GROUND_TESTS = os.environ.get("FB_GROUND_TESTS", "") not in ("", "0", "false")
+
+# A path is only read when it looks like a path. Anything else is a shell
+# hazard, and these strings come out of a model-readable problem statement.
+_SAFE_PATH_RE = re.compile(r"[A-Za-z0-9_][A-Za-z0-9_./-]{0,190}")
+_PATH_IN_TEXT_RE = re.compile(r"[A-Za-z0-9_][A-Za-z0-9_./-]*\.(?:py|pyi|cfg|toml|ini)")
+_TICKED_RE = re.compile(r"`([^`\n]{3,60})`")
+_FILE_MARKER = "@@FB_FILE@@"
 
 
-def _repair_prompt(problem, patch, digest, plan="", role=REPAIR_ROLE):
+def _dedup(items):
+    seen, out = set(), []
+    for it in items:
+        if it and it not in seen:
+            seen.add(it)
+            out.append(it)
+    return out
+
+
+def _candidate_paths(problem, limit=24):
+    """Repository paths this row is most likely to be about, best guess first.
+
+    The statement names them far more often than not: FeatureBench rows are
+    generated from real PRs and carry their file list in prose. What the
+    statement does not give, :func:`_grep_paths` looks for.
+    """
+    graded = set(featurebench_test_files(problem))
+    found = _PATH_IN_TEXT_RE.findall(str(problem.get("problem_statement") or ""))
+    paths = [p for p in _dedup(found) if _SAFE_PATH_RE.fullmatch(p)]
+    if not FB_GROUND_TESTS:
+        paths = [p for p in paths if p not in graded]
+    return paths[:limit]
+
+
+def _search_terms(problem, limit=8):
+    """Backticked identifiers from the statement, usable as `git grep` terms."""
+    ticked = _TICKED_RE.findall(str(problem.get("problem_statement") or ""))
+    return _dedup(t.strip() for t in ticked
+                  if re.fullmatch(r"[\w.]{3,60}", (t or "").strip()))[:limit]
+
+
+def _grep_paths(env, terms, limit=12):
+    """Files that mention any of `terms`, via the repository's own index."""
+    hits = []
+    for term in terms:
+        if not re.fullmatch(r"[\w.]{3,60}", term):
+            continue
+        r = env._sh(f"git grep -l --fixed-strings -- '{term}' | head -n 20",
+                    check=False)
+        hits.extend(l.strip() for l in (r.stdout or "").splitlines() if l.strip())
+        if len(_dedup(hits)) >= limit:
+            break
+    return [p for p in _dedup(hits) if p.endswith((".py", ".pyi"))][:limit]
+
+
+def _read_repo_files(env, paths, budget, per_file=None):
+    """Quote `paths` from inside the container. Returns (blocks, read, skipped).
+
+    One `docker exec` for the whole batch: a per-file exec would add a process
+    round-trip per candidate to a dataset whose cost is already dominated by
+    container time.
+    """
+    per_file = FB_GROUNDING_PER_FILE if per_file is None else per_file
+    safe = [p for p in paths if _SAFE_PATH_RE.fullmatch(p or "")]
+    if not safe or budget <= 0:
+        return [], [], list(paths)
+
+    script = "; ".join(
+        f'if [ -f "{p}" ]; then echo "{_FILE_MARKER} {p}"; '
+        f'head -c {per_file} "{p}"; echo; fi'
+        for p in safe)
+    r = env._sh(script, check=False)
+
+    blocks, read, skipped, spent = [], [], [], 0
+    chunks = (r.stdout or "").split(_FILE_MARKER + " ")
+    present = set()
+    for chunk in chunks[1:]:
+        head, _, body = chunk.partition("\n")
+        path = head.strip()
+        present.add(path)
+        block = f"--- BEGIN {path} ---\n{body.rstrip()}\n--- END {path} ---\n"
+        if spent + len(block) > budget:
+            skipped.append(path)
+            continue
+        blocks.append(block)
+        read.append(path)
+        spent += len(block)
+    skipped.extend(p for p in safe if p not in present and p not in skipped)
+    return blocks, read, skipped
+
+
+def collect_repo_context(env, problem, budget=None):
+    """Quote the repository files this row is about. Returns (text, meta).
+
+    `text` is empty whenever grounding is disabled or nothing could be read, in
+    which case the prompt is byte-identical to the blind one -- so an arm that
+    fails to ground is still a valid run of the blind arm rather than a lost row.
+    """
+    budget = FB_GROUNDING_CHARS if budget is None else budget
+    meta = {"enabled": bool(budget), "read": [], "skipped": [], "searched": [],
+            "chars": 0, "tests_quoted": bool(FB_GROUND_TESTS)}
+    if not budget:
+        return "", meta
+
+    try:
+        wanted = _candidate_paths(problem)
+        blocks, read, skipped = _read_repo_files(env, wanted, budget)
+        # The statement does not always name every file. Only pay for a search
+        # when it did not name enough of them.
+        if len(read) < 3:
+            terms = _search_terms(problem)
+            if terms:
+                meta["searched"] = terms
+                extra = [p for p in _grep_paths(env, terms) if p not in read]
+                more, read2, skipped2 = _read_repo_files(
+                    env, extra, budget - sum(len(b) for b in blocks))
+                blocks, read = blocks + more, read + read2
+                skipped = skipped + skipped2
+    except Exception as e:                                   # noqa: BLE001
+        meta["error"] = str(e)[:200]
+        return "", meta
+
+    if not blocks:
+        return "", meta
+    meta.update(read=read, skipped=_dedup(skipped), chars=sum(len(b) for b in blocks))
+    header = (
+        f"Repository files at commit {str(problem.get('base_commit', ''))[:12]}, "
+        f"quoted verbatim ({len(read)} file(s)). Your diff's context lines MUST "
+        "match these bytes exactly -- copy them, do not retype them. A file that "
+        "is not quoted here you have NOT seen: create it with `--- /dev/null` "
+        "rather than guessing its current contents.\n\n")
+    tail = ("\n[not quoted: " + ", ".join(meta["skipped"][:8]) + "]\n"
+            if meta["skipped"] else "")
+    return header + "\n".join(blocks) + tail, meta
+
+
+def _solve_prompt(problem, role=SOLVER_ROLE, plan="", repo=""):
     plan_block = f"\nArchitect's implementation plan:\n{plan}\n" if plan else ""
+    repo_block = f"\n{repo}\n" if repo else ""
+    return role + _context(problem) + repo_block + plan_block
+
+
+def _repair_prompt(problem, patch, digest, plan="", role=REPAIR_ROLE, repo=""):
+    plan_block = f"\nArchitect's implementation plan:\n{plan}\n" if plan else ""
+    repo_block = f"\n{repo}\n" if repo else ""
     return (
-        role + _context(problem) + plan_block
+        role + _context(problem) + repo_block + plan_block
         + f"\nYour current patch:\n```diff\n{patch}\n```\n\n"
         + f"Straitjacket Triaged Error Digest:\n```\n{digest}\n```\n"
     )
@@ -190,7 +402,7 @@ def _spend(acc, usage):
     return usage["as_run_usd"]
 
 
-def _result(passed, evidence, acc, loops, trace=None, ratio=None):
+def _result(passed, evidence, acc, loops, trace=None, ratio=None, grounding=None):
     out = {
         "passed": bool(passed),
         "as_run_usd": round(acc["usd"], 6),
@@ -208,12 +420,17 @@ def _result(passed, evidence, acc, loops, trace=None, ratio=None):
     }
     if trace is not None:
         out["routing"] = trace.as_dict()
+    if grounding is not None:
+        # What the arm was actually shown, so "grounded" is a receipt rather
+        # than an inference from the pass rate. An arm whose container could
+        # not be read records `chars: 0` and is a blind run, not a grounded one.
+        out["grounding"] = grounding
     return out
 
 
 def _ladder(problem, tiers, gate="after_ladder", frontier=FRONTIER,
             plan="", planner_usd=0.0, acc=None,
-            solver_role=None, repair_role=REPAIR_ROLE):
+            solver_role=None, repair_role=REPAIR_ROLE, ground=False):
     """One escalating repair loop against the containerised oracle.
 
     The gate, the difficulty classifier and the degradation warning are the
@@ -228,9 +445,14 @@ def _ladder(problem, tiers, gate="after_ladder", frontier=FRONTIER,
     init_role = solver_role or (EXECUTOR_ROLE if plan else SOLVER_ROLE)
 
     with FeatureBenchEnv(problem) as env:
+        # Read once, before the first attempt. The worktree is reset to base
+        # between attempts, so the files do not change and re-reading them
+        # would buy nothing but container time.
+        repo, grounding = collect_repo_context(env, problem) if ground else ("", None)
+
         model, think = tiers[0]
         text, usage, _ = dispatch_model(
-            model, _solve_prompt(problem, init_role, plan),
+            model, _solve_prompt(problem, init_role, plan, repo=repo),
             max_tokens=MAX_PATCH_TOKENS, thinking_level=think, problem=problem)
         _spend(acc, usage)
         trace.rungs.append(f"{model}/{think or 'off'}")
@@ -278,7 +500,9 @@ def _ladder(problem, tiers, gate="after_ladder", frontier=FRONTIER,
             digest, tr_usage, _ = _treat_error(evidence, "straitjacket", problem=problem)
             _spend(acc, tr_usage)
             r_text, r_usage, _ = dispatch_model(
-                target, _repair_prompt(problem, patch, digest, plan, role=repair_role),
+                target,
+                _repair_prompt(problem, patch, digest, plan,
+                               role=repair_role, repo=repo),
                 max_tokens=MAX_PATCH_TOKENS, thinking_level=think, problem=problem)
             _spend(acc, r_usage)
             trace.rungs.append(f"{target}/{think or 'off'}")
@@ -296,7 +520,7 @@ def _ladder(problem, tiers, gate="after_ladder", frontier=FRONTIER,
             if passed:
                 trace.solved_at = trace.rungs[-1]
 
-    return _result(passed, evidence, acc, loops, trace, ratio)
+    return _result(passed, evidence, acc, loops, trace, ratio, grounding)
 
 
 # ==============================================================================
@@ -373,6 +597,33 @@ def run_fb_diff_contract(problem, model_id=GEMINI_37_FLASH_ID, repair_model_id=S
     )
 
 
+def gate_diff_aware(difficulty, loop, n_tiers, last_err=""):
+    """Escalate on a typed hard failure, or on a repeated patch-apply failure.
+
+    Module-level rather than a closure inside the arm, for two reasons: the
+    registry invariant at the bottom of this file has to be able to evaluate
+    it, and a gate nobody can reach is a gate nobody can test.
+
+    It reads `difficulty` -- which now types pre-execution failures, so
+    `apply_failed` twice running arrives as `stalled` -- rather than
+    substring-matching the evidence prose. The original spelled
+    `"patch did not apply" in str(last_err)`, making this gate's behaviour
+    depend on the exact wording of a message in another module. It broke
+    silently the moment that message changed, and a silently-off gate is
+    precisely the defect this arm was added to fix.
+    """
+    if difficulty is not None and difficulty.is_environment:
+        return False, f"environment failure ({difficulty.guard}); no model fixes this"
+    if difficulty is not None and difficulty.level in ("broad", "stalled"):
+        return True, f"typed failure classified as {difficulty.level}"
+    if loop >= n_tiers:
+        return True, "reached end of tier ladder"
+    return False, "stay on standard tier"
+
+
+gate_diff_aware.requires_typed_evidence = True
+
+
 @_arm(sj_required=True)
 def run_fb_diff_aware_gate(problem, tiers=TIERS, frontier=FRONTIER):
     """Candidate 2: Diff-Aware Evidence Escalation Gate.
@@ -383,19 +634,10 @@ def run_fb_diff_aware_gate(problem, tiers=TIERS, frontier=FRONTIER):
     (1) Unit tests show `broad` or `stalled` failure (>=3 failing identities), OR
     (2) Patch application fails consecutively across attempts (stalled format).
     """
-    def _gate(difficulty, loop, n_tiers, last_err=""):
-        if difficulty is not None and difficulty.level in ("broad", "stalled"):
-            return True, f"typed test failure classified as {difficulty.level}"
-        if "patch did not apply" in str(last_err) and loop >= 2:
-            return True, "stalled patch formatting across consecutive attempts"
-        if loop >= n_tiers:
-            return True, "reached end of tier ladder"
-        return False, "stay on standard tier"
-
     return _ladder(
         problem,
         tiers,
-        gate=_gate,
+        gate=gate_diff_aware,
         frontier=frontier,
         solver_role=DIFF_CONTRACT_SOLVER_ROLE,
         repair_role=DIFF_CONTRACT_REPAIR_ROLE,
@@ -428,6 +670,39 @@ def run_fb_spec_deconstruct(problem, architect_model=GEMINI_37_FLASH_ID,
     )
 
 
+@_arm(sj_required=True)
+def run_fb_grounded(problem, tiers=TIERS):
+    """Same ladder as `fb_cascade`, with the repository actually shown.
+
+    The control for the only defect the N=48 sweep left unexplained. F4 and F6
+    attacked the 94% `patch did not apply` rate through diff *syntax* -- a
+    stricter contract, a file manifest -- and neither moved it, because the
+    models were not writing malformed diffs. They were writing well-formed
+    diffs about files they had never read. This arm changes one thing: the
+    files are quoted from the row's own container at its own base commit.
+
+    Held constant against `fb_cascade`: tiers, gate, oracle budget, output
+    budget. The extra input tokens are the cost of the treatment and show up in
+    `as_run_usd` where they belong.
+    """
+    return _ladder(problem, tiers, gate="after_ladder", ground=True,
+                   solver_role=GROUNDED_SOLVER_ROLE,
+                   repair_role=GROUNDED_REPAIR_ROLE)
+
+
+@_arm(sj_required=True)
+def run_fb_grounded_gate(problem, tiers=TIERS, frontier=FRONTIER):
+    """Grounded ladder with the N=148 evidence gate on top.
+
+    `fb_grounded` is to `fb_cascade` what this is to `fb_evidence_gate`, so the
+    pair answers the routing question and the grounding question separately
+    rather than confounding them the way report 22's arms did.
+    """
+    return _ladder(problem, tiers, gate="evidence", frontier=frontier,
+                   ground=True, solver_role=GROUNDED_SOLVER_ROLE,
+                   repair_role=GROUNDED_REPAIR_ROLE)
+
+
 # ==============================================================================
 # --- VARIANT REGISTRY ---
 # ==============================================================================
@@ -439,18 +714,29 @@ CATEGORY = "8. FeatureBench expensive-oracle study"
 # silently repricing every `--group featurebench` sweep.
 OPUS_CATEGORY = "8b. FeatureBench frontier baseline"
 
+# Same reasoning as the frontier baseline above, for the opposite reason: the
+# grounded arms buy their advantage with input tokens (~30k more per attempt),
+# so folding them into `--group featurebench` would silently reprice every
+# default sweep. They are the A/B partner of `fb_cascade` and
+# `fb_evidence_gate`, and the honest way to run them is against those two by
+# name:
+#
+#   python3 run_benchmark.py --dataset featurebench --no-cache \
+#       --variants fb_cascade,fb_grounded,fb_evidence_gate,fb_grounded_gate
+GROUNDED_CATEGORY = "8g. FeatureBench repository-grounded"
+
 FEATUREBENCH_VARIANTS = {
     "fb_single_flash": {
         "id": "fb_single_flash", "category": CATEGORY,
-        "name": "F0a. Single: gemini-3.7-flash low (2 rungs)",
-        "models": "Gemini 3.7 Flash (low) x2",
+        "name": "F0a. Single: gemini-3.7-flash low ({rungs} rungs)",
+        "models": "Gemini 3.7 Flash (low) x{rungs}",
         "triage_mode": "Straitjacket contained digest ($0.00)",
         "fn": lambda p: run_fb_single(p, model_id=GEMINI_37_FLASH_ID, thinking_level="low"),
     },
     "fb_single_sonnet": {
         "id": "fb_single_sonnet", "category": CATEGORY,
-        "name": "F0b. Single: claude-sonnet-5 (2 rungs)",
-        "models": "Claude Sonnet-5 x2",
+        "name": "F0b. Single: claude-sonnet-5 ({rungs} rungs)",
+        "models": "Claude Sonnet-5 x{rungs}",
         "triage_mode": "Straitjacket contained digest ($0.00)",
         "fn": lambda p: run_fb_single(p, model_id=SONNET_ID),
     },
@@ -471,7 +757,7 @@ FEATUREBENCH_VARIANTS = {
     "fb_plan_exec": {
         "id": "fb_plan_exec", "category": CATEGORY,
         "name": "F3. H2: opus-5 plans first, 3.7-flash implements and repairs",
-        "models": "Claude Opus-5 plan + Gemini 3.7 Flash exec x2",
+        "models": "Claude Opus-5 plan + Gemini 3.7 Flash exec x{rungs}",
         "triage_mode": "Straitjacket contained digest ($0.00)",
         "fn": run_fb_plan_exec,
     },
@@ -496,12 +782,75 @@ FEATUREBENCH_VARIANTS = {
         "triage_mode": "Straitjacket contained digest ($0.00)",
         "fn": run_fb_spec_deconstruct,
     },
+    "fb_grounded": {
+        "id": "fb_grounded", "category": GROUNDED_CATEGORY,
+        "name": "F7. Grounded cascade: repository quoted, Flash low -> Sonnet-5 ({rungs} rungs)",
+        "models": "Gemini 3.7 Flash (low) -> Claude Sonnet-5, source-grounded",
+        "triage_mode": "Straitjacket contained digest ($0.00)",
+        "fn": run_fb_grounded,
+    },
+    "fb_grounded_gate": {
+        "id": "fb_grounded_gate", "category": GROUNDED_CATEGORY,
+        "name": "F8. Grounded evidence gate: repository quoted, escalate on hard evidence ({rungs} rungs)",
+        "models": "Gemini 3.7 Flash -> Claude Sonnet-5 / Opus-5, source-grounded",
+        "triage_mode": "Straitjacket digest + evidence-gated escalation ($0.00)",
+        "fn": run_fb_grounded_gate,
+    },
     "fb_single_opus": {
         "id": "fb_single_opus", "category": OPUS_CATEGORY,
-        "name": "F0c. Single: claude-opus-5 (2 rungs)",
-        "models": "Claude Opus-5 x2",
+        "name": "F0c. Single: claude-opus-5 ({rungs} rungs)",
+        "models": "Claude Opus-5 x{rungs}",
         "triage_mode": "Straitjacket contained digest ($0.00)",
         "fn": lambda p: run_fb_single(p, model_id=OPUS_5_ID),
     },
 }
 
+
+
+# ==============================================================================
+# --- REGISTRY INVARIANTS ---
+# ==============================================================================
+#
+# Rule 2 of `docs/featurebench-n48-lessons.md` §8 -- "pick one oracle budget and
+# assert it" -- made executable. The audit it comes from found that report 20's
+# arms did not share a budget, that three rows are labelled as architectures
+# they did not run, and that at two oracle calls over a two-rung ladder the
+# frontier tier is unreachable for every arm that advertises one.
+
+_ARM_SHAPES = {
+    "fb_cascade": (len(TIERS), GATES["after_ladder"]),
+    "fb_evidence_gate": (len(TIERS), GATES["evidence"]),
+    "fb_diff_aware_gate": (len(TIERS), gate_diff_aware),
+    "fb_grounded_gate": (len(TIERS), GATES["evidence"]),
+}
+
+
+def unreachable_frontier_arms(max_oracle_calls=None):
+    """Arms whose advertised frontier rung cannot be called at this budget."""
+    budget = MAX_ORACLE_CALLS if max_oracle_calls is None else max_oracle_calls
+    return sorted(
+        arm for arm, (n_tiers, gate) in _ARM_SHAPES.items()
+        if not frontier_is_reachable(gate, n_tiers, budget))
+
+
+def _finalise_registry():
+    """Render `{rungs}` in the variant names and refuse a dishonest registry.
+
+    A report quotes these names verbatim, and report 20 shipped rows reading
+    "(2 rungs)" beside arms that had spent three. The count is derived from the
+    constant that decides it rather than typed out beside it.
+    """
+    for cfg in FEATUREBENCH_VARIANTS.values():
+        cfg["name"] = cfg["name"].format(rungs=MAX_ORACLE_CALLS)
+        cfg["models"] = cfg["models"].format(rungs=MAX_ORACLE_CALLS)
+    broken = unreachable_frontier_arms()
+    if broken:
+        raise RuntimeError(
+            "FeatureBench registry is not runnable: "
+            f"{', '.join(broken)} advertise a frontier rung that cannot be "
+            f"reached with FB_MAX_ORACLE_CALLS={MAX_ORACLE_CALLS} over a "
+            f"{len(TIERS)}-rung ladder. Raise the oracle budget above the rung "
+            "count, or drop the frontier model from those arms' names.")
+
+
+_finalise_registry()

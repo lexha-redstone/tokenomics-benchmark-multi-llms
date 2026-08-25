@@ -72,12 +72,23 @@ class Evidence(str):
     run = None
     digest = ""
     contained = False
+    # Why the attempt failed, when it failed *before* the suite ran. Empty
+    # string means "the suite ran and the harness captured it", which is the
+    # only case where `run` carries a typed evidence graph.
+    reason = ""
+    # The name a router should reason over for a pre-execution failure. The
+    # counterpart of a profile's `failure_class` for evidence that has no
+    # profile, so `src/routing.py` has one thing to read instead of two.
+    failure_class = ""
 
-    def __new__(cls, native_text, *, run=None, digest="", contained=False):
+    def __new__(cls, native_text, *, run=None, digest="", contained=False,
+                reason="", failure_class=""):
         obj = super().__new__(cls, native_text or "")
         obj.run = run
         obj.digest = digest or ""
         obj.contained = bool(contained)
+        obj.reason = reason or ""
+        obj.failure_class = failure_class or ""
         return obj
 
     @property
@@ -85,9 +96,49 @@ class Evidence(str):
         return self.run.metrics() if self.run is not None else {}
 
 
-def _guard_evidence(message):
-    """A pre-execution guard failure: short, bounded, already its own digest."""
-    return Evidence(message, run=None, digest=message, contained=False)
+# Every way an attempt can die *before* the repository's suite runs, named once.
+# The sweep records the name per task and the reporter tabulates the
+# distribution, because "0% pass rate" and "89% of attempts never reached the
+# tests" are different findings and only the second one is actionable.
+GUARD_REASONS = {
+    # the model's response was not a usable patch
+    "no_patch": "MalformedPatch",
+    "not_a_diff": "MalformedPatch",
+    "no_hunk": "MalformedPatch",
+    "truncated_output": "MalformedPatch",
+    # the patch was well-formed but did not land on this tree
+    "apply_failed": "PatchApplyError",
+    # nothing the model did could have changed the outcome
+    "container_unavailable": "EnvironmentError",
+    "restore_failed": "EnvironmentError",
+    "row_no_test_files": "EnvironmentError",
+    "execution_error": "EnvironmentError",
+    "harness_error": "EnvironmentError",
+}
+
+# Reasons that say the *environment* failed, not the model. Escalating to a
+# frontier model on one of these buys nothing; see `src/routing.py`.
+ENVIRONMENT_REASONS = frozenset(
+    r for r, cls in GUARD_REASONS.items() if cls == "EnvironmentError")
+
+
+def _guard_evidence(message, reason="", failure_class=""):
+    """A pre-execution guard failure: short, bounded, already its own digest.
+
+    ``reason`` is one of :data:`GUARD_REASONS`. It is what makes a guard
+    failure legible to both the router and the report: without it every
+    pre-execution death arrives as an untyped string and classifies as
+    `shallow`, which is how an evidence gate ends up never firing on the most
+    common failure in the sweep.
+    """
+    return Evidence(message, run=None, digest=message, contained=False,
+                    reason=reason,
+                    failure_class=failure_class or GUARD_REASONS.get(reason, ""))
+
+
+def guard_reason(evidence):
+    """The reason slug for one attempt: `''` when the suite actually ran."""
+    return getattr(evidence, "reason", "") or ""
 
 
 def _from_run(run):
@@ -223,7 +274,7 @@ def _run_bigcodebench_contained(program):
                 env_extra=sj.CAPTURE_ENV,
             )
         except sj.SJUnavailable as e:
-            return False, _guard_evidence(f"harness_error: {e}")
+            return False, _guard_evidence(f"harness_error: {e}", "harness_error")
 
         if run.timed_out:
             return False, _from_run(run)
@@ -387,10 +438,58 @@ FB_CONTAINER_PREFIX = "tokenomics-fb"
 # still a legitimate solve -- SWE-bench's own harness allows the same latitude
 # -- but a patch that fails both is a real failure and is fed back as evidence
 # rather than silently scored zero.
+# Strict first, then progressively looser. Every relaxation here targets a
+# failure mode that is an artefact of *how a model writes a diff*, never one
+# that would let a wrong patch score:
+#
+#   --recount            the `@@ -a,b +c,d @@` line counts are recomputed from
+#                        the hunk body. Miscounted hunk headers are the single
+#                        most common defect in a model-authored diff, and they
+#                        are the one defect that carries no information about
+#                        whether the *edit* was right.
+#   --ignore-whitespace  indentation drift in the context lines.
+#   -C1                  match on one line of context instead of three.
+#   --3way               fall back to a real merge using the blobs the
+#                        repository already has. Only possible because the tree
+#                        is at `base_commit`, and it fails loudly on conflict
+#                        rather than guessing.
+#   patch --forward      refuses to *reverse* a diff it thinks is already
+#                        applied. Without it `patch` exits 0 having deleted the
+#                        change the next step needs -- silence in exactly the
+#                        place a wrong number comes from.
+#
+# The candidate still has to make the repository's own tests pass afterwards,
+# so a looser apply widens what gets *graded*, not what counts as resolved.
 _APPLY_STRATEGIES = (
     ["git", "apply", "--verbose"],
-    ["patch", "--batch", "--fuzz=5", "-p1", "-i"],
+    ["git", "apply", "--verbose", "--recount"],
+    ["git", "apply", "--verbose", "--recount", "--ignore-whitespace", "-C1"],
+    ["git", "apply", "--verbose", "--recount", "--3way"],
+    ["patch", "--batch", "--forward", "--fuzz=5", "-p1", "-i"],
 )
+
+
+def _terminate_patch(patch):
+    """Guarantee the one byte `git apply` refuses to work without.
+
+    A unified diff whose final line has no newline is not a diff `git apply`
+    will read: it exits **128** with `corrupt patch at line N` before it looks
+    at the worktree at all. Every strategy in `_APPLY_STRATEGIES` inherits that
+    -- widening the ladder buys nothing, because none of its entries ever gets
+    to run. Measured on a scratch repository: a byte-perfect diff applies under
+    all five strategies with the newline and under none of them without it, and
+    a diff with drifted context is rescued by `--recount --ignore-whitespace`
+    with the newline and by nothing without it.
+
+    This was the harness's own bug, not the models'. `extract_patch` used to end
+    every return path with `.strip("\n")`, which deletes exactly this byte from
+    every candidate the sweep ever scored -- so `git apply` never once ran to
+    completion on FeatureBench, and the loose `patch --fuzz` fallback was
+    silently the only applier in the pipeline. See
+    docs/featurebench-n48-lessons.md.
+    """
+    body = (patch or "").strip("\n")
+    return body + "\n" if body else ""
 
 
 def extract_patch(text):
@@ -400,19 +499,25 @@ def extract_patch(text):
     the deleted SWE-bench Pro path fed a scorer that never ran the repository's
     tests; this one feeds a real pytest run inside the repository's own
     container, so the diff is executed rather than string-matched.
+
+    **Every** fenced diff block is taken, not just the first. A multi-file
+    feature is routinely answered with one fence per file, and returning only
+    the first silently scored a fraction of the candidate -- which reads as a
+    model failure and is not one. Blocks are joined with the newline that
+    :func:`_terminate_patch` guarantees, so a concatenation is still a diff.
     """
-    m = re.search(r"```(?:diff|patch)\s*\n(.*?)```", text or "", re.DOTALL)
-    if m:
-        return m.group(1).strip("\n")
-    m = re.search(r"```\s*\n(diff --git .*?)```", text or "", re.DOTALL)
-    if m:
-        return m.group(1).strip("\n")
+    blocks = re.findall(r"```(?:diff|patch)\s*\n(.*?)```", text or "", re.DOTALL)
+    if not blocks:
+        blocks = re.findall(r"```\s*\n(diff --git .*?)```", text or "", re.DOTALL)
+    if blocks:
+        joined = "\n".join(b.strip("\n") for b in blocks if b.strip())
+        return _terminate_patch(joined)
     # An unfenced diff is common enough to accept, but only from the first
     # marker onward -- prose before it would break `git apply`.
     idx = (text or "").find("diff --git ")
     if idx == -1:
         idx = (text or "").find("--- ")
-    return (text or "")[idx:].strip("\n") if idx != -1 else ""
+    return _terminate_patch((text or "")[idx:]) if idx != -1 else ""
 
 
 def missing_patch_error(patch_str):
@@ -424,13 +529,15 @@ def missing_patch_error(patch_str):
     """
     text = (patch_str or "").strip()
     if not text:
-        return _guard_evidence("model response contains no patch")
+        return _guard_evidence("model response contains no patch", "no_patch")
     if "--- " not in text or "+++ " not in text:
         return _guard_evidence(
-            "model response is not a unified diff: no `---`/`+++` file headers")
+            "model response is not a unified diff: no `---`/`+++` file headers",
+            "not_a_diff")
     if "@@" not in text:
         return _guard_evidence(
-            "model response has diff headers but no `@@` hunk -- nothing to apply")
+            "model response has diff headers but no `@@` hunk -- nothing to apply",
+            "no_hunk")
     return None
 
 
@@ -491,16 +598,24 @@ class _DockerRepoEnv:
         if p.returncode != 0:
             raise RuntimeError(f"could not write {path}: {(p.stderr or '').strip()[-200:]}")
 
-    def _try_apply(self, path):
+    def _try_apply(self, path, reset=None):
         """Apply a diff, strict strategy first. Records what each attempt said.
 
         `patch --batch` will happily *reverse* a diff it thinks was already
         applied and exit 0, which silently deletes a file the next step needs.
         So the log is kept on the instance rather than discarded, and callers
         that care check the outcome rather than the return code alone.
+
+        ``reset`` is called between failed strategies when supplied. It has to
+        be: `git apply --3way` writes conflict markers into the worktree on a
+        partial merge and *then* exits non-zero, so without a reset the next
+        strategy would be applied on top of that debris and any success it
+        reported would be a success against a tree nobody chose.
         """
         self.apply_log = []
-        for argv in _APPLY_STRATEGIES:
+        for i, argv in enumerate(_APPLY_STRATEGIES):
+            if i and reset is not None:
+                reset()
             cmd = " ".join(argv) + f" {path}"
             r = self._sh(cmd, check=False)
             out = ((r.stdout or "") + (r.stderr or "")).strip()
@@ -508,6 +623,19 @@ class _DockerRepoEnv:
             if r.returncode == 0:
                 return True
         return False
+
+    def apply_evidence(self, limit=1800):
+        """What the apply attempts actually said, as repair-turn evidence.
+
+        `git apply --verbose` names the file, the hunk number and prints the
+        `error: while searching for:` block that did not match. That is the
+        only actionable signal a patch-apply failure produces, and it was
+        being collected and then dropped -- so the repair turn received a
+        fixed 31-token sentence and the second rung was an independent
+        re-roll rather than a repair.
+        """
+        log = "\n".join(getattr(self, "apply_log", []) or [])
+        return log[-limit:] if len(log) > limit else log
 
 
 class FeatureBenchEnv(_DockerRepoEnv):
@@ -720,7 +848,8 @@ class FeatureBenchEnv(_DockerRepoEnv):
         """
         if not self.started:
             return False, _guard_evidence(
-                f"FeatureBench container unavailable: {self.setup_error}")
+                f"FeatureBench container unavailable: {self.setup_error}",
+                "container_unavailable")
         if not (allow_empty and not (patch or "").strip()):
             guard = missing_patch_error(patch)
             if guard:
@@ -729,15 +858,27 @@ class FeatureBenchEnv(_DockerRepoEnv):
         try:
             if patch and patch.strip():
                 self._write("/tmp/fb_cand.patch", patch)
-                if not self._try_apply("/tmp/fb_cand.patch"):
+                if not self._try_apply("/tmp/fb_cand.patch", reset=self.reset):
+                    log = self.apply_evidence()
                     self.reset()
+                    # Same reasoning as `SWEBenchProEnv.score`: the apply log
+                    # names the file, the hunk and the context block that did
+                    # not match, and it was being collected and discarded. On
+                    # this dataset 75-90% of every arm's final failures are
+                    # this branch, so a fixed sentence here is a repair turn
+                    # with no information in it.
                     return False, _guard_evidence(
-                        "patch did not apply (tried `git apply` then `patch --fuzz=5`). "
-                        "Re-emit the diff against the files as they exist at this commit.")
+                        "The patch did NOT apply to the repository -- no test was run.\n"
+                        f"{len(_APPLY_STRATEGIES)} strategies were tried, strictest first.\n"
+                        "Apply log:\n" + (log or "(no output)") +
+                        "\n\nRe-emit the COMPLETE diff against the files as they exist "
+                        "at this commit.",
+                        "apply_failed")
             self._restore_tests()
             return self._pytest()
         except Exception as e:                               # noqa: BLE001
-            return False, _guard_evidence(f"FeatureBench execution error: {e}")
+            return False, _guard_evidence(
+                f"FeatureBench execution error: {e}", "execution_error")
         finally:
             try:
                 self.reset()
@@ -748,7 +889,8 @@ class FeatureBenchEnv(_DockerRepoEnv):
         from .datasets import fb_test_command
         files = featurebench_test_files(self.problem)
         if not files:
-            return False, _guard_evidence("row names no FAIL_TO_PASS test file")
+            return False, _guard_evidence(
+                "row names no FAIL_TO_PASS test file", "row_no_test_files")
         # Every row ships its own `test_cmd`; using a hardcoded pytest line
         # would score the arms on a command the benchmark never specified.
         cmd = fb_test_command(self.problem)
@@ -842,6 +984,25 @@ SBP_DEFAULT_TIMEOUT = float(os.environ.get("SBP_TIMEOUT", "1800"))
 
 
 SBP_WORKSPACE = "/workspace"
+
+# How many characters of repository source may be read out of the container and
+# placed in the solver prompt. `0` reproduces the original blind setting, which
+# is what makes the grounding an A/B rather than a one-way change.
+#
+# Why this exists at all: the row hands the model an issue, a requirements
+# block and an interface block, and asks for a complete unified diff with real
+# line numbers. Measured over the published split, only 8.8% of rows name
+# *every* file their reference patch touches anywhere in those three blocks,
+# and the median reference patch is 9 hunks across 4 files. `git apply` needs
+# every context line to match a file the model was never shown, so the blind
+# setting has a localisation ceiling near 9% before a single hunk is written.
+SBP_GROUNDING_CHARS = int(os.environ.get("SBP_GROUNDING_CHARS", "60000"))
+
+# Per-file cap, so one 400 kB vendored bundle cannot consume the whole budget.
+SBP_GROUNDING_FILE_CHARS = int(os.environ.get("SBP_GROUNDING_FILE_CHARS", "16000"))
+
+# Upper bound on how many files are quoted, whatever the character budget says.
+SBP_GROUNDING_MAX_FILES = int(os.environ.get("SBP_GROUNDING_MAX_FILES", "12"))
 
 
 def sbp_test_script(test_files, workdir="/app", env_exports="", workspace=SBP_WORKSPACE):
@@ -1012,7 +1173,8 @@ class SWEBenchProEnv(_DockerRepoEnv):
         self.last_report, self.last_ratio = {}, None
         if not self.started:
             return False, _guard_evidence(
-                f"SWE-bench Pro container unavailable: {self.setup_error}")
+                f"SWE-bench Pro container unavailable: {self.setup_error}",
+                "container_unavailable")
         guard = missing_patch_error(patch)
         if guard:
             return False, guard
@@ -1020,10 +1182,18 @@ class SWEBenchProEnv(_DockerRepoEnv):
         try:
             self.reset()
             self._write(f"{SBP_WORKSPACE}/patch.diff", patch)
-            if not self._try_apply(f"{SBP_WORKSPACE}/patch.diff"):
+            if not self._try_apply(f"{SBP_WORKSPACE}/patch.diff", reset=self.reset):
+                # The apply log goes to the model. `git apply --verbose` prints
+                # the failing file, the hunk number and the context block it
+                # searched for, which is the difference between "try again" and
+                # "this hunk expected these three lines and the file has these".
                 return False, _guard_evidence(
-                    "patch did not apply (tried `git apply` then `patch --fuzz=5`). "
-                    "Re-emit the diff against the files as they exist at this commit.")
+                    "The patch did NOT apply to the repository -- no test was run.\n"
+                    f"{len(_APPLY_STRATEGIES)} strategies were tried, strictest first.\n"
+                    "Apply log:\n" + (self.apply_evidence() or "(no output)") +
+                    "\n\nRe-emit the COMPLETE diff against the files as they exist at "
+                    "this commit. Prefer fewer, larger hunks with exact context lines.",
+                    "apply_failed")
 
             # The anti-cheat, and the step whose silent failure would make every
             # arm's number meaningless: the graded tests are restored from the
@@ -1036,12 +1206,13 @@ class SWEBenchProEnv(_DockerRepoEnv):
                     return False, _guard_evidence(
                         "could not restore the graded test files "
                         f"(`{restore[:80]}`): "
-                        f"{((r.stderr or '') + (r.stdout or '')).strip()[-200:]}")
+                        f"{((r.stderr or '') + (r.stdout or '')).strip()[-200:]}",
+                        "restore_failed")
 
             files = sbp_test_files(self.problem)
             if not files:
                 return False, _guard_evidence(
-                    "row names no `selected_test_files_to_run`")
+                    "row names no `selected_test_files_to_run`", "row_no_test_files")
             script = sbp_test_script(files, workdir=self.workdir,
                                      env_exports=(self.scripts or {}).get("env_exports", ""))
             self._write(f"{SBP_WORKSPACE}/testscript.sh", script)
@@ -1059,12 +1230,90 @@ class SWEBenchProEnv(_DockerRepoEnv):
             self.last_ratio = report["test_pass_ratio"]
             return report["resolved"], evidence
         except Exception as e:                               # noqa: BLE001
-            return False, _guard_evidence(f"SWE-bench Pro execution error: {e}")
+            return False, _guard_evidence(
+                f"SWE-bench Pro execution error: {e}", "execution_error")
         finally:
             try:
                 self.reset()
             except Exception:                                # noqa: BLE001
                 pass
+
+    # -- repository grounding ---------------------------------------------
+    #
+    # Read-only views of the tree at `base_commit`. They exist so the solver
+    # prompt can quote the files it is being asked to patch. Everything goes
+    # through `git show <base>:<path>` rather than the worktree, so a previous
+    # attempt's patch can never leak into the next attempt's prompt.
+
+    def list_paths(self, limit=4000):
+        """Every tracked path at the base commit."""
+        base = self.problem.get("base_commit") or "HEAD"
+        r = self._sh(f"git ls-tree -r --name-only {base}", check=False)
+        if r.returncode != 0:
+            return []
+        return [p for p in (r.stdout or "").splitlines() if p][:limit]
+
+    def grep_paths(self, terms, limit=40):
+        """Paths at the base commit whose contents mention any of `terms`.
+
+        Fixed-string, case-insensitive, filenames only. This is the cheap
+        stand-in for the search an agent would do: it turns a symbol named in
+        the issue text into the file that defines it.
+        """
+        base = self.problem.get("base_commit") or "HEAD"
+        out, seen = [], set()
+        for term in terms:
+            term = str(term or "").strip()
+            if len(term) < 3:
+                continue
+            quoted = term.replace("'", "'\\''")
+            r = self._sh(f"git grep -l -I -i -F -e '{quoted}' {base} -- "
+                         f"| head -{limit}", check=False)
+            if r.returncode != 0:
+                continue
+            for line in (r.stdout or "").splitlines():
+                # `git grep <rev>` prefixes every hit with `<rev>:`.
+                path = line.split(":", 1)[1] if ":" in line else line
+                if path and path not in seen:
+                    seen.add(path)
+                    out.append(path)
+                if len(out) >= limit:
+                    return out
+        return out
+
+    def read_source(self, paths, budget=None, per_file=None, max_files=None):
+        """Quote files from the base commit, within a character budget.
+
+        Returns ``(blocks, read, skipped)``: the rendered text per path, the
+        paths that fit, and the paths that did not. The skipped list is
+        returned rather than dropped so the prompt can say what it left out --
+        an excerpt the model does not know is an excerpt is worse than none.
+        """
+        budget = SBP_GROUNDING_CHARS if budget is None else budget
+        per_file = SBP_GROUNDING_FILE_CHARS if per_file is None else per_file
+        max_files = SBP_GROUNDING_MAX_FILES if max_files is None else max_files
+        base = self.problem.get("base_commit") or "HEAD"
+        blocks, read, skipped, spent = [], [], [], 0
+        for path in paths:
+            if len(read) >= max_files or spent >= budget:
+                skipped.append(path)
+                continue
+            quoted = str(path).replace("'", "'\\''")
+            r = self._sh(f"git show '{base}:{quoted}'", check=False)
+            if r.returncode != 0:
+                skipped.append(path)
+                continue
+            text = r.stdout or ""
+            room = min(per_file, budget - spent)
+            clipped = len(text) > room
+            body = text[:room]
+            blocks.append(
+                f"--- FILE: {path}"
+                + (f"  [first {room} of {len(text)} chars]" if clipped else "")
+                + f" ---\n{body}\n")
+            read.append(path)
+            spent += len(body)
+        return blocks, read, skipped
 
     def _read_output(self):
         """The parser's verdict file. Absent means the parser never ran."""

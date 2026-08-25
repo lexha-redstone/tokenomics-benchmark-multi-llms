@@ -404,6 +404,16 @@ Rate** — the fraction of a task's ~62.7 fail-to-pass points that a patch clear
 — keeps the gradient measurable even for a rung that resolves nothing outright.
 What it costs to get there is in [§7.5](#75-what-adopting-featurebench-actually-costs).
 
+> **Ran at N=48; neither outcome was observed.** A third failure mode this
+> section did not anticipate dominated instead: the candidate diff was rejected
+> by `git apply` on 77–94% of tasks per arm, so the repair turn under study
+> mostly never happened and no pairwise arm difference reaches p < 0.05. The
+> Passed Rate hedge above was the right instinct — but `test_pass_ratio` is
+> dropped by the result serialiser and never reached a report, so the sweep has
+> only the binary verdict it was supposed to be protected from. Full account and
+> the three preconditions for a rerun:
+> [featurebench-n48-lessons.md](featurebench-n48-lessons.md).
+
 ### 7.5 What adopting FeatureBench actually costs
 
 Checked against the upstream repository and paper, because "Docker required" hides

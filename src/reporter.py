@@ -101,7 +101,7 @@ def _write_provenance(f, summary_rows):
                 f"report was produced by the real harness.\n\n")
 
 
-def _write_insights(f, summary_rows):
+def _write_insights(f, summary_rows, section=3):
     """Only assert things about arms that are actually in this report.
 
     The insights used to be a fixed block naming an LLM-triage arm, an `A4`
@@ -111,7 +111,7 @@ def _write_insights(f, summary_rows):
     """
     treatments = {t for r in summary_rows
                   for t in ((r.get("containment") or {}).get("treatments") or [])}
-    f.write("## 3. Key TCO & Architectural Insights\n\n")
+    f.write(f"## {section}. Key TCO & Architectural Insights\n\n")
     n = 0
 
     if "straitjacket" in treatments:
@@ -153,13 +153,13 @@ def _write_insights(f, summary_rows):
                     f"{top.get('pass_rate', 0):.0%}.\n")
 
 
-def _write_containment_table(f, summary_rows):
+def _write_containment_table(f, summary_rows, section=2):
     """Context-residency receipt per configuration."""
     rows = [r for r in summary_rows if (r.get("containment") or {}).get("captures")]
     if not rows:
         return
     f.write("\n---\n\n")
-    f.write("## 2. Context Containment Receipt\n\n")
+    f.write(f"## {section}. Context Containment Receipt\n\n")
     f.write("Measured by the harness itself for every captured run in the sweep. Every arm "
             "executes through the harness; `Captured` differs between them because they "
             "make different numbers of attempts and their candidate solutions print "
@@ -206,6 +206,96 @@ def _write_containment_table(f, summary_rows):
                 "Do not read them as a result.\n")
 
 
+def _write_diagnostics_table(f, summary_rows, section=2):
+    """Did the candidates get graded, and did the router do what its name says?
+
+    Placed before the containment receipt because it decides how to read
+    everything after it. A pass-rate table with no answer to "how many attempts
+    reached a test" cannot distinguish a hard dataset from a broken harness,
+    and reports 21 and 23 are what that looks like: five arms at 0-2%, an
+    identical set of three "candidate architectures" at 0%, and — recoverable
+    only by dividing the containment receipt's `Captures` by the attempt count
+    — roughly 89% of attempts that never ran a test at all.
+    """
+    rows = [r for r in summary_rows if (r.get("diagnostics") or {}).get("attempts")]
+    if not rows:
+        return
+    f.write(f"\n---\n\n## {section}. Attempt Diagnostics\n\n")
+    f.write("What happened to every *attempt*, not every task. `Suite reached` is the "
+            "share of attempts whose evidence came from the repository's own test run; "
+            "the rest died at a guard before grading and say nothing about the model. "
+            "`Avg partial` is the mean `test_pass_ratio` over graded attempts — the "
+            "credit a binary resolved/not-resolved verdict discards. `Frontier` and "
+            "`Degraded` are the router's own record: how many tasks actually reached "
+            "the frontier rung, and how many were routed by a gate that wanted typed "
+            "evidence and did not get it.\n\n")
+    f.write("| Configuration | Attempts | Suite reached | Avg partial | Grounded | "
+            "Frontier used | Degraded | Dominant guard failure |\n")
+    f.write("|---|---|---|---|---|---|---|---|\n")
+    never_frontier, low_reach = [], []
+    for r in rows:
+        d = r["diagnostics"]
+        name = r.get("name", r.get("arm", "Variant"))
+        reach = d.get("suite_reach_rate")
+        reach_s = (f"{d.get('suite_reached', 0)}/{d['attempts']} ({reach:.0%})"
+                   if reach is not None else "n/a")
+        partial = d.get("test_pass_ratio_avg")
+        partial_s = f"`{partial:.3f}` (n={d.get('test_pass_ratio_n', 0)})" \
+            if partial is not None else "n/a"
+        guards = d.get("guard_reasons") or {}
+        top = next(iter(guards.items()), None)
+        top_s = f"`{top[0]}` × {top[1]}" if top else "— (all attempts graded)"
+        f.write(f"| **{name}** | {d['attempts']} | {reach_s} | {partial_s} | "
+                f"{d.get('grounded', 0)} | {d.get('frontier_used', 0)} | "
+                f"{d.get('degraded', 0)} | {top_s} |\n")
+        if d.get("routed") and not d.get("frontier_used") and "Opus" in str(r.get("models", "")):
+            never_frontier.append(name)
+        if reach is not None and reach < 0.5:
+            low_reach.append(name)
+
+    if low_reach:
+        f.write("\n> [!WARNING]\n"
+                "> **Most attempts were never graded** — " +
+                ", ".join(f"`{n}`" for n in low_reach) +
+                " reached the repository's test suite on fewer than half of their "
+                "attempts. Their pass rates measure whether a candidate patch could be "
+                "*applied*, not whether it resolved the issue. Read the guard-failure "
+                "column before reading the pass rate.\n")
+    if never_frontier:
+        f.write("\n> [!WARNING]\n"
+                "> **Frontier rung never invoked** — " +
+                ", ".join(f"`{n}`" for n in never_frontier) +
+                " name a frontier model in their model column and never called it once. "
+                "Either the gate never fired or the oracle budget is at or below the "
+                "rung count, which makes the escalation branch unreachable. These rows "
+                "did not test the architecture they are named after.\n")
+
+
+def _write_task_set_audit(f, summary_rows):
+    """Refuse to let two different denominators sit in one table unremarked.
+
+    A task whose API calls failed is dropped from its arm's row, so arms in the
+    same sweep can be scored on different task sets — 49, 50, 47, 40 in one
+    report — while their pass rates are printed side by side as though they
+    were comparable.
+    """
+    sets = {r.get("name", r.get("arm", "Variant")): set(r.get("task_ids") or [])
+            for r in summary_rows if r.get("task_ids")}
+    if len(sets) < 2:
+        return
+    common = set.intersection(*sets.values())
+    union = set.union(*sets.values())
+    if len(common) == len(union):
+        return
+    f.write("\n> [!WARNING]\n"
+            f"> **Arms were scored on different task sets** — {len(union)} distinct tasks "
+            f"appear in this report but only {len(common)} were completed by every arm. "
+            "Pass rates below are over each arm's own denominator and are therefore not "
+            "directly comparable. Per-arm counts: "
+            + ", ".join(f"`{n}`={len(s)}" for n, s in sorted(sets.items()))
+            + f". Compare on the {len(common)}-task intersection instead.\n\n")
+
+
 def generate_markdown_report(summary_rows, dataset_name="BigCodeBench-Hard", output_path=None):
     """
     Generate standard Markdown Comparative TCO Report.
@@ -231,6 +321,8 @@ def generate_markdown_report(summary_rows, dataset_name="BigCodeBench-Hard", out
                     "environment constraints (e.g. missing package imports like `ModuleNotFoundError` or Vertex AI quota limits). "
                     "Below we report both **Raw Pass Rate** and **Effective Pass Rate** (evaluating testable tasks).\n\n")
 
+        _write_task_set_audit(f, summary_rows)
+
         f.write("## 1. Comparative TCO & Performance Table\n\n")
         f.write("| Configuration | Models | Evidence Treatment | Raw Pass Rate | Effective Pass Rate | Total Cost (USD) | Triage Cost (USD) | Cost / Solved Task ($/solved) | Avg Output Tokens |\n")
         f.write("|---|---|---|---|---|---|---|---|---|\n")
@@ -254,10 +346,18 @@ def generate_markdown_report(summary_rows, dataset_name="BigCodeBench-Hard", out
 
             f.write(f"| **{name}** | `{models}` | {triage_mode} | {raw_pr} | **{eff_pr}** | `${tot_usd:.4f}` | `${triage_usd:.4f}` | **`${cps:.4f}`** | `{avg_out:.1f}` |\n")
 
-        _write_containment_table(f, summary_rows)
+        # Sections renumber themselves so a dataset that produces no attempt
+        # diagnostics keeps the historical 1/2/3 layout.
+        section = 2
+        if any((r.get("diagnostics") or {}).get("attempts") for r in summary_rows):
+            _write_diagnostics_table(f, summary_rows, section=section)
+            section += 1
+        _write_containment_table(f, summary_rows, section=section)
+        if any((r.get("containment") or {}).get("captures") for r in summary_rows):
+            section += 1
 
         f.write("\n---\n\n")
-        _write_insights(f, summary_rows)
+        _write_insights(f, summary_rows, section=section)
 
     print(f"Generated Markdown report: {output_path}", flush=True)
     return output_path

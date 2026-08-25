@@ -367,7 +367,10 @@ The same three numbers as the routing study, plus one FeatureBench adds:
 - **`$/solved`** — against `fb_single_opus`, the same-budget frontier baseline.
 - **frontier yield** — of the tasks handed to opus, how many it solved.
 - **`test_pass_ratio`** — the fraction of executed test cases that passed, read
-  off pytest's summary. Upstream reports a *Passed Rate* beside Resolved Rate
+  off pytest's summary. ⚠️ **It does not currently reach the result file.**
+  `src/featurebench.py` returns it, but `src/sweep.py` persists an explicit field
+  allowlist that omits it, so no sweep so far has recorded it. Add it to that
+  allowlist before running anything that depends on partial credit. Upstream reports a *Passed Rate* beside Resolved Rate
   for a good reason: on a dataset where frontier models resolve 20–47%, a binary
   verdict makes every cheap arm read as an undifferentiated zero. It is named
   `test_pass_ratio` rather than `passed_rate` because the upstream denominator
@@ -386,6 +389,23 @@ repair turn escalated, exactly as
   retry cost.
 
 Either outcome is worth the run — the same standard ClassEval was held to.
+
+> **The N=48 run happened, and produced neither outcome — and the arms did not
+> share an oracle budget, so they cannot be ranked against each other.**
+> [Report 20](../reports/20_featurebench_straitjacket_n48.md) and
+> [report 22](../reports/22_featurebench_straitjacket_n48.md) are complete and
+> live, but 94% of their failures are `patch did not apply` — the candidate diff
+> was rejected before any test ran — so the repair turn under study mostly never
+> occurred. No pairwise arm difference reaches p < 0.05, and one arm's gate is
+> unreachable at `MAX_ORACLE_CALLS = 2` — as is every frontier rung at that
+> budget, because `TIERS` has two entries and the repair loop runs once. Read
+> **[featurebench-n48-lessons.md](featurebench-n48-lessons.md)** before running
+> anything here or quoting either report: it lists the three fixes a rerun needs.
+>
+> The most load-bearing one for this page: the troubleshooting table below calls
+> repeated `patch did not apply` "expected and informative". At the rate observed
+> it is neither — it is the dominant term, and it makes the sweep unable to
+> measure what it was built to measure.
 
 ### A cross-check worth doing once
 
@@ -421,7 +441,7 @@ model.
 | `docker: permission denied` | §2.2 — you are not in the `docker` group |
 | every row quarantines as `missing_image` | images not pulled, or no registry access; run `--pull` and read its output |
 | every row quarantines as `gold_patch_conflict` | `repo_workdir` is wrong — run `--settings` and rebind `_fb_workdir` |
-| `patch did not apply` from a model, repeatedly | expected and informative; it is fed back as evidence, and a model that cannot emit an applicable diff is a real finding on this dataset |
+| `patch did not apply` from a model, repeatedly | informative up to a point, and **at N=48 it was 77-94% of every arm's tasks** — past a few percent it stops being a finding about the model and becomes a confound that hides the routing result. Measure the application rate first ([lessons §1](featurebench-n48-lessons.md)) |
 | `fb_evidence_gate` results look identical to `fb_cascade` | check `routing.degraded` — the backend is probably not `library` |
 | very slow | confirm x86-64 (§2.4), and that images are pre-pulled so the first task is not also a download |
 | `missing_module` on every row | the library is not importable for the container's interpreter — run `--debug` step 3. `repo_settings` carries an `install` command that these images are assumed to have already run |

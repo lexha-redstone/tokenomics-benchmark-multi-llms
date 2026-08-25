@@ -101,9 +101,33 @@ def simulation_allowed():
 
 # Retry budget for failures that are worth retrying. Set to 1 to fail fast and
 # proceed immediately on transient errors.
-MAX_ATTEMPTS = int(os.environ.get("DISPATCH_MAX_ATTEMPTS", "1"))
+#
+# Three, not one, and the reason is what a give-up costs downstream rather than
+# a preference about politeness to the API. `src/sweep.py` discards a task
+# whose dispatch raised and drops it from the arm's denominator, so at
+# MAX_ATTEMPTS=1 a single 503 removes a task from one arm and leaves it in the
+# others: reports 21 and 23 published arms scored over 49, 50, 47, 40, 44 and
+# 37 tasks in one table. Worse, the loss is not random — the tasks that time
+# out are the ones with the longest prompts and outputs — so the surviving
+# denominator is biased toward easy rows.
+MAX_ATTEMPTS = int(os.environ.get("DISPATCH_MAX_ATTEMPTS", "3"))
 BACKOFF_BASE = float(os.environ.get("DISPATCH_BACKOFF_BASE", "2.0"))
 BACKOFF_CAP = float(os.environ.get("DISPATCH_BACKOFF_CAP", "60"))
+
+# Socket timeout floor, and the per-1k-output-token allowance above it. A fixed
+# 120s ceiling was being applied to requests with `max_tokens=32768`: at any
+# realistic decode rate the deadline expires while the response is still being
+# produced, which arrives as a transient failure and costs the task. The
+# timeout now scales with what was actually asked for.
+DISPATCH_TIMEOUT_FLOOR = float(os.environ.get("DISPATCH_TIMEOUT_FLOOR", "120"))
+DISPATCH_TIMEOUT_PER_1K = float(os.environ.get("DISPATCH_TIMEOUT_PER_1K", "20"))
+DISPATCH_TIMEOUT_CAP = float(os.environ.get("DISPATCH_TIMEOUT_CAP", "900"))
+
+
+def request_timeout(max_tokens):
+    """Seconds to allow one request that may emit `max_tokens` tokens."""
+    want = DISPATCH_TIMEOUT_FLOOR + (max(int(max_tokens), 0) / 1000.0) * DISPATCH_TIMEOUT_PER_1K
+    return min(max(want, DISPATCH_TIMEOUT_FLOOR), DISPATCH_TIMEOUT_CAP)
 
 _TRANSIENT_MARKERS = (
     "504", "503", "502", "500", "429", "gateway", "timeout", "timed out",
@@ -257,7 +281,9 @@ def claude_api_call(model_id, prompt, max_tokens=2560, thinking_level=None, prob
                 "Content-Type": "application/json",
             })
             t0 = time.time()
-            with urllib.request.urlopen(req, timeout=120, context=_ssl_ctx()) as r:
+            with urllib.request.urlopen(
+                    req, timeout=request_timeout(payload["max_tokens"]),
+                    context=_ssl_ctx()) as r:
                 d = json.loads(r.read())
             dt = time.time() - t0
             text = "".join(b.get("text", "") for b in d.get("content", []) if b.get("type") == "text")
@@ -272,7 +298,14 @@ def claude_api_call(model_id, prompt, max_tokens=2560, thinking_level=None, prob
             usage = {
                 "input_raw": inp, "output": out, "cache_read": cr, "cache_creation": cc,
                 "prompt_tokens": inp + cr + cc, "total_tokens": inp + cr + cc + out,
-                "as_run_usd": cost
+                "as_run_usd": cost,
+                # A response cut off at the output cap is a *truncated* answer,
+                # not a wrong one. Left unrecorded, a diff that stops mid-hunk
+                # still carries `---`/`+++`/`@@`, passes the birth gate, fails
+                # `git apply` and is filed as "patch did not apply" — the
+                # harness's most common failure absorbing a budget problem.
+                "stop_reason": d.get("stop_reason") or "",
+                "truncated": d.get("stop_reason") == "max_tokens",
             }
             return text, usage, dt
         except Exception as e:
@@ -333,7 +366,11 @@ def gemini_call(model_id, prompt, max_tokens=2560, thinking_level=None, problem=
         config = types.GenerateContentConfig(
             max_output_tokens=max_tokens,
             thinking_config=tc,
-            http_options=types.HttpOptions(timeout=90000)
+            # Milliseconds here, and scaled with the output budget for the same
+            # reason the Claude path is: a fixed 90s deadline on a 32k-token
+            # request expires mid-decode and costs the whole task.
+            http_options=types.HttpOptions(
+                timeout=int(request_timeout(max_tokens) * 1000))
         )
 
         last_exc = None
@@ -351,10 +388,19 @@ def gemini_call(model_id, prompt, max_tokens=2560, thinking_level=None, problem=
                 p = PRICING.get(model_id, PRICING.get(GEMINI_36_FLASH_ID, {"input": 1.50, "output": 7.50}))
                 cost = round(inp / 1e6 * p["input"] + out / 1e6 * p["output"], 6)
                 
+                finish = ""
+                try:
+                    finish = str(resp.candidates[0].finish_reason or "")
+                except Exception:                            # noqa: BLE001
+                    pass
                 usage = {
                     "input_raw": inp, "output": out, "cache_read": 0, "cache_creation": 0,
                     "prompt_tokens": inp, "total_tokens": m.total_token_count or (inp + out),
-                    "as_run_usd": cost
+                    "as_run_usd": cost,
+                    # Normalised to the same two keys the Claude path sets, so
+                    # a caller never has to know which provider answered.
+                    "stop_reason": finish,
+                    "truncated": "MAX_TOKENS" in finish.upper(),
                 }
                 return (resp.text or ""), usage, dt
             except Exception as e:

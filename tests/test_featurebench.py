@@ -149,11 +149,18 @@ def test_every_arm_makes_at_most_three_oracle_calls(wired, arm):
 
 # -- who holds each rung ---------------------------------------------------
 
-def test_cascade_escalates_one_rung_per_failure_ending_at_sonnet(wired):
+def test_cascade_escalates_one_rung_per_failure_ending_at_the_frontier(wired):
+    """Cheap rung, dear rung, then the frontier once the ladder is exhausted.
+
+    At the old two-call budget this arm stopped at sonnet, and it stopped there
+    for an arithmetic reason rather than a routing one: one gate evaluation,
+    at `attempt == 1`, which `gate_after_ladder` answers with "cheap rungs
+    remain". `docs/featurebench-n48-lessons.md` §2 is the audit."""
     out = fb.run_fb_cascade(PROBLEM)
     assert out["routing"]["rungs"] == [
-        f"{fb.GEMINI_37_FLASH_ID}/low", f"{fb.SONNET_ID}/off"]
-    assert out["routing"]["frontier_used"] is False
+        f"{fb.GEMINI_37_FLASH_ID}/low", f"{fb.SONNET_ID}/off",
+        f"{fb.FRONTIER}/off"]
+    assert out["routing"]["frontier_used"] is True
 
 
 def test_evidence_gate_jumps_to_the_frontier_when_the_digest_says_broad(wired):
@@ -187,23 +194,55 @@ def test_diff_aware_gate_escalates_on_broad_test_failure(wired):
 
 
 def test_diff_aware_gate_escalates_on_consecutive_patch_apply_failures(wired, monkeypatch):
+    """The arm's stated purpose, which it did not do before.
+
+    Its old gate substring-matched the evidence prose for
+    `"patch did not apply"`, so it depended on the exact wording of a message
+    in another module; and with a two-call budget the branch could not be
+    reached at all. Both are gone: the guard is typed, so a repeat arrives as
+    `stalled`, and the budget leaves a second gate evaluation to fire on."""
+    from src.evaluator import _guard_evidence
+
     def patch_fail_score(self, patch):
         self.calls.append(patch)
-        return False, "patch did not apply (tried `git apply` then `patch --fuzz=5`)."
+        return False, _guard_evidence("did NOT apply", "apply_failed")
 
     monkeypatch.setattr(FakeEnv, "score", patch_fail_score)
     out = fb.run_fb_diff_aware_gate(PROBLEM)
     rungs = out["routing"]["rungs"]
     assert rungs[0] == f"{fb.GEMINI_37_FLASH_ID}/low"
     assert rungs[1] == f"{fb.SONNET_ID}/off"
+    assert rungs[2] == f"{fb.FRONTIER}/off"
+    assert out["routing"]["frontier_used"] is True
+
+
+def test_diff_aware_gate_never_escalates_on_an_environment_failure(wired, monkeypatch):
+    """A container that would not start is the worst possible reason to buy the
+    study's most expensive tier."""
+    from src.evaluator import _guard_evidence
+
+    def env_fail_score(self, patch):
+        self.calls.append(patch)
+        return False, _guard_evidence("no such image", "container_unavailable")
+
+    monkeypatch.setattr(FakeEnv, "score", env_fail_score)
+    out = fb.run_fb_diff_aware_gate(PROBLEM)
     assert out["routing"]["frontier_used"] is False
+    assert all("environment failure" in d["why"]
+               for d in out["routing"]["decisions"])
+
+
+def test_the_diff_aware_gate_is_reachable_from_module_scope():
+    """It was a closure inside the arm, so the registry invariant could not
+    evaluate it and no test could reach it directly."""
+    assert fb.gate_diff_aware.requires_typed_evidence is True
 
 
 def test_diff_contract_uses_contracted_roles(wired):
     out = fb.run_fb_diff_contract(PROBLEM)
     assert "CRITICAL UNIFIED DIFF REQUIREMENTS" in wired[0]["prompt"]
     assert "principal software engineer repairing" in wired[1]["prompt"]
-    assert out["routing"]["rungs"] == [
+    assert out["routing"]["rungs"][:2] == [
         f"{fb.GEMINI_37_FLASH_ID}/low", f"{fb.SONNET_ID}/off"]
 
 
@@ -211,7 +250,8 @@ def test_spec_deconstruct_extracts_manifest_first(wired):
     out = fb.run_fb_spec_deconstruct(PROBLEM)
     assert wired[0]["model"] == fb.GEMINI_37_FLASH_ID, "the manifest extractor runs first"
     assert fb.MANIFEST_ROLE[:30] in wired[0]["prompt"]
-    assert [c["model"] for c in wired[1:]] == [fb.GEMINI_37_FLASH_ID, fb.SONNET_ID]
+    assert [c["model"] for c in wired[1:]] == [
+        fb.GEMINI_37_FLASH_ID, fb.SONNET_ID, fb.SONNET_ID]
     assert "FILE AND INTERFACE MANIFEST" in wired[0]["prompt"]
 
 
@@ -245,7 +285,8 @@ def test_plan_exec_spends_the_frontier_model_before_the_first_oracle_call(wired)
     assert wired[0]["model"] == fb.OPUS_5_ID, "the planner runs first"
     assert fb.PLANNER_ROLE[:40] in wired[0]["prompt"]
     # ...and never again: the executor and one repair are the cheap model.
-    assert [c["model"] for c in wired[1:]] == [fb.GEMINI_37_FLASH_ID] * 2
+    assert ([c["model"] for c in wired[1:]]
+            == [fb.GEMINI_37_FLASH_ID] * fb.MAX_ORACLE_CALLS)
     assert out["routing"]["frontier_used"] is False
     # The plan reaches the executor, or the arm is just a flash single.
     assert "implementation plan" in wired[1]["prompt"].lower()
@@ -341,3 +382,174 @@ def test_registry_excludes_the_frontier_single_from_the_default_group():
     assert "fb_single_opus" not in ids, (
         "opus is priced far above the rest; including it would silently reprice "
         "every routine sweep, as ClassEval's baseline does not")
+
+
+# ==============================================================================
+# --- REGISTRY INVARIANTS ---
+# ==============================================================================
+#
+# Rule 2 of `docs/featurebench-n48-lessons.md` §8 — "pick one oracle budget and
+# assert it" — as an executable check rather than a note. The audit it comes
+# from found that report 20's arms did not share a budget, that three rows are
+# labelled as architectures they did not run, and that at two oracle calls over
+# a two-rung ladder the frontier tier is unreachable code.
+
+def test_no_arm_advertises_a_frontier_rung_it_cannot_reach():
+    assert fb.unreachable_frontier_arms() == []
+
+
+def test_the_check_catches_the_budget_that_shipped_report_20():
+    assert "fb_cascade" in fb.unreachable_frontier_arms(2)
+
+
+def test_the_registry_refuses_to_finalise_at_an_unrunnable_budget(monkeypatch):
+    monkeypatch.setattr(fb, "MAX_ORACLE_CALLS", 2)
+    with pytest.raises(RuntimeError, match="cannot be reached"):
+        fb._finalise_registry()
+
+
+def test_arm_labels_state_the_rung_count_that_will_actually_be_spent():
+    """Report 20 shipped rows reading "(2 rungs)" beside arms that had spent
+    three, because the count was typed into the label by hand."""
+    for cfg in fb.FEATUREBENCH_VARIANTS.values():
+        assert "{rungs}" not in cfg["name"] and "{rungs}" not in cfg["models"]
+        assert " x2" not in cfg["models"], "a stale rung count in the models column"
+
+
+def test_the_oracle_budget_exceeds_the_rung_count():
+    """The invariant behind every unreachable-frontier bug in this repository:
+    K oracle calls give K-1 gate evaluations, and every gate compares `attempt`
+    against `len(TIERS)`."""
+    assert fb.MAX_ORACLE_CALLS > len(fb.TIERS)
+
+
+# ==========================================================================
+# --- THE APPLIER CONTRACT ---
+# ==========================================================================
+#
+# These pin the two defects that made the N=48 sweep unmeasurable, both of
+# them in the harness rather than in any arm. See
+# docs/featurebench-n48-lessons.md.
+
+
+def test_extracted_patch_always_ends_in_a_newline():
+    """`git apply` exits 128 `corrupt patch` on a diff with no final newline.
+
+    Measured on a scratch repository: a byte-perfect diff applies under all
+    five entries of `_APPLY_STRATEGIES` with the trailing newline and under
+    *none* of them without it -- the strict applier never even reads the
+    worktree. `extract_patch` used to end every return path with `.strip("\n")`,
+    so widening the strategy ladder bought nothing at all.
+    """
+    fenced = extract_patch(GOOD_PATCH)
+    unfenced = extract_patch("diff --git a/w.py b/w.py\n--- a/w.py\n"
+                             "+++ b/w.py\n@@ -1 +1 @@\n-old\n+new")
+    for patch in (fenced, unfenced):
+        assert patch.endswith("\n")
+        assert not patch.endswith("\n\n")
+
+
+def test_extract_patch_keeps_every_fenced_block():
+    """A multi-file feature is routinely answered one fence per file.
+
+    Returning only the first block scores a fraction of the candidate, which
+    reads as a model failure and is not one.
+    """
+    two = (GOOD_PATCH + "\nand the second file:\n```diff\n"
+           "diff --git a/x.py b/x.py\n--- a/x.py\n+++ b/x.py\n"
+           "@@ -1 +1 @@\n-a\n+b\n```")
+    got = extract_patch(two)
+    assert [l for l in got.splitlines() if l.startswith("diff --git")] == [
+        "diff --git a/w.py b/w.py", "diff --git a/x.py b/x.py"]
+
+
+def test_extract_patch_still_returns_empty_for_prose():
+    assert extract_patch("I cannot help with that.") == ""
+    assert extract_patch("") == ""
+
+
+# ==========================================================================
+# --- REPOSITORY GROUNDING ---
+# ==========================================================================
+
+
+class GroundedEnv(FakeEnv):
+    """A container whose files can be read, so grounding has something to quote."""
+
+    FILES = {"src/widget.py": "class Widget:\n    pass\n",
+             "src/registry.py": "REGISTRY = {}\n"}
+
+    def _sh(self, script, timeout=None, check=True):
+        if script.startswith("git grep"):
+            return types.SimpleNamespace(stdout="src/registry.py\n", stderr="",
+                                         returncode=0)
+        out = []
+        for path, body in self.FILES.items():
+            if f'"{path}"' in script:
+                out.append(f"@@FB_FILE@@ {path}\n{body}")
+        return types.SimpleNamespace(stdout="".join(out), stderr="", returncode=0)
+
+
+GROUNDING_PROBLEM = dict(PROBLEM,
+                         problem_statement="Add a registry to src/widget.py and "
+                                           "src/registry.py. Call `Widget.register`.")
+
+
+def test_grounded_arm_quotes_the_repository_into_the_solve_prompt(wired, monkeypatch):
+    """The defect this arm exists to test: the model was never shown the files.
+
+    A unified diff for an existing file is a claim about bytes already on disk,
+    so a model that has not read the file is guessing its context lines. 94% of
+    the N=48 sweep's failures were `patch did not apply`.
+    """
+    monkeypatch.setattr(fb, "FeatureBenchEnv", GroundedEnv)
+    out = fb.run_fb_grounded(GROUNDING_PROBLEM)
+
+    assert "class Widget:" in wired[0]["prompt"]
+    assert "--- BEGIN src/widget.py ---" in wired[0]["prompt"]
+    # ...and the repair turn keeps it, or the second rung re-guesses too.
+    assert "class Widget:" in wired[1]["prompt"]
+    assert out["grounding"]["read"] == ["src/widget.py", "src/registry.py"]
+    assert out["grounding"]["chars"] > 0
+
+
+def test_grounding_never_quotes_the_graded_tests_by_default():
+    """Quoting the graded tests changes what the benchmark measures.
+
+    Opt in with `FB_GROUND_TESTS=1` and say so in the report; do not let it
+    happen because a test file was mentioned in the problem statement.
+    """
+    problem = dict(PROBLEM,
+                   problem_statement="Fix tests/test_widget.py and src/widget.py.")
+    assert fb._candidate_paths(problem) == ["src/widget.py"]
+
+
+def test_a_container_that_cannot_be_read_falls_back_to_the_blind_prompt(wired,
+                                                                       monkeypatch):
+    """Grounding is an enrichment, never a precondition.
+
+    A row whose files cannot be read is still a valid blind run, recorded as
+    `chars: 0` rather than lost.
+    """
+    class Unreadable(FakeEnv):
+        def _sh(self, script, timeout=None, check=True):
+            raise RuntimeError("docker exec failed")
+
+    monkeypatch.setattr(fb, "FeatureBenchEnv", Unreadable)
+    out = fb.run_fb_grounded(GROUNDING_PROBLEM)
+    assert out["grounding"]["chars"] == 0
+    assert "--- BEGIN" not in wired[0]["prompt"]
+    assert out["repair_loops"] >= 1          # the arm still ran
+
+
+def test_ungrounded_arms_are_byte_identical_to_before(wired, monkeypatch):
+    """Grounding is opt-in per arm, so the existing rows stay reproducible."""
+    monkeypatch.setattr(fb, "FeatureBenchEnv", GroundedEnv)
+    fb.run_fb_cascade(PROBLEM)
+    assert "--- BEGIN" not in wired[0]["prompt"]
+    assert "@@FB_FILE@@" not in wired[0]["prompt"]
+
+
+def test_grounded_gate_can_actually_reach_the_frontier():
+    """Rule 4 of the lessons doc, asserted rather than remembered."""
+    assert "fb_grounded_gate" not in fb.unreachable_frontier_arms()

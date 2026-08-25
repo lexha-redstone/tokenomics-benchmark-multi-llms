@@ -62,6 +62,19 @@ NOTES = {
     "19": ("2026-08-24", "BigCodeBench-Hard", "N=148",
            "The routing study, run over the COMPLETE dataset. Eleven arms: "
            "gemini-3.7 ladders with claude-opus-5 gated behind them."),
+    "20": ("2026-08-25", "FeatureBench", "N=48",
+           "The expensive-oracle study, arms F0a-F3. **Do not rank these rows.** "
+           "F0a/F0b/F1/F2 were replayed from a cache written at 3 oracle calls "
+           "while F3 ran live at 2, the labels were rewritten for the newer "
+           "budget (F1 actually used claude-opus-5 on 41/48 tasks), and F2 "
+           "carries `routing.degraded` on 45/48. Audit: "
+           "[docs/featurebench-n48-lessons.md](../docs/featurebench-n48-lessons.md)."),
+    "22": ("2026-08-25", "FeatureBench", "N=48",
+           "Three follow-up arms (F4-F6) aimed at the patch-application failure. "
+           "At `MAX_ORACLE_CALLS = 2` none of them can reach the frontier rung, "
+           "so F4 and F5 ran the IDENTICAL ladder and its section 3 'cheapest per "
+           "solved' claim is a coin flip (Fisher p = 0.27). Audit: "
+           "[docs/featurebench-n48-lessons.md](../docs/featurebench-n48-lessons.md)."),
 }
 
 # Indices whose reports are gone, and why. Printed under the table so a gap in

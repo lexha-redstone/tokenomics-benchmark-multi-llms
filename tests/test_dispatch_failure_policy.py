@@ -19,6 +19,7 @@ Pinned here:
   * the retry budget is actually spent.
 """
 
+import json
 import os
 import sys
 
@@ -221,3 +222,143 @@ def test_short_error_str():
     assert _short_error_str(_HttpLike("504 Gateway Timeout", 504)) == "504 Gateway Timeout"
 
 
+
+
+# ==============================================================================
+# --- THE COST OF GIVING UP TOO EARLY ---
+# ==============================================================================
+#
+# `src/sweep.py` discards a task whose dispatch raised and drops it from the
+# arm's denominator. At MAX_ATTEMPTS=1 a single 503 therefore removes a task
+# from one arm and leaves it in the others: reports 21 and 23 published arms
+# scored over 49, 50, 47, 40, 44 and 37 tasks in one table, side by side, as
+# though the denominators matched. The loss is not random either — the tasks
+# that time out are the ones with the longest prompts and outputs — so the
+# surviving denominator is biased toward the easy rows.
+
+def test_the_retry_budget_is_more_than_one_by_default():
+    """One attempt means the first transient blip costs a whole task, and the
+    task is silently removed from that arm's denominator only."""
+    assert client.MAX_ATTEMPTS >= 3
+
+
+def test_a_transient_failure_that_later_succeeds_does_not_cost_the_task(monkeypatch):
+    calls = {"n": 0}
+
+    class _Resp:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *exc):
+            return False
+
+        def read(self):
+            return json.dumps({
+                "content": [{"type": "text", "text": "ok"}],
+                "usage": {"input_tokens": 10, "output_tokens": 5},
+                "stop_reason": "end_turn"}).encode()
+
+    def flaky(req, timeout=None, context=None):
+        calls["n"] += 1
+        if calls["n"] == 1:
+            raise _HttpLike("503 Service Unavailable")
+        return _Resp()
+
+    monkeypatch.setattr(client, "_vertex_access_token", lambda *a, **k: "tok")
+    monkeypatch.setattr(client.urllib.request, "urlopen", flaky)
+    monkeypatch.setattr(client, "_sleep_for", lambda attempt: 0.0)
+
+    text, usage, _ = client.claude_api_call("claude-sonnet-5", "prompt")
+    assert text == "ok" and calls["n"] == 2
+
+
+# ==============================================================================
+# --- THE TIMEOUT HAS TO FIT WHAT WAS ASKED FOR ---
+# ==============================================================================
+
+def test_the_timeout_scales_with_the_output_budget():
+    """A fixed 120s deadline was being applied to `max_tokens=32768` requests.
+    At any realistic decode rate it expires while the response is still being
+    produced, which arrives as a transient failure and costs the task."""
+    small = client.request_timeout(2048)
+    large = client.request_timeout(32768)
+    assert large > small >= client.DISPATCH_TIMEOUT_FLOOR
+
+
+def test_the_timeout_never_drops_below_the_floor_or_above_the_cap():
+    assert client.request_timeout(0) == client.DISPATCH_TIMEOUT_FLOOR
+    assert client.request_timeout(10 ** 9) == client.DISPATCH_TIMEOUT_CAP
+
+
+def test_a_thirty_two_k_request_gets_a_deadline_that_can_actually_be_met():
+    """The value the SWE-bench Pro arms request. 120s was not enough for a
+    response the reports themselves show averaging 5k-13k output tokens."""
+    assert client.request_timeout(32768) >= 600
+
+
+def test_the_claude_request_uses_the_scaled_timeout(monkeypatch):
+    seen = {}
+
+    class _Resp:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *exc):
+            return False
+
+        def read(self):
+            return json.dumps({
+                "content": [{"type": "text", "text": "ok"}],
+                "usage": {"input_tokens": 1, "output_tokens": 1}}).encode()
+
+    def capture(req, timeout=None, context=None):
+        seen["timeout"] = timeout
+        return _Resp()
+
+    monkeypatch.setattr(client, "_vertex_access_token", lambda *a, **k: "tok")
+    monkeypatch.setattr(client.urllib.request, "urlopen", capture)
+    client.claude_api_call("claude-sonnet-5", "prompt", max_tokens=32768)
+    assert seen["timeout"] == client.request_timeout(32768)
+
+
+# ==============================================================================
+# --- A TRUNCATED ANSWER IS NOT A WRONG ANSWER ---
+# ==============================================================================
+
+def _claude_with_stop_reason(monkeypatch, stop_reason):
+    class _Resp:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *exc):
+            return False
+
+        def read(self):
+            return json.dumps({
+                "content": [{"type": "text", "text": "diff --git"}],
+                "usage": {"input_tokens": 10, "output_tokens": 32768},
+                "stop_reason": stop_reason}).encode()
+
+    monkeypatch.setattr(client, "_vertex_access_token", lambda *a, **k: "tok")
+    monkeypatch.setattr(client.urllib.request, "urlopen",
+                        lambda req, timeout=None, context=None: _Resp())
+    return client.claude_api_call("claude-sonnet-5", "prompt", max_tokens=32768)
+
+
+def test_a_response_cut_off_at_the_cap_is_marked_truncated(monkeypatch):
+    """Left unrecorded, a diff that stops mid-hunk still carries `---`, `+++`
+    and `@@`, passes the birth gate, fails `git apply`, and is filed as the
+    harness's most common failure — a budget problem wearing a model's name."""
+    _, usage, _ = _claude_with_stop_reason(monkeypatch, "max_tokens")
+    assert usage["truncated"] is True
+    assert usage["stop_reason"] == "max_tokens"
+
+
+def test_a_complete_response_is_not_marked_truncated(monkeypatch):
+    _, usage, _ = _claude_with_stop_reason(monkeypatch, "end_turn")
+    assert usage["truncated"] is False
+
+
+def test_a_missing_stop_reason_is_not_read_as_truncation(monkeypatch):
+    _, usage, _ = _claude_with_stop_reason(monkeypatch, None)
+    assert usage["truncated"] is False and usage["stop_reason"] == ""

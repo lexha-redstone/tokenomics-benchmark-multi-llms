@@ -55,7 +55,26 @@ def _fake_dispatch(responses):
     return dispatch, calls
 
 
+@pytest.fixture(autouse=True)
+def _harness_stub(monkeypatch):
+    """The candidate arms are `sj_required`; the harness is not installed in CI.
+
+    Without this every test below raised `SJUnavailable` inside the `_arm`
+    decorator before reaching an assertion, so three tests that never actually
+    executed their arm read as a green suite on the author's machine only.
+    """
+    monkeypatch.setattr("src.architectures.sj.require", lambda: None)
+    monkeypatch.setattr(sbp, "_treat_error",
+                        lambda err, t, problem=None: ("DIGEST", {
+                            "as_run_usd": 0.0, "output": 0, "total_tokens": 0}, 0.0))
+
+
 class _MockEnv:
+    """Stands in for the container. Also stands in for the repository: the
+    grounding pass reads through the same two methods `SWEBenchProEnv` exposes."""
+
+    sources = {"w.py": "old\n"}
+
     def __init__(self, outcomes):
         self.outcomes = list(outcomes)
         self.calls = []
@@ -74,6 +93,14 @@ class _MockEnv:
         self.last_ratio = ratio
         self.last_report = {"resolved": passed, "test_pass_ratio": ratio}
         return passed, evidence
+
+    def read_source(self, paths, budget=None, per_file=None, max_files=None):
+        read = [p for p in paths if p in self.sources]
+        return ([f"--- FILE: {p} ---\n{self.sources[p]}\n" for p in read],
+                read, [p for p in paths if p not in self.sources])
+
+    def grep_paths(self, terms, limit=40):
+        return []
 
 
 # ==============================================================================
@@ -139,6 +166,22 @@ def test_gate_patch_health_logic():
     esc, why = sbp.gate_patch_health(d_local, 2, 2)
     assert esc
     assert "cheap rungs exhausted" in why
+
+    # 7. An environment failure never escalates, not even with the ladder
+    #    exhausted: no model fixes a container that would not start, and the
+    #    frontier tier is the most expensive thing the study can waste.
+    d_env = Difficulty(level="environment", reasons=("container unavailable",),
+                       guard="container_unavailable")
+    for attempt in (1, 2, 5):
+        esc, why = sbp.gate_patch_health(d_env, attempt, 2)
+        assert not esc
+        assert "environment failure" in why
+
+
+def test_gate_patch_health_declares_that_it_reads_typed_evidence():
+    """Undeclared, `_ladder` never sets `routing.degraded` for this gate, and a
+    row routed with no fact tier reads as an evidence-routed result."""
+    assert sbp.gate_patch_health.requires_typed_evidence is True
 
 
 # ==============================================================================

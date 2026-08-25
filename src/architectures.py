@@ -1426,6 +1426,8 @@ def get_configurations(dataset="bcb", group="all", variant_keys=None):
         return [c for c in all_configs if "7. ClassEval" in c["category"]]
     if group in ("featurebench", "fb"):
         return [c for c in all_configs if "8. FeatureBench" in c["category"]]
+    if group in ("fb_grounded", "fb-grounded", "grounded"):
+        return [c for c in all_configs if "8g. FeatureBench" in c["category"]]
     if group in ("swebench_pro", "swebench-pro", "sbp"):
         return [c for c in all_configs if "9. SWE-bench Pro" in c["category"] or "9c. SWE-bench Pro" in c["category"]]
     if group in ("sbp_candidates", "sbp-candidates", "candidates"):

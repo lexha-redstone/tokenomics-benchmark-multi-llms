@@ -28,6 +28,7 @@ Vertex AI (Gemini) and Anthropic (Claude).
 | 8 | [Report index](reports/README.md) — every sweep, in execution order |
 | 9 | [Dataset selection for pattern tests](docs/pattern-dataset-selection.md) — where a non-cascade pattern could win, which datasets can show it, and the ClassEval verdict |
 | 10 | [FeatureBench setup](docs/featurebench-setup.md) — the Docker-backed dataset that tests H2, and how to stand it up on Linux |
+| 10b | [FeatureBench N=48 lessons](docs/featurebench-n48-lessons.md) — **the run happened, and it did not settle H2**: what a confounded sweep looks like, and the six rules it produced |
 | 11 | [SWE-bench Pro setup](docs/swebench-pro-setup.md) — the same H2 study on 731 rows whose grading is the benchmark's own, and why it replaced FeatureBench |
 
 **Three sweeps carry the findings**, all live API, all with the contained digest
@@ -416,6 +417,29 @@ both it is the most expensive thing per solved task.
   [docs/pattern-dataset-selection.md §3](docs/pattern-dataset-selection.md).
   Re-adopting it means running the real containerised harness; the arms already
   exist.
+- **FeatureBench N=48 is a confounded sweep, not a third finding.** Both reports
+  are complete and live, and every defect below is visible in their own records:
+  the oracle budget differs across arms (3 calls vs 2), four arms were replayed
+  from a cache written under the older budget while their labels were rewritten
+  for the newer one, three arms did not execute the architecture their row names,
+  94% of failures are rejected diffs rather than failed tests, and no pairwise
+  difference reaches p < 0.05. **Its rows belong in no comparison table.** Full
+  audit: [docs/featurebench-n48-lessons.md](docs/featurebench-n48-lessons.md).
+- **A cached record outlives the code that produced it.** `run_arm` replays any
+  task already in the cache, and the cache carries no code version. Report 20 was
+  generated after `MAX_ORACLE_CALLS` was halved and the arms renamed, from records
+  produced before either change — so the report's labels describe code that never
+  ran those rows. Use `--no-cache` whenever an arm definition or a shared constant
+  has moved.
+- **A generated report line can manufacture a winner.** `src/reporter.py` closes
+  every report with "X is the cheapest per solved task; Y has the highest pass
+  rate". On a dataset where every CI overlaps, that sentence ranks noise. Treat it
+  as a pointer to the table, never as a conclusion.
+- **`test_pass_ratio` was computed and then dropped.** `src/featurebench.py`
+  returns the partial-credit metric that the setup doc argues is essential at a
+  low resolve rate; the `src/sweep.py` allowlist that persisted these sweeps
+  omitted it, so it reached no result file and no report. Reports 20 and 22 have
+  only the binary verdict, whatever the allowlist carries from here on.
 - **The ClassEval result is a failure to find an effect, not a proof of zero.**
   Every per-arm gap in that table is individually inside binomial noise at N=91.
   What is defensible is narrower and still useful: H1 made a directional
@@ -428,14 +452,22 @@ both it is the most expensive thing per solved task.
   makes two boxes measure different task sets while reporting comparable-looking
   pass rates.
 
-**What is still untested.** Both datasets here run their tests in a sandbox for
-$0, so the finding *escalate on failure rather than plan in advance* has only
-ever been measured where the failure signal is free, instant and exact — which
-is the regime that most favours it. The open question is what happens when retry
-is expensive or the oracle is partial.
+**What is still untested.** Both datasets carrying findings here run their tests
+in a sandbox for $0, so *escalate on failure rather than plan in advance* has
+only ever been measured where the failure signal is free, instant and exact —
+the regime that most favours it. The open question is what happens when retry is
+expensive or the oracle is partial.
 [Dataset selection for pattern tests §7](docs/pattern-dataset-selection.md)
-ranks the candidates and names one — **FeatureBench's 100-instance fast split**
-— as the run that would settle it.
+ranks the candidates and named one — **FeatureBench's fast split** — as the run
+that would settle it.
+
+**That run has now happened, and it did not settle it.** At N=48 the diff-
+application step, not the routing policy, determined almost every outcome, and
+the arms did not share an oracle budget — so the expensive-oracle regime remains
+unmeasured. Six conditions on the rerun are derived in
+[docs/featurebench-n48-lessons.md §8](docs/featurebench-n48-lessons.md), starting
+with: return the `git apply` output as evidence, hold one oracle budget and assert
+it, and refuse to tabulate any row whose distinguishing branch never fired.
 
 ---
 
@@ -698,6 +730,9 @@ python3 run_benchmark.py --dataset featurebench --group featurebench \
 | `fb_cascade` | flash → sonnet → opus, escalate whenever a rung fails — the `r6` shape |
 | `fb_evidence_gate` | **the recommended shape** — same tiers, escalate when the digest reads `broad`/`stalled` (`r9`, the N=148 winner) |
 | `fb_plan_exec` | **the H2 challenger** — `claude-opus-5` plans *before* any test runs, then flash implements and repairs |
+| `fb_diff_contract` | strict unified-diff contract — added after the first sweep showed that most failures never reached a test |
+| `fb_diff_aware_gate` | same, plus escalation on a stalled patch format — **its gate is unreachable at the current oracle budget; see the lessons doc** |
+| `fb_spec_deconstruct` | extract a file/interface manifest first, then synthesise the diff against it |
 | `fb_single_opus` | the frontier baseline — **not** in `--group featurebench`; opt-in, like ClassEval's |
 
 The arm set is built from what the two sweeps that ran at size actually
@@ -707,6 +742,51 @@ and **no `medium`/`high` thinking ladder** (N=148 measured it at 33% more than
 `claude-opus-5` for 14 fewer solved tasks). Every arm makes **at most 3 oracle
 calls** — the scarce resource here is held constant, and `fb_plan_exec`'s extra
 planning call shows up in dollars where it belongs.
+
+#### It ran at N=48 — and the result must not be used to rank architectures
+
+[Report 20](reports/20_featurebench_straitjacket_n48.md) (F0a–F3) and
+[report 22](reports/22_featurebench_straitjacket_n48.md) (F4–F6) are complete,
+live-API sweeps: zero simulated calls, gold verified on all 48 rows, every LLM
+call priced. **The execution is honest; the comparison is not sound.** Full audit:
+**[docs/featurebench-n48-lessons.md](docs/featurebench-n48-lessons.md)**.
+
+![FeatureBench N=48 cost vs. performance](visualization/featurebench_n48_scatter_plot.png)
+
+- **The eight arms are two experiments, not one.** `MAX_ORACLE_CALLS` was changed
+  from 3 to 2 between the sweeps. F0a/F0b/F1/F2 ran three oracle calls and reached
+  `claude-opus-5` (F1 on 41 of 48 tasks); F3–F6 ran two and reached it on **none**
+  — at two calls with a two-entry ladder the frontier rung is unreachable by
+  construction. Their cost columns cannot be put in one table, and report 22
+  contains no multi-tier escalation result at all.
+- **Three rows are labelled as architectures they did not run.** F1's label says
+  `3.7-flash -> sonnet-5` while its records show Opus on 41 tasks — the arms were
+  renamed for the new budget and the report regenerated from stale cache (those
+  four arms record `seconds = 0.0`, i.e. served entirely from cache). F2 carries
+  `routing.degraded` on 45 of 48 tasks, which the arm's own docstring says
+  disqualifies it from being quoted as an evidence-gate result. F5's gate is
+  unreachable, so it re-ran F4's ladder: same config, 2/48 vs 5/47, Fisher
+  p = 0.27.
+- **331 of 353 failures (94%) are `patch did not apply`** — the diff was rejected
+  before any test ran (77–94% of tasks per arm). The `git apply` output is
+  collected and then discarded, so the repair turn is told *that* it failed and
+  never *why*, the digest types the constant as `shallow`, and no evidence gate
+  can fire on the dominant failure mode. Conditional on applying, arms resolve
+  33–83%.
+- **Nothing in the sweep is significant.** Every arm's 95% CI contains 7.2–10.9%;
+  the widest gap (F1 7/48 vs F3 1/48) is p = 0.059. The union of all eight arms is
+  15/48, and 9 of those 15 were solved by exactly one arm. The 48 rows are also a
+  *prefix* of the split, not a sample: three repositories out of 24.
+- **What survives is a cost fact.** `claude-sonnet-5` solo is the worst value here
+  at $4.05/solved — the same model that was the *cheapest* arm per solved task on
+  BCB-Hard. **`$/solved` is not a model property; it does not transfer across
+  datasets.**
+
+Regenerate the chart from the raw records:
+
+```bash
+python3 visualization/generate_featurebench_n48_chart.py
+```
 
 ### SWE-bench Pro
 
@@ -843,6 +923,7 @@ python3 tools/index_reports.py --apply     # adopt new reports, refresh reports/
 │   ├── straitjacket-implementation.md
 │   ├── pipeline-architecture.md
 │   ├── featurebench-setup.md        #   Linux prerequisites for the Docker-backed dataset
+│   ├── featurebench-n48-lessons.md  #   why the N=48 sweep did not settle H2, and the rules it produced
 │   ├── swebench-pro-setup.md        #   Docker prerequisites and the per-attempt contract
 │   ├── routing-study.md
 │   ├── pattern-dataset-selection.md
@@ -852,6 +933,11 @@ python3 tools/index_reports.py --apply     # adopt new reports, refresh reports/
 ├── reports/                         # ← results only, indexed by run order
 │   ├── README.md                    #   the index: read this first
 │   └── NN_<dataset>_<tag>_n<N>.{md,html}
+│
+├── visualization/                   # ← charts, each regenerable from the raw result JSON
+│   ├── generate_bcb_n148_chart.py   #   BCB-Hard N=148 cost vs. accuracy scatter
+│   ├── generate_featurebench_n48_chart.py
+│   └── plot_classeval_n91_scatter.py
 │
 ├── tests/                           # contract tests for the straitjacket bridge
 ├── tools/                           # analysis (analyze_patterns / analyze_classeval /

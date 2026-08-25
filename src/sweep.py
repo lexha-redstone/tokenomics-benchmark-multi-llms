@@ -44,6 +44,55 @@ def save_cache(cache, cache_file):
         json.dump(cache, cf, indent=2)
 
 
+def diagnostics_rollup(results):
+    """Why this arm's tasks ended where they did, per attempt rather than per task.
+
+    A pass rate answers "did the candidate resolve the row". It cannot answer
+    "did the candidate ever get graded", and on a containerised dataset those
+    are different questions with different owners: the first is about the
+    models, the second about the harness. Reports 21 and 23 published the first
+    without the second, and their 0-2% was read as a model result when ~89% of
+    attempts had died before a test ran.
+
+    `suite_reach_rate` is the fraction of *attempts* whose evidence came from
+    the repository's own suite. `test_pass_ratio_avg` is the partial credit a
+    binary verdict throws away.
+    """
+    reasons = {}
+    attempts = reached = 0
+    for r in results:
+        per_attempt = r.get("guard_reasons")
+        if per_attempt is None:
+            continue
+        for reason in per_attempt:
+            attempts += 1
+            if reason:
+                reasons[reason] = reasons.get(reason, 0) + 1
+            else:
+                reached += 1
+    ratios = [r.get("test_pass_ratio") for r in results
+              if isinstance(r.get("test_pass_ratio"), (int, float))]
+    routings = [r.get("routing") or {} for r in results]
+    graded = [r for r in routings if r]
+    return {
+        "attempts": attempts,
+        "suite_reached": reached,
+        "suite_reach_rate": round(reached / attempts, 4) if attempts else None,
+        # Sorted by count so the dominant failure is first in the report.
+        "guard_reasons": dict(sorted(reasons.items(), key=lambda kv: -kv[1])),
+        "test_pass_ratio_avg": (round(sum(ratios) / len(ratios), 4)
+                                if ratios else None),
+        "test_pass_ratio_n": len(ratios),
+        # Routing provenance. `degraded` means the gate needed typed evidence
+        # and did not get it, so the row did not test what the arm's name says.
+        "frontier_used": sum(1 for t in graded if t.get("frontier_used")),
+        "degraded": sum(1 for t in graded if t.get("degraded")),
+        "routed": len(graded),
+        "grounded": sum(1 for r in results
+                        if (r.get("grounding") or {}).get("read")),
+    }
+
+
 def run_arm(cfg, problems, task_ids, cache=None, cache_file=None, no_cache=False,
             task_retries=1, sj_state=None, label=""):
     """Run one architecture variant over `task_ids` and return its summary row.
@@ -120,6 +169,19 @@ def run_arm(cfg, problems, task_ids, cache=None, cache_file=None, no_cache=False
                 "containment": raw_r.get("containment"),
                 "retrievals": raw_r.get("retrievals"),
                 "routing": raw_r.get("routing"),
+                # Partial credit and *why* an attempt failed. Both are produced
+                # per task and both used to stop here, at a whitelist that
+                # never listed them -- so a dataset whose arms all score 0/50
+                # published a table of zeroes while the record that would have
+                # explained them (89% of attempts never reached a test) was
+                # computed, dropped, and never written to disk.
+                "test_pass_ratio": raw_r.get("test_pass_ratio"),
+                "sbp": raw_r.get("sbp"),
+                "guard_reason": raw_r.get("guard_reason", ""),
+                "guard_reasons": raw_r.get("guard_reasons"),
+                "suite_reached": raw_r.get("suite_reached"),
+                "attempts": raw_r.get("attempts"),
+                "grounding": raw_r.get("grounding"),
                 # ClassEval scores a task per method; the per-method records are
                 # what makes a pass attributable to the model that wrote it.
                 "subtasks": raw_r.get("subtasks"),
@@ -166,6 +228,14 @@ def run_arm(cfg, problems, task_ids, cache=None, cache_file=None, no_cache=False
     subtask_rollup = _classeval_subtask_summary(sub_records) if sub_records else None
 
     simulated = sum(1 for t in results if t.get("simulated_calls"))
+    diagnostics = diagnostics_rollup(results)
+    if diagnostics["attempts"] and diagnostics["suite_reach_rate"] is not None \
+            and diagnostics["suite_reach_rate"] < 0.5:
+        print(f"  !! only {diagnostics['suite_reach_rate']:.0%} of attempts reached the "
+              f"test suite; the rest died before grading "
+              f"({', '.join(f'{k}={v}' for k, v in diagnostics['guard_reasons'].items())}). "
+              "This arm's pass rate is a statement about the harness, not the models.",
+              flush=True)
     if failed_tasks:
         print(f"  !! {len(failed_tasks)} task(s) never completed and are EXCLUDED "
               f"from this row: {', '.join(t['task_id'] for t in failed_tasks[:5])}"
@@ -182,6 +252,12 @@ def run_arm(cfg, problems, task_ids, cache=None, cache_file=None, no_cache=False
         "simulated_tasks": simulated,
         "simulation_allowed": simulation_allowed(),
         "containment": _aggregate_containment(results),
+        "diagnostics": diagnostics,
+        # The exact task set this row was scored on. Rows in one report can
+        # have different denominators (a dispatch failure drops a task), and a
+        # pass rate over 40 tasks is not comparable with one over 50 unless
+        # somebody checks. Recording the ids lets the reporter check.
+        "task_ids": [r.get("task_id") for r in results],
         "subtask_rollup": subtask_rollup,
         "category": cfg.get("category", ""),
         "models": cfg.get("models", "N/A"),

@@ -14,8 +14,10 @@ would silently produce a *wrong number* rather than an error:
   crashed is graded against the previous rung's results;
 * resolution is `(fail_to_pass | pass_to_pass) <= passed`, so breaking a
   pass_to_pass test is a failure even when the issue was fixed;
-* every arm spends exactly three oracle calls, which is the comparison H2
-  rests on.
+* every arm spends exactly `MAX_ORACLE_CALLS` oracle calls, which is the
+  comparison H2 rests on, and that budget leaves the frontier rung reachable;
+* a failure that happened before the suite ran is typed, so the router reads a
+  signal rather than a constant.
 
 The one test that needs Docker is opt-in (`SBP_INTEGRATION=1`) and runs a row's
 own gold patch: the only end-to-end check that this harness agrees with the
@@ -34,7 +36,8 @@ import pytest
 from src import swebench_pro as sbp
 from src import datasets as ds
 from src.evaluator import (SWEBenchProEnv, extract_patch, missing_patch_error,
-                           sbp_resolution, sbp_test_script, docker_available)
+                           sbp_resolution, sbp_test_script, docker_available,
+                           _guard_evidence)
 
 
 PROBLEM = {
@@ -267,7 +270,7 @@ def env(monkeypatch):
     def fake_write(path, text):
         e.calls.append(("write", path))
 
-    def fake_apply(path):
+    def fake_apply(path, reset=None):
         e.calls.append(("apply", path))
         return e.apply_ok
 
@@ -302,7 +305,8 @@ def test_a_patch_that_does_not_apply_never_runs_the_tests(env):
     env.apply_ok = False
     passed, evidence = env.score(extract_patch(GOOD_PATCH))
     assert passed is False
-    assert "did not apply" in str(evidence)
+    assert "did NOT apply" in str(evidence)
+    assert evidence.reason == "apply_failed"
     assert not [c for c in env.calls if c[0] == "run"]
 
 
@@ -364,18 +368,42 @@ class FakeEvidence(str):
 
 
 class FakeEnv:
-    """Records every scoring call; never resolves, so the ladder runs to its cap."""
+    """Records every scoring call; never resolves, so the ladder runs to its cap.
+
+    It also stands in for the repository: `sources` is the tree at the base
+    commit, and `read_source`/`grep_paths` are the same read-only contract
+    `SWEBenchProEnv` offers, so grounding can be exercised without Docker.
+    """
 
     instances = []
+    sources = {"w.py": "def widget():\n    return 1\n",
+               "src/email.py": "PENDING = 'email:pending'\n"}
 
     def __init__(self, problem, timeout=None, scripts=None):
         self.problem = problem
         self.started = True
         self.setup_error = ""
         self.calls = []
+        self.reads = []
+        self.greps = []
         self.last_ratio = 0.25
         self.last_report = {"resolved": False, "required": 4, "missing": 3}
         FakeEnv.instances.append(self)
+
+    def read_source(self, paths, budget=None, per_file=None, max_files=None):
+        self.reads.append(list(paths))
+        blocks, read, skipped = [], [], []
+        for path in paths:
+            if path in self.sources:
+                blocks.append(f"--- FILE: {path} ---\n{self.sources[path]}\n")
+                read.append(path)
+            else:
+                skipped.append(path)
+        return blocks, read, skipped
+
+    def grep_paths(self, terms, limit=40):
+        self.greps.append(list(terms))
+        return ["src/email.py"]
 
     def __enter__(self):
         return self
@@ -417,17 +445,20 @@ def wired(monkeypatch):
     sbp.run_sbp_evidence_gate,
     sbp.run_sbp_plan_exec,
 ])
-def test_every_arm_spends_exactly_two_oracle_calls(arm, wired):
+def test_every_arm_spends_exactly_the_oracle_budget(arm, wired):
     """The budget H2's comparison rests on: container runs, not LLM calls."""
     out = arm(dict(PROBLEM))
     assert len(FakeEnv.instances) == 1
-    assert len(FakeEnv.instances[0].calls) == sbp.MAX_ORACLE_CALLS == 2
-    assert out["repair_loops"] == 1 and out["passed"] is False
+    assert len(FakeEnv.instances[0].calls) == sbp.MAX_ORACLE_CALLS == 3
+    assert out["repair_loops"] == sbp.MAX_ORACLE_CALLS - 1
+    assert out["passed"] is False
 
 
 def test_cascade_climbs_one_rung_per_failure(wired):
+    """Cheap rung, dear rung, then the frontier once the ladder is exhausted."""
     sbp.run_sbp_cascade(dict(PROBLEM))
-    assert [c["model"] for c in wired] == [sbp.TIERS[0][0], sbp.TIERS[1][0]]
+    assert [c["model"] for c in wired] == [sbp.TIERS[0][0], sbp.TIERS[1][0],
+                                           sbp.FRONTIER]
 
 
 def test_evidence_gate_jumps_to_the_frontier_on_a_hard_digest(wired):
@@ -438,10 +469,18 @@ def test_evidence_gate_jumps_to_the_frontier_on_a_hard_digest(wired):
     assert out["routing"]["frontier_used"] is True
 
 
-def test_evidence_gate_never_escalates_twice(wired):
-    """One frontier rung is the ceiling; a second would double the arm's price."""
-    sbp.run_sbp_evidence_gate(dict(PROBLEM))
-    assert [c["model"] for c in wired].count(sbp.FRONTIER) <= 1
+def test_evidence_gate_enters_the_frontier_once_then_holds_it(wired):
+    """One *escalation* is the ceiling. Re-running the rung already held is not
+    a second escalation -- it is what the arm does instead of handing an oracle
+    call back, and `frontier_rung` records where the ratchet stopped."""
+    out = sbp.run_sbp_evidence_gate(dict(PROBLEM))
+    trace = out["routing"]
+    assert trace["frontier_used"] is True
+    assert trace["frontier_rung"] == 2
+    escalations = [d for d in trace["decisions"] if d["escalate"]]
+    assert len(escalations) == 1
+    assert any("already at the frontier rung" in d["why"]
+               for d in trace["decisions"][1:])
 
 
 def test_plan_exec_buys_the_frontier_model_before_the_first_oracle_call(wired):
@@ -659,3 +698,137 @@ def test_the_parsers_test_names_match_the_datasets_required_names():
     # And that name is graded as a pass by this repository's resolution rule.
     row = {"fail_to_pass": [expected], "pass_to_pass": []}
     assert sbp_resolution(output, row)["resolved"] is True
+
+
+# ==============================================================================
+# --- GROUNDING, GUARD REASONS AND REPAIR ROLES, END TO END THROUGH AN ARM ---
+# ==============================================================================
+
+class GuardEnv(FakeEnv):
+    """Fails every attempt at a pre-execution guard, as ~89% of the attempts in
+    reports 21 and 23 did."""
+
+    reason = "apply_failed"
+    message = "The patch did NOT apply -- no test was run.\nApply log: ..."
+
+    def score(self, patch):
+        self.calls.append(patch)
+        self.last_ratio = None
+        self.last_report = {}
+        return False, _guard_evidence(self.message, self.reason)
+
+
+class EnvironmentEnv(GuardEnv):
+    reason = "container_unavailable"
+    message = "SWE-bench Pro container unavailable: manifest unknown"
+
+
+def _use(monkeypatch, cls):
+    FakeEnv.instances = []
+    monkeypatch.setattr(sbp, "SWEBenchProEnv", cls)
+
+
+def test_the_solver_prompt_carries_the_repository_source(wired):
+    """The change that removes the 8.8% localisation ceiling. Without it the
+    model is asked for exact `git apply` context for files it has never seen."""
+    sbp.run_sbp_cascade(dict(PROBLEM))
+    assert "--- FILE: src/email.py ---" in wired[0]["prompt"]
+    assert "PENDING = 'email:pending'" in wired[0]["prompt"]
+
+
+def test_the_ladder_reads_the_tree_once_not_once_per_rung(wired):
+    """Grounding is base-commit state; re-reading it every rung would buy
+    nothing and cost a container round trip per attempt."""
+    sbp.run_sbp_cascade(dict(PROBLEM))
+    env = FakeEnv.instances[0]
+    assert len(env.reads) + len(env.greps) <= 3
+
+
+def test_grounding_is_disabled_by_budget_and_the_prompt_reverts(wired, monkeypatch):
+    """The A/B leg: `SBP_GROUNDING_CHARS=0` reproduces the blind sweep."""
+    monkeypatch.setattr("src.swebench_pro.SBP_GROUNDING_CHARS", 0)
+    out = sbp.run_sbp_cascade(dict(PROBLEM))
+    assert "--- FILE:" not in wired[0]["prompt"]
+    assert out["grounding"]["enabled"] is False
+
+
+def test_the_grounding_receipt_survives_into_the_result(wired):
+    out = sbp.run_sbp_cascade(dict(PROBLEM))
+    assert out["grounding"]["read"] == ["src/email.py"]
+
+
+def test_guard_reasons_are_recorded_per_attempt(monkeypatch, wired):
+    """The measurement that separates 'the models are bad at this dataset' from
+    '89% of attempts never reached a test'."""
+    _use(monkeypatch, GuardEnv)
+    out = sbp.run_sbp_cascade(dict(PROBLEM))
+    assert out["guard_reasons"] == ["apply_failed"] * sbp.MAX_ORACLE_CALLS
+    assert out["suite_reached"] == 0
+    assert out["attempts"] == sbp.MAX_ORACLE_CALLS
+    assert out["guard_reason"] == "apply_failed"
+
+
+def test_a_graded_attempt_records_no_guard_reason(wired):
+    out = sbp.run_sbp_cascade(dict(PROBLEM))
+    assert out["guard_reasons"] == [""] * sbp.MAX_ORACLE_CALLS
+    assert out["suite_reached"] == sbp.MAX_ORACLE_CALLS
+
+
+def test_an_apply_failure_gets_the_apply_repair_prompt_not_the_test_one(
+        monkeypatch, wired):
+    """`REPAIR_ROLE` opens with 'your patch was applied and the tests failed'.
+    On the dataset's dominant failure that is a false premise, and the model
+    spends the turn debugging a test run that never happened."""
+    _use(monkeypatch, GuardEnv)
+    sbp.run_sbp_cascade(dict(PROBLEM))
+    repair = wired[1]["prompt"]
+    assert "REJECTED by `git apply`" in repair
+    assert "NO test was run" in repair
+    assert "was applied to the repository" not in repair
+
+
+def test_an_environment_failure_gets_its_own_prompt(monkeypatch, wired):
+    _use(monkeypatch, EnvironmentEnv)
+    sbp.run_sbp_cascade(dict(PROBLEM))
+    assert "ENVIRONMENT reason" in wired[1]["prompt"]
+
+
+def test_a_real_test_failure_still_gets_the_original_repair_prompt(wired):
+    sbp.run_sbp_cascade(dict(PROBLEM))
+    assert "its test suite FAILED" in wired[1]["prompt"]
+
+
+def test_repair_role_selection_is_total_over_the_guard_vocabulary():
+    """A new guard reason must fall back to a real instruction, never to None."""
+    from src.evaluator import GUARD_REASONS
+    for reason in list(GUARD_REASONS) + [""]:
+        assert sbp.repair_role(_guard_evidence("x", reason))
+
+
+def test_an_environment_failure_never_buys_the_frontier_model(monkeypatch, wired):
+    """A container that would not start is the study's worst possible reason to
+    spend its most expensive tier."""
+    _use(monkeypatch, EnvironmentEnv)
+    out = sbp.run_sbp_evidence_gate(dict(PROBLEM))
+    assert sbp.FRONTIER not in [c["model"] for c in wired]
+    assert out["routing"]["frontier_used"] is False
+    assert all("environment failure" in d["why"]
+               for d in out["routing"]["decisions"])
+
+
+def test_a_repeated_apply_failure_does_buy_the_frontier_model(monkeypatch, wired):
+    """The behaviour the guard typing exists to produce: the same failure
+    surviving a repair turn is the clearest hand-this-over signal there is, and
+    before this it classified as `shallow` and never escalated."""
+    _use(monkeypatch, GuardEnv)
+    out = sbp.run_sbp_evidence_gate(dict(PROBLEM))
+    assert sbp.FRONTIER in [c["model"] for c in wired]
+    assert out["routing"]["frontier_used"] is True
+
+
+def test_a_guard_failure_does_not_mark_the_run_degraded(monkeypatch, wired):
+    """`degraded` means the gate wanted typed evidence and got none. A guard
+    failure is fully known; flagging it would mark every SWE-bench Pro row."""
+    _use(monkeypatch, GuardEnv)
+    out = sbp.run_sbp_evidence_gate(dict(PROBLEM))
+    assert out["routing"]["degraded"] is False

@@ -137,9 +137,16 @@ Per candidate patch, inside a container that is reused across the task's three
 attempts:
 
 1. `git reset --hard <base_commit>`, `git checkout -f`, `git clean -fdq`.
-2. Write the diff and apply it — `git apply --verbose`, then
-   `patch --batch --fuzz=5 -p1` if that fails. A patch that fails both is fed
-   back as evidence, not scored as a plain failure.
+2. Write the diff and apply it, strictest strategy first: `git apply`, then
+   `--recount` (recomputes miscounted `@@` headers — the commonest defect in a
+   model-authored diff and the one that says least about the edit), then
+   `--ignore-whitespace -C1`, then a `--3way` merge against the blobs the
+   repository already has, then `patch --batch --forward --fuzz=5 -p1`. The
+   worktree is reset between failed strategies, because `--3way` writes
+   conflict markers *before* it exits non-zero. None of this relaxes grading:
+   the candidate still has to make the suite pass. A patch that fails every
+   strategy is fed back with the full `git apply --verbose` log — the failing
+   file, the hunk, the context block it searched for — not as a fixed sentence.
 3. Run **the last line of `before_repo_set_cmd`** — `git checkout <solution> --
    <test files>`. This is the anti-cheat, and the order matters: the graded
    tests land *over* whatever the candidate did to them. Its failure is an
@@ -186,6 +193,66 @@ That is the resource H2 says is scarce, so it is the one held constant;
 
 ---
 
+## 6b. Repository grounding -- why the prompt quotes source
+
+Upstream's prompt is a statement, a requirements block and an interface block,
+and `src/swebench_pro.py` reproduces all three verbatim. What upstream *also*
+gives its agents, and what a one-shot prompt does not, is the repository.
+Measured over the published 731-row split:
+
+| | |
+|---|---|
+| reference-patch files named anywhere in the three blocks | 19.8% |
+| rows where **every** changed file is named | **8.8%** |
+| median reference patch | 9 hunks across 4 files |
+| patches that only create new files (no context needed) | 1.8% |
+
+`git apply` needs every context line of every hunk to match a file the model
+was never shown, so a blind prompt has a localisation ceiling near 9% before a
+single hunk is written. The published 20-40% resolve rates are *agent* numbers,
+measured with file access; they are not comparable to a blind one-shot arm.
+
+The container is already running and already holds the tree at `base_commit`,
+so `_ladder` quotes the likely files into the prompt before spending a token.
+Paths come from the row's own `Path:` lines, its graded test files and any
+path-shaped token in the prose; when that locates fewer than three files, the
+salient identifiers are `git grep`-ed for. Source is read with
+`git show <base_commit>:<path>` -- never from the worktree, which holds whatever
+the previous attempt applied.
+
+Set `SBP_GROUNDING_CHARS=0` to reproduce the blind prompt byte for byte. That
+is the A/B leg, and `tests/test_swebench_pro_grounding.py` pins it.
+
+---
+
+## 6c. Reading the diagnostics before reading the pass rate
+
+A containerised dataset has two failure owners, and a pass rate cannot tell
+them apart. Every report now carries an **Attempt Diagnostics** section:
+
+| Column | What it answers |
+|---|---|
+| `Suite reached` | share of *attempts* whose evidence came from the repository's own test run. The rest died at a guard and say nothing about the model |
+| `Avg partial` | mean `test_pass_ratio` over graded attempts, with the count it was averaged over |
+| `Frontier used` | how many tasks actually reached the frontier rung |
+| `Degraded` | tasks routed by a gate that wanted typed evidence and did not get it |
+| `Dominant guard failure` | which of `apply_failed`, `no_patch`, `not_a_diff`, `no_hunk`, `truncated_output`, `container_unavailable`, `restore_failed`, `execution_error` accounted for most attempts |
+
+Two warnings are emitted automatically and are not advisory:
+
+* **Most attempts were never graded** -- under 50% suite reach. The pass rate
+  measures whether a patch could be *applied*, not whether it resolved
+  anything.
+* **Frontier rung never invoked** -- an arm names a frontier model in its model
+  column and never called it. It did not test the architecture it is named
+  after.
+
+A third warning fires when arms in one report were scored on different task
+sets, which happens whenever a dispatch failure drops a task from one arm and
+not the others. Compare on the intersection it names.
+
+---
+
 ## 7. One caveat that changes what a number means
 
 The straitjacket digest's typed fact tier is **profile-detected from the test
@@ -213,6 +280,12 @@ SBP_LANGUAGES=python python3 run_benchmark.py --dataset swebench-pro --group sbp
 | `SBP_PLATFORM` | auto | `linux/amd64` on arm64 hosts, empty elsewhere |
 | `SBP_DOCKERHUB_USER` | `jefzda` | account hosting `sweap-images` |
 | `SBP_INTEGRATION` | unset | `1` runs the Docker-backed test in `tests/test_swebench_pro.py` |
+| `SBP_MAX_ORACLE_CALLS` | `3` | container test runs per task. Must exceed the rung count or the frontier tier is unreachable -- the registry refuses to load otherwise |
+| `SBP_GROUNDING_CHARS` | `60000` | characters of repository source quoted into the solver prompt. `0` restores the blind prompt |
+| `SBP_GROUNDING_FILE_CHARS` | `16000` | per-file cap, so one vendored bundle cannot eat the budget |
+| `SBP_GROUNDING_MAX_FILES` | `12` | hard ceiling on how many files are quoted |
+| `DISPATCH_MAX_ATTEMPTS` | `3` | retries per model call. At `1` a single 503 drops the task from that arm's denominator only |
+| `DISPATCH_TIMEOUT_FLOOR` / `_PER_1K` / `_CAP` | `120` / `20` / `900` | request deadline, scaled with the output budget |
 
 ---
 

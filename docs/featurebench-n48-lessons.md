@@ -337,8 +337,12 @@ arms are byte-identical to before, and F7/F8 sit in their own category so
 `--group featurebench` is not silently repriced by the extra input tokens.
 
 ```bash
+# `--out` is not optional here: without it `--group` defaults to `all` and the
+# run overwrites featurebench_all_results.json, which is report 22's raw data.
+cp featurebench/results/cache_featurebench_master.json{,.bak}
 python3 run_benchmark.py --dataset featurebench --no-cache \
-    --variants fb_cascade,fb_grounded,fb_evidence_gate,fb_grounded_gate
+    --variants fb_cascade,fb_grounded,fb_evidence_gate,fb_grounded_gate \
+    --out featurebench/results/featurebench_grounding_ab_results.json
 ```
 
 **What is not yet known.** None of this has been run against live Docker — the

@@ -443,6 +443,63 @@ Budget it before running: ~30k extra input tokens per attempt on
 `gemini-3.7-flash` is roughly $0.045/attempt, so a 48-row three-rung arm adds
 around $6.
 
+### 6b.1 Before the first grounded run — check these five
+
+The N=48 sweep's defects were all silent. These are the checks that would have
+caught them, in the order they bite:
+
+1. **Run it on the Linux box, not a Mac.** FeatureBench images are
+   `linux/amd64` only. An arm64 host runs every container under emulation even
+   when Docker is installed, which turns a 57 s oracle call into minutes.
+2. **Regenerate the quarantine.** `featurebench/data/quarantine-fast.json` is
+   environment-specific *and currently partial* — it records
+   `"n_checked": 54` against `"n_tasks": 100`, so 46 rows have never had gold
+   verified anywhere. Re-run `--write` on the machine that will run the sweep,
+   and do not copy the file between machines.
+3. **Always pass `--no-cache`, and always pass `--out`.** The cache carries no
+   code version, so a rerun after any arm or constant has moved will silently
+   replay records the current code never produced — that is how report 20 came
+   to describe arms it did not run. And `--group` defaults to `all`, so a
+   `--variants` run without `--out` overwrites
+   `featurebench/results/featurebench_all_results.json`, which is report 22's
+   raw data. Back up `cache_featurebench_master.json` too: `--no-cache` still
+   *writes* the cache at the end, replacing what was there.
+4. **Smoke two rows before paying for forty-eight.** The grounding path has
+   never touched a live container — it is covered by unit tests and a
+   scratch-repository reproduction, nothing more:
+
+   ```bash
+   python3 run_benchmark.py --dataset featurebench --n 2 --no-cache \
+       --variants fb_cascade,fb_grounded \
+       --out /tmp/fb_smoke.json
+   ```
+
+5. **Read the smoke run's receipts before scaling.** Two numbers decide whether
+   the fix works, and both are in the result JSON:
+
+   ```bash
+   python3 - <<'PY'
+   import json
+   d = json.load(open("/tmp/fb_smoke.json"))
+   M = ("patch did not apply", "contains no patch", "no `@@` hunk")
+   for s in d["summary"]:
+       g = [r.get("grounding") or {} for r in s["results"]]
+       applied = sum(1 for r in s["results"]
+                     if not any(m in (r.get("error") or "") for m in M))
+       print(s["id"],
+             "| grounded chars:", [x.get("chars", 0) for x in g],
+             "| files read:", [len(x.get("read", [])) for x in g],
+             "| patch applied:", f"{applied}/{s['n']}")
+   PY
+   ```
+
+   `fb_grounded` with `chars: 0` means the container could not be read and the
+   arm silently ran the blind prompt — a valid run, but not a test of grounding.
+   If `chars` is healthy and the application rate still does not clear ~25%,
+   the diagnosis in
+   [featurebench-n48-lessons.md §7b.3](featurebench-n48-lessons.md) is wrong and
+   the next step is reading an actual rejected diff, not another arm.
+
 ---
 
 ## 7. Troubleshooting

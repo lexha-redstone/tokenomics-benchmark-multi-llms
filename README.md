@@ -742,8 +742,12 @@ input tokens do not silently reprice a default sweep. Run them against their
 blind twins by name:
 
 ```bash
+# `--out` is not optional here: without it `--group` defaults to `all` and the
+# run overwrites featurebench_all_results.json, which is report 22's raw data.
+cp featurebench/results/cache_featurebench_master.json{,.bak}
 python3 run_benchmark.py --dataset featurebench --no-cache \
-    --variants fb_cascade,fb_grounded,fb_evidence_gate,fb_grounded_gate
+    --variants fb_cascade,fb_grounded,fb_evidence_gate,fb_grounded_gate \
+    --out featurebench/results/featurebench_grounding_ab_results.json
 ```
 
 The arm set is built from what the two sweeps that ran at size actually

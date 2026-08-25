@@ -468,6 +468,7 @@ class FeatureBenchEnv:
         self.started = False
         self.setup_error = ""
         self.workdir_unverified = False
+        self._staged = []
 
     # -- lifecycle ---------------------------------------------------------
     def __enter__(self):
@@ -545,18 +546,52 @@ class FeatureBenchEnv:
             if not self._try_apply("/tmp/fb_test.patch"):
                 raise RuntimeError("the dataset's own test_patch did not apply")
         files = featurebench_test_files(self.problem)
+        self._staged = []
         if files:
-            self._sh("rm -rf /tmp/fb_tests && mkdir -p /tmp/fb_tests && "
-                     + " && ".join(f"cp --parents {f} /tmp/fb_tests/ 2>/dev/null || true"
-                                   for f in files),
-                     check=False)
+            # Staged one file at a time, with `cp --parents` avoided (it is a
+            # GNU extension, absent on busybox) and NO error suppression. An
+            # earlier version wrote `cp --parents ... 2>/dev/null || true`,
+            # which silently staged nothing: the restore then became a no-op,
+            # every arm ran the repository's ORIGINAL tests, and gold "failed"
+            # because the old tests describe the old behaviour. Silence is the
+            # bug here, so this verifies rather than hopes.
+            script = "rm -rf /tmp/fb_tests && " + " && ".join(
+                f"mkdir -p /tmp/fb_tests/$(dirname {f}) && cp {f} /tmp/fb_tests/{f}"
+                for f in files)
+            r = self._sh(script, check=False)
+            if r.returncode != 0:
+                raise RuntimeError(
+                    "could not stage the graded test files: "
+                    f"{((r.stderr or '') + (r.stdout or '')).strip()[-300:]}")
+            got = self._sh("find /tmp/fb_tests -type f | wc -l", check=False)
+            n_staged = int((got.stdout or "0").strip() or 0)
+            if n_staged != len(files):
+                raise RuntimeError(
+                    f"staged {n_staged} of {len(files)} graded test files; the "
+                    "restore would run the repository's original tests instead")
+            self._staged = list(files)
+
         self._sh("git checkout -- . && git clean -fdq", check=False)
         self._sh("git add -A && git commit -q -m fb-base --allow-empty", check=False)
 
     def _restore_tests(self):
-        """Copy the graded test files back over whatever the candidate did."""
-        self._sh("[ -d /tmp/fb_tests ] && cp -a /tmp/fb_tests/. ./ || true",
-                 check=False)
+        """Copy the graded test files back over whatever the candidate did.
+
+        This is what makes the run measure the *feature* rather than the
+        repository's pre-existing behaviour, and what stops a candidate from
+        passing by editing the tests. Failure here is fatal to the row's
+        meaning, so it is checked.
+        """
+        if not self._staged:
+            return
+        script = " && ".join(
+            f"mkdir -p $(dirname {f}) && cp /tmp/fb_tests/{f} {f}"
+            for f in self._staged)
+        r = self._sh(script, check=False)
+        if r.returncode != 0:
+            raise RuntimeError(
+                "could not restore the graded test files: "
+                f"{((r.stderr or '') + (r.stdout or '')).strip()[-300:]}")
 
     def _resolve_workdir(self):
         """Find the repository inside the running container.

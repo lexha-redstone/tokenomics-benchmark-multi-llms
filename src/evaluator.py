@@ -555,8 +555,7 @@ class FeatureBenchEnv:
         # and the narrower the intervention before `test_patch`, the fewer ways
         # it has to fail for a reason that is not the benchmark's.
         if files:
-            self._sh(" ; ".join(f"git checkout -- {f} 2>/dev/null || true"
-                                for f in files), check=False)
+            self._restore_from_head(files)
 
         test_patch = self.problem.get("test_patch") or ""
         if test_patch.strip():
@@ -590,6 +589,25 @@ class FeatureBenchEnv:
 
         self._sh("git checkout -- . && git clean -fdq", check=False)
         self._sh("git add -A && git commit -q -m fb-base --allow-empty", check=False)
+
+    def _restore_from_head(self, files):
+        """Materialise the graded test files from the commit, whatever git thinks.
+
+        `git checkout -- <path>` is the obvious way and it does not work here:
+        the images hide the fail-to-pass file with an index flag (skip-worktree
+        / sparse-checkout), so the checkout is a no-op and the file stays gone.
+        `git show HEAD:<path>` reads the blob directly and is immune to that.
+
+        Files genuinely absent from the commit are fine -- `test_patch` may be
+        creating them -- so only a write that leaves nothing behind is an error.
+        """
+        missing = []
+        for f in files:
+            self._sh(f"mkdir -p $(dirname {f}) && "
+                     f"git show HEAD:{f} > {f} 2>/dev/null || true", check=False)
+            if self._sh(f"test -f {f}", check=False).returncode != 0:
+                missing.append(f)
+        return missing
 
     def _restore_tests(self):
         """Copy the graded test files back over whatever the candidate did.

@@ -411,6 +411,20 @@ def debug_instance(problems, iid):
         # agent cannot read it. Seeing that here is normal, not a fault.
         show("files deleted from the worktree (expected for the graded tests)",
              "git status --short | grep '^ *D' || echo '(none)'")
+        # Why the obvious restore does not work: these files carry an index
+        # flag (skip-worktree shows as a lowercase letter from `ls-files -v`),
+        # which makes `git checkout -- <path>` a silent no-op.
+        f2p = files[0] if files else ""
+        if f2p:
+            show("why the graded file is hidden, and can it be read from HEAD?",
+                 f"echo '-- ls-files -v (lowercase letter = skip-worktree):'; "
+                 f"git ls-files -v {f2p}; "
+                 f"echo '-- sparse-checkout:'; git sparse-checkout list 2>&1 | head -3; "
+                 f"echo '-- git checkout -- <f> then does the file exist?:'; "
+                 f"git checkout -- {f2p}; echo \"checkout exit $?\"; "
+                 f"ls -l {f2p} 2>&1 | tail -1; "
+                 f"echo '-- git show HEAD:<f> size:'; "
+                 f"git show HEAD:{f2p} 2>&1 | wc -c")
         # The tree here is base only: `_start` stages the graded test files
         # aside and reverts, because the solution patch has to be applied to
         # the tree it was generated against. So this run uses the *old* tests

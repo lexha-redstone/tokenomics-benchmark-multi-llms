@@ -356,6 +356,7 @@ def debug_instance(problems, iid):
     dataset one, and the failure classes (`missing_module`, `gold_patch_conflict`)
     point at different steps. Guessing between them costs a 10 GB pull per guess.
     """
+    pre_gold_green = False
     problem = problems.get(iid)
     if problem is None:
         print(f"no such instance: {iid}", file=sys.stderr)
@@ -406,18 +407,52 @@ def debug_instance(problems, iid):
              f"pip show {lib} 2>/dev/null | head -3")
         show("named test files exist?",
              "ls -l " + " ".join(files) if files else "echo '(no test files named)'")
-        show("test command BEFORE any patch (tree is base+test_patch)",
-             f"{fb_test_command(problem)} {' '.join(files)} 2>&1 | tail -25", timeout=900)
+        # The tree here is base only: `_start` stages the graded test files
+        # aside and reverts, because the solution patch has to be applied to
+        # the tree it was generated against. So this run uses the *old* tests
+        # and is expected to pass -- it is a sanity check on the environment,
+        # not on the task.
+        show("test command on the BASE tree, OLD tests (expect: green)",
+             f"{fb_test_command(problem)} {' '.join(files)} 2>&1 | tail -8", timeout=900)
+
+        # The steps that actually decide the verdict.
+        e._restore_tests()
+        r = show("same command with the GRADED tests restored (expect: RED -- "
+                 "these are the fail-to-pass tests)",
+                 f"{fb_test_command(problem)} {' '.join(files)} 2>&1 | tail -12",
+                 timeout=900)
+        pre_gold_green = r.returncode == 0
+        e._sh("git checkout -- . && git clean -fdq", check=False)
+
+        gold = problem.get("patch") or ""
+        if gold.strip():
+            e._write("/tmp/fb_gold.patch", gold)
+            applied = e._try_apply("/tmp/fb_gold.patch")
+            print(f"\n--- gold patch applies? " + "-" * 47)
+            print("YES" if applied else "NO -- this is `gold_patch_conflict`")
+            if applied:
+                e._restore_tests()
+                show("gold + graded tests (expect: GREEN -- this is the verdict)",
+                     f"{fb_test_command(problem)} {' '.join(files)} 2>&1 | tail -20",
+                     timeout=900)
+            e._sh("git checkout -- . && git clean -fdq", check=False)
+        else:
+            print("\n(no gold patch on this row -- Level 2)")
 
     print("\nRead it like this:")
-    print("  step 'import' fails            -> the package is not installed for this")
-    print("                                    interpreter; `repo_settings.install`")
-    print("                                    may need running, or the workdir is wrong")
-    print("  test files missing             -> test_patch did not land where expected")
-    print("  BEFORE-patch run already green -> the gold patch is being applied on top")
-    print("                                    of an already-solved tree (ordering bug)")
-    print("  BEFORE-patch run errors on     -> import/collection problem, not a patch")
-    print("    collection                      problem; gold can never resolve it")
+    print("  import step fails             -> package not installed for this")
+    print("                                   interpreter, or the workdir is wrong")
+    print("  BASE+OLD tests red            -> the environment is broken independently")
+    print("                                   of any patch; gold can never resolve it")
+    if pre_gold_green:
+        print("  ** GRADED tests were GREEN without the gold patch. **")
+        print("     The fail-to-pass tests are supposed to FAIL here. Either the")
+        print("     graded test files were not actually restored, or this image")
+        print("     already contains the feature -- both make the row unscorable.")
+    else:
+        print("  GRADED tests red before gold  -> correct; that is fail-to-pass")
+    print("  gold applies but stays red    -> the test command or its file list is")
+    print("                                   not what the benchmark grades with")
     return 0
 
 

@@ -23,6 +23,7 @@ do not copy it between them.**
 Usage
 -----
     python3 tools/featurebench_preflight.py --settings     # what repo_settings holds
+    python3 tools/featurebench_preflight.py --disk         # how much --pull will download
     python3 tools/featurebench_preflight.py --pull         # pre-pull the images
     python3 tools/featurebench_preflight.py --n 5          # try 5 rows, report
     python3 tools/featurebench_preflight.py --write        # quarantine what gold fails
@@ -115,19 +116,115 @@ def show_settings(problems):
           "git root, so the printed guess is used only if both are unavailable.")
 
 
-def pull_images(problems):
-    """Pre-pull every distinct image. One image serves many instances."""
+def _hub_size(image):
+    """Compressed size of one image from the Docker Hub API, or None.
+
+    `full_size` is the sum of the *compressed* layer sizes -- what crosses the
+    network. What lands on disk is larger, and layers shared between images are
+    stored once, so this is an upper bound on download and a rough lower bound
+    on disk. `docker system df` after the pull is the only exact answer.
+    """
+    import urllib.request
+
+    from src.datasets import _ssl_ctx     # same CA handling as the dataset fetch
+
+    ref = str(image or "").strip()
+    if not ref:
+        return None
+    path, _, tag = ref.partition(":")
+    tag = tag or "latest"
+    url = f"https://hub.docker.com/v2/repositories/{path}/tags/{tag}"
+    try:
+        with urllib.request.urlopen(url, timeout=30, context=_ssl_ctx()) as r:
+            return json.load(r).get("full_size")
+    except Exception:
+        return None
+
+
+def report_disk(problems):
+    """Ask the registry what `--pull` is about to download, before it starts."""
+    counts = collections.Counter(p.get("image_name") for p in problems.values()
+                                 if p.get("image_name"))
+    print(f"\n{len(counts)} distinct image(s) for {len(problems)} instances")
+    known, unknown, total = 0, 0, 0
+    for image, n in counts.most_common():
+        size = _hub_size(image)
+        if size is None:
+            unknown += 1
+            print(f"  {'?':>9}  x{n:<3} {image}")
+            continue
+        known += 1
+        total += size
+        print(f"  {size / 1e9:7.2f} GB  x{n:<3} {image}")
+
+    if not known:
+        print("\ncould not reach the registry; run with network access, or just "
+              "`--pull` and watch `docker system df`.")
+        return
+    mean = total / known
+    projected = mean * len(counts)
+    print(f"\ncompressed download:  {total / 1e9:.1f} GB measured over {known} "
+          f"image(s)" + (f", ~{projected / 1e9:.0f} GB projected for all "
+                         f"{len(counts)}" if unknown else ""))
+    print(f"on disk after pull:   roughly {projected / 1e9 * 1.4:.0f}-"
+          f"{projected / 1e9 * 2.5:.0f} GB")
+    print("\nTwo things move that number, in opposite directions:")
+    print("  - images are decompressed on disk (up ~1.4-2.5x)")
+    print("  - layers shared between images are stored ONCE (down, possibly a lot,")
+    print("    since these images are built from a common base)")
+    print("`docker system df` after the pull is the only exact answer.")
+
+
+def _image_present(image):
+    """Is this image already in the local store? Cheap, and offline."""
+    return subprocess.run(["docker", "image", "inspect", image],
+                          capture_output=True, timeout=60).returncode == 0
+
+
+def pull_images(problems, timeout=7200):
+    """Pre-pull every distinct image, resumably.
+
+    Safe to interrupt and re-run. Two things make that true:
+
+      * images already in the local store are skipped outright, so a re-run
+        goes straight to where it stopped instead of re-checking the registry
+        for everything;
+      * `docker pull` itself keeps whatever layers it finished. An interrupted
+        pull resumes at **layer** granularity, not byte -- a layer that was
+        mid-flight when you stopped restarts, completed layers do not.
+
+    Docker's progress output is deliberately NOT captured. These images are
+    ~10 GB each; swallowing the progress bars leaves the terminal silent for
+    many minutes and makes a working pull look hung.
+    """
     images = sorted({p.get("image_name") for p in problems.values() if p.get("image_name")})
-    print(f"\n{len(images)} distinct image(s) for {len(problems)} instances "
-          f"-- images are per repository, not per task.")
+    have = [i for i in images if _image_present(i)]
+    todo = [i for i in images if i not in set(have)]
+    print(f"\n{len(images)} distinct image(s) for {len(problems)} instances")
+    if have:
+        print(f"  {len(have)} already present locally -- skipping")
+    if not todo:
+        print("  nothing to pull.")
+        return []
+
+    print(f"  {len(todo)} to pull. Safe to interrupt: finished images are kept "
+          f"and a re-run continues from here.\n")
     failed = []
-    for i, img in enumerate(images, 1):
-        print(f"  [{i}/{len(images)}] docker pull {img}", flush=True)
-        p = subprocess.run(["docker", "pull", img], capture_output=True, text=True,
-                           timeout=3600)
-        if p.returncode != 0:
-            failed.append((img, (p.stderr or "").strip()[-200:]))
-            print(f"      FAILED: {failed[-1][1]}")
+    for i, img in enumerate(todo, 1):
+        print(f"[{i}/{len(todo)}] docker pull {img}", flush=True)
+        try:
+            # Inherit stdout/stderr so Docker's own progress is visible.
+            rc = subprocess.run(["docker", "pull", img], timeout=timeout).returncode
+        except subprocess.TimeoutExpired:
+            rc, note = 1, f"exceeded --pull-timeout ({timeout}s)"
+            print(f"    TIMEOUT: {note}")
+        except KeyboardInterrupt:
+            print(f"\ninterrupted at {i}/{len(todo)}. Completed images are kept; "
+                  f"re-run --pull to continue.")
+            raise
+        if rc != 0:
+            failed.append(img)
+            print(f"    FAILED (see output above): {img}")
     if failed:
         print(f"\n{len(failed)} image(s) could not be pulled; their instances will "
               "quarantine as `missing_image`.")
@@ -202,8 +299,14 @@ def main():
     ap.add_argument("--n", type=int, default=0, help="limit rows checked (0 = all)")
     ap.add_argument("--settings", action="store_true",
                     help="print what repo_settings holds, then stop")
+    ap.add_argument("--disk", action="store_true",
+                    help="ask the registry how much --pull will download, then stop")
     ap.add_argument("--pull", action="store_true",
-                    help="pre-pull every distinct image before checking")
+                    help="pre-pull every distinct image before checking "
+                         "(resumable: already-present images are skipped)")
+    ap.add_argument("--pull-timeout", type=int, default=7200,
+                    help="seconds allowed per image (default 7200); these are "
+                         "~10 GB each, so a short cap kills a healthy pull")
     ap.add_argument("--write", action="store_true",
                     help="write the quarantine file the loader honours")
     args = ap.parse_args()
@@ -215,6 +318,10 @@ def main():
 
     if args.settings:
         show_settings(problems)
+        return 0
+
+    if args.disk:
+        report_disk(problems)
         return 0
 
     ok, why = docker_available()
@@ -232,7 +339,7 @@ def main():
               "its row must not be quoted as an evidence-gate result.", file=sys.stderr)
 
     if args.pull:
-        pull_images(problems)
+        pull_images(problems, timeout=args.pull_timeout)
 
     verdicts = run_gold(problems, limit=args.n)
     counts = collections.Counter(v["reason"] for v in verdicts.values() if not v["ok"])

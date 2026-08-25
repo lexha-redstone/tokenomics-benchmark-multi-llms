@@ -662,14 +662,17 @@ repository's own container and runs pytest, ~57 s on gold. That makes **H2**
 testable: does escalation still beat front-loaded planning when the routing
 signal stops being free?
 
-**It needs Docker, and it needs a preflight.** Full Linux prerequisites, cost
+**It needs Docker, a lot of disk, and a preflight.** The images are per
+*instance* rather than per repository and the one measured directly is 10.2 GB
+compressed, so run `--disk` before `--pull`. Full Linux prerequisites, cost
 model and troubleshooting: **[docs/featurebench-setup.md](docs/featurebench-setup.md)**.
 The upstream `fb` CLI is *not* required — the arms drive Docker directly,
 because the ladder needs the oracle inside the loop rather than after it.
 
 ```bash
 python3 tools/featurebench_preflight.py --settings   # what repo_settings holds
-python3 tools/featurebench_preflight.py --pull       # 18 images for 100 instances
+python3 tools/featurebench_preflight.py --disk       # how much --pull will download
+python3 tools/featurebench_preflight.py --pull       # then fetch them
 python3 tools/featurebench_preflight.py --write      # run gold, quarantine what fails
 ```
 

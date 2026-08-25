@@ -420,7 +420,7 @@ Three things make that cheaper than it first sounds:
 
 | | |
 |---|---|
-| **Images are per repository, not per instance** | The fast split's 100 instances need **18 images**, not 100. Lite needs 13, full needs 24 |
+| **Disk is the real prerequisite** | Upstream documents `fb pull --mode fast` as 18 images, but the dataset's `image_name` values are per *instance* — `libercoders/featurebench-specs_packaging-instance_<hash>`, and the un-suffixed repository 404s. The one measured directly is **10.2 GB compressed**, for one of the smallest libraries in the set. Size it with `tools/featurebench_preflight.py --disk` before pulling |
 | **They are prebuilt and published** | `fb pull --mode fast` — no local image builds. Total disk footprint is not stated upstream; measure it with that command before committing |
 | **No GPU** | 57.2 s/instance on gold patches |
 

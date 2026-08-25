@@ -74,19 +74,68 @@ newgrp docker          # or log out and back in
 docker info            # must succeed with no sudo
 ```
 
-### 2.3 Disk
+### 2.3 Disk — measure before you pull
 
-Images are **per repository, not per instance** — the fast split's 100 instances
-draw on 18 images (lite 13, full 24). Repository images of this kind commonly run
-10–30 GB in total; the upstream docs do not state a figure, so measure rather
-than trust an estimate:
+**Ask the registry first.** This needs no Docker and no download:
+
+```bash
+python3 tools/featurebench_preflight.py --disk
+```
+
+It counts the distinct `image_name` values in the split and queries Docker Hub
+for each one's compressed size, then prints a projected on-disk range.
+
+Two corrections to what the upstream README implies, both checked against the
+registry:
+
+- **The images are per *instance*, not per repository.** `fb pull --mode fast`
+  documents 18 images, but the dataset's own `image_name` field looks like
+  `libercoders/featurebench-specs_packaging-instance_c393a6a8` — and
+  `libercoders/featurebench-specs_packaging` (no instance suffix) returns 404,
+  so the suffix is part of the repository name. Do not assume 18; run `--disk`.
+- **They are large.** The one instance image measured directly,
+  `featurebench-specs_packaging-instance_c393a6a8`, reports a `full_size` of
+  **10.18 GB compressed** — for `pypa/packaging`, one of the smallest libraries
+  in the set. These images evidently carry a heavy common base.
+
+So plan for **hundreds of GB, not tens**, and read the `--disk` output before
+committing. Two effects move the real number in opposite directions: images
+decompress on disk (up ~1.4–2.5×), while layers shared between images are stored
+**once** (down, potentially by a lot, since these are built from a common base).
+
+`docker system df` after the pull is the only exact answer:
 
 ```bash
 python3 tools/featurebench_preflight.py --pull
 docker system df
 ```
 
-Reclaim later with `docker image prune -a`.
+If the projection is more disk than you have, pull nothing up front and run a
+small `--n` instead: images are fetched on first use, so a 20-instance sweep
+only ever materialises the images those 20 rows need. Reclaim with
+`docker image prune -a`.
+
+**`--pull` is safe to interrupt.** Two mechanisms make a re-run continue rather
+than restart:
+
+- Images already in the local store are **skipped outright** — the tool checks
+  with `docker image inspect` before asking the registry for anything.
+- `docker pull` keeps whatever layers it finished. Resumption is at **layer**
+  granularity, not byte: a layer that was mid-flight when you stopped starts
+  over, completed layers do not. With ~10 GB images that can still mean
+  re-fetching a few hundred MB, but never the whole image.
+
+Check what you already have at any point:
+
+```bash
+docker images | grep featurebench
+docker system df
+```
+
+Docker's own progress output is left on the terminal deliberately. An earlier
+version captured it, which left the screen silent for minutes at a time and made
+a healthy multi-GB pull look hung. The per-image cap is `--pull-timeout`
+(default 7200 s) for the same reason — a short cap kills a working download.
 
 ### 2.4 Architecture
 
@@ -137,9 +186,11 @@ Checked against the real fast split, the 40 keys are `repository`, `commit`,
   confirms it with `git rev-parse --show-toplevel`. `/workspace/<library_name>`
   is only a last resort if both fail, and step 3 catches it if it is wrong.
 
-**Step 2 — pull the images.**
+**Step 2 — size the download, then pull.** See §2.3 first: these images are far
+larger than the upstream README implies.
 
 ```bash
+python3 tools/featurebench_preflight.py --disk     # no Docker needed
 python3 tools/featurebench_preflight.py --pull
 ```
 

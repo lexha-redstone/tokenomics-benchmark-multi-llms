@@ -194,7 +194,34 @@ python3 tools/featurebench_preflight.py --disk     # no Docker needed
 python3 tools/featurebench_preflight.py --pull
 ```
 
-**Step 2b — if you pulled only some images, find out what that covers.**
+**Step 2a — buy the most benchmark per gigabyte.** These images are ~10 GB
+each, so *which* ones you pull decides how much of the split you can run. Rank
+them by coverage first — this needs no Docker and no download:
+
+```bash
+python3 tools/featurebench_preflight.py --top-images 3 --ready-out /tmp/fb_top3.txt
+```
+
+It prints each image's instance count, its compressed size, whether you already
+have it, and the **cumulative coverage** as you go down the list — so you can see
+where the curve flattens and stop there. Add `--pull` to fetch only those:
+
+```bash
+python3 tools/featurebench_preflight.py --top-images 3 --ready-out /tmp/fb_top3.txt --pull
+```
+
+Then verify gold and run on exactly that subset:
+
+```bash
+python3 tools/featurebench_preflight.py --tasks @/tmp/fb_top3.txt --write
+python3 run_benchmark.py --dataset featurebench --group featurebench \
+    --tasks @/tmp/fb_top3.txt --report --no-cache
+```
+
+The quarantine file records `partial: true` when only a subset was checked, so a
+later full sweep does not mistake it for a complete environment audit.
+
+**Step 2b — if you pulled some images already, find out what that covers.**
 
 `--pull` walks the images alphabetically; the runner slices tasks in *dataset*
 order. Those are different orderings, so having the first four images does **not**

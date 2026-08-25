@@ -228,6 +228,73 @@ def test_result_carries_the_partial_credit_metric(wired):
     assert out["as_run_usd"] > 0
 
 
+# -- image coverage planning -----------------------------------------------
+
+def _preflight():
+    import importlib.util
+    import os
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    spec = importlib.util.spec_from_file_location(
+        "fb_preflight", os.path.join(root, "tools", "featurebench_preflight.py"))
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def _synthetic(counts):
+    return {f"{img}__case{k}": {"image_name": img}
+            for img, n in counts for k in range(n)}
+
+
+def test_top_images_ranks_by_instance_coverage():
+    """These images are ~10 GB each, so which ones you pull decides how much of
+    the split is runnable. The ranking is what makes that choice cheap."""
+    pf = _preflight()
+    problems = _synthetic([("a", 5), ("b", 21), ("c", 18), ("d", 1)])
+    ranked, by_image = pf.top_images(problems, 3)
+    assert [img for img, _ in ranked] == ["b", "c", "a"]
+    assert [len(iids) for _, iids in ranked] == [21, 18, 5]
+    assert len(by_image) == 4
+
+
+def test_top_images_is_deterministic_on_ties():
+    pf = _preflight()
+    ranked, _ = pf.top_images(_synthetic([("z", 4), ("a", 4), ("m", 4)]), 2)
+    assert [img for img, _ in ranked] == ["a", "m"], "ties break by name, not hash order"
+
+
+def test_top_images_selection_covers_exactly_those_images(tmp_path):
+    pf = _preflight()
+    pf._hub_size = lambda img: None
+    pf._image_present = lambda img: False
+    problems = _synthetic([("a", 5), ("b", 21), ("c", 18), ("d", 1)])
+    out = tmp_path / "ids.txt"
+    covered = pf.report_top(problems, 2, out_path=str(out))
+    assert len(covered) == 21 + 18
+    assert {i.split("__")[0] for i in covered} == {"b", "c"}
+    assert out.read_text().strip().splitlines() == covered
+
+
+def test_preflight_and_runner_share_one_tasks_grammar(tmp_path):
+    """A divergence here would send gold verification and the sweep to
+    different task sets, which is the exact failure the preflight exists to
+    prevent."""
+    import importlib.util
+    import os
+    pf = _preflight()
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    spec = importlib.util.spec_from_file_location(
+        "fb_runner", os.path.join(root, "run_benchmark.py"))
+    rb = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(rb)
+
+    f = tmp_path / "ids.txt"
+    f.write_text("x1\n# comment\n\nx2\nx1\n")
+    for spec_str in ("a, b ,a,c", f"@{f}"):
+        assert pf._requested_tasks(spec_str) == rb._requested_tasks(spec_str)
+    assert pf._requested_tasks(f"@{f}") == ["x1", "x2"]
+
+
 def test_registry_excludes_the_frontier_single_from_the_default_group():
     from src.architectures import get_configurations
     ids = {c["id"] for c in get_configurations("featurebench", "featurebench")}

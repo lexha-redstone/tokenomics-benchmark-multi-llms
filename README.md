@@ -674,6 +674,10 @@ python3 tools/featurebench_preflight.py --settings   # what repo_settings holds
 python3 tools/featurebench_preflight.py --disk       # how much --pull will download
 python3 tools/featurebench_preflight.py --pull       # then fetch them (resumable)
 python3 tools/featurebench_preflight.py --ready      # what runs with what you have
+
+# Or: take the 3 densest images and run only what they cover.
+python3 tools/featurebench_preflight.py --top-images 3 --ready-out ids.txt --pull
+python3 tools/featurebench_preflight.py --tasks @ids.txt --write
 python3 tools/featurebench_preflight.py --write      # run gold, quarantine what fails
 ```
 

@@ -25,6 +25,7 @@ Usage
     python3 tools/featurebench_preflight.py --settings     # what repo_settings holds
     python3 tools/featurebench_preflight.py --disk         # how much --pull will download
     python3 tools/featurebench_preflight.py --ready        # what runs with what you already have
+    python3 tools/featurebench_preflight.py --top-images 3 --ready-out ids.txt --pull
     python3 tools/featurebench_preflight.py --pull         # pre-pull the images
     python3 tools/featurebench_preflight.py --n 5          # try 5 rows, report
     python3 tools/featurebench_preflight.py --write        # quarantine what gold fails
@@ -182,6 +183,63 @@ def _image_present(image):
                           capture_output=True, timeout=60).returncode == 0
 
 
+def top_images(problems, k=3):
+    """The k images covering the most instances, densest first.
+
+    Pure dataset arithmetic -- no Docker, no network. This is the cheapest way
+    to buy the most benchmark per gigabyte: these images are ~10 GB each, so
+    which ones you pull decides how much of the split you can actually run.
+    """
+    by_image = collections.defaultdict(list)
+    for iid, p in problems.items():
+        if p.get("image_name"):
+            by_image[p["image_name"]].append(iid)
+    ranked = sorted(by_image.items(), key=lambda kv: (-len(kv[1]), kv[0]))
+    return ranked[:k], by_image
+
+
+def report_top(problems, k, out_path="", do_pull=False, timeout=7200):
+    """Pick the k densest images, report coverage, optionally pull just those."""
+    ranked, by_image = top_images(problems, k)
+    if not ranked:
+        print("no image_name on any row", file=sys.stderr)
+        return []
+
+    covered = [iid for _img, iids in ranked for iid in iids]
+    print(f"\ntop {len(ranked)} image(s) by instance coverage "
+          f"(of {len(by_image)} distinct, {len(problems)} instances):\n")
+    running = 0
+    for i, (img, iids) in enumerate(ranked, 1):
+        running += len(iids)
+        size = _hub_size(img)
+        size_s = f"{size / 1e9:6.2f} GB" if size else "      ? GB"
+        here = "have" if _image_present(img) else "need"
+        print(f"  {i}. {len(iids):3} instance(s)  {size_s}  [{here}]  {img}")
+        print(f"     cumulative coverage: {running}/{len(problems)} "
+              f"({running / len(problems):.0%})")
+
+    sizes = [s for s in (_hub_size(img) for img, _ in ranked) if s]
+    if sizes:
+        print(f"\ncompressed download for these {len(ranked)}: "
+              f"{sum(sizes) / 1e9:.1f} GB"
+              + ("" if len(sizes) == len(ranked) else " (partial -- some unknown)"))
+
+    if out_path:
+        with open(out_path, "w", encoding="utf-8") as f:
+            f.write("\n".join(covered) + "\n")
+        print(f"\nwrote {len(covered)} instance id(s) to {out_path}")
+
+    if do_pull:
+        pull_images(problems, timeout=timeout, only=[img for img, _ in ranked])
+
+    print("\nnext:")
+    tasks_ref = f"@{out_path}" if out_path else "<ids>"
+    print(f"  python3 tools/featurebench_preflight.py --tasks {tasks_ref} --write")
+    print(f"  python3 run_benchmark.py --dataset featurebench "
+          f"--group featurebench --tasks {tasks_ref} --report --no-cache")
+    return covered
+
+
 def report_ready(problems, out_path=""):
     """Which instances can run right now, with no further download.
 
@@ -223,7 +281,7 @@ def report_ready(problems, out_path=""):
     return ready
 
 
-def pull_images(problems, timeout=7200):
+def pull_images(problems, timeout=7200, only=None):
     """Pre-pull every distinct image, resumably.
 
     Safe to interrupt and re-run. Two things make that true:
@@ -240,6 +298,9 @@ def pull_images(problems, timeout=7200):
     many minutes and makes a working pull look hung.
     """
     images = sorted({p.get("image_name") for p in problems.values() if p.get("image_name")})
+    if only is not None:
+        keep = set(only)
+        images = [i for i in images if i in keep]
     have = [i for i in images if _image_present(i)]
     todo = [i for i in images if i not in set(have)]
     print(f"\n{len(images)} distinct image(s) for {len(problems)} instances")
@@ -273,9 +334,30 @@ def pull_images(problems, timeout=7200):
     return failed
 
 
-def run_gold(problems, limit=0):
+def _requested_tasks(spec):
+    """Same --tasks grammar as run_benchmark.py: a list, or @path to one per line."""
+    spec = (spec or "").strip()
+    if not spec:
+        return []
+    if spec.startswith("@"):
+        with open(spec[1:], "r", encoding="utf-8") as f:
+            items = [ln.strip() for ln in f]
+    else:
+        items = spec.split(",")
+    seen, out = set(), []
+    for t in (i.strip() for i in items):
+        if t and not t.startswith("#") and t not in seen:
+            seen.add(t)
+            out.append(t)
+    return out
+
+
+def run_gold(problems, limit=0, only=None):
     """Apply each row's own `patch` and run its tests. Returns per-task verdicts."""
-    items = list(problems.items())
+    if only:
+        items = [(t, problems[t]) for t in only if t in problems]
+    else:
+        items = list(problems.items())
     if limit:
         items = items[:limit]
     verdicts = {}
@@ -325,6 +407,7 @@ def write_quarantine(split, problems, verdicts, n_total):
         "generated": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "n_tasks": n_total,
         "n_checked": len(verdicts),
+        "partial": len(verdicts) < n_total,
         "n_quarantined": len(bad),
         "tasks": bad,
     }
@@ -341,11 +424,19 @@ def main():
     ap.add_argument("--n", type=int, default=0, help="limit rows checked (0 = all)")
     ap.add_argument("--settings", action="store_true",
                     help="print what repo_settings holds, then stop")
+    ap.add_argument("--top-images", type=int, default=0, metavar="K",
+                    help="pick the K images covering the most instances, report "
+                         "their coverage, and (with --ready-out) write those "
+                         "instance ids. Add --pull to fetch only those K.")
+    ap.add_argument("--tasks", default="",
+                    help="verify gold on exactly these task ids: a comma list or "
+                         "@path to one per line. Same grammar as run_benchmark.py.")
     ap.add_argument("--ready", action="store_true",
                     help="which instances can run with the images already "
                          "present locally, then stop")
-    ap.add_argument("--ready-out", default="",
-                    help="with --ready, write the runnable instance ids here")
+    ap.add_argument("--ready-out", default="", metavar="PATH",
+                    help="with --ready or --top-images, write the selected "
+                         "instance ids here for `run_benchmark.py --tasks @PATH`")
     ap.add_argument("--disk", action="store_true",
                     help="ask the registry how much --pull will download, then stop")
     ap.add_argument("--pull", action="store_true",
@@ -379,6 +470,13 @@ def main():
         report_ready(problems, args.ready_out)
         return 0
 
+    if args.top_images:
+        # Deliberately works without Docker: choosing what to pull is a planning
+        # step, and it should be answerable before ~10 GB is committed.
+        report_top(problems, args.top_images, args.ready_out,
+                   do_pull=args.pull, timeout=args.pull_timeout)
+        return 0
+
     ok, why = docker_available()
     print(f"docker: {why}")
     if not ok:
@@ -396,7 +494,13 @@ def main():
     if args.pull:
         pull_images(problems, timeout=args.pull_timeout)
 
-    verdicts = run_gold(problems, limit=args.n)
+    wanted = _requested_tasks(args.tasks)
+    missing = [t for t in wanted if t not in problems]
+    if missing:
+        print(f"ERROR: {len(missing)} requested task id(s) are not in this split "
+              f"(first: {missing[0]})", file=sys.stderr)
+        return 2
+    verdicts = run_gold(problems, limit=args.n, only=wanted)
     counts = collections.Counter(v["reason"] for v in verdicts.values() if not v["ok"])
     good = sum(1 for v in verdicts.values() if v["ok"])
     print(f"\ngold passes on {good}/{len(verdicts)} checked")

@@ -540,12 +540,29 @@ class FeatureBenchEnv:
         # conflict, because the context it was generated against is already
         # gone. So the test files are staged aside here and copied back over
         # each candidate in `score()`.
+        files = featurebench_test_files(self.problem)
+
+        # These images ship the fail-to-pass test file **deleted from the
+        # worktree** -- that is how the benchmark stops an agent reading the
+        # tests it will be graded on. `git status` shows it as `D`, while the
+        # commit still carries it. `test_patch` is a diff against the committed
+        # version, so the file has to be put back before it will apply;
+        # otherwise the apply is a silent no-op and everything downstream grades
+        # against the repository's original tests.
+        #
+        # Only the graded files are touched here. These images also carry other
+        # worktree edits (mlflow's `libs/*/mlflow` symlinks show as `T`/`D`),
+        # and the narrower the intervention before `test_patch`, the fewer ways
+        # it has to fail for a reason that is not the benchmark's.
+        if files:
+            self._sh(" ; ".join(f"git checkout -- {f} 2>/dev/null || true"
+                                for f in files), check=False)
+
         test_patch = self.problem.get("test_patch") or ""
         if test_patch.strip():
             self._write("/tmp/fb_test.patch", test_patch)
             if not self._try_apply("/tmp/fb_test.patch"):
                 raise RuntimeError("the dataset's own test_patch did not apply")
-        files = featurebench_test_files(self.problem)
         self._staged = []
         if files:
             # Staged one file at a time, with `cp --parents` avoided (it is a

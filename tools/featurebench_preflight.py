@@ -406,7 +406,11 @@ def debug_instance(problems, iid):
              f"python -c 'import {lib}; print({lib}.__file__)' 2>&1 | tail -3; "
              f"pip show {lib} 2>/dev/null | head -3")
         show("named test files exist?",
-             "ls -l " + " ".join(files) if files else "echo '(no test files named)'")
+             ("ls -l " + " ".join(files)) if files else "echo '(no test files named)'")
+        # These images delete the fail-to-pass file from the worktree so the
+        # agent cannot read it. Seeing that here is normal, not a fault.
+        show("files deleted from the worktree (expected for the graded tests)",
+             "git status --short | grep '^ *D' || echo '(none)'")
         # The tree here is base only: `_start` stages the graded test files
         # aside and reverts, because the solution patch has to be applied to
         # the tree it was generated against. So this run uses the *old* tests

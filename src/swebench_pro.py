@@ -61,6 +61,7 @@ sweep is two arms wearing one name. Run it per language --
 -- and say which in the report.
 """
 
+import os
 from .config import GEMINI_37_FLASH_ID, SONNET_ID, OPUS_5_ID
 from .client import dispatch_model
 from .evaluator import SWEBenchProEnv, extract_patch
@@ -74,7 +75,7 @@ TIERS = [
 ]
 FRONTIER = OPUS_5_ID
 
-MAX_ORACLE_CALLS = 3
+MAX_ORACLE_CALLS = int(os.environ.get("SBP_MAX_ORACLE_CALLS", "2"))
 
 # SWE-bench Pro's gold patches run to ~12k chars on a median row and far past
 # that on the large ones. The same ceiling FeatureBench needed, for the same
@@ -96,6 +97,15 @@ SOLVER_ROLE = (
     "test files: the graded tests are restored from the reference commit after "
     "your patch is applied, so edits to them are discarded. Output ONLY one "
     "```diff code block.\n\n"
+)
+CONTRACT_LOCATOR_ROLE = (
+    "You are a principal software engineer and codebase navigator. Read the issue, "
+    "requirements and new interfaces below. Produce a CONCISE IMPLEMENTATION CONTRACT (<150 words) "
+    "for the engineer who will generate the unified git diff. Specify:\n"
+    "1. TARGET_FILES: Exact repository file paths that must be modified or created (use standard relative paths).\n"
+    "2. MODIFICATIONS: The exact function, method, class, or logic block to modify in each file.\n"
+    "3. TEST_INVARIANTS: What key behaviors must hold to pass the test suite.\n"
+    "Do NOT write diffs or full code. Output ONLY the concise contract.\n\n"
 )
 PLANNER_ROLE = (
     "You are a senior software architect. Read the issue, requirements and "
@@ -320,6 +330,62 @@ def run_sbp_plan_exec(problem, planner_model=OPUS_5_ID,
                    gate="never", plan=plan, acc=acc)
 
 
+def gate_patch_health(difficulty, attempt, total_rungs):
+    """Patch-health aware escalation gate for SWE-bench Pro."""
+    if difficulty is None:
+        return False, "no difficulty signal"
+    if difficulty.is_hard:
+        return True, f"patch health & evidence says {difficulty.level}: {'; '.join(difficulty.reasons)}"
+    if attempt >= total_rungs:
+        return True, f"cheap rungs exhausted ({attempt}/{total_rungs})"
+    return False, f"failure is {difficulty.level}; standard repair"
+
+
+@_arm(sj_required=True)
+def run_sbp_grounded_contract(problem, locator_model=SONNET_ID,
+                              executor_model=GEMINI_37_FLASH_ID,
+                              frontier=OPUS_5_ID):
+    """Candidate 1: Grounded Micro-Contract Localization Cascade.
+    
+    Sonnet-5 generates a strict, compact file & interface contract (<150 words)
+    at minimal cost (~$0.0015). Gemini 3.7 Flash executes the grounded diff.
+    Escalates to Opus-5 on broad/stalled test failure evidence.
+    """
+    acc = {"usd": 0.0, "out": 0, "tok": 0}
+    contract, usage, _ = dispatch_model(
+        locator_model, _solve_prompt(problem, CONTRACT_LOCATOR_ROLE),
+        max_tokens=512, problem=problem)
+    _spend(acc, usage)
+    return _ladder(problem, [(executor_model, "low"), (SONNET_ID, None)],
+                   gate="evidence", frontier=frontier, plan=contract, acc=acc)
+
+
+@_arm(sj_required=True)
+def run_sbp_patch_health_router(problem, initial_model=GEMINI_37_FLASH_ID,
+                                mid_model=SONNET_ID, frontier=OPUS_5_ID):
+    """Candidate 2: Patch-Health & Semantic Error-Class Aware Router.
+    
+    Gemini 3.7 Flash writes the initial diff. The router discriminates between
+    patch-applicability/syntax issues (stays cheap/Sonnet) vs broad semantic regressions
+    (instantly escalates to Opus-5).
+    """
+    return _ladder(problem, [(initial_model, "low"), (mid_model, None)],
+                   gate=gate_patch_health, frontier=frontier)
+
+
+@_arm(sj_required=True)
+def run_sbp_sonnet_opus_sweetspot(problem, initial_model=SONNET_ID,
+                                  frontier=OPUS_5_ID):
+    """Candidate 3: Cross-Provider Pareto Sweet-Spot (Sonnet Drafter + Opus Escalator).
+    
+    Claude Sonnet-5 writes the initial diff with high first-shot syntax fidelity (~$0.005).
+    Deterministic Straitjacket triage escalates to Claude Opus-5 on broad/stalled regressions,
+    providing maximum reliability in the expensive Docker oracle regime.
+    """
+    return _ladder(problem, [(initial_model, None), (initial_model, None)],
+                   gate="evidence", frontier=frontier)
+
+
 # ==============================================================================
 # --- VARIANT REGISTRY ---
 # ==============================================================================
@@ -330,49 +396,72 @@ CATEGORY = "9. SWE-bench Pro expensive-oracle study"
 # single is priced far above the rest, so it sits in its own category and is
 # opt-in rather than silently repricing every `--group swebench-pro` sweep.
 OPUS_CATEGORY = "9b. SWE-bench Pro frontier baseline"
+CANDIDATES_CATEGORY = "9c. SWE-bench Pro candidate architectures"
 
 SWEBENCH_PRO_VARIANTS = {
     "sbp_single_flash": {
         "id": "sbp_single_flash", "category": CATEGORY,
-        "name": "S0a. Single: gemini-3.7-flash low (3 rungs)",
-        "models": "Gemini 3.7 Flash (low) x3",
+        "name": "S0a. Single: gemini-3.7-flash low (2 rungs)",
+        "models": "Gemini 3.7 Flash (low) x2",
         "triage_mode": "Straitjacket contained digest ($0.00)",
         "fn": lambda p: run_sbp_single(p, model_id=GEMINI_37_FLASH_ID,
-                                       thinking_level="low"),
+                                        thinking_level="low"),
     },
     "sbp_single_sonnet": {
         "id": "sbp_single_sonnet", "category": CATEGORY,
-        "name": "S0b. Single: claude-sonnet-5 (3 rungs)",
-        "models": "Claude Sonnet-5 x3",
+        "name": "S0b. Single: claude-sonnet-5 (2 rungs)",
+        "models": "Claude Sonnet-5 x2",
         "triage_mode": "Straitjacket contained digest ($0.00)",
         "fn": lambda p: run_sbp_single(p, model_id=SONNET_ID),
     },
     "sbp_cascade": {
         "id": "sbp_cascade", "category": CATEGORY,
-        "name": "S1. Cascade: 3.7-flash -> sonnet-5 -> opus-5 (attempt-count gate)",
-        "models": "Gemini 3.7 Flash -> Claude Sonnet-5 -> Claude Opus-5",
+        "name": "S1. Cascade: 3.7-flash -> sonnet-5 (attempt-count gate, 2 rungs)",
+        "models": "Gemini 3.7 Flash -> Claude Sonnet-5",
         "triage_mode": "Straitjacket contained digest ($0.00)",
         "fn": run_sbp_cascade,
     },
     "sbp_evidence_gate": {
         "id": "sbp_evidence_gate", "category": CATEGORY,
-        "name": "S2. Evidence gate: same tiers, escalate when the digest says hard",
-        "models": "Gemini 3.7 Flash -> Claude Sonnet-5 -> Claude Opus-5 (evidence gate)",
+        "name": "S2. Evidence gate: flash -> sonnet/opus (evidence gate, 2 rungs)",
+        "models": "Gemini 3.7 Flash -> Claude Sonnet-5 / Claude Opus-5 (evidence gate)",
         "triage_mode": "Straitjacket digest + evidence-gated escalation ($0.00)",
         "fn": run_sbp_evidence_gate,
     },
     "sbp_plan_exec": {
         "id": "sbp_plan_exec", "category": CATEGORY,
-        "name": "S3. H2: opus-5 plans first, 3.7-flash implements and repairs",
-        "models": "Claude Opus-5 plan + Gemini 3.7 Flash exec x3",
+        "name": "S3. H2: opus-5 plans first, 3.7-flash implements and repairs (2 rungs)",
+        "models": "Claude Opus-5 plan + Gemini 3.7 Flash exec x2",
         "triage_mode": "Straitjacket contained digest ($0.00)",
         "fn": run_sbp_plan_exec,
     },
     "sbp_single_opus": {
         "id": "sbp_single_opus", "category": OPUS_CATEGORY,
-        "name": "S0c. Single: claude-opus-5 (3 rungs)",
-        "models": "Claude Opus-5 x3",
+        "name": "S0c. Single: claude-opus-5 (2 rungs)",
+        "models": "Claude Opus-5 x2",
         "triage_mode": "Straitjacket contained digest ($0.00)",
         "fn": lambda p: run_sbp_single(p, model_id=OPUS_5_ID),
+    },
+    # -- 3 Optimized Candidate Architectures --
+    "sbp_grounded_contract": {
+        "id": "sbp_grounded_contract", "category": CANDIDATES_CATEGORY,
+        "name": "S4. Grounded Contract: Sonnet locator -> Flash exec -> Opus escalation (2 rungs)",
+        "models": "Claude Sonnet-5 contract + Gemini 3.7 Flash exec -> Claude Opus-5",
+        "triage_mode": "Straitjacket digest + evidence-gated escalation ($0.00)",
+        "fn": run_sbp_grounded_contract,
+    },
+    "sbp_patch_health_router": {
+        "id": "sbp_patch_health_router", "category": CANDIDATES_CATEGORY,
+        "name": "S5. Patch-Health Router: Flash -> Sonnet / Opus (health-aware gate, 2 rungs)",
+        "models": "Gemini 3.7 Flash -> Claude Sonnet-5 / Claude Opus-5 (health gate)",
+        "triage_mode": "Straitjacket digest + patch-health router ($0.00)",
+        "fn": run_sbp_patch_health_router,
+    },
+    "sbp_sonnet_opus_sweetspot": {
+        "id": "sbp_sonnet_opus_sweetspot", "category": CANDIDATES_CATEGORY,
+        "name": "S6. Sweetspot: Sonnet-5 draft -> Evidence gate -> Opus-5 repair (2 rungs)",
+        "models": "Claude Sonnet-5 draft -> Claude Sonnet-5 / Claude Opus-5 (evidence gate)",
+        "triage_mode": "Straitjacket digest + evidence-gated escalation ($0.00)",
+        "fn": run_sbp_sonnet_opus_sweetspot,
     },
 }

@@ -80,8 +80,8 @@ def test_scrub_prefers_repo_over_home():
 # and the sandbox-internal paths the harness constructs are not the target.
 ABS_LITERAL = re.compile(r"""['"](/(?:usr|home|Users|opt|private|var|mnt|media)/[^'"\n]{4,})['"]""")
 
-SKIP_DIRS = {".git", "__pycache__", ".venv", "node_modules", "data", "results",
-             "archive", "reports"}
+SKIP_DIRS = {".git", "__pycache__", ".venv", "venv", "node_modules", "data", "results",
+             "archive", "reports", "tokenomics-bench-env"}
 
 
 def _python_sources():

@@ -88,7 +88,7 @@ TIERS = [
 ]
 FRONTIER = OPUS_5_ID
 
-MAX_ORACLE_CALLS = 3
+MAX_ORACLE_CALLS = 2
 
 # The sample row's gold patch is 51k chars (~13k tokens) and the schema tops out
 # at 227k, so the 8192 this started at truncated a correct answer into an
@@ -125,6 +125,38 @@ REPAIR_ROLE = (
     "increment on top of it. Output ONLY one ```diff code block.\n\n"
 )
 
+# Contracted roles for unified diff precision: enforces minimal context hunks,
+# zero-context new file creation, and relative paths (stripping /testbed/).
+DIFF_CONTRACT_SOLVER_ROLE = (
+    "You are a principal software engineer implementing a feature in an existing repository.\n"
+    "CRITICAL UNIFIED DIFF REQUIREMENTS:\n"
+    "1. File Paths: Always use relative paths starting with `a/` and `b/` (strip any `/testbed/` prefix).\n"
+    "2. New Files: If creating a new file specified in the prompt, use the standard header:\n"
+    "   --- /dev/null\n"
+    "   +++ b/<path>\n"
+    "   @@ -0,0 +1,<total_lines> @@\n"
+    "   followed by each line prefixed with '+'.\n"
+    "3. Existing Files: Keep hunk context lines minimal (1-2 lines) so `git apply` / `patch -p1` applies cleanly.\n"
+    "4. Output format: Output ONLY ONE ```diff code block spanning all modified/created files.\n\n"
+)
+
+DIFF_CONTRACT_REPAIR_ROLE = (
+    "You are a principal software engineer repairing a failed feature patch in an existing repository.\n"
+    "If the previous attempt failed with `patch did not apply`: Ensure all paths are relative without `/testbed/`, "
+    "new files use `--- /dev/null` and `+++ b/<path>`, and existing files use minimal context lines.\n"
+    "If unit tests failed: Analyze the Straitjacket test error digest below, fix the root cause, and output "
+    "the COMPLETE corrected unified git diff against the base commit.\n"
+    "Output ONLY ONE ```diff code block.\n\n"
+)
+
+MANIFEST_ROLE = (
+    "You are a senior software architect. Read the feature request below and extract a structured "
+    "FILE AND INTERFACE MANIFEST.\n"
+    "List each target file (relative path from repository root, stripping any `/testbed/` prefix) and every class, "
+    "function, and exception that belongs to that file according to the Interface Descriptions.\n"
+    "Be concise, concrete, and output ONLY the manifest. Under 300 words.\n\n"
+)
+
 
 def _context(problem):
     """The task as the model sees it: statement, repo, and what will be run."""
@@ -142,10 +174,10 @@ def _solve_prompt(problem, role=SOLVER_ROLE, plan=""):
     return role + _context(problem) + plan_block
 
 
-def _repair_prompt(problem, patch, digest, plan=""):
+def _repair_prompt(problem, patch, digest, plan="", role=REPAIR_ROLE):
     plan_block = f"\nArchitect's implementation plan:\n{plan}\n" if plan else ""
     return (
-        REPAIR_ROLE + _context(problem) + plan_block
+        role + _context(problem) + plan_block
         + f"\nYour current patch:\n```diff\n{patch}\n```\n\n"
         + f"Straitjacket Triaged Error Digest:\n```\n{digest}\n```\n"
     )
@@ -180,7 +212,8 @@ def _result(passed, evidence, acc, loops, trace=None, ratio=None):
 
 
 def _ladder(problem, tiers, gate="after_ladder", frontier=FRONTIER,
-            plan="", planner_usd=0.0, acc=None):
+            plan="", planner_usd=0.0, acc=None,
+            solver_role=None, repair_role=REPAIR_ROLE):
     """One escalating repair loop against the containerised oracle.
 
     The gate, the difficulty classifier and the degradation warning are the
@@ -192,11 +225,12 @@ def _ladder(problem, tiers, gate="after_ladder", frontier=FRONTIER,
     gate_fn = GATES[gate] if isinstance(gate, str) else gate
     trace = EscalationTrace()
     acc = acc if acc is not None else {"usd": planner_usd, "out": 0, "tok": 0}
+    init_role = solver_role or (EXECUTOR_ROLE if plan else SOLVER_ROLE)
 
     with FeatureBenchEnv(problem) as env:
         model, think = tiers[0]
         text, usage, _ = dispatch_model(
-            model, _solve_prompt(problem, EXECUTOR_ROLE if plan else SOLVER_ROLE, plan),
+            model, _solve_prompt(problem, init_role, plan),
             max_tokens=MAX_PATCH_TOKENS, thinking_level=think, problem=problem)
         _spend(acc, usage)
         trace.rungs.append(f"{model}/{think or 'off'}")
@@ -216,7 +250,10 @@ def _ladder(problem, tiers, gate="after_ladder", frontier=FRONTIER,
                     and difficulty is not None and not difficulty.typed
                     and not trace.degraded):
                 trace.degraded = True
-            escalate, why = gate_fn(difficulty, loops + 1, len(tiers))
+            try:
+                escalate, why = gate_fn(difficulty, loops + 1, len(tiers), last_err=evidence)
+            except TypeError:
+                escalate, why = gate_fn(difficulty, loops + 1, len(tiers))
             if escalate and trace.frontier_used:
                 escalate, why = False, "already at the frontier rung"
             trace.record(loops + 1, difficulty, escalate, why)
@@ -241,7 +278,7 @@ def _ladder(problem, tiers, gate="after_ladder", frontier=FRONTIER,
             digest, tr_usage, _ = _treat_error(evidence, "straitjacket", problem=problem)
             _spend(acc, tr_usage)
             r_text, r_usage, _ = dispatch_model(
-                target, _repair_prompt(problem, patch, digest, plan),
+                target, _repair_prompt(problem, patch, digest, plan, role=repair_role),
                 max_tokens=MAX_PATCH_TOKENS, thinking_level=think, problem=problem)
             _spend(acc, r_usage)
             trace.rungs.append(f"{target}/{think or 'off'}")
@@ -315,6 +352,83 @@ def run_fb_plan_exec(problem, planner_model=OPUS_5_ID,
 
 
 # ==============================================================================
+# --- NEW CANDIDATE ARCHITECTURES (H2 PARETO-OPTIMAL EXTENSIONS) ---
+# ==============================================================================
+
+@_arm(sj_required=True)
+def run_fb_diff_contract(problem, model_id=GEMINI_37_FLASH_ID, repair_model_id=SONNET_ID):
+    """Candidate 1: Diff-Contracted Multi-File Solver.
+
+    Directly addresses the dominant failure mode on FeatureBench (80%+ of errors
+    are `patch did not apply`). Enforces strict unified diff path/hunk standards:
+    relative paths (no /testbed/), zero-context new file headers (--- /dev/null),
+    and minimal context lines to ensure git apply and patch --fuzz=5 cleanly succeed.
+    """
+    return _ladder(
+        problem,
+        [(model_id, "low"), (repair_model_id, None if repair_model_id == SONNET_ID else "low")],
+        gate="never",
+        solver_role=DIFF_CONTRACT_SOLVER_ROLE,
+        repair_role=DIFF_CONTRACT_REPAIR_ROLE,
+    )
+
+
+@_arm(sj_required=True)
+def run_fb_diff_aware_gate(problem, tiers=TIERS, frontier=FRONTIER):
+    """Candidate 2: Diff-Aware Evidence Escalation Gate.
+
+    Fixes the blind spot in standard evidence gate where `patch did not apply` was
+    classified as shallow and never escalated to Opus-5. Escalate to Frontier (Opus-5)
+    when:
+    (1) Unit tests show `broad` or `stalled` failure (>=3 failing identities), OR
+    (2) Patch application fails consecutively across attempts (stalled format).
+    """
+    def _gate(difficulty, loop, n_tiers, last_err=""):
+        if difficulty is not None and difficulty.level in ("broad", "stalled"):
+            return True, f"typed test failure classified as {difficulty.level}"
+        if "patch did not apply" in str(last_err) and loop >= 2:
+            return True, "stalled patch formatting across consecutive attempts"
+        if loop >= n_tiers:
+            return True, "reached end of tier ladder"
+        return False, "stay on standard tier"
+
+    return _ladder(
+        problem,
+        tiers,
+        gate=_gate,
+        frontier=frontier,
+        solver_role=DIFF_CONTRACT_SOLVER_ROLE,
+        repair_role=DIFF_CONTRACT_REPAIR_ROLE,
+    )
+
+
+@_arm(sj_required=True)
+def run_fb_spec_deconstruct(problem, architect_model=GEMINI_37_FLASH_ID,
+                            solver_model=GEMINI_37_FLASH_ID, repair_model=SONNET_ID):
+    """Candidate 3: Manifest Deconstruction & Component Synthesis.
+
+    Deconstructs 40k+ character problem statements into a structured File-to-Interface
+    Manifest before synthesizing unified diffs. Solves multi-file interface omission
+    and enables component-targeted repair without vague natural language overhead.
+    """
+    acc = {"usd": 0.0, "out": 0, "tok": 0}
+    manifest_prompt = MANIFEST_ROLE + _context(problem)
+    manifest, usage, _ = dispatch_model(architect_model, manifest_prompt,
+                                        max_tokens=1024, problem=problem)
+    _spend(acc, usage)
+
+    return _ladder(
+        problem,
+        [(solver_model, "low"), (repair_model, None if repair_model == SONNET_ID else "low")],
+        gate="never",
+        plan=f"Target File & Interface Manifest:\n{manifest}",
+        acc=acc,
+        solver_role=DIFF_CONTRACT_SOLVER_ROLE,
+        repair_role=DIFF_CONTRACT_REPAIR_ROLE,
+    )
+
+
+# ==============================================================================
 # --- VARIANT REGISTRY ---
 # ==============================================================================
 
@@ -328,44 +442,66 @@ OPUS_CATEGORY = "8b. FeatureBench frontier baseline"
 FEATUREBENCH_VARIANTS = {
     "fb_single_flash": {
         "id": "fb_single_flash", "category": CATEGORY,
-        "name": "F0a. Single: gemini-3.7-flash low (3 rungs)",
-        "models": "Gemini 3.7 Flash (low) x3",
+        "name": "F0a. Single: gemini-3.7-flash low (2 rungs)",
+        "models": "Gemini 3.7 Flash (low) x2",
         "triage_mode": "Straitjacket contained digest ($0.00)",
         "fn": lambda p: run_fb_single(p, model_id=GEMINI_37_FLASH_ID, thinking_level="low"),
     },
     "fb_single_sonnet": {
         "id": "fb_single_sonnet", "category": CATEGORY,
-        "name": "F0b. Single: claude-sonnet-5 (3 rungs)",
-        "models": "Claude Sonnet-5 x3",
+        "name": "F0b. Single: claude-sonnet-5 (2 rungs)",
+        "models": "Claude Sonnet-5 x2",
         "triage_mode": "Straitjacket contained digest ($0.00)",
         "fn": lambda p: run_fb_single(p, model_id=SONNET_ID),
     },
     "fb_cascade": {
         "id": "fb_cascade", "category": CATEGORY,
-        "name": "F1. Cascade: 3.7-flash -> sonnet-5 -> opus-5 (attempt-count gate)",
-        "models": "Gemini 3.7 Flash -> Claude Sonnet-5 -> Claude Opus-5",
+        "name": "F1. Cascade: 3.7-flash -> sonnet-5 (attempt-count gate)",
+        "models": "Gemini 3.7 Flash -> Claude Sonnet-5",
         "triage_mode": "Straitjacket contained digest ($0.00)",
         "fn": run_fb_cascade,
     },
     "fb_evidence_gate": {
         "id": "fb_evidence_gate", "category": CATEGORY,
         "name": "F2. Evidence gate: same tiers, escalate when the digest says hard",
-        "models": "Gemini 3.7 Flash -> Claude Sonnet-5 -> Claude Opus-5 (evidence gate)",
+        "models": "Gemini 3.7 Flash -> Claude Sonnet-5 / Opus-5 (evidence gate)",
         "triage_mode": "Straitjacket digest + evidence-gated escalation ($0.00)",
         "fn": run_fb_evidence_gate,
     },
     "fb_plan_exec": {
         "id": "fb_plan_exec", "category": CATEGORY,
         "name": "F3. H2: opus-5 plans first, 3.7-flash implements and repairs",
-        "models": "Claude Opus-5 plan + Gemini 3.7 Flash exec x3",
+        "models": "Claude Opus-5 plan + Gemini 3.7 Flash exec x2",
         "triage_mode": "Straitjacket contained digest ($0.00)",
         "fn": run_fb_plan_exec,
     },
+    "fb_diff_contract": {
+        "id": "fb_diff_contract", "category": CATEGORY,
+        "name": "F4. Diff-Contract: Flash low -> Sonnet-5 (Strict unified diff anchoring)",
+        "models": "Gemini 3.7 Flash (low) -> Claude Sonnet-5 (contracted diffs)",
+        "triage_mode": "Straitjacket contained digest ($0.00)",
+        "fn": run_fb_diff_contract,
+    },
+    "fb_diff_aware_gate": {
+        "id": "fb_diff_aware_gate", "category": CATEGORY,
+        "name": "F5. Diff-Aware Evidence Gate: Flash low -> Sonnet-5 / Opus-5 on hard/stalled",
+        "models": "Gemini 3.7 Flash -> Claude Sonnet-5 / Opus-5 (diff-aware gate)",
+        "triage_mode": "Straitjacket digest + diff-aware escalation ($0.00)",
+        "fn": run_fb_diff_aware_gate,
+    },
+    "fb_spec_deconstruct": {
+        "id": "fb_spec_deconstruct", "category": CATEGORY,
+        "name": "F6. Spec Deconstruct: Manifest extraction + Flash low synthesis & repair",
+        "models": "Gemini 3.7 Flash manifest + Flash/Sonnet diff synthesis",
+        "triage_mode": "Straitjacket contained digest ($0.00)",
+        "fn": run_fb_spec_deconstruct,
+    },
     "fb_single_opus": {
         "id": "fb_single_opus", "category": OPUS_CATEGORY,
-        "name": "F0c. Single: claude-opus-5 (3 rungs)",
-        "models": "Claude Opus-5 x3",
+        "name": "F0c. Single: claude-opus-5 (2 rungs)",
+        "models": "Claude Opus-5 x2",
         "triage_mode": "Straitjacket contained digest ($0.00)",
         "fn": lambda p: run_fb_single(p, model_id=OPUS_5_ID),
     },
 }
+

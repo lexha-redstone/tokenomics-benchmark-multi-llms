@@ -1427,7 +1427,9 @@ def get_configurations(dataset="bcb", group="all", variant_keys=None):
     if group in ("featurebench", "fb"):
         return [c for c in all_configs if "8. FeatureBench" in c["category"]]
     if group in ("swebench_pro", "swebench-pro", "sbp"):
-        return [c for c in all_configs if "9. SWE-bench Pro" in c["category"]]
+        return [c for c in all_configs if "9. SWE-bench Pro" in c["category"] or "9c. SWE-bench Pro" in c["category"]]
+    if group in ("sbp_candidates", "sbp-candidates", "candidates"):
+        return [c for c in all_configs if "9c. SWE-bench Pro" in c["category"]]
     if group == "single":
         return [c for c in all_configs if "1. Single" in c["category"]]
     elif group == "combo":

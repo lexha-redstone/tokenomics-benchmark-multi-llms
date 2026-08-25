@@ -1,0 +1,594 @@
+{
+  "fb_diff_contract": {
+    "mlflow__mlflow.93dab383.test_client.42de781c.lv1": {
+      "task_id": "mlflow__mlflow.93dab383.test_client.42de781c.lv1",
+      "passed": false,
+      "as_run_usd": 0.076201,
+      "triage_usd": 0.0,
+      "output_tokens": 5962,
+      "total_tokens": 18310,
+      "repair_loops": 1,
+      "simulated_calls": 0,
+      "containment": {
+        "captures": 0,
+        "raw_tokens_est": 0,
+        "digest_tokens_est": 0,
+        "tokens_kept_out": 0,
+        "containment_ratio": null,
+        "profiles": [],
+        "backend": null,
+        "handles": [],
+        "raw_exact": null,
+        "treatment_events": 1,
+        "evidence_sent_tokens_est": 31,
+        "native_baseline_tokens_est": 31,
+        "delta_vs_native_tokens": 0,
+        "treatments": [
+          "straitjacket"
+        ]
+      },
+      "retrievals": null,
+      "routing": {
+        "degraded": false,
+        "rungs": [
+          "gemini-3.7-flash/low",
+          "claude-sonnet-5/off"
+        ],
+        "decisions": [
+          {
+            "attempt": 1,
+            "difficulty": {
+              "level": "shallow",
+              "reasons": [
+                "no typed evidence (profile has no fact tier)"
+              ],
+              "failing": 0,
+              "failure_classes": [],
+              "profile": "",
+              "typed": false
+            },
+            "escalate": false,
+            "why": "frontier disabled"
+          }
+        ],
+        "frontier_used": false,
+        "frontier_rung": null,
+        "solved_at": null
+      },
+      "subtasks": null,
+      "subtask_summary": null,
+      "error": "patch did not apply (tried `git apply` then `patch --fuzz=5`). Re-emit the diff against the files as they exist at this commit."
+    },
+    "mlflow__mlflow.93dab383.test_utils.3c9647bf.lv1": {
+      "task_id": "mlflow__mlflow.93dab383.test_utils.3c9647bf.lv1",
+      "passed": false,
+      "as_run_usd": 0.073321,
+      "triage_usd": 0.0,
+      "output_tokens": 5377,
+      "total_tokens": 19022,
+      "repair_loops": 1,
+      "simulated_calls": 0,
+      "containment": {
+        "captures": 0,
+        "raw_tokens_est": 0,
+        "digest_tokens_est": 0,
+        "tokens_kept_out": 0,
+        "containment_ratio": null,
+        "profiles": [],
+        "backend": null,
+        "handles": [],
+        "raw_exact": null,
+        "treatment_events": 1,
+        "evidence_sent_tokens_est": 31,
+        "native_baseline_tokens_est": 31,
+        "delta_vs_native_tokens": 0,
+        "treatments": [
+          "straitjacket"
+        ]
+      },
+      "retrievals": null,
+      "routing": {
+        "degraded": false,
+        "rungs": [
+          "gemini-3.7-flash/low",
+          "claude-sonnet-5/off"
+        ],
+        "decisions": [
+          {
+            "attempt": 1,
+            "difficulty": {
+              "level": "shallow",
+              "reasons": [
+                "no typed evidence (profile has no fact tier)"
+              ],
+              "failing": 0,
+              "failure_classes": [],
+              "profile": "",
+              "typed": false
+            },
+            "escalate": false,
+            "why": "frontier disabled"
+          }
+        ],
+        "frontier_used": false,
+        "frontier_rung": null,
+        "solved_at": null
+      },
+      "subtasks": null,
+      "subtask_summary": null,
+      "error": "patch did not apply (tried `git apply` then `patch --fuzz=5`). Re-emit the diff against the files as they exist at this commit."
+    },
+    "mlflow__mlflow.93dab383.test_client_webhooks.75e39b52.lv1": {
+      "task_id": "mlflow__mlflow.93dab383.test_client_webhooks.75e39b52.lv1",
+      "passed": false,
+      "as_run_usd": 0.049019,
+      "triage_usd": 0.0,
+      "output_tokens": 2869,
+      "total_tokens": 15667,
+      "repair_loops": 1,
+      "simulated_calls": 0,
+      "containment": {
+        "captures": 0,
+        "raw_tokens_est": 0,
+        "digest_tokens_est": 0,
+        "tokens_kept_out": 0,
+        "containment_ratio": null,
+        "profiles": [],
+        "backend": null,
+        "handles": [],
+        "raw_exact": null,
+        "treatment_events": 1,
+        "evidence_sent_tokens_est": 31,
+        "native_baseline_tokens_est": 31,
+        "delta_vs_native_tokens": 0,
+        "treatments": [
+          "straitjacket"
+        ]
+      },
+      "retrievals": null,
+      "routing": {
+        "degraded": false,
+        "rungs": [
+          "gemini-3.7-flash/low",
+          "claude-sonnet-5/off"
+        ],
+        "decisions": [
+          {
+            "attempt": 1,
+            "difficulty": {
+              "level": "shallow",
+              "reasons": [
+                "no typed evidence (profile has no fact tier)"
+              ],
+              "failing": 0,
+              "failure_classes": [],
+              "profile": "",
+              "typed": false
+            },
+            "escalate": false,
+            "why": "frontier disabled"
+          }
+        ],
+        "frontier_used": false,
+        "frontier_rung": null,
+        "solved_at": null
+      },
+      "subtasks": null,
+      "subtask_summary": null,
+      "error": "patch did not apply (tried `git apply` then `patch --fuzz=5`). Re-emit the diff against the files as they exist at this commit."
+    },
+    "mlflow__mlflow.93dab383.test_judge_tool_search_traces.cad8fc4b.lv1": {
+      "task_id": "mlflow__mlflow.93dab383.test_judge_tool_search_traces.cad8fc4b.lv1",
+      "passed": false,
+      "as_run_usd": 0.058073,
+      "triage_usd": 0.0,
+      "output_tokens": 3860,
+      "total_tokens": 14731,
+      "repair_loops": 1,
+      "simulated_calls": 0,
+      "containment": {
+        "captures": 0,
+        "raw_tokens_est": 0,
+        "digest_tokens_est": 0,
+        "tokens_kept_out": 0,
+        "containment_ratio": null,
+        "profiles": [],
+        "backend": null,
+        "handles": [],
+        "raw_exact": null,
+        "treatment_events": 1,
+        "evidence_sent_tokens_est": 8,
+        "native_baseline_tokens_est": 8,
+        "delta_vs_native_tokens": 0,
+        "treatments": [
+          "straitjacket"
+        ]
+      },
+      "retrievals": null,
+      "routing": {
+        "degraded": false,
+        "rungs": [
+          "gemini-3.7-flash/low",
+          "claude-sonnet-5/off"
+        ],
+        "decisions": [
+          {
+            "attempt": 1,
+            "difficulty": {
+              "level": "shallow",
+              "reasons": [
+                "no typed evidence (profile has no fact tier)"
+              ],
+              "failing": 0,
+              "failure_classes": [],
+              "profile": "",
+              "typed": false
+            },
+            "escalate": false,
+            "why": "frontier disabled"
+          }
+        ],
+        "frontier_used": false,
+        "frontier_rung": null,
+        "solved_at": null
+      },
+      "subtasks": null,
+      "subtask_summary": null,
+      "error": "patch did not apply (tried `git apply` then `patch --fuzz=5`). Re-emit the diff against the files as they exist at this commit."
+    },
+    "mlflow__mlflow.93dab383.test_jsonpath_utils.eb851c42.lv1": {
+      "task_id": "mlflow__mlflow.93dab383.test_jsonpath_utils.eb851c42.lv1",
+      "passed": false,
+      "as_run_usd": 0.070248,
+      "triage_usd": 0.0,
+      "output_tokens": 5627,
+      "total_tokens": 16471,
+      "repair_loops": 1,
+      "simulated_calls": 0,
+      "containment": {
+        "captures": 0,
+        "raw_tokens_est": 0,
+        "digest_tokens_est": 0,
+        "tokens_kept_out": 0,
+        "containment_ratio": null,
+        "profiles": [],
+        "backend": null,
+        "handles": [],
+        "raw_exact": null,
+        "treatment_events": 1,
+        "evidence_sent_tokens_est": 31,
+        "native_baseline_tokens_est": 31,
+        "delta_vs_native_tokens": 0,
+        "treatments": [
+          "straitjacket"
+        ]
+      },
+      "retrievals": null,
+      "routing": {
+        "degraded": false,
+        "rungs": [
+          "gemini-3.7-flash/low",
+          "claude-sonnet-5/off"
+        ],
+        "decisions": [
+          {
+            "attempt": 1,
+            "difficulty": {
+              "level": "shallow",
+              "reasons": [
+                "no typed evidence (profile has no fact tier)"
+              ],
+              "failing": 0,
+              "failure_classes": [],
+              "profile": "",
+              "typed": false
+            },
+            "escalate": false,
+            "why": "frontier disabled"
+          }
+        ],
+        "frontier_used": false,
+        "frontier_rung": null,
+        "solved_at": null
+      },
+      "subtasks": null,
+      "subtask_summary": null,
+      "error": "patch did not apply (tried `git apply` then `patch --fuzz=5`). Re-emit the diff against the files as they exist at this commit."
+    },
+    "mlflow__mlflow.93dab383.test_genai_metrics.5f107830.lv1": {
+      "task_id": "mlflow__mlflow.93dab383.test_genai_metrics.5f107830.lv1",
+      "passed": false,
+      "as_run_usd": 0.153249,
+      "triage_usd": 0.0,
+      "output_tokens": 12132,
+      "total_tokens": 35229,
+      "repair_loops": 1,
+      "simulated_calls": 0,
+      "containment": {
+        "captures": 0,
+        "raw_tokens_est": 0,
+        "digest_tokens_est": 0,
+        "tokens_kept_out": 0,
+        "containment_ratio": null,
+        "profiles": [],
+        "backend": null,
+        "handles": [],
+        "raw_exact": null,
+        "treatment_events": 1,
+        "evidence_sent_tokens_est": 31,
+        "native_baseline_tokens_est": 31,
+        "delta_vs_native_tokens": 0,
+        "treatments": [
+          "straitjacket"
+        ]
+      },
+      "retrievals": null,
+      "routing": {
+        "degraded": false,
+        "rungs": [
+          "gemini-3.7-flash/low",
+          "claude-sonnet-5/off"
+        ],
+        "decisions": [
+          {
+            "attempt": 1,
+            "difficulty": {
+              "level": "shallow",
+              "reasons": [
+                "no typed evidence (profile has no fact tier)"
+              ],
+              "failing": 0,
+              "failure_classes": [],
+              "profile": "",
+              "typed": false
+            },
+            "escalate": false,
+            "why": "frontier disabled"
+          }
+        ],
+        "frontier_used": false,
+        "frontier_rung": null,
+        "solved_at": null
+      },
+      "subtasks": null,
+      "subtask_summary": null,
+      "error": "patch did not apply (tried `git apply` then `patch --fuzz=5`). Re-emit the diff against the files as they exist at this commit."
+    },
+    "mlflow__mlflow.93dab383.test_security.98fcde1d.lv1": {
+      "task_id": "mlflow__mlflow.93dab383.test_security.98fcde1d.lv1",
+      "passed": false,
+      "as_run_usd": 0.128835,
+      "triage_usd": 0.0,
+      "output_tokens": 14148,
+      "total_tokens": 23347,
+      "repair_loops": 1,
+      "simulated_calls": 0,
+      "containment": {
+        "captures": 0,
+        "raw_tokens_est": 0,
+        "digest_tokens_est": 0,
+        "tokens_kept_out": 0,
+        "containment_ratio": null,
+        "profiles": [],
+        "backend": null,
+        "handles": [],
+        "raw_exact": null,
+        "treatment_events": 1,
+        "evidence_sent_tokens_est": 31,
+        "native_baseline_tokens_est": 31,
+        "delta_vs_native_tokens": 0,
+        "treatments": [
+          "straitjacket"
+        ]
+      },
+      "retrievals": null,
+      "routing": {
+        "degraded": false,
+        "rungs": [
+          "gemini-3.7-flash/low",
+          "claude-sonnet-5/off"
+        ],
+        "decisions": [
+          {
+            "attempt": 1,
+            "difficulty": {
+              "level": "shallow",
+              "reasons": [
+                "no typed evidence (profile has no fact tier)"
+              ],
+              "failing": 0,
+              "failure_classes": [],
+              "profile": "",
+              "typed": false
+            },
+            "escalate": false,
+            "why": "frontier disabled"
+          }
+        ],
+        "frontier_used": false,
+        "frontier_rung": null,
+        "solved_at": null
+      },
+      "subtasks": null,
+      "subtask_summary": null,
+      "error": "patch did not apply (tried `git apply` then `patch --fuzz=5`). Re-emit the diff against the files as they exist at this commit."
+    },
+    "mlflow__mlflow.93dab383.test_numpy_dataset.1beaad57.lv1": {
+      "task_id": "mlflow__mlflow.93dab383.test_numpy_dataset.1beaad57.lv1",
+      "passed": false,
+      "as_run_usd": 0.082437,
+      "triage_usd": 0.0,
+      "output_tokens": 5754,
+      "total_tokens": 22037,
+      "repair_loops": 1,
+      "simulated_calls": 0,
+      "containment": {
+        "captures": 0,
+        "raw_tokens_est": 0,
+        "digest_tokens_est": 0,
+        "tokens_kept_out": 0,
+        "containment_ratio": null,
+        "profiles": [],
+        "backend": null,
+        "handles": [],
+        "raw_exact": null,
+        "treatment_events": 1,
+        "evidence_sent_tokens_est": 31,
+        "native_baseline_tokens_est": 31,
+        "delta_vs_native_tokens": 0,
+        "treatments": [
+          "straitjacket"
+        ]
+      },
+      "retrievals": null,
+      "routing": {
+        "degraded": false,
+        "rungs": [
+          "gemini-3.7-flash/low",
+          "claude-sonnet-5/off"
+        ],
+        "decisions": [
+          {
+            "attempt": 1,
+            "difficulty": {
+              "level": "shallow",
+              "reasons": [
+                "no typed evidence (profile has no fact tier)"
+              ],
+              "failing": 0,
+              "failure_classes": [],
+              "profile": "",
+              "typed": false
+            },
+            "escalate": false,
+            "why": "frontier disabled"
+          }
+        ],
+        "frontier_used": false,
+        "frontier_rung": null,
+        "solved_at": null
+      },
+      "subtasks": null,
+      "subtask_summary": null,
+      "error": "patch did not apply (tried `git apply` then `patch --fuzz=5`). Re-emit the diff against the files as they exist at this commit."
+    },
+    "mlflow__mlflow.93dab383.test_validation.2e1c5076.lv1": {
+      "task_id": "mlflow__mlflow.93dab383.test_validation.2e1c5076.lv1",
+      "passed": false,
+      "as_run_usd": 0.032841,
+      "triage_usd": 0.0,
+      "output_tokens": 1137,
+      "total_tokens": 13329,
+      "repair_loops": 1,
+      "simulated_calls": 0,
+      "containment": {
+        "captures": 0,
+        "raw_tokens_est": 0,
+        "digest_tokens_est": 0,
+        "tokens_kept_out": 0,
+        "containment_ratio": null,
+        "profiles": [],
+        "backend": null,
+        "handles": [],
+        "raw_exact": null,
+        "treatment_events": 1,
+        "evidence_sent_tokens_est": 8,
+        "native_baseline_tokens_est": 8,
+        "delta_vs_native_tokens": 0,
+        "treatments": [
+          "straitjacket"
+        ]
+      },
+      "retrievals": null,
+      "routing": {
+        "degraded": false,
+        "rungs": [
+          "gemini-3.7-flash/low",
+          "claude-sonnet-5/off"
+        ],
+        "decisions": [
+          {
+            "attempt": 1,
+            "difficulty": {
+              "level": "shallow",
+              "reasons": [
+                "no typed evidence (profile has no fact tier)"
+              ],
+              "failing": 0,
+              "failure_classes": [],
+              "profile": "",
+              "typed": false
+            },
+            "escalate": false,
+            "why": "frontier disabled"
+          }
+        ],
+        "frontier_used": false,
+        "frontier_rung": null,
+        "solved_at": null
+      },
+      "subtasks": null,
+      "subtask_summary": null,
+      "error": "patch did not apply (tried `git apply` then `patch --fuzz=5`). Re-emit the diff against the files as they exist at this commit."
+    },
+    "mlflow__mlflow.93dab383.test_genai_eval_utils.2d5441f2.lv1": {
+      "task_id": "mlflow__mlflow.93dab383.test_genai_eval_utils.2d5441f2.lv1",
+      "passed": false,
+      "as_run_usd": 0.053464,
+      "triage_usd": 0.0,
+      "output_tokens": 3984,
+      "total_tokens": 13660,
+      "repair_loops": 1,
+      "simulated_calls": 0,
+      "containment": {
+        "captures": 0,
+        "raw_tokens_est": 0,
+        "digest_tokens_est": 0,
+        "tokens_kept_out": 0,
+        "containment_ratio": null,
+        "profiles": [],
+        "backend": null,
+        "handles": [],
+        "raw_exact": null,
+        "treatment_events": 1,
+        "evidence_sent_tokens_est": 31,
+        "native_baseline_tokens_est": 31,
+        "delta_vs_native_tokens": 0,
+        "treatments": [
+          "straitjacket"
+        ]
+      },
+      "retrievals": null,
+      "routing": {
+        "degraded": false,
+        "rungs": [
+          "gemini-3.7-flash/low",
+          "claude-sonnet-5/off"
+        ],
+        "decisions": [
+          {
+            "attempt": 1,
+            "difficulty": {
+              "level": "shallow",
+              "reasons": [
+                "no typed evidence (profile has no fact tier)"
+              ],
+              "failing": 0,
+              "failure_classes": [],
+              "profile": "",
+              "typed": false
+            },
+            "escalate": false,
+            "why": "frontier disabled"
+          }
+        ],
+        "frontier_used": false,
+        "frontier_rung": null,
+        "solved_at": null
+      },
+      "subtasks": null,
+      "subtask_summary": null,
+      "error": "patch did not apply (tried `git apply` then `patch --fuzz=5`). Re-emit the diff against the files as they exist at this commit."
+    }
+  }
+}

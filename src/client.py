@@ -99,9 +99,9 @@ def simulation_allowed():
     return os.environ.get("ALLOW_SIMULATION", "").strip().lower() in ("1", "true", "yes")
 
 
-# Retry budget for failures that are worth retrying. 504s and token refreshes
-# routinely need longer than the 2s+3s the old loop allowed.
-MAX_ATTEMPTS = int(os.environ.get("DISPATCH_MAX_ATTEMPTS", "5"))
+# Retry budget for failures that are worth retrying. Set to 1 to fail fast and
+# proceed immediately on transient errors.
+MAX_ATTEMPTS = int(os.environ.get("DISPATCH_MAX_ATTEMPTS", "1"))
 BACKOFF_BASE = float(os.environ.get("DISPATCH_BACKOFF_BASE", "2.0"))
 BACKOFF_CAP = float(os.environ.get("DISPATCH_BACKOFF_CAP", "60"))
 
@@ -250,7 +250,7 @@ def claude_api_call(model_id, prompt, max_tokens=2560, thinking_level=None, prob
     body = json.dumps(payload).encode("utf-8")
     
     last_exc = None
-    for attempt in range(MAX_ATTEMPTS):
+    for attempt in range(max(MAX_ATTEMPTS, 2)):
         try:
             req = urllib.request.Request(url, data=body, headers={
                 "Authorization": f"Bearer {token}",
@@ -278,12 +278,12 @@ def claude_api_call(model_id, prompt, max_tokens=2560, thinking_level=None, prob
         except Exception as e:
             last_exc = e
             kind = classify_error(e)
-            if kind == "permanent" or attempt == MAX_ATTEMPTS - 1:
-                return _give_up(model_id, e, kind, attempt + 1,
-                                prompt, max_tokens, thinking_level, problem)
             if kind == "auth":
                 # The cached token may be exactly what the server rejected.
                 token = _vertex_access_token(force_refresh=True) or token
+            if kind == "permanent" or (kind == "transient" and attempt >= MAX_ATTEMPTS - 1) or (kind == "auth" and attempt >= 1):
+                return _give_up(model_id, e, kind, attempt + 1,
+                                prompt, max_tokens, thinking_level, problem)
             delay = _sleep_for(attempt)
             print(f"[{model_id}] {kind} failure ({_short_error_str(e)}); retry "
                   f"{attempt + 2}/{MAX_ATTEMPTS} in {delay:.1f}s", flush=True)
@@ -360,13 +360,13 @@ def gemini_call(model_id, prompt, max_tokens=2560, thinking_level=None, problem=
             except Exception as e:
                 last_exc = e
                 kind = classify_error(e)
-                if kind == "permanent" or attempt == MAX_ATTEMPTS - 1:
-                    return _give_up(model_id, e, kind, attempt + 1,
-                                    prompt, max_tokens, thinking_level, problem)
                 if kind == "auth":
                     global _gemini_client
                     _gemini_client = None      # rebuild against fresh credentials
                     client = _gemini() or client
+                if kind == "permanent" or (kind == "transient" and attempt >= MAX_ATTEMPTS - 1) or (kind == "auth" and attempt >= 1):
+                    return _give_up(model_id, e, kind, attempt + 1,
+                                    prompt, max_tokens, thinking_level, problem)
                 delay = _sleep_for(attempt)
                 print(f"[{model_id}] {kind} failure ({_short_error_str(e)}); retry "
                       f"{attempt + 2}/{MAX_ATTEMPTS} in {delay:.1f}s", flush=True)

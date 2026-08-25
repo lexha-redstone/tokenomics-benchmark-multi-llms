@@ -127,8 +127,9 @@ def main():
     parser.add_argument("--split", "-s", default=None, help="Dataset split (default: standard)")
     parser.add_argument("--no-cache", action="store_true",
                         help="Ignore the task cache and re-run every task live")
-    parser.add_argument("--task-retries", type=int, default=3,
-                        help="Re-attempts for a task whose API calls failed (default: 3)")
+    parser.add_argument("--task-retries", type=int,
+                        default=int(os.environ.get("TASK_RETRIES", "1")),
+                        help="Re-attempts for a task whose API calls failed (default: 1)")
     parser.add_argument("--allow-simulation", action="store_true",
                         help="Substitute SIMULATED output on an unrecoverable API failure "
                              "instead of discarding the task. Off by default.")

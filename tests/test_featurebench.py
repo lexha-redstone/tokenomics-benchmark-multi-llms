@@ -135,6 +135,9 @@ def test_test_pass_ratio_reads_pytest_summary():
     fb.run_fb_cascade,
     fb.run_fb_evidence_gate,
     fb.run_fb_plan_exec,
+    fb.run_fb_diff_contract,
+    fb.run_fb_diff_aware_gate,
+    fb.run_fb_spec_deconstruct,
 ])
 def test_every_arm_makes_at_most_three_oracle_calls(wired, arm):
     arm() if not callable(getattr(arm, "__wrapped__", None)) else arm(PROBLEM)
@@ -146,11 +149,11 @@ def test_every_arm_makes_at_most_three_oracle_calls(wired, arm):
 
 # -- who holds each rung ---------------------------------------------------
 
-def test_cascade_escalates_one_rung_per_failure_ending_at_the_frontier(wired):
+def test_cascade_escalates_one_rung_per_failure_ending_at_sonnet(wired):
     out = fb.run_fb_cascade(PROBLEM)
     assert out["routing"]["rungs"] == [
-        f"{fb.GEMINI_37_FLASH_ID}/low", f"{fb.SONNET_ID}/off", f"{fb.FRONTIER}/off"]
-    assert out["routing"]["frontier_used"] is True
+        f"{fb.GEMINI_37_FLASH_ID}/low", f"{fb.SONNET_ID}/off"]
+    assert out["routing"]["frontier_used"] is False
 
 
 def test_evidence_gate_jumps_to_the_frontier_when_the_digest_says_broad(wired):
@@ -176,6 +179,42 @@ def test_evidence_gate_flags_itself_degraded_without_a_typed_fact_tier(wired,
         "label; the row must say so")
 
 
+def test_diff_aware_gate_escalates_on_broad_test_failure(wired):
+    out = fb.run_fb_diff_aware_gate(PROBLEM)
+    rungs = out["routing"]["rungs"]
+    assert rungs[1] == f"{fb.FRONTIER}/off"
+    assert out["routing"]["frontier_used"] is True
+
+
+def test_diff_aware_gate_escalates_on_consecutive_patch_apply_failures(wired, monkeypatch):
+    def patch_fail_score(self, patch):
+        self.calls.append(patch)
+        return False, "patch did not apply (tried `git apply` then `patch --fuzz=5`)."
+
+    monkeypatch.setattr(FakeEnv, "score", patch_fail_score)
+    out = fb.run_fb_diff_aware_gate(PROBLEM)
+    rungs = out["routing"]["rungs"]
+    assert rungs[0] == f"{fb.GEMINI_37_FLASH_ID}/low"
+    assert rungs[1] == f"{fb.SONNET_ID}/off"
+    assert out["routing"]["frontier_used"] is False
+
+
+def test_diff_contract_uses_contracted_roles(wired):
+    out = fb.run_fb_diff_contract(PROBLEM)
+    assert "CRITICAL UNIFIED DIFF REQUIREMENTS" in wired[0]["prompt"]
+    assert "principal software engineer repairing" in wired[1]["prompt"]
+    assert out["routing"]["rungs"] == [
+        f"{fb.GEMINI_37_FLASH_ID}/low", f"{fb.SONNET_ID}/off"]
+
+
+def test_spec_deconstruct_extracts_manifest_first(wired):
+    out = fb.run_fb_spec_deconstruct(PROBLEM)
+    assert wired[0]["model"] == fb.GEMINI_37_FLASH_ID, "the manifest extractor runs first"
+    assert fb.MANIFEST_ROLE[:30] in wired[0]["prompt"]
+    assert [c["model"] for c in wired[1:]] == [fb.GEMINI_37_FLASH_ID, fb.SONNET_ID]
+    assert "FILE AND INTERFACE MANIFEST" in wired[0]["prompt"]
+
+
 RANK = {f"{fb.GEMINI_37_FLASH_ID}/low": 0, f"{fb.SONNET_ID}/off": 1,
         f"{fb.FRONTIER}/off": 2}
 
@@ -188,7 +227,7 @@ def test_the_ladder_never_de_escalates(wired):
     is a one-way ratchet: once an arm is at a rung it never drops below it, and
     a spare oracle call is spent re-running the rung it holds.
     """
-    for arm in (fb.run_fb_cascade, fb.run_fb_evidence_gate):
+    for arm in (fb.run_fb_cascade, fb.run_fb_evidence_gate, fb.run_fb_diff_aware_gate):
         ranks = [RANK[r] for r in arm(PROBLEM)["routing"]["rungs"]]
         assert ranks == sorted(ranks), f"{arm.__name__} de-escalated: {ranks}"
 
@@ -205,8 +244,8 @@ def test_plan_exec_spends_the_frontier_model_before_the_first_oracle_call(wired)
     out = fb.run_fb_plan_exec(PROBLEM)
     assert wired[0]["model"] == fb.OPUS_5_ID, "the planner runs first"
     assert fb.PLANNER_ROLE[:40] in wired[0]["prompt"]
-    # ...and never again: the executor and both repairs are the cheap model.
-    assert [c["model"] for c in wired[1:]] == [fb.GEMINI_37_FLASH_ID] * 3
+    # ...and never again: the executor and one repair are the cheap model.
+    assert [c["model"] for c in wired[1:]] == [fb.GEMINI_37_FLASH_ID] * 2
     assert out["routing"]["frontier_used"] is False
     # The plan reaches the executor, or the arm is just a flash single.
     assert "implementation plan" in wired[1]["prompt"].lower()

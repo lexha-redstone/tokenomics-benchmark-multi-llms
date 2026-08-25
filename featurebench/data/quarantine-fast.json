@@ -1,17 +1,52 @@
 {
  "_comment": "Environment-specific. Regenerate on each machine; do not copy between them. A `missing_image` reason means `docker pull` failed, not that the task is broken.",
  "split": "fast",
- "generated": "2026-08-25T04:00:26+00:00",
+ "generated": "2026-08-25T06:04:06+00:00",
  "n_tasks": 100,
- "n_checked": 40,
+ "n_checked": 54,
  "partial": true,
- "n_quarantined": 1,
+ "n_quarantined": 6,
  "tasks": {
   "mlflow__mlflow.93dab383.test_trace_manager.bb95fbcd.lv1": {
    "ok": false,
    "reason": "gold_fails",
    "test_pass_ratio": 0.9872,
-   "evidence": "B tests/store/artifact/test_gcs_artifact_repo.py::test_log_artifacts\nPASSED | MEM 8.3/31.3 GB | DISK 103.1/114.6 GB tests/store/artifact/test_gcs_artifact_repo.py::test_download_artifacts_calls_expected_gcs_client_methods\nPASSED | MEM 8.3/31.3 GB | DISK 103.1/114.6 GB tests/store/artifact/test_gcs_artifact_repo.py::test_get_anonymous_bucket\nPASSED | MEM 8.3/31.3 GB | DISK 103.1/114.6 GB tests/store/artifact/test_gcs_artifact_repo.py::test_download_artifacts_downloads_expected_content\nPASSED | MEM 8.3/31.3 GB | DISK 103.1/114.6 GB tests/store/artifact/test_gcs_artifact_repo.py::test_delete_arti",
+   "evidence": "act/test_gcs_artifact_repo.py::test_log_artifacts\nPASSED | MEM 12.7/94.3 GB | DISK 135.2/976.2 GB tests/store/artifact/test_gcs_artifact_repo.py::test_download_artifacts_calls_expected_gcs_client_methods\nPASSED | MEM 12.7/94.3 GB | DISK 135.2/976.2 GB tests/store/artifact/test_gcs_artifact_repo.py::test_get_anonymous_bucket\nPASSED | MEM 12.7/94.3 GB | DISK 135.2/976.2 GB tests/store/artifact/test_gcs_artifact_repo.py::test_download_artifacts_downloads_expected_content\nPASSED | MEM 12.7/94.3 GB | DISK 135.2/976.2 GB tests/store/artifact/test_gcs_artifact_repo.py::test_delete_artifacts\nPASSED | ",
+   "setup_error": ""
+  },
+  "astropy__astropy.b0db0daa.test_compressed.8daeb7d6.lv1": {
+   "ok": false,
+   "reason": "gold_fails",
+   "test_pass_ratio": 0.998,
+   "evidence": "ED astropy/timeseries/periodograms/lombscargle/implementations/tests/test_utils.py::test_bitceil[1-N7]\nPASSED astropy/timeseries/periodograms/lombscargle/implementations/tests/test_utils.py::test_bitceil[1-N8]\nPASSED astropy/timeseries/periodograms/lombscargle/implementations/tests/test_utils.py::test_bitceil[1-N9]\nPASSED astropy/timeseries/periodograms/lombscargle/implementations/tests/test_utils.py::test_bitceil[1-N10]\nPASSED astropy/timeseries/periodograms/lombscargle/implementations/tests/test_utils.py::test_extirpolate[5-100]\nPASSED astropy/timeseries/periodograms/lombscargle/implementati",
+   "setup_error": ""
+  },
+  "astropy__astropy.b0db0daa.test_quantity_erfa_ufuncs.3fc54395.lv1": {
+   "ok": false,
+   "reason": "gold_fails",
+   "test_pass_ratio": 0.9969,
+   "evidence": "tions0-fullstack_times0]\nPASSED astropy/coordinates/tests/test_iau_fullstack.py::test_iau_fullstack[fullstack_obsconditions4-min_alt4-tol4-fullstack_locations0-fullstack_times1]\nPASSED astropy/coordinates/tests/test_iau_fullstack.py::test_iau_fullstack[fullstack_obsconditions4-min_alt4-tol4-fullstack_locations1-fullstack_times0]\nPASSED astropy/coordinates/tests/test_iau_fullstack.py::test_iau_fullstack[fullstack_obsconditions4-min_alt4-tol4-fullstack_locations1-fullstack_times1]\nPASSED astropy/coordinates/tests/test_iau_fullstack.py::test_iau_fullstack[fullstack_obsconditions4-min_alt4-tol4-fu",
+   "setup_error": ""
+  },
+  "astropy__astropy.b0db0daa.test_tree.261bac3c.lv1": {
+   "ok": false,
+   "reason": "gold_fails",
+   "test_pass_ratio": 0.8879,
+   "evidence": "als::test_apply_space_motion[dt0]\nPASSED astropy/coordinates/tests/test_masked.py::TestSkyCoordWithDifferentials::test_apply_space_motion[dt1]\nPASSED astropy/coordinates/tests/test_masked.py::TestSkyCoordWithOnlyDifferentialsMasked::test_setup\nPASSED astropy/coordinates/tests/test_masked.py::TestSkyCoordWithOnlyDifferentialsMasked::test_get_mask\nPASSED astropy/coordinates/tests/test_masked.py::TestSkyCoordWithOnlyDifferentialsMasked::test_filled\nPASSED astropy/coordinates/tests/test_masked.py::TestSkyCoordWithOnlyDifferentialsMasked::test_filled_with_masked_value\nPASSED astropy/coordinates/tes",
+   "setup_error": ""
+  },
+  "astropy__astropy.b0db0daa.test_lombscargle_multiband.78687278.lv1": {
+   "ok": false,
+   "reason": "gold_fails",
+   "test_pass_ratio": 0.999,
+   "evidence": "able_groups_mask_index[False]\nPASSED astropy/table/tests/test_groups.py::test_table_groups_mask_index[True]\nPASSED astropy/table/tests/test_groups.py::test_table_groups_array_index[False]\nPASSED astropy/table/tests/test_groups.py::test_table_groups_array_index[True]\nPASSED astropy/table/tests/test_groups.py::test_table_groups_slicing[False]\nPASSED astropy/table/tests/test_groups.py::test_table_groups_slicing[True]\nPASSED astropy/table/tests/test_groups.py::test_grouped_item_access[False]\nPASSED astropy/table/tests/test_groups.py::test_grouped_item_access[True]\nPASSED astropy/table/tests/test_g",
+   "setup_error": ""
+  },
+  "astropy__astropy.b0db0daa.test_converter.2ef0539f.lv1": {
+   "ok": false,
+   "reason": "gold_fails",
+   "test_pass_ratio": 0.9873,
+   "evidence": "s_nddata_ignored\nPASSED astropy/nddata/tests/test_decorators.py::test_incorrect_first_argument[<lambda>0]\nPASSED astropy/nddata/tests/test_decorators.py::test_incorrect_first_argument[<lambda>1]\nPASSED astropy/nddata/tests/test_decorators.py::test_wrap_function_no_kwargs\nPASSED astropy/nddata/tests/test_decorators.py::test_wrap_function_repack_valid\nPASSED astropy/nddata/tests/test_decorators.py::test_wrap_function_accepts\nPASSED astropy/nddata/tests/test_decorators.py::test_wrap_preserve_signature_docstring\nPASSED astropy/nddata/tests/test_decorators.py::test_setup_failures1\nPASSED astropy/nd",
    "setup_error": ""
   }
  }

@@ -82,7 +82,8 @@ def main():
                                                   "nextgen", "ablation", "router",
                                                   "classeval", "ce",
                                                   "featurebench", "fb",
-                                                  "swebench-pro", "swebench_pro", "sbp"],
+                                                  "swebench-pro", "swebench_pro", "sbp",
+                                                  "sbp_candidates", "sbp-candidates", "candidates"],
                         default="all", help="Preset variant group to run (default: 'all')")
     parser.add_argument("--variants", "-v", default="",
                         help="Comma-separated variant IDs to run (e.g. 'single_flash36,sj_hybrid,sj_escalation_shield')")
@@ -100,9 +101,10 @@ def main():
                         help="on an unrecoverable API failure, substitute SIMULATED output "
                              "instead of discarding and retrying the task. Off by default: a "
                              "504 or an expired credential must not become a datapoint.")
-    parser.add_argument("--task-retries", type=int, default=3,
+    parser.add_argument("--task-retries", type=int,
+                        default=int(os.environ.get("TASK_RETRIES", "1")),
                         help="how many times to re-attempt a task whose API calls failed "
-                             "(default: 3). The partial record is discarded each time.")
+                             "(default: 1). The partial record is discarded each time.")
     parser.add_argument("--no-cache", action="store_true",
                         help="Ignore local task cache and force live re-evaluation")
     parser.add_argument("--out", "-o", default="",

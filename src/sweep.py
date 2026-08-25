@@ -45,7 +45,7 @@ def save_cache(cache, cache_file):
 
 
 def run_arm(cfg, problems, task_ids, cache=None, cache_file=None, no_cache=False,
-            task_retries=3, sj_state=None, label=""):
+            task_retries=1, sj_state=None, label=""):
     """Run one architecture variant over `task_ids` and return its summary row.
 
     `cache` is mutated in place and flushed to `cache_file` after every task, so

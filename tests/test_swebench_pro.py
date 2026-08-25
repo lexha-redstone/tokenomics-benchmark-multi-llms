@@ -417,18 +417,17 @@ def wired(monkeypatch):
     sbp.run_sbp_evidence_gate,
     sbp.run_sbp_plan_exec,
 ])
-def test_every_arm_spends_exactly_three_oracle_calls(arm, wired):
+def test_every_arm_spends_exactly_two_oracle_calls(arm, wired):
     """The budget H2's comparison rests on: container runs, not LLM calls."""
     out = arm(dict(PROBLEM))
     assert len(FakeEnv.instances) == 1
-    assert len(FakeEnv.instances[0].calls) == sbp.MAX_ORACLE_CALLS == 3
-    assert out["repair_loops"] == 2 and out["passed"] is False
+    assert len(FakeEnv.instances[0].calls) == sbp.MAX_ORACLE_CALLS == 2
+    assert out["repair_loops"] == 1 and out["passed"] is False
 
 
 def test_cascade_climbs_one_rung_per_failure(wired):
     sbp.run_sbp_cascade(dict(PROBLEM))
-    assert [c["model"] for c in wired] == [sbp.TIERS[0][0], sbp.TIERS[1][0],
-                                           sbp.FRONTIER]
+    assert [c["model"] for c in wired] == [sbp.TIERS[0][0], sbp.TIERS[1][0]]
 
 
 def test_evidence_gate_jumps_to_the_frontier_on_a_hard_digest(wired):
@@ -442,7 +441,7 @@ def test_evidence_gate_jumps_to_the_frontier_on_a_hard_digest(wired):
 def test_evidence_gate_never_escalates_twice(wired):
     """One frontier rung is the ceiling; a second would double the arm's price."""
     sbp.run_sbp_evidence_gate(dict(PROBLEM))
-    assert [c["model"] for c in wired].count(sbp.FRONTIER) <= 2
+    assert [c["model"] for c in wired].count(sbp.FRONTIER) <= 1
 
 
 def test_plan_exec_buys_the_frontier_model_before_the_first_oracle_call(wired):
@@ -450,7 +449,7 @@ def test_plan_exec_buys_the_frontier_model_before_the_first_oracle_call(wired):
     assert wired[0]["model"] == sbp.FRONTIER
     assert "IMPLEMENTATION PLAN" in wired[0]["prompt"]
     # ...and never again: the executor rungs are all the cheap model.
-    assert [c["model"] for c in wired[1:]] == [sbp.TIERS[0][0]] * 3
+    assert [c["model"] for c in wired[1:]] == [sbp.TIERS[0][0]] * sbp.MAX_ORACLE_CALLS
     assert "Architect's implementation plan" in wired[1]["prompt"]
 
 

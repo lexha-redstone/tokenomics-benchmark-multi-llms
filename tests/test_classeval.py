@@ -421,7 +421,7 @@ def test_the_control_arm_exists():
 
 def test_variants_are_wired_into_the_runner():
     from src.architectures import get_configurations
-    ids = {c["id"] for c in get_configurations(dataset="classeval", group="classeval")}
+    ids = {c["id"] for c in get_configurations(dataset="classeval", group="all")}
     assert set(CLASSEVAL_VARIANTS) == ids
     # and must not leak into the other datasets' groups
     bcb = {c["id"] for c in get_configurations(dataset="bcb", group="all")}

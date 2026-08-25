@@ -35,6 +35,9 @@ _DATASET_SLUG = {
     "web-dev": "webdev",
     "featurebench": "featurebench",
     "feature-bench": "featurebench",
+    "swe-bench pro": "swebench-pro",
+    "swebench pro": "swebench-pro",
+    "swebench-pro": "swebench-pro",
 }
 
 _INDEX_RE = re.compile(r"^(\d{2})_")

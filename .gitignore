@@ -80,3 +80,11 @@ _instructions/
 # numbers inside the digest's evidence budget). This only matters if SJ_HOME is
 # pointed back into the repo.
 .straitjacket/
+
+# --- SWE-bench Pro caches (fetched on demand; not source) ---
+# The split is ~24 MB of JSONL and the run scripts are upstream's, so neither
+# belongs in this repository. The quarantine file lives here too and is
+# environment-specific by design -- see docs/swebench-pro-setup.md.
+swebench_pro/data/
+swebench_pro/run_scripts/
+swebench_pro/results/

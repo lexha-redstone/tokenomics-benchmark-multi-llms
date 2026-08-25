@@ -19,6 +19,10 @@ Usage Examples:
   # Run the FeatureBench expensive-oracle study (needs Docker; see docs/featurebench-setup.md):
   python3 run_benchmark.py --dataset featurebench --group featurebench --n 20 --report
 
+  # Run the SWE-bench Pro expensive-oracle study (needs Docker; see docs/swebench-pro-setup.md):
+  python3 tools/swebench_pro_preflight.py --gold 3 --write      # prove the harness first
+  python3 run_benchmark.py --dataset swebench-pro --group sbp --n 20 --report
+
   # Run WebDev single-model baseline comparisons:
   python3 run_benchmark.py --dataset webdev --group single --n 10 --report
 """
@@ -71,12 +75,14 @@ def main():
     parser.add_argument("--dataset", "-d", choices=["bcb", "bigcodebench", "bigcodebench-hard",
                                                     "webdev", "web-dev",
                                                     "classeval", "class-eval", "ce",
-                                                    "featurebench", "feature-bench", "fb"],
+                                                    "featurebench", "feature-bench", "fb",
+                                                    "swebench-pro", "swebench_pro", "sbp"],
                         default="bcb", help="Dataset to evaluate (default: 'bcb')")
     parser.add_argument("--group", "-g", choices=["all", "single", "combo", "straitjacket", "sj",
                                                   "nextgen", "ablation", "router",
                                                   "classeval", "ce",
-                                                  "featurebench", "fb"],
+                                                  "featurebench", "fb",
+                                                  "swebench-pro", "swebench_pro", "sbp"],
                         default="all", help="Preset variant group to run (default: 'all')")
     parser.add_argument("--variants", "-v", default="",
                         help="Comma-separated variant IDs to run (e.g. 'single_flash36,sj_hybrid,sj_escalation_shield')")
@@ -131,6 +137,10 @@ def main():
         dataset_name = "FeatureBench"
         ds_key = "featurebench"
         ds_folder = "featurebench"
+    elif d_norm in ("swebench_pro", "swe_bench_pro", "sbp", "swebenchpro"):
+        dataset_name = "SWE-bench Pro"
+        ds_key = "swebench_pro"
+        ds_folder = "swebench_pro"
     else:
         dataset_name = "WebDev"
         ds_key = "webdev"

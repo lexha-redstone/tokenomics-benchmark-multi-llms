@@ -28,6 +28,7 @@ Vertex AI (Gemini) and Anthropic (Claude).
 | 8 | [Report index](reports/README.md) — every sweep, in execution order |
 | 9 | [Dataset selection for pattern tests](docs/pattern-dataset-selection.md) — where a non-cascade pattern could win, which datasets can show it, and the ClassEval verdict |
 | 10 | [FeatureBench setup](docs/featurebench-setup.md) — the Docker-backed dataset that tests H2, and how to stand it up on Linux |
+| 11 | [SWE-bench Pro setup](docs/swebench-pro-setup.md) — the same H2 study on 731 rows whose grading is the benchmark's own, and why it replaced FeatureBench |
 
 **Three sweeps carry the findings**, all live API, all with the contained digest
 on every repair turn:
@@ -707,6 +708,62 @@ and **no `medium`/`high` thinking ladder** (N=148 measured it at 33% more than
 calls** — the scarce resource here is held constant, and `fb_plan_exec`'s extra
 planning call shows up in dollars where it belongs.
 
+### SWE-bench Pro
+
+The same H2 question as FeatureBench, on rows that are actually gradable.
+A FeatureBench row is only scorable when the repository's own `test_patch`
+applies to the image it ships with, and the harness has to rebuild the graded
+tree itself; when that fails it fails for *every* arm, which is a missing
+measurement rather than a hard task. SWE-bench Pro removes that step instead of
+working around it — upstream ships the image, the git command that restores the
+graded tests, the per-instance script that runs the suite, and the parser that
+reads its output, and [`src/evaluator.py`](src/evaluator.py) calls all four
+rather than reimplementing any of them. 731 rows, four languages (go 280 ·
+python 266 · js 165 · ts 20), frontier agents resolve roughly 20–40%.
+
+**It needs Docker and disk**: one image per instance, 0.5–4.2 GB compressed
+over a 14-row sample, median 1.1 GB. Upstream publishes linux/amd64 only, so an
+arm64 host runs every container under emulation. Prerequisites, the per-attempt
+contract and troubleshooting:
+**[docs/swebench-pro-setup.md](docs/swebench-pro-setup.md)**. Modal is *not*
+required — the local-Docker path is the one mirrored here.
+
+```bash
+python3 tools/swebench_pro_preflight.py --list                     # what the split holds
+python3 tools/swebench_pro_preflight.py --languages python --n 20 --pull
+python3 tools/swebench_pro_preflight.py --ready --ready-out ids.txt
+python3 tools/swebench_pro_preflight.py --languages python --gold 3
+python3 tools/swebench_pro_preflight.py --gold 0 --write           # quarantine what gold fails
+```
+
+```bash
+# Smoke: two rows, the recommended shape and the shape it has to beat.
+python3 run_benchmark.py --dataset swebench-pro --n 2 \
+    --variants sbp_evidence_gate,sbp_cascade --no-cache
+
+# The comparison. Five arms, one language at a time -- see the caveat below.
+SBP_LANGUAGES=python python3 run_benchmark.py --dataset swebench-pro \
+    --group sbp --n 20 --report --no-cache
+```
+
+| Arm | What it is |
+|---|---|
+| `sbp_single_flash` / `sbp_single_sonnet` | one model writes the patch and repairs it twice |
+| `sbp_cascade` | flash → sonnet → opus, escalate whenever a rung fails — the `r6` shape |
+| `sbp_evidence_gate` | **the recommended shape** — same tiers, escalate when the digest reads `broad`/`stalled` (`r9`, the N=148 winner) |
+| `sbp_plan_exec` | **the H2 challenger** — `claude-opus-5` plans *before* any test runs, then flash implements and repairs |
+| `sbp_single_opus` | the frontier baseline — **not** in `--group sbp`; opt-in |
+
+Every arm makes **exactly 3 oracle calls** — three container test runs, the
+resource H2 says is scarce — and `sbp_plan_exec`'s extra planning call shows up
+in dollars where it belongs.
+
+**One caveat that changes what a number means.** The straitjacket digest's typed
+fact tier is profile-detected from test output, and this split spans four
+languages: a Python row's pytest output types, a mocha row's JSON reporter blob
+does not (and sets `routing.degraded`). A mixed-language `sbp_evidence_gate`
+sweep is two arms wearing one name. Run it per language and say which.
+
 ### WebDev
 
 ```bash
@@ -721,10 +778,10 @@ reading a result there as confirmation of a BCB-Hard result.
 
 | Flag | Values | Meaning |
 |---|---|---|
-| `--dataset` / `-d` | `bcb`, `webdev`, `classeval`, `featurebench` | which benchmark (default `bcb`) |
+| `--dataset` / `-d` | `bcb`, `webdev`, `classeval`, `featurebench`, `swebench-pro` | which benchmark (default `bcb`) |
 | `--n` | integer | number of tasks |
 | `--variants` / `-v` | comma-separated ids | exactly which architectures to run |
-| `--group` / `-g` | `all`, `single`, `combo`, `straitjacket`, `nextgen`, `ablation`, `router`, `classeval`, `featurebench` | a preset family instead of explicit ids |
+| `--group` / `-g` | `all`, `single`, `combo`, `straitjacket`, `nextgen`, `ablation`, `router`, `classeval`, `featurebench`, `sbp` | a preset family instead of explicit ids |
 | `--no-cache` | flag | ignore cached task results and re-run live |
 | `--report` / `-r` | flag | emit the markdown report and HTML dashboard |
 | `--out` / `-o` | path | override the consolidated JSON path |
@@ -745,6 +802,7 @@ python3 -c "import sys;sys.path.insert(0,'.');from src.architectures import VARI
 | Consolidated metrics — ClassEval | `classeval/results/classeval_classeval_results.json` |
 | Per-task cache — ClassEval | `classeval/results/cache_classeval_master.json` |
 | Consolidated metrics — FeatureBench | `featurebench/results/featurebench_featurebench_results.json` |
+| Consolidated metrics — SWE-bench Pro | `swebench_pro/results/swebench_pro_sbp_results.json` |
 | Markdown report | `reports/NN_<dataset>_<tag>_n<N>.md` |
 | HTML dashboard | `reports/NN_<dataset>_<tag>_n<N>.html` |
 
@@ -776,6 +834,7 @@ python3 tools/index_reports.py --apply     # adopt new reports, refresh reports/
 │   ├── architectures.py             #   variant registry + every pipeline
 │   ├── classeval.py                 #   ClassEval arms: per-method routing + its control
 │   ├── featurebench.py              #   FeatureBench arms: the expensive-oracle (H2) study
+│   ├── swebench_pro.py              #   SWE-bench Pro arms: the same study, on gradable rows
 │   ├── sweep.py                     #   the per-arm run loop, shared by every runner
 │   ├── merge.py                     #   fold a single-arm run back into a sweep's results
 │   └── reporter.py                  #   markdown report + HTML dashboard
@@ -784,6 +843,7 @@ python3 tools/index_reports.py --apply     # adopt new reports, refresh reports/
 │   ├── straitjacket-implementation.md
 │   ├── pipeline-architecture.md
 │   ├── featurebench-setup.md        #   Linux prerequisites for the Docker-backed dataset
+│   ├── swebench-pro-setup.md        #   Docker prerequisites and the per-attempt contract
 │   ├── routing-study.md
 │   ├── pattern-dataset-selection.md
 │   ├── bigcodebench-hard-sweetspot-methodology.md
@@ -802,6 +862,7 @@ python3 tools/index_reports.py --apply     # adopt new reports, refresh reports/
 ├── classeval/                       # dataset 2: class generation, scored per method (N=91 swept)
 │     data/ also holds quarantine-<split>.json, written by the preflight
 ├── featurebench/                    # dataset 3: multi-file features, containerised oracle (H2)
+├── swebench_pro/                    # dataset 4: 731 rows, upstream's own grading (H2), gitignored caches
 │     data/ also holds quarantine-<split>.json, written by the preflight
 ├── webdev/                          # a library-filtered BCB-Hard subset, not an independent dataset
 │     each: data/  results/  + historical sweep scripts

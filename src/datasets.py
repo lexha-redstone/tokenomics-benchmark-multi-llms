@@ -1,6 +1,7 @@
 # Copyright 2026. Licensed under the Apache License, Version 2.0.
 """
-Unified Dataset Loader for BigCodeBench-Hard, WebDev, ClassEval and FeatureBench.
+Unified Dataset Loader for BigCodeBench-Hard, WebDev, ClassEval, FeatureBench
+and SWE-bench Pro.
 Handles dataset loading, HuggingFace dataset caching, and problem dictionary creation.
 """
 
@@ -617,6 +618,348 @@ def load_featurebench_problems(split=FEATUREBENCH_DEFAULT_SPLIT, max_tasks=None,
 
 
 # ==============================================================================
+# --- SWE-BENCH PRO DATASET LOADER ---
+# ==============================================================================
+#
+# Why this dataset is here
+# ------------------------
+# FeatureBench was adopted to test H2 -- does front-loaded planning beat
+# fail->escalate once the oracle costs real money -- and too many of its rows
+# are unscorable here for a reason that has nothing to do with H2: a row is
+# only gradable when the repository's own `test_patch` applies to the image it
+# ships with, and the harness has to reconstruct the graded tree itself. An arm
+# cannot be measured on a row whose *gold* patch cannot pass.
+#
+# SWE-bench Pro is the same shape of task -- multi-file work in a real
+# repository, graded by that repository's own tests inside a per-instance
+# Docker image -- with the fragile step removed. Nothing is reconstructed
+# locally, because every row ships the commands upstream itself runs:
+#
+#   dockerhub_tag              the prebuilt image: repo cloned at /app, deps
+#                              installed, ENTRYPOINT ["/bin/bash"]
+#   before_repo_set_cmd        the exact git commands that put the graded test
+#                              files in place (last line does the checkout)
+#   selected_test_files_to_run what the run script is pointed at
+#   fail_to_pass/pass_to_pass  test *names* (not file paths, unlike FeatureBench)
+#
+# and upstream publishes, per instance, a `run_script.sh` (how to run that
+# repository's tests) and a `parser.py` (how to turn its output into
+# {name, status} records) in scaleapi/SWE-bench_Pro-os. So the grading rule is
+# the benchmark's own rather than a reimplementation of it: resolved means
+# every required test name came back PASSED, which is exactly what upstream's
+# `swe_bench_pro_eval.py` computes.
+#
+# What this module does NOT do
+# ----------------------------
+# It does not use Modal. Upstream's default runtime is a Modal sandbox; the
+# `--use_local_docker` path is the one mirrored here, because the question this
+# repository asks is about routing policy and dollars, and a second scheduler
+# in the loop is one more thing that can fail in a way the numbers absorb.
+
+SWEBENCH_PRO_DATASET = "ScaleAI/SWE-bench_Pro"
+SWEBENCH_PRO_CONFIG = "default"
+SWEBENCH_PRO_DEFAULT_SPLIT = "test"
+
+# The per-instance run scripts and Dockerfiles are not in the HuggingFace
+# dataset; they live in the evaluation repository and are fetched on demand.
+SWEBENCH_PRO_SCRIPTS_RAW = ("https://raw.githubusercontent.com/"
+                            "scaleapi/SWE-bench_Pro-os/main")
+
+# Upstream publishes the images under one account. `dockerhub_tag` is a dataset
+# column, so the tag is never derived from the instance_id here -- upstream's
+# own `get_dockerhub_image_uri` carries two special cases for element-web that
+# a re-derivation would silently get wrong.
+SWEBENCH_PRO_DOCKERHUB_USER = os.environ.get("SBP_DOCKERHUB_USER", "jefzda")
+SWEBENCH_PRO_IMAGE_REPO = os.environ.get("SBP_IMAGE_REPO", "sweap-images")
+
+# Every field the container executor or an arm's prompt reads. `pass_to_pass`
+# runs to 45k chars on the larger rows and is kept whole: it is the grading
+# denominator, so truncating it would silently change what "resolved" means.
+_SBP_KEEP_FIELDS = (
+    "instance_id", "repo", "base_commit", "patch", "test_patch",
+    "problem_statement", "requirements", "interface", "repo_language",
+    "fail_to_pass", "pass_to_pass", "issue_specificity", "issue_categories",
+    "before_repo_set_cmd", "selected_test_files_to_run", "dockerhub_tag",
+)
+
+# The list-valued columns arrive as *Python literals*, not JSON: upstream reads
+# them with `eval()`, and the sample row's fail_to_pass mixes `"` and `'`
+# quoting because one test name contains an apostrophe. `json.loads` fails on
+# exactly those rows, which would drop required tests and inflate pass rates.
+_SBP_LIST_FIELDS = ("fail_to_pass", "pass_to_pass", "selected_test_files_to_run",
+                    "issue_specificity", "issue_categories")
+
+
+def _sbp_list(raw):
+    """Parse one of the dataset's list-valued string columns."""
+    if isinstance(raw, (list, tuple)):
+        return [str(x) for x in raw]
+    text = str(raw or "").strip()
+    if not text:
+        return []
+    for parse in (ast.literal_eval, json.loads):
+        try:
+            v = parse(text)
+        except Exception:
+            continue
+        if isinstance(v, (list, tuple)):
+            return [str(x) for x in v]
+        return [str(v)]
+    # Not a literal at all: treat it as a single entry rather than dropping it
+    # silently, so a schema change shows up as a failing row and not as a
+    # smaller grading set.
+    return [text]
+
+
+def _fetch(url, timeout=180):
+    """GET `url` as bytes, with a `curl` fallback for CA-less interpreters.
+
+    A Python installed without a certificate bundle (common on macOS, and the
+    state of the interpreter this was written on) fails every HTTPS request
+    with CERTIFICATE_VERIFY_FAILED even though the machine itself is online.
+    That is an environment problem, not a dataset problem, so it is worked
+    around here rather than turned into "the dataset could not be fetched".
+    """
+    try:
+        with urllib.request.urlopen(url, timeout=timeout, context=_ssl_ctx()) as r:
+            return r.read()
+    except Exception as e:                                   # noqa: BLE001
+        if "CERTIFICATE_VERIFY_FAILED" not in str(e):
+            raise
+        import shutil as _shutil
+        import subprocess as _subprocess
+        if _shutil.which("curl") is None:
+            raise
+        p = _subprocess.run(["curl", "-fsSL", "--max-time", str(int(timeout)), url],
+                            capture_output=True, timeout=timeout + 30)
+        if p.returncode != 0:
+            raise RuntimeError(
+                f"urllib has no CA bundle and curl failed for {url}: "
+                f"{(p.stderr or b'').decode('utf-8', 'replace')[-200:]}") from e
+        return p.stdout
+
+
+def swebench_pro_dir(*parts):
+    return os.path.join(ROOT_DIR, "swebench_pro", *parts)
+
+
+def swebench_pro_quarantine_path(split=SWEBENCH_PRO_DEFAULT_SPLIT):
+    """Where `tools/swebench_pro_preflight.py` records rows gold cannot pass."""
+    return swebench_pro_dir("data", f"quarantine-{split}.json")
+
+
+def load_swebench_pro_quarantine(split=SWEBENCH_PRO_DEFAULT_SPLIT):
+    path = swebench_pro_quarantine_path(split)
+    if not os.path.exists(path):
+        return {}
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            return json.load(f).get("tasks", {})
+    except Exception:
+        return {}
+
+
+def ensure_swebench_pro_dataset(split=SWEBENCH_PRO_DEFAULT_SPLIT):
+    """Ensure the SWE-bench Pro split is present locally, fetching it if needed."""
+    data_dir = swebench_pro_dir("data")
+    os.makedirs(data_dir, exist_ok=True)
+    path = os.path.join(data_dir, f"SWE-bench_Pro-{split}.jsonl")
+    if os.path.exists(path):
+        return path
+
+    print(f"Fetching {SWEBENCH_PRO_DATASET} [{split}] from HuggingFace -> {_rel(path)}",
+          flush=True)
+    rows, offset, total = [], 0, None
+    while total is None or offset < total:
+        q = urllib.parse.urlencode({
+            "dataset": SWEBENCH_PRO_DATASET, "config": SWEBENCH_PRO_CONFIG,
+            # 20 rows is not a round number, it is the largest page that comes
+            # back whole: the rows server truncates oversized cells and says so
+            # in `truncated_cells`, and a truncated `pass_to_pass` is a smaller
+            # grading set rather than an error.
+            "split": split, "offset": offset, "length": 20,
+        })
+        d = json.loads(_fetch("https://datasets-server.huggingface.co/rows?" + q))
+        batch = d.get("rows", [])
+        total = d.get("num_rows_total", len(batch))
+        if not batch:
+            break
+        for b in batch:
+            if b.get("truncated_cells"):
+                raise RuntimeError(
+                    f"row {b.get('row_idx')} came back with truncated cells "
+                    f"{b['truncated_cells']} -- refusing to grade against a "
+                    "partial test list. Re-fetch with a smaller page size.")
+        rows.extend(b["row"] for b in batch)
+        offset += len(batch)
+
+    tmp = path + ".part"
+    with open(tmp, "w", encoding="utf-8") as f:
+        for row in rows:
+            f.write(json.dumps({k: row.get(k) for k in _SBP_KEEP_FIELDS}) + "\n")
+    os.replace(tmp, path)
+    print(f"  saved {len(rows)} instances to {_rel(path)}", flush=True)
+    return path
+
+
+def swebench_pro_image(problem, username=None, repo=None):
+    """The prebuilt image for a row, from the dataset's own `dockerhub_tag`."""
+    tag = str(problem.get("dockerhub_tag") or "").strip()
+    if not tag:
+        return ""
+    user = username or SWEBENCH_PRO_DOCKERHUB_USER
+    return f"{user}/{repo or SWEBENCH_PRO_IMAGE_REPO}:{tag}"
+
+
+def swebench_pro_scripts_dir(instance_id):
+    return swebench_pro_dir("run_scripts", str(instance_id))
+
+
+def _sbp_cached(url, path, refresh=False):
+    if not refresh and os.path.exists(path):
+        with open(path, "r", encoding="utf-8") as f:
+            return f.read()
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    text = _fetch(url).decode("utf-8", "replace")
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(text)
+    return text
+
+
+def _sbp_env_exports(instance_id, refresh=False):
+    """The image's own ENV lines, replayed as `export` statements.
+
+    Belt and braces, and upstream does the same: `docker exec` already inherits
+    the image's environment, but a run script that assumes `$SETUP` or
+    `$PYTEST_ADDOPTS` is cheap to protect and expensive to debug. Only the
+    `ENV k=v` form is converted -- upstream's blanket `ENV` -> `export`
+    rewrite turns the legacy `ENV k v` form into a command that fails.
+    """
+    out = []
+    for kind in ("base_dockerfile", "instance_dockerfile"):
+        url = f"{SWEBENCH_PRO_SCRIPTS_RAW}/dockerfiles/{kind}/{instance_id}/Dockerfile"
+        path = swebench_pro_scripts_dir(instance_id) + f"/{kind}.Dockerfile"
+        try:
+            text = _sbp_cached(url, path, refresh=refresh)
+        except Exception:
+            continue
+        for line in text.splitlines():
+            line = line.strip()
+            if re.match(r"^ENV\s+[A-Za-z_][A-Za-z_0-9]*=", line):
+                out.append("export " + line[3:].strip())
+    return "\n".join(out)
+
+
+def ensure_swebench_pro_scripts(instance_id, refresh=False):
+    """Fetch (and cache) the per-instance run script, parser and ENV exports.
+
+    These are the benchmark's own grading machinery. Reimplementing either one
+    would mean scoring the arms on a test command and a log parser that
+    SWE-bench Pro never specified -- which is the mistake the deleted
+    `swebench_pro/` tree made when it string-matched patches instead of
+    running anything.
+    """
+    d = swebench_pro_scripts_dir(instance_id)
+    base = f"{SWEBENCH_PRO_SCRIPTS_RAW}/run_scripts/{instance_id}"
+    run_script = _sbp_cached(f"{base}/run_script.sh",
+                             os.path.join(d, "run_script.sh"), refresh=refresh)
+    parser = _sbp_cached(f"{base}/parser.py",
+                         os.path.join(d, "parser.py"), refresh=refresh)
+    if "run_all_tests" not in run_script:
+        raise RuntimeError(f"{instance_id}: fetched run_script.sh looks wrong "
+                           f"(no `run_all_tests`); got {len(run_script)} chars")
+    return {"run_script": run_script, "parser": parser,
+            "env_exports": _sbp_env_exports(instance_id, refresh=refresh),
+            "dir": d}
+
+
+def sbp_restore_tests_cmd(problem):
+    """The one command that materialises the graded test files.
+
+    `before_repo_set_cmd` is four lines: reset, clean, checkout base, then
+    `git checkout <solution_commit> -- <test files>`. Upstream's entry script
+    takes **only the last line**, because the first three are exactly what the
+    harness has already done, and re-running them after the candidate patch is
+    applied would throw the patch away. That is the whole reason this is a
+    function with a docstring instead of an inline `[-1]`.
+    """
+    raw = str(problem.get("before_repo_set_cmd") or "").strip()
+    return raw.split("\n")[-1].strip() if raw else ""
+
+
+def sbp_test_files(problem):
+    """The test files the run script is pointed at, comma-joined as it expects."""
+    return list(problem.get("selected_test_files_to_run") or [])
+
+
+def sbp_required_tests(problem):
+    """Every test name that must report PASSED for the row to count as resolved."""
+    out, seen = [], set()
+    for key in ("fail_to_pass", "pass_to_pass"):
+        for name in (problem.get(key) or []):
+            name = str(name)
+            if name and name not in seen:
+                seen.add(name)
+                out.append(name)
+    return out
+
+
+def load_swebench_pro_problems(split=SWEBENCH_PRO_DEFAULT_SPLIT, max_tasks=None,
+                               apply_quarantine=True, languages=None):
+    """Load SWE-bench Pro instances as a dictionary keyed by instance_id.
+
+    `languages` filters on `repo_language`, whose values in the published split
+    are "go" (280), "python" (266), "js" (165) and "ts" (20). It exists
+    because the straitjacket harness's typed fact tier is profile-detected from
+    test output: a Python row digests as `pytest/v1`, a mocha row as text. An
+    evidence-gated arm reads that tier, so mixing languages inside one sweep
+    mixes two qualities of routing signal under one arm name.
+
+    Rows whose own gold patch cannot be scored in this environment are excluded
+    using the file `tools/swebench_pro_preflight.py` writes. That file is
+    environment-specific -- regenerate it per machine rather than copying it.
+    """
+    path = ensure_swebench_pro_dataset(split)
+    excluded = load_swebench_pro_quarantine(split) if apply_quarantine else {}
+    wanted = {str(x).lower() for x in (languages or [])}
+    skipped = 0
+    problems = {}
+    with open(path, "r", encoding="utf-8") as f:
+        for line in f:
+            if not line.strip():
+                continue
+            row = json.loads(line)
+            iid = row.get("instance_id")
+            if iid in excluded:
+                skipped += 1
+                continue
+            for key in _SBP_LIST_FIELDS:
+                row[key] = _sbp_list(row.get(key))
+            if wanted and str(row.get("repo_language") or "").lower() not in wanted:
+                continue
+            row["dataset_type"] = "swebench_pro"
+            row["task_id"] = iid
+            row["image_name"] = swebench_pro_image(row)
+            # Upstream's images always clone into /app; the executor still
+            # verifies it rather than trusting the convention.
+            row["repo_workdir"] = "/app"
+            problems[iid] = row
+            if max_tasks and len(problems) >= max_tasks:
+                break
+    note = ""
+    if skipped:
+        note = (f" ({skipped} excluded by "
+                f"{os.path.basename(swebench_pro_quarantine_path(split))}"
+                " -- gold does not pass here)")
+    elif apply_quarantine and not os.path.exists(swebench_pro_quarantine_path(split)):
+        note = "  [no preflight run yet: python3 tools/swebench_pro_preflight.py --gold 5]"
+    if wanted:
+        note += f" [languages={','.join(sorted(wanted))}]"
+    print(f"Loaded {len(problems)} SWE-bench Pro instances from {_rel(path)}{note}")
+    return problems
+
+
+# ==============================================================================
 # --- UNIFIED DATASET DISPATCHER ---
 # ==============================================================================
 
@@ -628,6 +971,7 @@ def load_dataset(dataset_name, split=None, max_tasks=None):
       - 'webdev', 'web-dev'
       - 'classeval', 'class-eval'
       - 'featurebench', 'feature-bench', 'fb'
+      - 'swebench-pro', 'swebench_pro', 'sbp'
     """
     name = dataset_name.lower().replace("-", "_")
     if name in ("bcb", "bigcodebench", "bigcodebench_hard"):
@@ -641,6 +985,11 @@ def load_dataset(dataset_name, split=None, max_tasks=None):
     elif name in ("featurebench", "feature_bench", "fb"):
         s = split or FEATUREBENCH_DEFAULT_SPLIT
         return load_featurebench_problems(split=s, max_tasks=max_tasks)
+    elif name in ("swebench_pro", "swe_bench_pro", "sbp", "swebenchpro"):
+        s = split or SWEBENCH_PRO_DEFAULT_SPLIT
+        return load_swebench_pro_problems(
+            split=s, max_tasks=max_tasks,
+            languages=[x for x in os.environ.get("SBP_LANGUAGES", "").split(",") if x])
     else:
-        raise ValueError(f"Unknown dataset name: '{dataset_name}'. "
-                         "Supported: 'bcb', 'webdev', 'classeval', 'featurebench'.")
+        raise ValueError(f"Unknown dataset name: '{dataset_name}'. Supported: "
+                         "'bcb', 'webdev', 'classeval', 'featurebench', 'swebench-pro'.")

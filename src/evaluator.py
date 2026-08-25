@@ -39,6 +39,8 @@ unavailable, the straitjacket arms refuse to run rather than fabricate one.
 import os
 import sys
 import re
+import json
+import platform
 import subprocess
 import tempfile
 import shutil
@@ -446,7 +448,69 @@ def docker_available():
     return True, f"docker server {(p.stdout or '').strip()}"
 
 
-class FeatureBenchEnv:
+class _DockerRepoEnv:
+    """Container plumbing shared by the two executors that grade a patch inside
+    a repository's own image.
+
+    Only the three operations that are *identical* live here -- run a snippet,
+    write a file, apply a diff. Container start-up, what "reset" means and how
+    a row is scored differ per dataset and stay in the subclasses, because
+    those are where the benchmarks disagree.
+
+    ``SHELL_FLAGS`` is not decoration. FeatureBench's images want a login shell
+    (`-lc`) to pick up the interpreter their `test_cmd` assumes; SWE-bench Pro's
+    do not, and must not get one -- upstream runs `bash <script>` directly, and
+    sourcing `/etc/profile` can reorder a PATH the image set deliberately.
+    """
+
+    SHELL_FLAGS = "-lc"
+
+    def _sh(self, script, timeout=None, check=True):
+        """Run a shell snippet inside the container, outside the harness.
+
+        Setup plumbing (checkout, patch application, worktree reset) is not
+        evidence: containing it would put `git apply` chatter into the
+        containment ledger and dilute the receipt the test runs produce.
+        """
+        p = subprocess.run(
+            ["docker", "exec", "-w", self.workdir, self.name,
+             "bash", self.SHELL_FLAGS, script],
+            capture_output=True, text=True, timeout=timeout or self.timeout)
+        if check and p.returncode != 0:
+            raise RuntimeError(
+                f"{script.splitlines()[0][:60]}: exit {p.returncode}: "
+                f"{((p.stderr or '') + (p.stdout or '')).strip()[-400:]}")
+        return p
+
+    def _write(self, path, text):
+        """Materialise a file inside the container without a shell quoting hazard."""
+        p = subprocess.run(
+            ["docker", "exec", "-i", self.name, "bash", self.SHELL_FLAGS,
+             f"mkdir -p $(dirname {path}) && cat > {path}"],
+            input=text, capture_output=True, text=True, timeout=self.timeout)
+        if p.returncode != 0:
+            raise RuntimeError(f"could not write {path}: {(p.stderr or '').strip()[-200:]}")
+
+    def _try_apply(self, path):
+        """Apply a diff, strict strategy first. Records what each attempt said.
+
+        `patch --batch` will happily *reverse* a diff it thinks was already
+        applied and exit 0, which silently deletes a file the next step needs.
+        So the log is kept on the instance rather than discarded, and callers
+        that care check the outcome rather than the return code alone.
+        """
+        self.apply_log = []
+        for argv in _APPLY_STRATEGIES:
+            cmd = " ".join(argv) + f" {path}"
+            r = self._sh(cmd, check=False)
+            out = ((r.stdout or "") + (r.stderr or "")).strip()
+            self.apply_log.append(f"$ {cmd}\n[exit {r.returncode}] {out[:400]}")
+            if r.returncode == 0:
+                return True
+        return False
+
+
+class FeatureBenchEnv(_DockerRepoEnv):
     """One repository container, reused across a task's repair attempts.
 
     Use as a context manager. `score(patch)` applies a candidate diff, runs the
@@ -485,22 +549,6 @@ class FeatureBenchEnv:
         subprocess.run(["docker", "rm", "-f", self.name],
                        capture_output=True, text=True, timeout=120)
         return False
-
-    def _sh(self, script, timeout=None, check=True):
-        """Run a shell snippet inside the container, outside the harness.
-
-        Setup plumbing (checkout, patch application, worktree reset) is not
-        evidence: containing it would put `git apply` chatter into the
-        containment ledger and dilute the receipt the test runs produce.
-        """
-        p = subprocess.run(
-            ["docker", "exec", "-w", self.workdir, self.name, "bash", "-lc", script],
-            capture_output=True, text=True, timeout=timeout or self.timeout)
-        if check and p.returncode != 0:
-            raise RuntimeError(
-                f"{script.splitlines()[0][:60]}: exit {p.returncode}: "
-                f"{((p.stderr or '') + (p.stdout or '')).strip()[-400:]}")
-        return p
 
     def _start(self):
         if not self.image:
@@ -666,32 +714,6 @@ class FeatureBenchEnv:
         # in the preflight rather than scoring arms against the wrong tree.
         self.workdir_unverified = True
 
-    def _write(self, path, text):
-        """Materialise a file inside the container without a shell quoting hazard."""
-        p = subprocess.run(
-            ["docker", "exec", "-i", self.name, "bash", "-lc", f"cat > {path}"],
-            input=text, capture_output=True, text=True, timeout=self.timeout)
-        if p.returncode != 0:
-            raise RuntimeError(f"could not write {path}: {(p.stderr or '').strip()[-200:]}")
-
-    def _try_apply(self, path):
-        """Apply a diff, strict strategy first. Records what each attempt said.
-
-        `patch --batch` will happily *reverse* a diff it thinks was already
-        applied and exit 0, which silently deletes a file the next step needs.
-        So the log is kept on the instance rather than discarded, and callers
-        that care check the outcome rather than the return code alone.
-        """
-        self.apply_log = []
-        for argv in _APPLY_STRATEGIES:
-            cmd = " ".join(argv) + f" {path}"
-            r = self._sh(cmd, check=False)
-            out = ((r.stdout or "") + (r.stderr or "")).strip()
-            self.apply_log.append(f"$ {cmd}\n[exit {r.returncode}] {out[:400]}")
-            if r.returncode == 0:
-                return True
-        return False
-
     def reset(self):
         self._sh("git checkout -- . && git clean -fdq", check=False)
 
@@ -784,6 +806,288 @@ def featurebench_test_ratio(evidence):
     if not total:
         return None
     return round(counts.get("passed", 0) / total, 4)
+
+
+# ==============================================================================
+# --- SWE-BENCH PRO: THE BENCHMARK'S OWN GRADING, RUN LOCALLY ---
+# ==============================================================================
+#
+# The contract, in one place, because every part of it is load-bearing:
+#
+#   1. The image (`jefzda/sweap-images:<dockerhub_tag>`) has the repository at
+#      /app with dependencies installed, and `ENTRYPOINT ["/bin/bash"]` -- so a
+#      container has to be started with `--entrypoint` overridden, or `docker
+#      run <image> sleep infinity` becomes `bash sleep infinity` and dies.
+#   2. Reset to `base_commit`, apply the candidate diff, THEN run the last line
+#      of `before_repo_set_cmd`. That order is upstream's and it is the
+#      anti-cheat: the graded test files are checked out from the solution
+#      commit *over* whatever the candidate did to them.
+#   3. Run upstream's own `run_script.sh <files>` and `parser.py`, never a
+#      reimplementation. `parser.py` is per-instance because "what does a
+#      passing test look like" is per-repository (mocha JSON here, pytest
+#      there, `go test -json` elsewhere).
+#   4. Resolved == every name in fail_to_pass + pass_to_pass reported PASSED.
+#      Upstream computes `(f2p | p2p) <= passed`; so does `sbp_resolution`.
+#
+# Network stays ON by default. Several run scripts install dependencies at test
+# time (NodeBB's runs `npm install`), so `--network none` does not harden the
+# run, it fails it. SBP_NETWORK=none once a split is known to be self-contained.
+
+SBP_CONTAINER_PREFIX = "tokenomics-sbp"
+
+# Some repositories' suites are slow, and the run scripts already carry their
+# own inner `timeout`. This is the outer bound on one attempt.
+SBP_DEFAULT_TIMEOUT = float(os.environ.get("SBP_TIMEOUT", "1800"))
+
+
+SBP_WORKSPACE = "/workspace"
+
+
+def sbp_test_script(test_files, workdir="/app", env_exports="", workspace=SBP_WORKSPACE):
+    """The script one attempt runs inside the container.
+
+    Two details are the difference between a number and a wrong number:
+
+    * `rm -f /workspace/output.json` first. The parser writes that file only
+      when it runs; without the delete, an attempt whose parser crashed would
+      be graded against the *previous* attempt's results -- which, in a repair
+      loop that reuses one container, is the previous rung's results.
+    * the logs are written to files (upstream's parser takes file paths) and
+      then echoed, so the harness capture wrapping this command sees exactly
+      the bytes the parser saw. Nothing is summarised twice.
+    """
+    csv = ",".join(str(f) for f in test_files)
+    w = workspace.rstrip("/")
+    return "\n".join([
+        "set -u",
+        env_exports or "",
+        f"cd {workdir} || exit 90",
+        f"rm -f {w}/output.json {w}/stdout.log {w}/stderr.log",
+        "PY=python; command -v python >/dev/null 2>&1 || PY=python3",
+        f"bash {w}/run_script.sh '{csv}' > {w}/stdout.log 2> {w}/stderr.log",
+        "rc=$?",
+        f'"$PY" {w}/parser.py {w}/stdout.log {w}/stderr.log {w}/output.json >&2 '
+        '|| echo "PARSER FAILED" >&2',
+        f"cat {w}/stderr.log >&2",
+        f"cat {w}/stdout.log",
+        "exit $rc",
+    ])
+
+
+def sbp_resolution(output, problem):
+    """Score one attempt from the parser's JSON. Upstream's rule, verbatim.
+
+    Returns a dict rather than a bool because the binary verdict throws away
+    what a cheap rung achieved: on a dataset where frontier agents resolve
+    ~20-40%, `test_pass_ratio` is the only thing separating "wrote nothing
+    useful" from "one assertion short".
+    """
+    from .datasets import sbp_required_tests
+    required = sbp_required_tests(problem)
+    tests = (output or {}).get("tests") or []
+    passed = {str(t.get("name")) for t in tests
+              if str(t.get("status", "")).upper() == "PASSED"}
+    missing = [n for n in required if n not in passed]
+    # An empty requirement set is a broken row, not a free pass. Upstream's
+    # `(f2p | p2p) <= passed` returns True for it; here it does not, because a
+    # row that grades every patch as resolved is worse than a skipped row.
+    resolved = bool(required) and not missing
+    return {
+        "resolved": resolved,
+        "test_pass_ratio": (round((len(required) - len(missing)) / len(required), 4)
+                            if required else None),
+        "required": len(required),
+        "missing": len(missing),
+        "reported": len(tests),
+        # Enough names to see the shape of the failure in a results file,
+        # bounded so a row with 900 pass_to_pass entries cannot inflate it.
+        "missing_names": missing[:10],
+    }
+
+
+class SWEBenchProEnv(_DockerRepoEnv):
+    """One SWE-bench Pro container, reused across a task's repair attempts.
+
+    Use as a context manager. `score(patch)` resets to the base commit, applies
+    the candidate diff, restores the graded test files, runs the instance's own
+    test script through the straitjacket harness, and reads the verdict from
+    the instance's own parser.
+
+    Reusing one container across the repair loop is what makes an expensive
+    oracle affordable enough to study: the image pull and the dependency
+    install happen once per task rather than once per attempt.
+    """
+
+    SHELL_FLAGS = "-c"
+
+    def __init__(self, problem, timeout=None, scripts=None):
+        from .datasets import swebench_pro_image
+        self.problem = problem
+        self.timeout = float(timeout or SBP_DEFAULT_TIMEOUT)
+        self.image = problem.get("image_name") or swebench_pro_image(problem)
+        self.workdir = problem.get("repo_workdir") or "/app"
+        self.name = (f"{SBP_CONTAINER_PREFIX}-{os.getpid()}-"
+                     f"{abs(hash(problem.get('instance_id', ''))) % 10 ** 8}")
+        self.sandbox = None
+        self.started = False
+        self.setup_error = ""
+        self.apply_log = []
+        self.scripts = scripts
+        # Last attempt's verdict, for the arm's soft metric and the results row.
+        self.last_report = {}
+        self.last_ratio = None
+
+    # -- lifecycle ---------------------------------------------------------
+    def __enter__(self):
+        self.sandbox = sj.new_sandbox("sbp")
+        try:
+            self._start()
+            self.started = True
+        except Exception as e:                               # noqa: BLE001
+            self.setup_error = str(e)
+        return self
+
+    def __exit__(self, *exc):
+        subprocess.run(["docker", "rm", "-f", self.name],
+                       capture_output=True, text=True, timeout=120)
+        return False
+
+    def _start(self):
+        from .datasets import ensure_swebench_pro_scripts
+        if not self.image:
+            raise RuntimeError("row carries no `dockerhub_tag`")
+        iid = self.problem.get("instance_id") or ""
+        # Fetched before the container exists: a missing run script is a setup
+        # error worth one clear message, not a container that starts, pulls a
+        # multi-gigabyte image and then has nothing to run.
+        self.scripts = self.scripts or ensure_swebench_pro_scripts(iid)
+
+        subprocess.run(["docker", "rm", "-f", self.name],
+                       capture_output=True, text=True, timeout=120)
+        argv = ["docker", "run", "-d", "--name", self.name,
+                # The images set ENTRYPOINT ["/bin/bash"]; without this
+                # override the command below is read as a script *filename*.
+                "--entrypoint", "/bin/bash",
+                "--network", os.environ.get("SBP_NETWORK", "bridge")]
+        platform = os.environ.get("SBP_PLATFORM") or _sbp_default_platform()
+        if platform:
+            argv += ["--platform", platform]
+        argv += ["-w", self.workdir, self.image, "-c", "sleep infinity"]
+        p = subprocess.run(argv, capture_output=True, text=True, timeout=self.timeout)
+        if p.returncode != 0:
+            raise RuntimeError(
+                f"docker run failed for {self.image}: {(p.stderr or '').strip()[-300:]}")
+
+        root = self._sh("git rev-parse --show-toplevel", check=False).stdout.strip()
+        if not root:
+            raise RuntimeError(
+                f"no git repository at {self.workdir} in {self.image} -- the "
+                "image is not the one this row names, or it failed to build")
+        self.workdir = root
+
+        base = self.problem.get("base_commit") or ""
+        if base:
+            r = self._sh(f"git cat-file -e {base}^{{commit}}", check=False)
+            if r.returncode != 0:
+                raise RuntimeError(
+                    f"base commit {base[:12]} is not in the image's clone; "
+                    "grading would run against a different tree")
+
+        self._write(f"{SBP_WORKSPACE}/run_script.sh", self.scripts["run_script"])
+        self._write(f"{SBP_WORKSPACE}/parser.py", self.scripts["parser"])
+
+    def reset(self):
+        """Back to the base commit, discarding everything the last attempt did."""
+        base = self.problem.get("base_commit") or ""
+        if base:
+            self._sh(f"git reset --hard {base}", check=False)
+            self._sh(f"git checkout -f {base}", check=False)
+        self._sh("git clean -fdq", check=False)
+
+    # -- scoring -----------------------------------------------------------
+    def score(self, patch):
+        """Apply `patch`, run the instance's tests, reset. Returns (resolved, evidence)."""
+        from .datasets import sbp_restore_tests_cmd, sbp_test_files
+        self.last_report, self.last_ratio = {}, None
+        if not self.started:
+            return False, _guard_evidence(
+                f"SWE-bench Pro container unavailable: {self.setup_error}")
+        guard = missing_patch_error(patch)
+        if guard:
+            return False, guard
+
+        try:
+            self.reset()
+            self._write(f"{SBP_WORKSPACE}/patch.diff", patch)
+            if not self._try_apply(f"{SBP_WORKSPACE}/patch.diff"):
+                return False, _guard_evidence(
+                    "patch did not apply (tried `git apply` then `patch --fuzz=5`). "
+                    "Re-emit the diff against the files as they exist at this commit.")
+
+            # The anti-cheat, and the step whose silent failure would make every
+            # arm's number meaningless: the graded tests are restored from the
+            # solution commit *after* the candidate patch, so a patch that
+            # edited them gains nothing.
+            restore = sbp_restore_tests_cmd(self.problem)
+            if restore:
+                r = self._sh(restore, check=False)
+                if r.returncode != 0:
+                    return False, _guard_evidence(
+                        "could not restore the graded test files "
+                        f"(`{restore[:80]}`): "
+                        f"{((r.stderr or '') + (r.stdout or '')).strip()[-200:]}")
+
+            files = sbp_test_files(self.problem)
+            if not files:
+                return False, _guard_evidence(
+                    "row names no `selected_test_files_to_run`")
+            script = sbp_test_script(files, workdir=self.workdir,
+                                     env_exports=(self.scripts or {}).get("env_exports", ""))
+            self._write(f"{SBP_WORKSPACE}/testscript.sh", script)
+            run = sj.contained_run(
+                ["docker", "exec", "-w", self.workdir, self.name,
+                 "bash", f"{SBP_WORKSPACE}/testscript.sh"],
+                cwd=self.sandbox, timeout=self.timeout,
+                # The container name carries a pid; recording it would mint a
+                # different digest handle for every identical failure.
+                record_argv=["bash", "run_script.sh"] + list(files))
+            evidence = _from_run(run)
+
+            report = sbp_resolution(self._read_output(), self.problem)
+            self.last_report = report
+            self.last_ratio = report["test_pass_ratio"]
+            return report["resolved"], evidence
+        except Exception as e:                               # noqa: BLE001
+            return False, _guard_evidence(f"SWE-bench Pro execution error: {e}")
+        finally:
+            try:
+                self.reset()
+            except Exception:                                # noqa: BLE001
+                pass
+
+    def _read_output(self):
+        """The parser's verdict file. Absent means the parser never ran."""
+        p = subprocess.run(
+            ["docker", "exec", self.name, "cat", f"{SBP_WORKSPACE}/output.json"],
+            capture_output=True, text=True, timeout=120)
+        if p.returncode != 0:
+            return {}
+        try:
+            return json.loads(p.stdout or "{}")
+        except json.JSONDecodeError:
+            return {}
+
+
+def _sbp_default_platform():
+    """`linux/amd64` on Apple Silicon: upstream publishes amd64 images only.
+
+    Without this, Docker Desktop picks the host architecture, fails to find a
+    matching manifest and reports it as a missing image.
+    """
+    try:
+        return "linux/amd64" if platform.machine().lower() in ("arm64", "aarch64") else ""
+    except Exception:                                        # noqa: BLE001
+        return ""
 
 
 # ==============================================================================

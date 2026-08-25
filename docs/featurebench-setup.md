@@ -194,6 +194,28 @@ python3 tools/featurebench_preflight.py --disk     # no Docker needed
 python3 tools/featurebench_preflight.py --pull
 ```
 
+**Step 2b — if you pulled only some images, find out what that covers.**
+
+`--pull` walks the images alphabetically; the runner slices tasks in *dataset*
+order. Those are different orderings, so having the first four images does **not**
+mean `--n 4` is runnable — it would land on a missing image and pull ~10 GB
+mid-run. Print the actual intersection:
+
+```bash
+python3 tools/featurebench_preflight.py --ready --ready-out /tmp/fb_ready.txt
+```
+
+Then run exactly those rows:
+
+```bash
+python3 run_benchmark.py --dataset featurebench --group featurebench \
+    --tasks @/tmp/fb_ready.txt --report --no-cache
+```
+
+`--tasks` takes a comma-separated list or `@path` to one id per line, and
+overrides `--n`. Nothing outside that set is blocked — `docker run` fetches a
+missing image on first use — it just pays the download mid-sweep.
+
 **Step 3 — run FeatureBench's own gold patches.**
 
 ```bash

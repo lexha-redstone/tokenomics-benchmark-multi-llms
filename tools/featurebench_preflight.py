@@ -24,6 +24,7 @@ Usage
 -----
     python3 tools/featurebench_preflight.py --settings     # what repo_settings holds
     python3 tools/featurebench_preflight.py --disk         # how much --pull will download
+    python3 tools/featurebench_preflight.py --ready        # what runs with what you already have
     python3 tools/featurebench_preflight.py --pull         # pre-pull the images
     python3 tools/featurebench_preflight.py --n 5          # try 5 rows, report
     python3 tools/featurebench_preflight.py --write        # quarantine what gold fails
@@ -181,6 +182,47 @@ def _image_present(image):
                           capture_output=True, timeout=60).returncode == 0
 
 
+def report_ready(problems, out_path=""):
+    """Which instances can run right now, with no further download.
+
+    `--pull` walks the images in alphabetical order; the runner slices tasks in
+    *dataset* order. Those are different orderings, so "I have the first four
+    images" does not mean "I can run the first four tasks" -- and a `--n 4` that
+    lands on a missing image will pull ~10 GB mid-run. This prints the actual
+    intersection, and writes the ids in a form `run_benchmark.py --tasks` takes.
+    """
+    by_image = collections.defaultdict(list)
+    for iid, p in problems.items():
+        by_image[p.get("image_name")].append(iid)
+
+    have = {img for img in by_image if img and _image_present(img)}
+    ready = [iid for img in sorted(have) for iid in by_image[img]]
+
+    print(f"\n{len(have)}/{len(by_image)} image(s) present locally")
+    for img in sorted(have):
+        print(f"  {len(by_image[img]):3} instance(s)  {img}")
+    print(f"\n{len(ready)} of {len(problems)} instances can run with no further "
+          f"download.")
+
+    if not ready:
+        print("nothing is runnable yet -- pull at least one image.")
+        return ready
+
+    if out_path:
+        with open(out_path, "w", encoding="utf-8") as f:
+            f.write("\n".join(ready) + "\n")
+        print(f"\nwrote {out_path}")
+        print("run exactly these:\n"
+              f"  python3 run_benchmark.py --dataset featurebench "
+              f"--group featurebench --tasks @{out_path} --report --no-cache")
+    else:
+        print("\nre-run with --ready-out <path> to write these ids for "
+              "`run_benchmark.py --tasks @<path>`.")
+    print("\nAnything NOT in this set still works -- `docker run` fetches a "
+          "missing image on first use. It just costs the download mid-sweep.")
+    return ready
+
+
 def pull_images(problems, timeout=7200):
     """Pre-pull every distinct image, resumably.
 
@@ -299,6 +341,11 @@ def main():
     ap.add_argument("--n", type=int, default=0, help="limit rows checked (0 = all)")
     ap.add_argument("--settings", action="store_true",
                     help="print what repo_settings holds, then stop")
+    ap.add_argument("--ready", action="store_true",
+                    help="which instances can run with the images already "
+                         "present locally, then stop")
+    ap.add_argument("--ready-out", default="",
+                    help="with --ready, write the runnable instance ids here")
     ap.add_argument("--disk", action="store_true",
                     help="ask the registry how much --pull will download, then stop")
     ap.add_argument("--pull", action="store_true",
@@ -322,6 +369,14 @@ def main():
 
     if args.disk:
         report_disk(problems)
+        return 0
+
+    if args.ready:
+        ok, why = docker_available()
+        print(f"docker: {why}")
+        if not ok:
+            return 2
+        report_ready(problems, args.ready_out)
         return 0
 
     ok, why = docker_available()

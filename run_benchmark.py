@@ -48,6 +48,24 @@ from src.reporter import (allocate_report_paths, generate_markdown_report,
 # (run_classeval_opus5.py) score their rows by exactly these rules.
 from src.sweep import load_cache, run_arm, print_scoreboard
 
+def _requested_tasks(spec):
+    """Parse --tasks: a comma-separated list, or @path to one id per line."""
+    spec = (spec or "").strip()
+    if not spec:
+        return []
+    if spec.startswith("@"):
+        with open(spec[1:], "r", encoding="utf-8") as f:
+            items = [ln.strip() for ln in f]
+    else:
+        items = spec.split(",")
+    seen, out = set(), []
+    for t in (i.strip() for i in items):
+        if t and not t.startswith("#") and t not in seen:
+            seen.add(t)
+            out.append(t)
+    return out
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--dataset", "-d", choices=["bcb", "bigcodebench", "bigcodebench-hard",
@@ -64,6 +82,12 @@ def main():
                         help="Comma-separated variant IDs to run (e.g. 'single_flash36,sj_hybrid,sj_escalation_shield')")
     parser.add_argument("--n", "-n", type=int, default=30,
                         help="Number of tasks to evaluate (default: 30)")
+    parser.add_argument("--tasks", default="",
+                        help="Run exactly these task ids: a comma-separated list, "
+                             "or @path to a file with one id per line. Overrides "
+                             "--n. Useful when only some of a dataset's Docker "
+                             "images are present locally -- see "
+                             "`tools/featurebench_preflight.py --ready`.")
     parser.add_argument("--split", "-s", default=None,
                         help="Dataset split (default: dataset standard)")
     parser.add_argument("--allow-simulation", action="store_true",
@@ -114,12 +138,28 @@ def main():
 
     print("=" * 80)
     print(f"STARTING MULTI-LLM BENCHMARK RUNNER")
-    print(f"Dataset: {dataset_name} | Tasks (N): {args.n} | Group: {args.group.upper()}")
+    _n_label = f"{len(_requested_tasks(args.tasks))} (explicit --tasks)" \
+        if args.tasks else str(args.n)
+    print(f"Dataset: {dataset_name} | Tasks (N): {_n_label} | "
+          f"Group: {args.group.upper()}")
     print("=" * 80, flush=True)
 
     # 1. Load Dataset
-    problems = load_dataset(ds_key, split=args.split, max_tasks=args.n)
-    task_ids = list(problems.keys())[:args.n]
+    #    `--tasks` names rows explicitly, so the whole split has to be loaded
+    #    before selecting -- `max_tasks` would truncate in dataset order and
+    #    silently drop the very ids that were asked for.
+    wanted = _requested_tasks(args.tasks)
+    problems = load_dataset(ds_key, split=args.split,
+                            max_tasks=None if wanted else args.n)
+    if wanted:
+        missing = [t for t in wanted if t not in problems]
+        if missing:
+            print(f"ERROR: {len(missing)} requested task id(s) are not in this "
+                  f"split (first: {missing[0]})", file=sys.stderr)
+            return 2
+        task_ids = wanted
+    else:
+        task_ids = list(problems.keys())[:args.n]
     n = len(task_ids)
     print(f"Successfully loaded {n} tasks for {dataset_name}.", flush=True)
 
@@ -176,4 +216,4 @@ def main():
     print_scoreboard(summary_rows, dataset_name, n)
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main() or 0)

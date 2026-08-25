@@ -672,7 +672,8 @@ because the ladder needs the oracle inside the loop rather than after it.
 ```bash
 python3 tools/featurebench_preflight.py --settings   # what repo_settings holds
 python3 tools/featurebench_preflight.py --disk       # how much --pull will download
-python3 tools/featurebench_preflight.py --pull       # then fetch them
+python3 tools/featurebench_preflight.py --pull       # then fetch them (resumable)
+python3 tools/featurebench_preflight.py --ready      # what runs with what you have
 python3 tools/featurebench_preflight.py --write      # run gold, quarantine what fails
 ```
 

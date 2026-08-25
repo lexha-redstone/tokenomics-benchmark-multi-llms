@@ -469,6 +469,7 @@ class FeatureBenchEnv:
         self.setup_error = ""
         self.workdir_unverified = False
         self._staged = []
+        self.apply_log = []
 
     # -- lifecycle ---------------------------------------------------------
     def __enter__(self):
@@ -554,14 +555,24 @@ class FeatureBenchEnv:
         # worktree edits (mlflow's `libs/*/mlflow` symlinks show as `T`/`D`),
         # and the narrower the intervention before `test_patch`, the fewer ways
         # it has to fail for a reason that is not the benchmark's.
-        if files:
-            self._restore_from_head(files)
-
         test_patch = self.problem.get("test_patch") or ""
         if test_patch.strip():
             self._write("/tmp/fb_test.patch", test_patch)
             if not self._try_apply("/tmp/fb_test.patch"):
-                raise RuntimeError("the dataset's own test_patch did not apply")
+                raise RuntimeError("the dataset's own test_patch did not apply:\n"
+                                   + "\n".join(self.apply_log))
+        # `test_patch` is what materialises the graded tests -- the images ship
+        # the fail-to-pass file deleted precisely so this diff can create it.
+        # If a named file is still absent, the apply did something other than
+        # what it claimed (`patch --batch` reverse-applying, most likely), and
+        # grading anything now would silently use the repository's own tests.
+        still_missing = [f for f in files
+                         if self._sh(f"test -f {f}", check=False).returncode != 0]
+        if still_missing:
+            raise RuntimeError(
+                f"test_patch applied but {len(still_missing)} graded file(s) are "
+                f"still absent ({still_missing[0]}). Apply log:\n"
+                + "\n".join(getattr(self, "apply_log", []) or ["(none)"]))
         self._staged = []
         if files:
             # Staged one file at a time, with `cp --parents` avoided (it is a
@@ -664,9 +675,20 @@ class FeatureBenchEnv:
             raise RuntimeError(f"could not write {path}: {(p.stderr or '').strip()[-200:]}")
 
     def _try_apply(self, path):
+        """Apply a diff, strict strategy first. Records what each attempt said.
+
+        `patch --batch` will happily *reverse* a diff it thinks was already
+        applied and exit 0, which silently deletes a file the next step needs.
+        So the log is kept on the instance rather than discarded, and callers
+        that care check the outcome rather than the return code alone.
+        """
+        self.apply_log = []
         for argv in _APPLY_STRATEGIES:
-            cmd = " ".join(argv) + (f" {path}" if argv[0] == "git" else f" {path}")
-            if self._sh(cmd, check=False).returncode == 0:
+            cmd = " ".join(argv) + f" {path}"
+            r = self._sh(cmd, check=False)
+            out = ((r.stdout or "") + (r.stderr or "")).strip()
+            self.apply_log.append(f"$ {cmd}\n[exit {r.returncode}] {out[:400]}")
+            if r.returncode == 0:
                 return True
         return False
 

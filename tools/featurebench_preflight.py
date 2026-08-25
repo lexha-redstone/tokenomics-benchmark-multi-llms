@@ -376,6 +376,9 @@ def debug_instance(problems, iid):
           f"test_patch {len(problem.get('test_patch') or '')} chars")
 
     with env as e:
+        if not e.started and getattr(e, "apply_log", None):
+            print("\n--- apply log from setup " + "-" * 45)
+            print("\n".join(e.apply_log)[:1500])
         if not e.started:
             # The container usually exists even when setup failed part-way --
             # a test_patch that would not apply, say. Keep inspecting rather
@@ -415,6 +418,22 @@ def debug_instance(problems, iid):
         # flag (skip-worktree shows as a lowercase letter from `ls-files -v`),
         # which makes `git checkout -- <path>` a silent no-op.
         f2p = files[0] if files else ""
+        # What test_patch actually is decides everything downstream: a
+        # new-file diff needs the target ABSENT, an edit diff needs it PRESENT.
+        # Applying the wrong one silently deletes the graded tests.
+        tp = problem.get("test_patch") or ""
+        if tp.strip():
+            head = "\n".join(tp.splitlines()[:40])
+            print("\n--- test_patch header (first 40 lines) " + "-" * 31)
+            print(head[:1600])
+            e._write("/tmp/fb_dbg.patch", tp)
+            show("does test_patch apply cleanly, and what does it claim to do?",
+                 "echo '-- git apply --check:'; "
+                 "git apply --check --verbose /tmp/fb_dbg.patch 2>&1 | tail -8; "
+                 "echo '-- git apply --stat:'; "
+                 "git apply --stat /tmp/fb_dbg.patch 2>&1 | tail -8; "
+                 f"echo '-- does {f2p} exist right now?:'; "
+                 f"ls -l {f2p} 2>&1 | tail -1")
         if f2p:
             show("why the graded file is hidden, and can it be read from HEAD?",
                  f"echo '-- ls-files -v (lowercase letter = skip-worktree):'; "

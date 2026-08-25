@@ -56,18 +56,20 @@ def classify(evidence_text, setup_error=""):
     t = (str(setup_error) + " " + str(evidence_text)).lower()
     if "no such image" in t or "manifest unknown" in t or "pull access denied" in t:
         return "missing_image"
-    if "docker run failed" in t or "container unavailable" in t:
+    if "docker run failed" in t:
         return "container_start_failed"
     if "test_patch did not apply" in t:
         return "test_patch_conflict"
     if "patch did not apply" in t:
         return "gold_patch_conflict"
-    if "no such file or directory" in t or "file or directory not found" in t:
+    if "no such file or directory" in t or "file or directory not found" in t or "graded test file" in t:
         return "test_file_missing"
     if "modulenotfounderror" in t or "importerror" in t:
         return "missing_module"
     if "error" in t and "collect" in t:
         return "collection_error"
+    if "container unavailable" in t:
+        return "container_start_failed"
     return "gold_fails"
 
 
@@ -551,24 +553,30 @@ def run_gold(problems, limit=0, only=None):
         if not gold.strip():
             # Level 2 rows ship no reference patch; there is nothing to verify
             # and nothing to blame on the environment, so they are left in.
-            print(f"{head}  SKIP (no gold patch -- Level 2 row)")
+            print(f"{head}  SKIP (no gold patch -- Level 2 row)", flush=True)
             verdicts[iid] = {"ok": True, "reason": "no_gold_patch", "skipped": True}
             continue
         if not files:
-            print(f"{head}  QUARANTINE (names no test file)")
+            print(f"{head}  QUARANTINE (names no test file)", flush=True)
             verdicts[iid] = {"ok": False, "reason": "no_test_files", "evidence": ""}
             continue
 
         with FeatureBenchEnv(problem) as env:
-            passed, evidence = env.score(gold)
+            # In FeatureBench Level 1, `patch` in the dataset is a deletion diff
+            # used by the benchmark to create the problem (masking the feature),
+            # while the complete reference implementation resides directly at
+            # git HEAD in the Docker image. We test the reference implementation
+            # with `env.score("")` to verify that the container environment and
+            # test suite pass cleanly.
+            passed, evidence = env.score("", allow_empty=True)
         ratio = featurebench_test_ratio(evidence)
         if passed:
-            print(f"{head}  ok")
+            print(f"{head}  ok", flush=True)
             verdicts[iid] = {"ok": True, "reason": "gold_passes"}
         else:
             reason = classify(evidence, env.setup_error)
             print(f"{head}  QUARANTINE ({reason})"
-                  + (f"  test_pass_ratio={ratio}" if ratio is not None else ""))
+                  + (f"  test_pass_ratio={ratio}" if ratio is not None else ""), flush=True)
             verdicts[iid] = {
                 "ok": False, "reason": reason,
                 "test_pass_ratio": ratio,

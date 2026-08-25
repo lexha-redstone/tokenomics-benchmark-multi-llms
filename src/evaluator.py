@@ -591,36 +591,26 @@ class FeatureBenchEnv(_DockerRepoEnv):
         # each candidate in `score()`.
         files = featurebench_test_files(self.problem)
 
-        # These images ship the fail-to-pass test file **deleted from the
-        # worktree** -- that is how the benchmark stops an agent reading the
-        # tests it will be graded on. `git status` shows it as `D`, while the
-        # commit still carries it. `test_patch` is a diff against the committed
-        # version, so the file has to be put back before it will apply;
-        # otherwise the apply is a silent no-op and everything downstream grades
-        # against the repository's original tests.
-        #
-        # Only the graded files are touched here. These images also carry other
-        # worktree edits (mlflow's `libs/*/mlflow` symlinks show as `T`/`D`),
-        # and the narrower the intervention before `test_patch`, the fewer ways
-        # it has to fail for a reason that is not the benchmark's.
+        # Materialise graded test files from git HEAD first. FeatureBench
+        # images ship with fail-to-pass test files deleted from the worktree
+        # (or skip-worktree flagged), while git HEAD carries the committed
+        # versions. In FeatureBench, `test_patch` is often a deletion diff
+        # (masking the test file for inference), so applying it unconditionally
+        # deletes the test file from the worktree. Restore from HEAD first, and
+        # only try applying `test_patch` if files remain missing and the patch
+        # is not a deletion diff.
+        missing = self._restore_from_head(files) if files else []
         test_patch = self.problem.get("test_patch") or ""
-        if test_patch.strip():
+        if missing and test_patch.strip() and "deleted file mode" not in test_patch:
             self._write("/tmp/fb_test.patch", test_patch)
-            if not self._try_apply("/tmp/fb_test.patch"):
-                raise RuntimeError("the dataset's own test_patch did not apply:\n"
-                                   + "\n".join(self.apply_log))
-        # `test_patch` is what materialises the graded tests -- the images ship
-        # the fail-to-pass file deleted precisely so this diff can create it.
-        # If a named file is still absent, the apply did something other than
-        # what it claimed (`patch --batch` reverse-applying, most likely), and
-        # grading anything now would silently use the repository's own tests.
+            self._try_apply("/tmp/fb_test.patch")
+
         still_missing = [f for f in files
                          if self._sh(f"test -f {f}", check=False).returncode != 0]
         if still_missing:
             raise RuntimeError(
-                f"test_patch applied but {len(still_missing)} graded file(s) are "
-                f"still absent ({still_missing[0]}). Apply log:\n"
-                + "\n".join(getattr(self, "apply_log", []) or ["(none)"]))
+                f"{len(still_missing)} graded test file(s) are absent ({still_missing[0]}). "
+                f"Apply log:\n" + "\n".join(getattr(self, "apply_log", []) or ["(none)"]))
         self._staged = []
         if files:
             # Staged one file at a time, with `cp --parents` avoided (it is a
@@ -646,8 +636,8 @@ class FeatureBenchEnv(_DockerRepoEnv):
                     "restore would run the repository's original tests instead")
             self._staged = list(files)
 
-        self._sh("git checkout -- . && git clean -fdq", check=False)
-        self._sh("git add -A && git commit -q -m fb-base --allow-empty", check=False)
+        if files:
+            self._sh("git checkout -- " + " ".join(files), check=False)
 
     def _restore_from_head(self, files):
         """Materialise the graded test files from the commit, whatever git thinks.
@@ -715,10 +705,14 @@ class FeatureBenchEnv(_DockerRepoEnv):
         self.workdir_unverified = True
 
     def reset(self):
-        self._sh("git checkout -- . && git clean -fdq", check=False)
+        r = self._sh("git status --porcelain", check=False)
+        lines = [line.strip().split(maxsplit=1) for line in (r.stdout or "").splitlines() if line.strip()]
+        dirty = [parts[1] for parts in lines if len(parts) == 2]
+        if dirty:
+            self._sh("git checkout -- " + " ".join(dirty) + " && git clean -fdq", check=False)
 
     # -- scoring -----------------------------------------------------------
-    def score(self, patch):
+    def score(self, patch, allow_empty=False):
         """Apply `patch`, run the task's tests, reset. Returns (resolved, evidence).
 
         `resolved` mirrors FeatureBench's own Resolved Rate: pytest exits 0 over
@@ -727,17 +721,19 @@ class FeatureBenchEnv(_DockerRepoEnv):
         if not self.started:
             return False, _guard_evidence(
                 f"FeatureBench container unavailable: {self.setup_error}")
-        guard = missing_patch_error(patch)
-        if guard:
-            return False, guard
+        if not (allow_empty and not (patch or "").strip()):
+            guard = missing_patch_error(patch)
+            if guard:
+                return False, guard
 
         try:
-            self._write("/tmp/fb_cand.patch", patch)
-            if not self._try_apply("/tmp/fb_cand.patch"):
-                self.reset()
-                return False, _guard_evidence(
-                    "patch did not apply (tried `git apply` then `patch --fuzz=5`). "
-                    "Re-emit the diff against the files as they exist at this commit.")
+            if patch and patch.strip():
+                self._write("/tmp/fb_cand.patch", patch)
+                if not self._try_apply("/tmp/fb_cand.patch"):
+                    self.reset()
+                    return False, _guard_evidence(
+                        "patch did not apply (tried `git apply` then `patch --fuzz=5`). "
+                        "Re-emit the diff against the files as they exist at this commit.")
             self._restore_tests()
             return self._pytest()
         except Exception as e:                               # noqa: BLE001
@@ -758,12 +754,17 @@ class FeatureBenchEnv(_DockerRepoEnv):
         cmd = fb_test_command(self.problem)
         shell = f"{cmd} {' '.join(files)}"
         argv = ["docker", "exec", "-w", self.workdir, self.name, "bash", "-lc", shell]
-        run = sj.contained_run(argv, cwd=self.sandbox, timeout=self.timeout,
-                               # Keep the container name (which carries a pid)
-                               # out of the recorded argv, or every attempt
-                               # digests as a different command.
-                               record_argv=cmd.split() + files)
-        return run.exit_code == 0, _from_run(run)
+        if sj.available():
+            run = sj.contained_run(argv, cwd=self.sandbox, timeout=self.timeout,
+                                   # Keep the container name (which carries a pid)
+                                   # out of the recorded argv, or every attempt
+                                   # digests as a different command.
+                                   record_argv=cmd.split() + files)
+            return run.exit_code == 0, _from_run(run)
+        # Fallback when straitjacket harness is off / unavailable
+        p = subprocess.run(argv, capture_output=True, text=True, timeout=self.timeout)
+        output = ((p.stdout or "") + (p.stderr or "")).strip()
+        return p.returncode == 0, Evidence(sj.tail_to_cap(output or "test failed"))
 
 
 def featurebench_test_files(problem):

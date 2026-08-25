@@ -492,6 +492,68 @@ def _terminate_patch(patch):
     return body + "\n" if body else ""
 
 
+# Header lines that end a hunk body. Anything else between `@@` markers is
+# hunk content and must carry a ` `, `+`, `-` or `\` marker in column 0.
+_HUNK_HEADER_RE = re.compile(r"^@@ -(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@")
+_FILE_HEADER_PREFIXES = (
+    "diff --git ", "--- ", "+++ ", "index ", "new file mode", "deleted file mode",
+    "similarity index", "rename from", "rename to", "old mode", "new mode",
+    "Binary files", "GIT binary patch",
+)
+
+
+def normalise_hunk_markers(patch):
+    """Restore the column-0 marker on blank lines inside a hunk.
+
+    A blank line in the source is written in a unified diff as a *marked* line:
+    one space and nothing else for context, `+` for an addition. Models write a
+    genuinely empty line instead, and almost every editor and copy-paste path
+    strips the lone trailing space back out again. `git apply` cannot parse the
+    result: an unmarked line inside a hunk is `corrupt patch at line N`, exit
+    **128**, and `--recount`, `--ignore-whitespace` and `--3way` all inherit it
+    because the patch never parses in the first place.
+
+    Measured on a scratch repository, one new-file hunk containing one blank
+    line: unmarked, **0 of 5** strategies apply (`corrupt patch`, then `new file
+    depends on old contents`, then `malformed patch`); marked, 3 of 5 apply.
+    That signature -- the same `corrupt patch at line N` under every strategy --
+    is what the N=2 run recorded on `fb_cascade`.
+
+    The marker depends on the hunk: a pure-addition hunk (`@@ -0,0 ...`, a new
+    file) has no context lines to be, so a blank line there is `+`. Everywhere
+    else it is a context line. A blank line that is *not* followed by more hunk
+    content is a separator between files rather than content, and is dropped.
+    """
+    if not patch:
+        return patch
+    lines = patch.rstrip("\n").split("\n")
+    out, in_hunk, additions_only = [], False, False
+
+    for i, line in enumerate(lines):
+        header = _HUNK_HEADER_RE.match(line)
+        if header:
+            in_hunk = True
+            # `-0,0` (and the `-0` shorthand) is a file being created: there is
+            # no old side for a context line to refer to.
+            additions_only = (header.group(1) == "0" and header.group(2) in (None, "0"))
+            out.append(line)
+            continue
+        if line.startswith(_FILE_HEADER_PREFIXES):
+            in_hunk = False
+            out.append(line)
+            continue
+        if in_hunk and line == "":
+            nxt = next((l for l in lines[i + 1:] if l != ""), None)
+            if nxt is None or nxt.startswith(_FILE_HEADER_PREFIXES):
+                # Cosmetic blank between files, not a line of the hunk.
+                continue
+            out.append("+" if additions_only else " ")
+            continue
+        out.append(line)
+
+    return _terminate_patch("\n".join(out))
+
+
 def extract_patch(text):
     """Pull a unified diff out of a model response.
 
@@ -511,13 +573,13 @@ def extract_patch(text):
         blocks = re.findall(r"```\s*\n(diff --git .*?)```", text or "", re.DOTALL)
     if blocks:
         joined = "\n".join(b.strip("\n") for b in blocks if b.strip())
-        return _terminate_patch(joined)
+        return normalise_hunk_markers(joined)
     # An unfenced diff is common enough to accept, but only from the first
     # marker onward -- prose before it would break `git apply`.
     idx = (text or "").find("diff --git ")
     if idx == -1:
         idx = (text or "").find("--- ")
-    return _terminate_patch((text or "")[idx:]) if idx != -1 else ""
+    return normalise_hunk_markers((text or "")[idx:]) if idx != -1 else ""
 
 
 def missing_patch_error(patch_str):

@@ -351,6 +351,72 @@ reproduction. The application rate is the number to read first on the rerun; if
 it does not move well above 25%, the diagnosis in §7b.3 is wrong and the arms
 are failing for a reason nobody has found yet.
 
+## 7d. The N=2 smoke run — what it proved and what it exposed
+
+[Report 24](../reports/24_featurebench_straitjacket_n2.md), two rows,
+`fb_cascade` vs `fb_grounded`. **0/2 for both arms.** Two rows decide nothing
+about pass rates; what they do decide is whether the machinery works, and they
+found three more defects.
+
+**Confirmed working.** Both arms ran `flash → sonnet-5 → opus-5` on every task,
+so the budget and reachability fixes hold. Grounding read real files on one row
+(`fastapi/_compat/main.py`, `v1.py`, `v2.py`, `__init__.py` — 44,913 chars).
+
+**Defect 6 — blank lines inside a hunk lose their column-0 marker.** The
+dominant failure was still `patch did not apply`, but the apply log now says
+why, and it is not the trailing newline:
+
+```
+$ git apply --verbose            [exit 128] error: corrupt patch at line 8
+$ git apply --recount            [exit 128] error: corrupt patch at line 8
+$ git apply --recount -C1 --ignore-whitespace   [exit 128] corrupt patch at line 8
+$ git apply --recount --3way     [exit 128] error: corrupt patch at line 8
+```
+
+A blank source line is written in a unified diff as a *marked* line — one space
+for context, `+` for an addition. Models write a genuinely empty line, and an
+unmarked line inside a hunk is unparseable: reproduced on a scratch repository,
+one new-file hunk with one unmarked blank applies under **0 of 5** strategies
+(`corrupt patch`, then `new file depends on old contents`, then `malformed
+patch`), and marked it applies under 3 of 5. `--recount`, `--ignore-whitespace`
+and `--3way` cannot help, because the patch never parses in the first place.
+Fixed by `normalise_hunk_markers` in [`src/evaluator.py`](../src/evaluator.py),
+which restores the marker — `+` inside a `-0,0` hunk, a space elsewhere — and
+drops the cosmetic blank models put *between* two files.
+
+**Defect 7 — grounding asked for paths that cannot exist.** These images root
+the repository at `/testbed`, and the statements quote absolute paths inside it.
+The path regex cannot capture a leading slash without also matching prose, so
+`/testbed/src/packaging/metadata.py` was requested as
+`testbed/src/packaging/metadata.py`, found nothing, and the row fell through to
+a `git grep` that quoted **`docs/conf.py`** — 2,566 chars of the wrong file, on
+the row that most needed the right one. Fixed by stripping the container root,
+ranking source above `docs/`, `examples/` and `scripts/`, and resolving a
+missing path by basename through `git ls-files`.
+
+**Defect 8 — the candidate patch is not stored, so `corrupt patch at line 8`
+cannot be read.** Diagnosing the above needed a scratch-repository
+reproduction, because line 8 of the patch existed nowhere: the record keeps a
+500-character error string and nothing else. Failed rows now carry a bounded
+`candidate_patch` excerpt.
+
+**Two reporting defects, both visible in report 24 itself.**
+
+- Its `$ / solved` column reads **`$0.0000`** for both arms. `src/sweep.py`
+  stores `0.0` when nothing was solved and the markdown table printed it
+  literally, so a total failure renders as free — and sorts as best. Now `N/A`,
+  matching what the HTML dashboard already did.
+- `fb_grounded` is **missing from the containment table** with no explanation:
+  it recorded zero captures, because no test ever ran, and the table silently
+  drops capture-less arms. Zero captures is a finding about the arm, not a gap
+  in the receipt, so it is now named beneath the table.
+
+**What the N=2 run does not tell us.** Nothing about pass rates, and nothing
+about whether grounding helps — one of its two rows was grounded on the wrong
+file, and both arms hit the marker bug that swallowed every candidate. The
+smoke run has to be repeated after these fixes before the N=48 A/B is worth
+paying for, and the number to read first is still the application rate.
+
 ## 8. What a rerun needs
 
 H2 remains open. The pre-registered next step in

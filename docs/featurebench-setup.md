@@ -493,6 +493,11 @@ caught them, in the order they bite:
    PY
    ```
 
+   Two known-bad shapes to look for, both found by the first N=2 smoke run:
+   `grounding.read` containing only `docs/…` means the path resolution missed
+   the real file, and `corrupt patch at line N` under *every* strategy means a
+   hunk line lost its column-0 marker.
+
    `fb_grounded` with `chars: 0` means the container could not be read and the
    arm silently ran the blind prompt — a valid run, but not a test of grounding.
    If `chars` is healthy and the application rate still does not clear ~25%,

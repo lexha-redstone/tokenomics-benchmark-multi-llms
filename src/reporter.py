@@ -156,6 +156,7 @@ def _write_insights(f, summary_rows, section=3):
 def _write_containment_table(f, summary_rows, section=2):
     """Context-residency receipt per configuration."""
     rows = [r for r in summary_rows if (r.get("containment") or {}).get("captures")]
+    silent = [r for r in summary_rows if r not in rows]
     if not rows:
         return
     f.write("\n---\n\n")
@@ -204,6 +205,17 @@ def _write_containment_table(f, summary_rows, section=2):
                 " captured runs through the harness but recorded no evidence treatment, so "
                 "their `Sent`/`Native`/`Δ` columns are missing measurements rather than zeros. "
                 "Do not read them as a result.\n")
+    if silent:
+        # An arm with zero captures is not a quiet arm; it is an arm whose
+        # candidates never reached a test run. Dropping its row silently makes
+        # the table look like the arm was not part of the sweep.
+        f.write("\n> [!IMPORTANT]\n"
+                "> **Absent from this table** — " +
+                ", ".join(f"`{r.get('name', r.get('arm', 'Variant'))}`" for r in silent) +
+                " produced **no captures at all**: no test run ever happened, because "
+                "every candidate was rejected before execution (typically the patch not "
+                "applying). There is nothing to contain when nothing ran, so the absence "
+                "is a finding about the arm, not a gap in the receipt.\n")
 
 
 def _write_diagnostics_table(f, summary_rows, section=2):
@@ -343,8 +355,12 @@ def generate_markdown_report(summary_rows, dataset_name="BigCodeBench-Hard", out
             triage_usd = r.get("total_triage_usd", r.get("triage_usd", 0.0))
             cps = r.get("cost_per_solved_usd", r.get("cost_per_solved", 0.0))
             avg_out = r.get("avg_output_tokens", r.get("avg_out_tok", 0.0))
+            # An arm that solved nothing has no cost per solved task. Printing
+            # the stored 0.0 renders a total failure as `$0.0000`, which reads
+            # as free and sorts as best.
+            cps_cell = f"**`${cps:.4f}`**" if passed > 0 else "**`N/A`**"
 
-            f.write(f"| **{name}** | `{models}` | {triage_mode} | {raw_pr} | **{eff_pr}** | `${tot_usd:.4f}` | `${triage_usd:.4f}` | **`${cps:.4f}`** | `{avg_out:.1f}` |\n")
+            f.write(f"| **{name}** | `{models}` | {triage_mode} | {raw_pr} | **{eff_pr}** | `${tot_usd:.4f}` | `${triage_usd:.4f}` | {cps_cell} | `{avg_out:.1f}` |\n")
 
         # Sections renumber themselves so a dataset that produces no attempt
         # diagnostics keeps the historical 1/2/3 layout.

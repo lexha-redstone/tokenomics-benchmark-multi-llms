@@ -553,3 +553,85 @@ def test_ungrounded_arms_are_byte_identical_to_before(wired, monkeypatch):
 def test_grounded_gate_can_actually_reach_the_frontier():
     """Rule 4 of the lessons doc, asserted rather than remembered."""
     assert "fb_grounded_gate" not in fb.unreachable_frontier_arms()
+
+
+# ==========================================================================
+# --- WHAT THE N=2 RUN EXPOSED ---
+# ==========================================================================
+
+
+def test_blank_lines_inside_a_hunk_get_their_marker_back():
+    """The N=2 failure signature: `corrupt patch at line N` on all 5 strategies.
+
+    A blank source line must be written with a column-0 marker -- a lone space
+    for context, `+` for an addition. Models emit a genuinely empty line, which
+    `git apply` cannot parse *at all*: measured on a scratch repository, an
+    unmarked blank inside one new-file hunk applies under 0 of 5 strategies,
+    and `--recount` / `--ignore-whitespace` / `--3way` cannot rescue it because
+    the patch never parses.
+    """
+    from src.evaluator import normalise_hunk_markers
+
+    # New file: the blank belongs to the added side.
+    new_file = ("diff --git a/n.py b/n.py\nnew file mode 100644\n"
+                "--- /dev/null\n+++ b/n.py\n@@ -0,0 +1,3 @@\n+import os\n\n+x = 1\n")
+    assert normalise_hunk_markers(new_file).splitlines()[6] == "+"
+
+    # Existing file: the blank is context.
+    edit = ("diff --git a/m.py b/m.py\n--- a/m.py\n+++ b/m.py\n"
+            "@@ -1,3 +1,4 @@\n import os\n\n+y = 2\n")
+    assert normalise_hunk_markers(edit).splitlines()[5] == " "
+
+
+def test_a_blank_between_two_files_is_not_hunk_content():
+    """Models separate per-file diffs with a blank line. It is not a context line."""
+    from src.evaluator import normalise_hunk_markers
+
+    two = ("diff --git a/m.py b/m.py\n--- a/m.py\n+++ b/m.py\n@@ -1 +1,2 @@\n"
+           " import os\n+y = 2\n\ndiff --git a/n.py b/n.py\n--- a/n.py\n+++ b/n.py\n"
+           "@@ -1 +1,2 @@\n import os\n+z = 3\n")
+    got = normalise_hunk_markers(two).splitlines()
+    # The blank is dropped, not turned into a context line, so the last line of
+    # the first file's hunk sits directly against the next file's header.
+    assert got[got.index("diff --git a/n.py b/n.py") - 1] == "+y = 2"
+
+
+def test_container_absolute_paths_resolve_to_repository_paths():
+    """`/testbed/src/pkg/x.py` is `src/pkg/x.py` inside the container.
+
+    The N=2 run asked for `testbed/src/packaging/metadata.py` -- the leading
+    slash lost, the prefix kept -- so the one file it most needed was recorded
+    as skipped, and grounding quoted `docs/conf.py` instead.
+    """
+    assert fb._normalise_repo_path("/testbed/src/packaging/metadata.py") == \
+        "src/packaging/metadata.py"
+    assert fb._normalise_repo_path("src/packaging/metadata.py") == \
+        "src/packaging/metadata.py"
+
+
+def test_grounding_spends_its_budget_on_source_before_documentation():
+    problem = dict(PROBLEM, problem_statement=(
+        "Update docs/conf.py and /testbed/src/pkg/core.py for the new option."))
+    assert fb._candidate_paths(problem) == ["src/pkg/core.py", "docs/conf.py"]
+
+
+def test_a_failed_row_keeps_the_candidate_patch_for_diagnosis(wired):
+    """`corrupt patch at line 8` is unreadable without line 8.
+
+    The N=2 run recorded that error under all five strategies and the patch was
+    nowhere on disk, so the cause had to be reproduced from scratch instead of
+    looked up.
+    """
+    out = fb.run_fb_cascade(PROBLEM)
+    assert not out["passed"]
+    assert "diff --git a/w.py b/w.py" in out["candidate_patch"]
+
+
+def test_a_passing_row_does_not_store_its_patch(wired, monkeypatch):
+    class Solves(FakeEnv):
+        def score(self, patch):
+            self.calls.append(patch)
+            return True, FakeEvidence("2 passed", typed=True)
+
+    monkeypatch.setattr(fb, "FeatureBenchEnv", Solves)
+    assert "candidate_patch" not in fb.run_fb_cascade(PROBLEM)

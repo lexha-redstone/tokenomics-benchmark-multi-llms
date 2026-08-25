@@ -179,6 +179,9 @@ def run_arm(cfg, problems, task_ids, cache=None, cache_file=None, no_cache=False
                 "sbp": raw_r.get("sbp"),
                 "guard_reason": raw_r.get("guard_reason", ""),
                 "guard_reasons": raw_r.get("guard_reasons"),
+                # The failing candidate itself, bounded. Without it a
+                # `corrupt patch at line N` is unreadable after the fact.
+                "candidate_patch": raw_r.get("candidate_patch"),
                 "suite_reached": raw_r.get("suite_reached"),
                 "attempts": raw_r.get("attempts"),
                 "grounding": raw_r.get("grounding"),

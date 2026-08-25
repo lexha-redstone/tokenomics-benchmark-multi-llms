@@ -253,6 +253,35 @@ _TICKED_RE = re.compile(r"`([^`\n]{3,60})`")
 _FILE_MARKER = "@@FB_FILE@@"
 
 
+# These images root the repository at `/testbed`, and the problem statements
+# quote absolute paths inside it. `_PATH_IN_TEXT_RE` cannot capture the leading
+# slash without also matching prose, so the prefix is stripped here instead --
+# the N=2 run read `docs/conf.py` and skipped
+# `testbed/src/packaging/metadata.py`, which is this bug: the file it most
+# needed was requested under a path that does not exist.
+_CONTAINER_ROOTS = ("testbed/", "workspace/", "repo/", "app/", "src/app/")
+
+# Quoted budget is finite, so spend it on code. A statement that mentions
+# `docs/conf.py` is almost never asking for a change to `docs/conf.py`.
+_LOW_VALUE_DIRS = ("docs/", "doc/", "examples/", "example/", "benchmarks/",
+                   "benchmark/", "scripts/", ".github/")
+
+
+def _normalise_repo_path(path):
+    """Make a path from the problem statement resolvable inside the container."""
+    p = (path or "").strip().lstrip("/")
+    for root in _CONTAINER_ROOTS:
+        if p.startswith(root):
+            return p[len(root):]
+    return p
+
+
+def _rank_paths(paths):
+    """Source before documentation, shallow before deep, order otherwise kept."""
+    return sorted(paths, key=lambda p: (p.startswith(_LOW_VALUE_DIRS),
+                                        p.count("/")))
+
+
 def _dedup(items):
     seen, out = set(), []
     for it in items:
@@ -271,10 +300,11 @@ def _candidate_paths(problem, limit=24):
     """
     graded = set(featurebench_test_files(problem))
     found = _PATH_IN_TEXT_RE.findall(str(problem.get("problem_statement") or ""))
-    paths = [p for p in _dedup(found) if _SAFE_PATH_RE.fullmatch(p)]
+    paths = _dedup(_normalise_repo_path(p) for p in found)
+    paths = [p for p in paths if p and _SAFE_PATH_RE.fullmatch(p)]
     if not FB_GROUND_TESTS:
         paths = [p for p in paths if p not in graded]
-    return paths[:limit]
+    return _rank_paths(paths)[:limit]
 
 
 def _search_terms(problem, limit=8):
@@ -295,7 +325,25 @@ def _grep_paths(env, terms, limit=12):
         hits.extend(l.strip() for l in (r.stdout or "").splitlines() if l.strip())
         if len(_dedup(hits)) >= limit:
             break
-    return [p for p in _dedup(hits) if p.endswith((".py", ".pyi"))][:limit]
+    py = [p for p in _dedup(hits) if p.endswith((".py", ".pyi"))]
+    return _rank_paths(py)[:limit]
+
+
+def _resolve_by_basename(env, missing, limit=8):
+    """Find a named file that is not where the statement said it was.
+
+    Statements quote paths against several roots (`/testbed/...`, the package
+    directory, the sdist layout). When the literal path is not present, the
+    basename usually still is and is usually unique.
+    """
+    found = []
+    for path in missing[:limit]:
+        base = path.rsplit("/", 1)[-1]
+        if not re.fullmatch(r"[\w.-]{3,80}", base):
+            continue
+        r = env._sh(f"git ls-files '*/{base}' '{base}' | head -n 4", check=False)
+        found.extend(l.strip() for l in (r.stdout or "").splitlines() if l.strip())
+    return _rank_paths(_dedup(found))
 
 
 def _read_repo_files(env, paths, budget, per_file=None):
@@ -343,13 +391,28 @@ def collect_repo_context(env, problem, budget=None):
     """
     budget = FB_GROUNDING_CHARS if budget is None else budget
     meta = {"enabled": bool(budget), "read": [], "skipped": [], "searched": [],
-            "chars": 0, "tests_quoted": bool(FB_GROUND_TESTS)}
+            "relocated": [], "chars": 0, "tests_quoted": bool(FB_GROUND_TESTS)}
     if not budget:
         return "", meta
 
     try:
         wanted = _candidate_paths(problem)
         blocks, read, skipped = _read_repo_files(env, wanted, budget)
+
+        # A path the statement named but the container does not have is usually
+        # the right file under a different root, not a file that is absent.
+        if skipped:
+            spent = sum(len(b) for b in blocks)
+            relocated = [p for p in _resolve_by_basename(env, skipped)
+                         if p not in read]
+            if relocated:
+                meta["relocated"] = relocated
+                more, read2, _ = _read_repo_files(env, relocated, budget - spent)
+                blocks, read = blocks + more, read + read2
+                skipped = [p for p in skipped
+                           if p.rsplit("/", 1)[-1] not in
+                           {q.rsplit("/", 1)[-1] for q in read2}]
+
         # The statement does not always name every file. Only pay for a search
         # when it did not name enough of them.
         if len(read) < 3:
@@ -402,7 +465,25 @@ def _spend(acc, usage):
     return usage["as_run_usd"]
 
 
-def _result(passed, evidence, acc, loops, trace=None, ratio=None, grounding=None):
+# Enough of the candidate to read the line `git apply` complained about, and
+# far short of a 51k-char gold patch. The N=2 run recorded
+# `corrupt patch at line 8` on all five strategies and the patch itself was
+# nowhere on disk, so the diagnosis needed a scratch-repository reproduction
+# instead of a lookup.
+FB_PATCH_EXCERPT_CHARS = int(os.environ.get("FB_PATCH_EXCERPT_CHARS", "4000"))
+
+
+def _patch_excerpt(patch, limit=None):
+    limit = FB_PATCH_EXCERPT_CHARS if limit is None else limit
+    text = patch or ""
+    if len(text) <= limit:
+        return text
+    head = limit * 2 // 3
+    return f"{text[:head]}\n[... {len(text) - limit} chars elided ...]\n{text[-(limit - head):]}"
+
+
+def _result(passed, evidence, acc, loops, trace=None, ratio=None, grounding=None,
+            patch=None):
     out = {
         "passed": bool(passed),
         "as_run_usd": round(acc["usd"], 6),
@@ -420,6 +501,10 @@ def _result(passed, evidence, acc, loops, trace=None, ratio=None, grounding=None
     }
     if trace is not None:
         out["routing"] = trace.as_dict()
+    if not passed and patch:
+        # Only on a failure, and only the last candidate: a passing row's patch
+        # is not a diagnostic and every stored byte is paid for on every read.
+        out["candidate_patch"] = _patch_excerpt(patch)
     if grounding is not None:
         # What the arm was actually shown, so "grounded" is a receipt rather
         # than an inference from the pass rate. An arm whose container could
@@ -520,7 +605,8 @@ def _ladder(problem, tiers, gate="after_ladder", frontier=FRONTIER,
             if passed:
                 trace.solved_at = trace.rungs[-1]
 
-    return _result(passed, evidence, acc, loops, trace, ratio, grounding)
+    return _result(passed, evidence, acc, loops, trace, ratio, grounding,
+                   patch=patch)
 
 
 # ==============================================================================

@@ -260,6 +260,93 @@ spend rather than close calls about accuracy:
 
 ---
 
+## 7b. Root cause of the 94% — two harness bugs and one missing input
+
+§4 established *that* the sweep died at `git apply`. Three findings explain
+*why*, and all three are the harness's, not the models'.
+
+### 7b.1 The applier never ran
+
+`extract_patch` ended every return path with `.strip("\n")`, deleting the
+trailing newline from every candidate diff the sweep ever scored. A unified
+diff whose last line has no newline is not a diff `git apply` will read: it
+exits **128 `corrupt patch at line N`** before it looks at the worktree at all.
+
+Measured on a scratch repository, one hunk against one file:
+
+| candidate | with trailing newline | without (what the harness wrote) |
+|---|---|---|
+| byte-perfect diff | applies under all 5 strategies | **0 of 5** |
+| wrong `@@` line numbers | applies | **0 of 5** |
+| hallucinated context lines | applies via `--recount --ignore-whitespace -C1` | **0 of 5** |
+| wrong indentation | applies via `--recount --ignore-whitespace -C1` | **0 of 5** |
+| new file (`--- /dev/null`) | applies | `patch --fuzz` only |
+
+So the strict applier was never exercised, and the loose `patch --fuzz=5`
+fallback was silently the *only* applier in the pipeline — which is also why
+widening `_APPLY_STRATEGIES` alone changes nothing: with the newline stripped,
+all five entries fail identically. **The fix is one byte, and it is a
+precondition for every other applier improvement.**
+
+### 7b.2 Only the first fenced block was read
+
+`extract_patch` used `re.search`, so a response that fences one diff per file —
+routine for a multi-file feature — was scored on its first file alone. A
+partial patch fails the tests, and the row reads as a model failure.
+
+### 7b.3 The model was never shown the repository
+
+The deepest one. `_context()` gives the model the repository *name*, the base
+commit, the test filenames and the feature request — and no source code. A
+unified diff for an existing file is a claim about bytes already on disk, and
+`git apply` matches context lines literally. **A model that has never read the
+file is guessing them.**
+
+This reframes F4 and F6 entirely. Both attacked the symptom through diff
+*syntax* — a stricter contract, a file manifest — and neither moved the
+application rate, because the diffs were not malformed. They were well-formed
+diffs about files nobody had read. F4's contract even instructs "keep hunk
+context lines minimal (1-2 lines)", which shrinks the anchor the applier
+matches on.
+
+## 7c. What has been fixed
+
+Committed alongside this document:
+
+| Fix | Where | Effect |
+|---|---|---|
+| Trailing newline guaranteed on every extracted patch | `_terminate_patch` in [`src/evaluator.py`](../src/evaluator.py) | `git apply` runs at all, for the first time |
+| All fenced diff blocks concatenated, not just the first | `extract_patch` | multi-file answers are scored whole |
+| Repository files quoted into the prompt from the row's own container | `collect_repo_context` in [`src/featurebench.py`](../src/featurebench.py) | context lines can be copied instead of invented |
+| Two new arms, `fb_grounded` (F7) and `fb_grounded_gate` (F8) | registry | the grounding effect is measured against `fb_cascade` / `fb_evidence_gate` rather than assumed |
+
+End-to-end check on a real repository, same model-shaped response and the same
+five strategies:
+
+```
+BEFORE (trailing newline stripped): patch did not apply (5 strategies tried)
+AFTER  (newline restored)         : APPLIED via git apply --verbose --recount --ignore-whitespace -C1
+```
+
+**Two things the grounded arms deliberately do not do.** They do not quote the
+graded test files — that is the API contract the row is scored on, and quoting
+it would change what the benchmark measures rather than how well the harness
+measures it (`FB_GROUND_TESTS=1` opts in, and a report that uses it must say
+so). And they do not replace the existing arms: grounding is per-arm, the blind
+arms are byte-identical to before, and F7/F8 sit in their own category so
+`--group featurebench` is not silently repriced by the extra input tokens.
+
+```bash
+python3 run_benchmark.py --dataset featurebench --no-cache \
+    --variants fb_cascade,fb_grounded,fb_evidence_gate,fb_grounded_gate
+```
+
+**What is not yet known.** None of this has been run against live Docker — the
+audit and the fixes are from the records, the source and a scratch-repository
+reproduction. The application rate is the number to read first on the rerun; if
+it does not move well above 25%, the diagnosis in §7b.3 is wrong and the arms
+are failing for a reason nobody has found yet.
+
 ## 8. What a rerun needs
 
 H2 remains open. The pre-registered next step in

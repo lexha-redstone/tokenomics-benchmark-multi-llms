@@ -419,6 +419,32 @@ verified against a live install.
 
 ---
 
+## 6b. Repository grounding (`fb_grounded`, `fb_grounded_gate`)
+
+The N=48 sweep's dominant failure was `patch did not apply`, and the root cause
+was that `_context()` never showed the model any source. `collect_repo_context`
+in [`src/featurebench.py`](../src/featurebench.py) quotes the files the row is
+about, read from the row's own container at its own base commit, so the context
+lines the model writes can be copied rather than invented.
+
+| Variable | Default | What it does |
+|---|---|---|
+| `FB_GROUNDING_CHARS` | `48000` | total budget for quoted source, per task |
+| `FB_GROUNDING_PER_FILE` | `16000` | per-file cap, so one large module cannot eat the budget |
+| `FB_GROUND_TESTS` | unset (off) | quote the **graded** test files too. This changes what the benchmark measures, not how well the harness measures it — a report that sets it must say so |
+
+Paths come from the problem statement first; when it names fewer than three
+readable files, the arm falls back to `git grep` on the backticked identifiers.
+Grounding is an enrichment and never a precondition: a container that cannot be
+read yields an empty block, the arm runs the blind prompt, and the row records
+`grounding.chars = 0` rather than failing.
+
+Budget it before running: ~30k extra input tokens per attempt on
+`gemini-3.7-flash` is roughly $0.045/attempt, so a 48-row three-rung arm adds
+around $6.
+
+---
+
 ## 7. Troubleshooting
 
 **Gold quarantines on every row.** That is a setup symptom, not a dataset one.

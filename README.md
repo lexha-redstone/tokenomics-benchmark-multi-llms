@@ -733,7 +733,18 @@ python3 run_benchmark.py --dataset featurebench --group featurebench \
 | `fb_diff_contract` | strict unified-diff contract — added after the first sweep showed that most failures never reached a test |
 | `fb_diff_aware_gate` | same, plus escalation on a stalled patch format — **its gate is unreachable at the current oracle budget; see the lessons doc** |
 | `fb_spec_deconstruct` | extract a file/interface manifest first, then synthesise the diff against it |
+| `fb_grounded` | **the fix for the real defect** — same ladder as `fb_cascade`, but the files it must patch are quoted from the row's own container first |
+| `fb_grounded_gate` | the same grounding under the `r9` evidence gate, so routing and grounding are measured separately |
 | `fb_single_opus` | the frontier baseline — **not** in `--group featurebench`; opt-in, like ClassEval's |
+
+`fb_grounded` and `fb_grounded_gate` sit in their own category so the extra
+input tokens do not silently reprice a default sweep. Run them against their
+blind twins by name:
+
+```bash
+python3 run_benchmark.py --dataset featurebench --no-cache \
+    --variants fb_cascade,fb_grounded,fb_evidence_gate,fb_grounded_gate
+```
 
 The arm set is built from what the two sweeps that ran at size actually
 rewarded, and what they punished is absent on purpose: **no `gemini-3.5-flash-lite`
@@ -768,11 +779,15 @@ call priced. **The execution is honest; the comparison is not sound.** Full audi
   unreachable, so it re-ran F4's ladder: same config, 2/48 vs 5/47, Fisher
   p = 0.27.
 - **331 of 353 failures (94%) are `patch did not apply`** — the diff was rejected
-  before any test ran (77–94% of tasks per arm). The `git apply` output is
-  collected and then discarded, so the repair turn is told *that* it failed and
-  never *why*, the digest types the constant as `shallow`, and no evidence gate
-  can fire on the dominant failure mode. Conditional on applying, arms resolve
-  33–83%.
+  before any test ran (77–94% of tasks per arm). Conditional on applying, arms
+  resolve 33–83%. The cause was the harness, not the models: `extract_patch`
+  stripped the trailing newline from every candidate, and a diff whose last line
+  has no newline makes `git apply` exit 128 `corrupt patch` before it reads the
+  worktree — so the strict applier never ran once, and the loose `patch --fuzz`
+  fallback was silently the only applier in the pipeline. Underneath that,
+  `_context()` showed the model no source code at all, so it was inventing the
+  context lines `git apply` matches literally. **Both are fixed**; see
+  [the lessons doc §7b](docs/featurebench-n48-lessons.md).
 - **Nothing in the sweep is significant.** Every arm's 95% CI contains 7.2–10.9%;
   the widest gap (F1 7/48 vs F3 1/48) is p = 0.059. The union of all eight arms is
   15/48, and 9 of those 15 were solved by exactly one arm. The 48 rows are also a

@@ -133,6 +133,61 @@ def classify_error(exc):
     return "permanent"
 
 
+def _short_error_str(exc, max_len=140):
+    """Summarize verbose API exceptions (e.g. Vertex 429/503 traces) into a concise string."""
+    if isinstance(exc, str):
+        s = exc.strip()
+    else:
+        # If the exception has structured attributes (e.g. google.genai APIError)
+        code = getattr(exc, "code", None)
+        status = getattr(exc, "status", None)
+        msg = getattr(exc, "message", None)
+        if code or status or msg:
+            m_str = str(msg or status or str(exc) or "").split("\n")[0].strip()
+            if "'message':" in m_str or '"message":' in m_str:
+                m = re.search(r'["\']message["\']:\s*["\']([^"\']+)["\']', m_str)
+                if m:
+                    m_str = m.group(1)
+            m_str = m_str.split("Please refer to")[0].strip().rstrip(".")
+            prefix_parts = [str(p) for p in (code, status) if p]
+            prefix = " ".join(prefix_parts) + ": " if prefix_parts else ""
+            if prefix and m_str.startswith(str(code)):
+                res = m_str
+            else:
+                res = f"{prefix}{m_str}".strip().rstrip(":")
+            if res:
+                return (res[:max_len] + "...") if len(res) > max_len else res
+        s = str(exc).strip()
+
+    # Look for 429 / RESOURCE_EXHAUSTED in string representation
+    if "RESOURCE_EXHAUSTED" in s or "429" in s:
+        m = re.search(r'["\']message["\']:\s*["\']([^"\']+)["\']', s)
+        if m:
+            clean = m.group(1).split("Please refer to")[0].strip().rstrip(".")
+            return f"429 RESOURCE_EXHAUSTED: {clean}"
+        return "429 RESOURCE_EXHAUSTED: Resource exhausted"
+
+    # Look for 503 / UNAVAILABLE / Overloaded
+    if "UNAVAILABLE" in s or "503" in s:
+        if "Overloaded prefill queue" in s or "PREFILL_QUEUE_PREEMPTED" in s:
+            return "503 UNAVAILABLE: Overloaded prefill queue (preempted)"
+        m = re.search(r'["\']message["\']:\s*["\']([^"\']+)["\']', s)
+        if m:
+            clean = m.group(1).split("\n")[0].strip().rstrip(".")
+            return f"503 UNAVAILABLE: {clean[:max_len]}"
+        return "503 UNAVAILABLE: Service temporarily unavailable"
+
+    # Clean up single-line representation
+    first_line = s.split("\n")[0].strip()
+    if "{'error':" in first_line or '{"error":' in first_line:
+        m = re.search(r'["\']message["\']:\s*["\']([^"\']+)["\']', first_line)
+        if m:
+            first_line = m.group(1).split("Please refer to")[0].strip().rstrip(".")
+    if len(first_line) > max_len:
+        first_line = first_line[:max_len] + "..."
+    return first_line or type(exc).__name__
+
+
 def _sleep_for(attempt):
     delay = min(BACKOFF_BASE ** attempt, BACKOFF_CAP)
     # Jitter so parallel arms do not retry in lockstep against a struggling API.
@@ -145,8 +200,9 @@ def _give_up(model_id, exc, kind, attempts, prompt, max_tokens, thinking_level, 
     if kind == "auth":
         hint = ("  Credentials look expired — run:\n"
                 "    gcloud auth application-default login\n")
+    short_err = _short_error_str(exc)
     if simulation_allowed():
-        print(f"[{model_id}] {kind} failure after {attempts} attempts ({exc}). "
+        print(f"[{model_id}] {kind} failure after {attempts} attempts ({short_err}). "
               f"ALLOW_SIMULATION is set: substituting SIMULATED output.", flush=True)
         _sim_calls["n"] += 1
         text, usage, dt = _fallback_dispatch(model_id, prompt, max_tokens,
@@ -155,7 +211,7 @@ def _give_up(model_id, exc, kind, attempts, prompt, max_tokens, thinking_level, 
         usage["simulated"] = True
         return text, usage, dt
     raise DispatchError(
-        f"{model_id}: {kind} failure after {attempts} attempt(s): {exc}\n{hint}"
+        f"{model_id}: {kind} failure after {attempts} attempt(s): {short_err}\n{hint}"
         "  This record will be discarded and retried. Pass --allow-simulation "
         "only if you deliberately want simulated results.",
         model_id=model_id, kind=kind, attempts=attempts)
@@ -229,7 +285,7 @@ def claude_api_call(model_id, prompt, max_tokens=2560, thinking_level=None, prob
                 # The cached token may be exactly what the server rejected.
                 token = _vertex_access_token(force_refresh=True) or token
             delay = _sleep_for(attempt)
-            print(f"[{model_id}] {kind} failure ({e}); retry "
+            print(f"[{model_id}] {kind} failure ({_short_error_str(e)}); retry "
                   f"{attempt + 2}/{MAX_ATTEMPTS} in {delay:.1f}s", flush=True)
             time.sleep(delay)
 
@@ -312,7 +368,7 @@ def gemini_call(model_id, prompt, max_tokens=2560, thinking_level=None, problem=
                     _gemini_client = None      # rebuild against fresh credentials
                     client = _gemini() or client
                 delay = _sleep_for(attempt)
-                print(f"[{model_id}] {kind} failure ({e}); retry "
+                print(f"[{model_id}] {kind} failure ({_short_error_str(e)}); retry "
                       f"{attempt + 2}/{MAX_ATTEMPTS} in {delay:.1f}s", flush=True)
                 time.sleep(delay)
     except DispatchError:

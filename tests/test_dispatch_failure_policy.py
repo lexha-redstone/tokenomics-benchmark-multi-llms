@@ -201,3 +201,23 @@ def test_no_silent_fallback_remains_in_the_client():
         assert "text, usage, dt = _fallback_dispatch" in ln, (
             f"unsanctioned _fallback_dispatch call site: {ln.strip()}")
     assert "Falling back to simulation" not in src
+
+
+def test_short_error_str():
+    from src.client import _short_error_str
+
+    verbose_429 = (
+        "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'Resource exhausted. "
+        "Please try again later. Please refer to https://cloud.google.com/vertex-ai for details.', "
+        "'status': 'RESOURCE_EXHAUSTED', 'details': [{'detail': '[ORIGINAL ERROR] extensible_stubs...'}]}}"
+    )
+    s = _short_error_str(verbose_429)
+    assert s == "429 RESOURCE_EXHAUSTED: Resource exhausted. Please try again later"
+    assert len(s) < 100
+
+    verbose_503 = "503 UNAVAILABLE: Overloaded prefill queue, preempted by higher priority.; details: ..."
+    assert _short_error_str(verbose_503) == "503 UNAVAILABLE: Overloaded prefill queue (preempted)"
+
+    assert _short_error_str(_HttpLike("504 Gateway Timeout", 504)) == "504 Gateway Timeout"
+
+

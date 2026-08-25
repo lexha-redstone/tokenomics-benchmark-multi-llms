@@ -38,6 +38,61 @@ def _ssl_ctx():
     except Exception:
         return ssl.create_default_context()
 
+
+def _fetch(url, timeout=180, max_retries=6):
+    """GET `url` as bytes, with auth, backoff on rate limits, and `curl` fallback for CA-less interpreters.
+
+    A Python installed without a certificate bundle (common on macOS, and the
+    state of the interpreter this was written on) fails every HTTPS request
+    with CERTIFICATE_VERIFY_FAILED even though the machine itself is online.
+    That is an environment problem, not a dataset problem, so it is worked
+    around here rather than turned into "the dataset could not be fetched".
+    """
+    import time as _time
+    headers = {"User-Agent": "tokenomics-benchmark/1.0"}
+    token = os.environ.get("HF_TOKEN") or os.environ.get("HUGGING_FACE_HUB_TOKEN")
+    if token:
+        headers["Authorization"] = f"Bearer {token.strip()}"
+
+    for attempt in range(max_retries + 1):
+        req = urllib.request.Request(url, headers=headers)
+        try:
+            with urllib.request.urlopen(req, timeout=timeout, context=_ssl_ctx()) as r:
+                return r.read()
+        except urllib.error.HTTPError as e:
+            if e.code in (429, 500, 502, 503, 504) and attempt < max_retries:
+                retry_after = e.headers.get("Retry-After")
+                try:
+                    sleep_sec = float(retry_after) if retry_after else min(60.0, 2.0 ** attempt * 2.0)
+                except (ValueError, TypeError):
+                    sleep_sec = min(60.0, 2.0 ** attempt * 2.0)
+                print(f"  [HTTP {e.code}] rate limited by HuggingFace; sleeping {sleep_sec:.1f}s (retry {attempt + 1}/{max_retries})...",
+                      flush=True)
+                _time.sleep(sleep_sec)
+                continue
+            raise
+        except Exception as e:                                   # noqa: BLE001
+            if "CERTIFICATE_VERIFY_FAILED" not in str(e):
+                if attempt < max_retries:
+                    _time.sleep(min(30.0, 2.0 ** attempt))
+                    continue
+                raise
+            import shutil as _shutil
+            import subprocess as _subprocess
+            if _shutil.which("curl") is None:
+                raise
+            curl_cmd = ["curl", "-fsSL", "--max-time", str(int(timeout))]
+            for k, v in headers.items():
+                curl_cmd.extend(["-H", f"{k}: {v}"])
+            curl_cmd.append(url)
+            p = _subprocess.run(curl_cmd, capture_output=True, timeout=timeout + 30)
+            if p.returncode != 0:
+                raise RuntimeError(
+                    f"urllib has no CA bundle and curl failed for {url}: "
+                    f"{(p.stderr or b'').decode('utf-8', 'replace')[-200:]}") from e
+            return p.stdout
+
+
 def ensure_bcb_dataset(split=BCB_DEFAULT_SPLIT):
     """Ensure BigCodeBench-Hard split file is present locally, fetching from HF if needed."""
     data_dir = os.path.join(ROOT_DIR, "bigCodeBench-hard", "data")
@@ -53,9 +108,7 @@ def ensure_bcb_dataset(split=BCB_DEFAULT_SPLIT):
             "dataset": BCB_DATASET, "config": BCB_CONFIG,
             "split": split, "offset": offset, "length": 100
         })
-        with urllib.request.urlopen("https://datasets-server.huggingface.co/rows?" + q,
-                                    timeout=120, context=_ssl_ctx()) as r:
-            d = json.loads(r.read())
+        d = json.loads(_fetch("https://datasets-server.huggingface.co/rows?" + q))
         batch = d.get("rows", [])
         total = d.get("num_rows_total", len(batch))
         if not batch:
@@ -307,9 +360,7 @@ def ensure_classeval_dataset(split=CLASSEVAL_DEFAULT_SPLIT):
             "dataset": CLASSEVAL_DATASET, "config": CLASSEVAL_CONFIG,
             "split": split, "offset": offset, "length": 50
         })
-        with urllib.request.urlopen("https://datasets-server.huggingface.co/rows?" + q,
-                                    timeout=120, context=_ssl_ctx()) as r:
-            d = json.loads(r.read())
+        d = json.loads(_fetch("https://datasets-server.huggingface.co/rows?" + q))
         batch = d.get("rows", [])
         total = d.get("num_rows_total", len(batch))
         if not batch:
@@ -497,9 +548,7 @@ def ensure_featurebench_dataset(split=FEATUREBENCH_DEFAULT_SPLIT):
             "dataset": FEATUREBENCH_DATASET, "config": FEATUREBENCH_CONFIG,
             "split": split, "offset": offset, "length": 20,
         })
-        with urllib.request.urlopen("https://datasets-server.huggingface.co/rows?" + q,
-                                    timeout=180, context=_ssl_ctx()) as r:
-            d = json.loads(r.read())
+        d = json.loads(_fetch("https://datasets-server.huggingface.co/rows?" + q))
         batch = d.get("rows", [])
         total = d.get("num_rows_total", len(batch))
         if not batch:
@@ -711,34 +760,6 @@ def _sbp_list(raw):
     return [text]
 
 
-def _fetch(url, timeout=180):
-    """GET `url` as bytes, with a `curl` fallback for CA-less interpreters.
-
-    A Python installed without a certificate bundle (common on macOS, and the
-    state of the interpreter this was written on) fails every HTTPS request
-    with CERTIFICATE_VERIFY_FAILED even though the machine itself is online.
-    That is an environment problem, not a dataset problem, so it is worked
-    around here rather than turned into "the dataset could not be fetched".
-    """
-    try:
-        with urllib.request.urlopen(url, timeout=timeout, context=_ssl_ctx()) as r:
-            return r.read()
-    except Exception as e:                                   # noqa: BLE001
-        if "CERTIFICATE_VERIFY_FAILED" not in str(e):
-            raise
-        import shutil as _shutil
-        import subprocess as _subprocess
-        if _shutil.which("curl") is None:
-            raise
-        p = _subprocess.run(["curl", "-fsSL", "--max-time", str(int(timeout)), url],
-                            capture_output=True, timeout=timeout + 30)
-        if p.returncode != 0:
-            raise RuntimeError(
-                f"urllib has no CA bundle and curl failed for {url}: "
-                f"{(p.stderr or b'').decode('utf-8', 'replace')[-200:]}") from e
-        return p.stdout
-
-
 def swebench_pro_dir(*parts):
     return os.path.join(ROOT_DIR, "swebench_pro", *parts)
 
@@ -770,6 +791,7 @@ def ensure_swebench_pro_dataset(split=SWEBENCH_PRO_DEFAULT_SPLIT):
     print(f"Fetching {SWEBENCH_PRO_DATASET} [{split}] from HuggingFace -> {_rel(path)}",
           flush=True)
     rows, offset, total = [], 0, None
+    import time as _time
     while total is None or offset < total:
         q = urllib.parse.urlencode({
             "dataset": SWEBENCH_PRO_DATASET, "config": SWEBENCH_PRO_CONFIG,
@@ -792,6 +814,9 @@ def ensure_swebench_pro_dataset(split=SWEBENCH_PRO_DEFAULT_SPLIT):
                     "partial test list. Re-fetch with a smaller page size.")
         rows.extend(b["row"] for b in batch)
         offset += len(batch)
+        print(f"  fetched {len(rows)}/{total or '?'} instances...", end="\r", flush=True)
+        _time.sleep(0.15)
+    print("", flush=True)
 
     tmp = path + ".part"
     with open(tmp, "w", encoding="utf-8") as f:

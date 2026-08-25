@@ -1,0 +1,18 @@
+{
+ "_comment": "Environment-specific. Regenerate on each machine; do not copy between them. A `missing_image` reason means `docker pull` failed, not that the task is broken.",
+ "split": "fast",
+ "generated": "2026-08-25T04:00:26+00:00",
+ "n_tasks": 100,
+ "n_checked": 40,
+ "partial": true,
+ "n_quarantined": 1,
+ "tasks": {
+  "mlflow__mlflow.93dab383.test_trace_manager.bb95fbcd.lv1": {
+   "ok": false,
+   "reason": "gold_fails",
+   "test_pass_ratio": 0.9872,
+   "evidence": "B tests/store/artifact/test_gcs_artifact_repo.py::test_log_artifacts\nPASSED | MEM 8.3/31.3 GB | DISK 103.1/114.6 GB tests/store/artifact/test_gcs_artifact_repo.py::test_download_artifacts_calls_expected_gcs_client_methods\nPASSED | MEM 8.3/31.3 GB | DISK 103.1/114.6 GB tests/store/artifact/test_gcs_artifact_repo.py::test_get_anonymous_bucket\nPASSED | MEM 8.3/31.3 GB | DISK 103.1/114.6 GB tests/store/artifact/test_gcs_artifact_repo.py::test_download_artifacts_downloads_expected_content\nPASSED | MEM 8.3/31.3 GB | DISK 103.1/114.6 GB tests/store/artifact/test_gcs_artifact_repo.py::test_delete_arti",
+   "setup_error": ""
+  }
+ }
+}

@@ -242,7 +242,7 @@ def _write_diagnostics_table(f, summary_rows, section=2):
             "the frontier rung, and how many were routed by a gate that wanted typed "
             "evidence and did not get it.\n\n")
     f.write("| Configuration | Attempts | Suite reached | Avg partial | Grounded | "
-            "Frontier used | Degraded | Dominant guard failure |\n")
+            "Frontier used | Degraded | Ungraded attempts, by cause |\n")
     f.write("|---|---|---|---|---|---|---|---|\n")
     never_frontier, low_reach = [], []
     for r in rows:
@@ -254,12 +254,18 @@ def _write_diagnostics_table(f, summary_rows, section=2):
         partial = d.get("test_pass_ratio_avg")
         partial_s = f"`{partial:.3f}` (n={d.get('test_pass_ratio_n', 0)})" \
             if partial is not None else "n/a"
+        # Every cause, not just the leading one. Printing only the top entry
+        # loses the rest silently, and the loss is invisible unless a reader
+        # happens to check that `suite_reached + guards == attempts`: report 27
+        # showed `apply_failed × 1` against 4 attempts of which 2 were graded,
+        # so one attempt's cause was simply absent from the table. The whole
+        # point of this column is that the reader does not have to do that sum.
         guards = d.get("guard_reasons") or {}
-        top = next(iter(guards.items()), None)
-        top_s = f"`{top[0]}` × {top[1]}" if top else "— (all attempts graded)"
+        guards_s = (" · ".join(f"`{k}` × {v}" for k, v in guards.items())
+                    if guards else "— (all attempts graded)")
         f.write(f"| **{name}** | {d['attempts']} | {reach_s} | {partial_s} | "
                 f"{d.get('grounded', 0)} | {d.get('frontier_used', 0)} | "
-                f"{d.get('degraded', 0)} | {top_s} |\n")
+                f"{d.get('degraded', 0)} | {guards_s} |\n")
         if d.get("routed") and not d.get("frontier_used") and "Opus" in str(r.get("models", "")):
             never_frontier.append(name)
         if reach is not None and reach < 0.5:

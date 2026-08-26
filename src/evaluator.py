@@ -554,6 +554,91 @@ def normalise_hunk_markers(patch):
     return _terminate_patch("\n".join(out))
 
 
+# `@@` with no numbers at all, or with placeholder letters where the counts
+# should be. Both are `unrecognized input` to `git apply`.
+_BARE_HUNK_RE = re.compile(r"^@@(?!\s*-\d)[^@]*@@\s*(.*)$|^@@\s*$")
+_MINUS_FILE_RE = re.compile(r"^--- (?:a/)?(\S+)")
+_PLUS_FILE_RE = re.compile(r"^\+\+\+ (?:b/)?(\S+)")
+
+
+def repair_hunk_headers(patch):
+    """Give a hunk header line numbers when the model left them out.
+
+    `@@` on its own, or `@@ -1,NNN +1,MMM @@` with placeholder letters, is not a
+    hunk header `git apply` will read -- it exits 128 with **`unrecognized
+    input`**, which is what the N=2 run recorded on both `fb_grounded` rows.
+    The numbers barely matter: `git apply` locates a hunk by searching for its
+    context and reports the offset, so `@@ -1 +1 @@` plus `--recount` finds the
+    real position. Measured on a scratch repository, a hunk whose start line is
+    wrong by 36 applies cleanly.
+    """
+    out = []
+    for line in (patch or "").split("\n"):
+        if line.startswith("@@"):
+            m = _BARE_HUNK_RE.match(line)
+            if m:
+                trailer = (m.group(1) or "").strip()
+                line = "@@ -1 +1 @@" + (f" {trailer}" if trailer else "")
+        out.append(line)
+    return "\n".join(out)
+
+
+_HEADER_CONTINUATION = ("diff --git ", "index ", "new file mode",
+                        "deleted file mode", "rename ", "old mode", "new mode",
+                        "similarity index")
+
+
+def ensure_git_headers(patch):
+    """Insert the `diff --git` line a multi-file patch needs to be splittable.
+
+    A model that emits two files as `--- a/x` / `+++ b/x` / hunk / `--- a/y`
+    gives `git apply` no marker for where the first file's diff ends. When the
+    first hunk's declared line count is short -- and models miscount routinely
+    -- `--recount` runs past the boundary and reads `--- a/y` as a *deletion
+    line* of the previous hunk. That is the
+    `error: while searching for: ... -- a/fastapi/_compat/v1.py` in the N=2 log:
+    the second file's header was swallowed by the first file's hunk.
+    """
+    lines = (patch or "").split("\n")
+    out = []
+    for i, line in enumerate(lines):
+        m = _MINUS_FILE_RE.match(line)
+        if m:
+            prev = next((l for l in reversed(out) if l.strip()), "")
+            if not prev.startswith(_HEADER_CONTINUATION):
+                plus = next((l for l in lines[i + 1:i + 3]
+                             if l.startswith("+++ ")), "")
+                pm = _PLUS_FILE_RE.match(plus)
+                a_path, b_path = m.group(1), (pm.group(1) if pm else m.group(1))
+                if a_path == "/dev/null":
+                    a_path = b_path
+                if b_path == "/dev/null":
+                    b_path = a_path
+                if a_path and a_path != "/dev/null":
+                    out.append(f"diff --git a/{a_path} b/{b_path}")
+        out.append(line)
+    return "\n".join(out)
+
+
+def _looks_like_a_diff(block):
+    """A fenced block belongs to the patch only if it carries a real hunk.
+
+    Responses routinely fence an *illustration* beside the real diff -- a
+    header sketch, a `@@ -0,0 +1,N @@` template. Concatenating those with the
+    real patch produces a file `git apply` cannot parse.
+    """
+    lines = (block or "").split("\n")
+    return (any(l.startswith("@@") for l in lines)
+            and any(l[:1] in ("+", "-") and not l.startswith(("+++ ", "--- "))
+                    for l in lines))
+
+
+def _assemble(patch):
+    """The repair chain, in the order each step needs the previous one."""
+    return normalise_hunk_markers(
+        repair_hunk_headers(ensure_git_headers(patch)))
+
+
 def extract_patch(text):
     """Pull a unified diff out of a model response.
 
@@ -571,15 +656,15 @@ def extract_patch(text):
     blocks = re.findall(r"```(?:diff|patch)\s*\n(.*?)```", text or "", re.DOTALL)
     if not blocks:
         blocks = re.findall(r"```\s*\n(diff --git .*?)```", text or "", re.DOTALL)
+    blocks = [b.strip("\n") for b in blocks if _looks_like_a_diff(b)]
     if blocks:
-        joined = "\n".join(b.strip("\n") for b in blocks if b.strip())
-        return normalise_hunk_markers(joined)
-    # An unfenced diff is common enough to accept, but only from the first
-    # marker onward -- prose before it would break `git apply`.
-    idx = (text or "").find("diff --git ")
-    if idx == -1:
-        idx = (text or "").find("--- ")
-    return normalise_hunk_markers((text or "")[idx:]) if idx != -1 else ""
+        return _assemble("\n".join(blocks))
+    # An unfenced diff is common enough to accept, but the marker has to start a
+    # line. Searching anywhere in the text scrapes prose that merely *mentions*
+    # `--- a/foo.py`, which is how the N=2 run handed an English sentence to
+    # `git apply`.
+    m = re.search(r"^(?:diff --git |--- )", text or "", re.MULTILINE)
+    return _assemble((text or "")[m.start():]) if m else ""
 
 
 def missing_patch_error(patch_str):
@@ -592,14 +677,25 @@ def missing_patch_error(patch_str):
     text = (patch_str or "").strip()
     if not text:
         return _guard_evidence("model response contains no patch", "no_patch")
-    if "--- " not in text or "+++ " not in text:
+    # Line-anchored, because a response that *describes* a diff in prose puts
+    # `--- a/x.py`, `+++ b/x.py` and `@@` inside a sentence. The N=2 run sent
+    # exactly such a sentence to `git apply`, which answered `unrecognized
+    # input` five times before the row was recorded as a patch that did not
+    # apply -- a model failure dressed as an application failure.
+    if not re.search(r"^--- ", text, re.MULTILINE) or \
+            not re.search(r"^\+\+\+ ", text, re.MULTILINE):
         return _guard_evidence(
-            "model response is not a unified diff: no `---`/`+++` file headers",
+            "model response is not a unified diff: no `---`/`+++` file headers "
+            "at the start of a line",
             "not_a_diff")
-    if "@@" not in text:
+    if not re.search(r"^@@", text, re.MULTILINE):
         return _guard_evidence(
             "model response has diff headers but no `@@` hunk -- nothing to apply",
             "no_hunk")
+    if not re.search(r"^[+-](?!\+\+ |-- )", text, re.MULTILINE):
+        return _guard_evidence(
+            "model response has a hunk header but no added or removed lines",
+            "empty_hunk")
     return None
 
 

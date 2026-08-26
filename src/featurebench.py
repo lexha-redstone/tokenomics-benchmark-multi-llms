@@ -314,8 +314,15 @@ def _search_terms(problem, limit=8):
                   if re.fullmatch(r"[\w.]{3,60}", (t or "").strip()))[:limit]
 
 
-def _grep_paths(env, terms, limit=12):
-    """Files that mention any of `terms`, via the repository's own index."""
+def _grep_paths(env, terms, limit=12, exclude=()):
+    """Files that mention any of `terms`, via the repository's own index.
+
+    `exclude` carries the graded test files. `_candidate_paths` already drops
+    them, but the search fallback did not, and the N=2 run consequently quoted
+    `tests/test_compat.py` -- the file the row is scored on -- into a grounded
+    arm's prompt. One leaked answer key invalidates the arm it appears in, so
+    the filter belongs on every path into the quote, not just the first.
+    """
     hits = []
     for term in terms:
         if not re.fullmatch(r"[\w.]{3,60}", term):
@@ -325,7 +332,9 @@ def _grep_paths(env, terms, limit=12):
         hits.extend(l.strip() for l in (r.stdout or "").splitlines() if l.strip())
         if len(_dedup(hits)) >= limit:
             break
-    py = [p for p in _dedup(hits) if p.endswith((".py", ".pyi"))]
+    blocked = set(exclude or ())
+    py = [p for p in _dedup(hits)
+          if p.endswith((".py", ".pyi")) and p not in blocked]
     return _rank_paths(py)[:limit]
 
 
@@ -403,8 +412,9 @@ def collect_repo_context(env, problem, budget=None):
         # the right file under a different root, not a file that is absent.
         if skipped:
             spent = sum(len(b) for b in blocks)
+            graded = set() if FB_GROUND_TESTS else set(featurebench_test_files(problem))
             relocated = [p for p in _resolve_by_basename(env, skipped)
-                         if p not in read]
+                         if p not in read and p not in graded]
             if relocated:
                 meta["relocated"] = relocated
                 more, read2, _ = _read_repo_files(env, relocated, budget - spent)
@@ -419,7 +429,9 @@ def collect_repo_context(env, problem, budget=None):
             terms = _search_terms(problem)
             if terms:
                 meta["searched"] = terms
-                extra = [p for p in _grep_paths(env, terms) if p not in read]
+                graded = () if FB_GROUND_TESTS else featurebench_test_files(problem)
+                extra = [p for p in _grep_paths(env, terms, exclude=graded)
+                         if p not in read]
                 more, read2, skipped2 = _read_repo_files(
                     env, extra, budget - sum(len(b) for b in blocks))
                 blocks, read = blocks + more, read + read2

@@ -71,9 +71,27 @@ def test_a_low_reach_rate_is_flagged_as_a_harness_finding_not_a_model_one(tmp_pa
     assert "not whether it resolved the issue" in md
 
 
-def test_the_dominant_guard_failure_is_named(tmp_path):
+def test_every_guard_cause_is_named_not_just_the_leading_one(tmp_path):
+    """Report 27 printed `apply_failed × 1` against 4 attempts of which 2 were
+    graded: one attempt's cause was absent from the table, and the loss was
+    invisible unless a reader summed the columns by hand."""
     md = _render([_row("S0a")], tmp_path)
     assert "`apply_failed` × 25" in md
+    assert "`no_patch` × 2" in md
+
+
+def test_the_guard_column_accounts_for_every_ungraded_attempt(tmp_path):
+    """The column has to reconcile: graded + every cause == attempts. If it
+    does not, the table is hiding a cause rather than reporting one."""
+    import re
+    row = _row("S0a")
+    d = row["diagnostics"]
+    md = _render([row], tmp_path)
+    # Two tables carry a row starting `| **S0a**`; take the diagnostics one.
+    section = md.split("Attempt Diagnostics", 1)[1]
+    line = next(l for l in section.splitlines() if l.startswith("| **S0a**"))
+    counted = sum(int(m) for m in re.findall(r"× (\d+)", line))
+    assert counted == d["attempts"] - d["suite_reached"]
 
 
 def test_partial_credit_is_shown_with_the_count_it_was_averaged_over(tmp_path):

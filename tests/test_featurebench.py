@@ -635,3 +635,54 @@ def test_a_passing_row_does_not_store_its_patch(wired, monkeypatch):
 
     monkeypatch.setattr(fb, "FeatureBenchEnv", Solves)
     assert "candidate_patch" not in fb.run_fb_cascade(PROBLEM)
+
+
+def test_the_search_fallback_cannot_quote_a_graded_test_file():
+    """One leaked answer key invalidates the arm it appears in.
+
+    `_candidate_paths` filtered the graded files; the `git grep` fallback did
+    not, and the N=2 run quoted `tests/test_compat.py` into a grounded prompt
+    for a row scored on `tests/test_compat.py`.
+    """
+    class Grepper:
+        def _sh(self, script, timeout=None, check=True):
+            return types.SimpleNamespace(
+                stdout="tests/test_widget.py\nsrc/widget.py\n", stderr="",
+                returncode=0)
+
+    got = fb._grep_paths(Grepper(), ["widget"],
+                         exclude=featurebench_test_files(PROBLEM))
+    assert "tests/test_widget.py" not in got
+    assert "src/widget.py" in got
+
+
+def test_a_hunk_header_with_no_line_numbers_is_repaired():
+    """`@@` alone is `unrecognized input` to git apply, on every strategy."""
+    from src.evaluator import extract_patch
+    got = extract_patch("```diff\n--- a/m.py\n+++ b/m.py\n@@\n-a\n+b\n```")
+    assert [l for l in got.splitlines() if l.startswith("@@")] == ["@@ -1 +1 @@"]
+
+
+def test_each_file_gets_a_diff_git_header():
+    """Without it `--recount` reads the next file's `---` as a deletion line."""
+    from src.evaluator import extract_patch
+    two = ("```diff\n--- a/a.py\n+++ b/a.py\n@@ -1,1 +1,2 @@\n import os\n+y = 2\n"
+           "--- a/b.py\n+++ b/b.py\n@@ -1,1 +1,2 @@\n import sys\n+z = 3\n```")
+    assert [l for l in extract_patch(two).splitlines() if l.startswith("diff --git")] == [
+        "diff --git a/a.py b/a.py", "diff --git a/b.py b/b.py"]
+
+
+def test_prose_that_merely_describes_a_diff_is_refused():
+    """The N=2 run sent an English sentence to `git apply` five times."""
+    from src.evaluator import extract_patch, missing_patch_error
+    prose = ("Use `--- a/src/pkg/x.py` `+++ b/src/pkg/x.py` with one hunk "
+             "`@@ -1,NNN +1,MMM @@` where old lines are `-` and new are `+`.")
+    assert missing_patch_error(extract_patch(prose)) is not None
+
+
+def test_an_illustration_block_is_not_concatenated_into_the_patch():
+    from src.evaluator import extract_patch
+    text = ("```diff\ndiff --git a/x.py b/x.py\nnew file mode 100644\nindex 000..xxx\n```\n"
+            "```diff\ndiff --git a/x.py b/x.py\n--- a/x.py\n+++ b/x.py\n"
+            "@@ -1 +1,2 @@\n import os\n+y = 1\n```")
+    assert extract_patch(text).count("diff --git") == 1

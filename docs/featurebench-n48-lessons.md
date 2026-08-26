@@ -417,6 +417,74 @@ file, and both arms hit the marker bug that swallowed every candidate. The
 smoke run has to be repeated after these fixes before the N=48 A/B is worth
 paying for, and the number to read first is still the application rate.
 
+## 7e. The second N=2 run — the harness stopped hiding the models
+
+[Report 28](../reports/28_featurebench_straitjacket_n2.md), same two rows,
+after the §7b–§7d fixes. **Still 0/2, still zero captures on all four rows.**
+But the diagnosis is now possible, because the candidate patches are stored,
+and it shows the previous verdict was half wrong.
+
+**The grounding fix works.** `fb_grounded` now quotes
+`src/packaging/metadata.py` and `src/packaging/requirements.py` on the row that
+previously got `docs/conf.py` — 21,677 and 47,993 chars of the right files.
+
+**Four rows, four different causes, three of them still the harness.** With the
+patches finally on disk:
+
+| Row | What the model actually emitted | Why it failed |
+|---|---|---|
+| `fb_cascade` / fastapi | a **correct** two-file diff | no `diff --git` headers, and the first hunk's declared count was 3 short → `--recount` ran past the boundary and read `--- a/fastapi/_compat/v1.py` as a *deletion line* |
+| `fb_grounded` / fastapi | a correct one-file diff | hunk header was bare `@@`, no line numbers → `unrecognized input` on all 5 strategies |
+| `fb_grounded` / packaging | an **English sentence** describing a diff | the unfenced fallback scraped prose containing `` `--- a/x.py` `` and `` `@@` ``; the birth gate passed it because it matched substrings anywhere |
+| `fb_cascade` / packaging | five conflicting headers for one file, ending in `@@ -0,0 +1,N @@` / `+...` | a genuine model failure — but the harness had concatenated illustration blocks into it |
+
+**Defect 9 — a multi-file patch with no `diff --git` headers cannot be split.**
+Fixed by `ensure_git_headers`: synthesise the header from the `---`/`+++` pair.
+Verified end-to-end on a scratch repository — the exact fastapi shape (two
+files, no headers, first count short by 3) goes from *all 5 strategies fail* to
+`APPLIED via git apply --recount`.
+
+**Defect 10 — `@@` without line numbers is unparseable.** Fixed by
+`repair_hunk_headers`, which rewrites it to `@@ -1 +1 @@`. The numbers do not
+matter: `git apply` locates a hunk by searching for its context, and a start
+line wrong by 36 applies cleanly.
+
+**Defect 11 — the harness fed prose to `git apply`.** The unfenced fallback used
+`text.find("--- ")`, which matches inside a sentence, and `missing_patch_error`
+checked for `"--- "`, `"+++ "` and `"@@"` as bare substrings. Both are now
+line-anchored, and the gate additionally requires at least one real `+`/`-`
+body line. A response that never produced a diff is now recorded as
+`not_a_diff` — a **model** failure — instead of being laundered into
+`patch did not apply`, a **harness** failure. That distinction is the one the
+whole study turns on, and it was inverted.
+
+**Defect 12 — concatenating every fenced block was my own regression.** §7b.2
+widened extraction to all blocks so multi-file answers were scored whole. But
+responses also fence *illustrations* — header sketches, `@@ -0,0 +1,N @@`
+templates — and gluing those to the real diff produces something unparseable.
+Blocks are now kept only if they carry a hunk header and a body line.
+
+**Defect 13 — grounding leaked a graded test file.** `_candidate_paths` drops
+the files the row is scored on; the `git grep` fallback did not, so
+`tests/test_compat.py` was quoted into `fb_grounded`'s prompt for a row graded
+on `tests/test_compat.py`. **Any grounded row from report 28 that quoted a
+graded test is void.** The filter now sits on every path into the quote —
+statement, search and basename relocation.
+
+### What this changes about the N=48 verdict
+
+§4 said 94% of failures were `patch did not apply` and treated that as one
+phenomenon. It was at least four, and the split matters:
+
+- Some candidates were **correct diffs the harness could not apply** — a
+  harness defect, and the pass rate understated the models.
+- Some responses were **never diffs at all** — a model failure that the harness
+  mislabelled as an application failure, which overstated how much the applier
+  could rescue.
+
+Until a run separates those two, no statement about FeatureBench pass rates —
+including the ones in reports 20, 22, 24 and 28 — is measuring what it says.
+
 ## 8. What a rerun needs
 
 H2 remains open. The pre-registered next step in

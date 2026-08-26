@@ -3,10 +3,10 @@
     "pypa__packaging.013f3b03.test_metadata.e00b5801.lv1": {
       "task_id": "pypa__packaging.013f3b03.test_metadata.e00b5801.lv1",
       "passed": false,
-      "as_run_usd": 1.109519,
+      "as_run_usd": 1.142924,
       "triage_usd": 0.0,
-      "output_tokens": 46607,
-      "total_tokens": 99562,
+      "output_tokens": 49271,
+      "total_tokens": 105467,
       "repair_loops": 2,
       "simulated_calls": 0,
       "containment": {
@@ -20,8 +20,8 @@
         "handles": [],
         "raw_exact": null,
         "treatment_events": 2,
-        "evidence_sent_tokens_est": 967,
-        "native_baseline_tokens_est": 967,
+        "evidence_sent_tokens_est": 969,
+        "native_baseline_tokens_est": 969,
         "delta_vs_native_tokens": 0,
         "treatments": [
           "straitjacket"
@@ -81,117 +81,21 @@
       "sbp": null,
       "guard_reason": "",
       "guard_reasons": null,
+      "candidate_patch": "diff --git a/src/packaging/metadata.py b/src/packaging/metadata.py\ndeleted file mode 100644\ndiff --git a/src/packaging/metadata.py b/src/packaging/metadata.py\nold mode 100644\nnew mode 100755\ndiff --git a/src/packaging/metadata.py b/src/packaging/_metadata_stub.py\nsimilarity index 100%\nrename from src/packaging/metadata.py\nrename to src/packaging/_metadata_stub.py\ndiff --git a/src/packaging/metadata.py b/build/_stubs/metadata.py\nsimilarity index 100%\nrename from src/packaging/metadata.py\nrename to build/_stubs/metadata.py\ndiff --git a/src/packaging/metadata.py b/src/packaging/metadata.py\nnew file mode 100644\nindex 0000000..xxxxxxx\n--- /dev/null\n+++ b/src/packaging/metadata.py\n@@ -0,0 +1,N @@\n+...\n",
       "suite_reached": null,
       "attempts": null,
       "grounding": null,
       "subtasks": null,
       "subtask_summary": null,
-      "error": "The patch did NOT apply to the repository -- no test was run.\n5 strategies were tried, strictest first.\nApply log:\n$ git apply --verbose /tmp/fb_cand.patch\n[exit 128] error: corrupt patch at line 8\n$ git apply --verbose --recount /tmp/fb_cand.patch\n[exit 128] error: corrupt patch at line 8\n$ git apply --verbose --recount --ignore-whitespace -C1 /tmp/fb_cand.patch\n[exit 128] error: corrupt patch at line 8\n$ git apply --verbose --recount --3way /tmp/fb_cand.patch\n[exit 128] error: corrupt patch at"
+      "error": "The patch did NOT apply to the repository -- no test was run.\n5 strategies were tried, strictest first.\nApply log:\n$ git apply --verbose /tmp/fb_cand.patch\n[exit 128] error: corrupt patch at line 19\n$ git apply --verbose --recount /tmp/fb_cand.patch\n[exit 128] error: corrupt patch at line 19\n$ git apply --verbose --recount --ignore-whitespace -C1 /tmp/fb_cand.patch\n[exit 128] error: corrupt patch at line 19\n$ git apply --verbose --recount --3way /tmp/fb_cand.patch\n[exit 128] error: corrupt patch"
     },
     "fastapi__fastapi.02e108d1.test_compat.71e8518f.lv1": {
       "task_id": "fastapi__fastapi.02e108d1.test_compat.71e8518f.lv1",
       "passed": false,
-      "as_run_usd": 0.109876,
+      "as_run_usd": 0.092822,
       "triage_usd": 0.0,
-      "output_tokens": 6974,
-      "total_tokens": 19020,
-      "repair_loops": 2,
-      "simulated_calls": 0,
-      "containment": {
-        "captures": 3,
-        "raw_tokens_est": 8319,
-        "digest_tokens_est": 1812,
-        "tokens_kept_out": 6507,
-        "containment_ratio": 4.59,
-        "profiles": [
-          "pytest/v2"
-        ],
-        "backend": "library",
-        "handles": [
-          "run:712204b4519e",
-          "run:a728c628b281",
-          "run:c62a972822e5"
-        ],
-        "raw_exact": true,
-        "treatment_events": 2,
-        "evidence_sent_tokens_est": 1208,
-        "native_baseline_tokens_est": 1250,
-        "delta_vs_native_tokens": 42,
-        "treatments": [
-          "straitjacket"
-        ]
-      },
-      "retrievals": null,
-      "routing": {
-        "degraded": false,
-        "rungs": [
-          "gemini-3.7-flash/low",
-          "claude-sonnet-5/off",
-          "claude-opus-5/off"
-        ],
-        "decisions": [
-          {
-            "attempt": 1,
-            "difficulty": {
-              "level": "shallow",
-              "reasons": [
-                "failure classes are all shallow: IndentationError"
-              ],
-              "failing": 6,
-              "failure_classes": [
-                "IndentationError"
-              ],
-              "profile": "pytest/v2",
-              "typed": true,
-              "guard": ""
-            },
-            "escalate": false,
-            "why": "cheap rungs remain (1/2)"
-          },
-          {
-            "attempt": 2,
-            "difficulty": {
-              "level": "stalled",
-              "reasons": [
-                "failure classes are all shallow: IndentationError",
-                "identical failing identities survived the last repair turn"
-              ],
-              "failing": 6,
-              "failure_classes": [
-                "IndentationError"
-              ],
-              "profile": "pytest/v2",
-              "typed": true,
-              "guard": ""
-            },
-            "escalate": true,
-            "why": "all 2 cheap rungs exhausted"
-          }
-        ],
-        "frontier_used": true,
-        "frontier_rung": 3,
-        "solved_at": null
-      },
-      "test_pass_ratio": 0.0,
-      "sbp": null,
-      "guard_reason": "",
-      "guard_reasons": null,
-      "suite_reached": null,
-      "attempts": null,
-      "grounding": null,
-      "subtasks": null,
-      "subtask_summary": null,
-      "error": "onfig\nE     File \"/testbed/fastapi/_compat/main.py\", line 113\nE       def _get_model_config(model: Any) -> Any:\nE   IndentationError: expected an indented block after 'if' statement on line 110\n_ ERROR collecting tests/test_tutorial/test_query_params_str_validations/test_tutorial014.py _\n/opt/miniconda3/envs/testbed/lib/python3.10/site-packages/_pytest/python.py:507: in importtestmodule\n    mod = import_path(\n/opt/miniconda3/envs/testbed/lib/python3.10/site-packages/_pytest/pathlib.py:587: in im"
-    }
-  },
-  "fb_grounded": {
-    "pypa__packaging.013f3b03.test_metadata.e00b5801.lv1": {
-      "task_id": "pypa__packaging.013f3b03.test_metadata.e00b5801.lv1",
-      "passed": false,
-      "as_run_usd": 0.791723,
-      "triage_usd": 0.0,
-      "output_tokens": 35858,
-      "total_tokens": 97439,
+      "output_tokens": 5527,
+      "total_tokens": 16984,
       "repair_loops": 2,
       "simulated_calls": 0,
       "containment": {
@@ -205,8 +109,8 @@
         "handles": [],
         "raw_exact": null,
         "treatment_events": 2,
-        "evidence_sent_tokens_est": 705,
-        "native_baseline_tokens_est": 705,
+        "evidence_sent_tokens_est": 753,
+        "native_baseline_tokens_est": 753,
         "delta_vs_native_tokens": 0,
         "treatments": [
           "straitjacket"
@@ -266,149 +170,13 @@
       "sbp": null,
       "guard_reason": "",
       "guard_reasons": null,
+      "candidate_patch": "--- a/fastapi/_compat/main.py\n+++ b/fastapi/_compat/main.py\n@@ -107,3 +107,25 @@ def _get_model_field_default_value_json(param: Any) -> Any:\n         return None\n \n     return _model_dump(param.default, mode=\"json\")\n+\n+\n+def _get_model_config(model: Any) -> Any:\n+    if PYDANTIC_V2:\n+        if isinstance(model, BaseModelV1) or (\n+            isinstance(model, type) and issubclass(model, BaseModelV1)\n+        ):\n+            return getattr(model, \"__config__\", None)\n+        config = getattr(model, \"model_config\", None)\n+        if config is not None:\n+            return config\n+        return getattr(model, \"__config__\", None)\n+    return getattr(model, \"__config__\", None)\n+\n+\n+def _is_model_field(value: Any) -> bool:\n+    if PYDANTIC_V2:\n+        return isinstance(value, (ModelFieldV1, ModelFieldV2))\n+    return isinstance(value, ModelFieldV1)\n--- a/fastapi/_compat/v1.py\n+++ b/fastapi/_compat/v1.py\n@@ -1,7 +1,7 @@\n from dataclasses import dataclass\n from enum import Enum\n-from typing import Any, Dict, List, Optional, Sequence, Tuple, Type, Union\n+from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, Type, Union\n \n from fastapi._compat.common import (\n     _is_scalar_sequence_field,\n@@ -298,3 +298,18 @@ def create_body_model(\n \n def _get_model_fields(model: Type[BaseModel]) -> List[ModelField]:\n     return list(model.__fields__.values())\n+\n+\n+def get_model_fields(model: Type[BaseModel]) -> List[ModelField]:\n+    return list(model.__fields__.values())\n+\n+\n+def with_info_plain_validator_function(\n+    function: Callable[..., Any],\n+    *,\n+    ref: Union[str, None] = None,\n+    metadata: Any = None,\n+    serialization: Any = None,\n+) -> Any:\n+    return {}\n",
       "suite_reached": null,
       "attempts": null,
-      "grounding": {
-        "enabled": true,
-        "read": [
-          "docs/conf.py"
-        ],
-        "skipped": [
-          "file1.py",
-          "testbed/src/packaging/metadata.py",
-          "testbed/src/packaging/requirements.py"
-        ],
-        "searched": [
-          "packaging",
-          "ExceptionGroup",
-          "RawMetadata",
-          "InvalidMetadata",
-          "from_raw",
-          "Metadata",
-          "email.message.EmailMessage",
-          "RFC822Policy"
-        ],
-        "chars": 2566,
-        "tests_quoted": false
-      },
+      "grounding": null,
       "subtasks": null,
       "subtask_summary": null,
-      "error": "The patch did NOT apply to the repository -- no test was run.\n5 strategies were tried, strictest first.\nApply log:\n$ git apply --verbose /tmp/fb_cand.patch\n[exit 128] error: corrupt patch at line 1090\n$ git apply --verbose --recount /tmp/fb_cand.patch\n[exit 1] Checking patch src/packaging/_metadata_impl.py...\nChecking patch src/packaging/_requirements_impl.py...\nChecking patch src/packaging/metadata.py...\nerror: while searching for:\n\n\nerror: patch failed: src/packaging/metadata.py:1\nerror: src/p"
-    },
-    "fastapi__fastapi.02e108d1.test_compat.71e8518f.lv1": {
-      "task_id": "fastapi__fastapi.02e108d1.test_compat.71e8518f.lv1",
-      "passed": false,
-      "as_run_usd": 0.294136,
-      "triage_usd": 0.0,
-      "output_tokens": 9499,
-      "total_tokens": 73570,
-      "repair_loops": 2,
-      "simulated_calls": 0,
-      "containment": {
-        "captures": 0,
-        "raw_tokens_est": 0,
-        "digest_tokens_est": 0,
-        "tokens_kept_out": 0,
-        "containment_ratio": null,
-        "profiles": [],
-        "backend": null,
-        "handles": [],
-        "raw_exact": null,
-        "treatment_events": 2,
-        "evidence_sent_tokens_est": 953,
-        "native_baseline_tokens_est": 953,
-        "delta_vs_native_tokens": 0,
-        "treatments": [
-          "straitjacket"
-        ]
-      },
-      "retrievals": null,
-      "routing": {
-        "degraded": false,
-        "rungs": [
-          "gemini-3.7-flash/low",
-          "claude-sonnet-5/off",
-          "claude-opus-5/off"
-        ],
-        "decisions": [
-          {
-            "attempt": 1,
-            "difficulty": {
-              "level": "local",
-              "reasons": [
-                "apply_failed: patch did not land on this tree"
-              ],
-              "failing": 0,
-              "failure_classes": [
-                "PatchApplyError"
-              ],
-              "profile": "guard/v1",
-              "typed": true,
-              "guard": "apply_failed"
-            },
-            "escalate": false,
-            "why": "cheap rungs remain (1/2)"
-          },
-          {
-            "attempt": 2,
-            "difficulty": {
-              "level": "stalled",
-              "reasons": [
-                "apply_failed survived the last repair turn"
-              ],
-              "failing": 0,
-              "failure_classes": [
-                "PatchApplyError"
-              ],
-              "profile": "guard/v1",
-              "typed": true,
-              "guard": "apply_failed"
-            },
-            "escalate": true,
-            "why": "all 2 cheap rungs exhausted"
-          }
-        ],
-        "frontier_used": true,
-        "frontier_rung": 3,
-        "solved_at": null
-      },
-      "test_pass_ratio": 0.0,
-      "sbp": null,
-      "guard_reason": "",
-      "guard_reasons": null,
-      "suite_reached": null,
-      "attempts": null,
-      "grounding": {
-        "enabled": true,
-        "read": [
-          "fastapi/_compat/main.py",
-          "fastapi/_compat/v1.py",
-          "fastapi/_compat/v2.py",
-          "tests/test_compat.py",
-          "fastapi/_compat/__init__.py"
-        ],
-        "skipped": [
-          "file1.py",
-          "testbed/fastapi/_compat/v1.py",
-          "testbed/fastapi/_compat/main.py",
-          "fastapi/datastructures.py",
-          "fastapi/openapi/models.py",
-          "fastapi/routing.py",
-          "fastapi/openapi/utils.py"
-        ],
-        "searched": [
-          "get_model_fields",
-          "with_info_plain_validator_function",
-          "_get_model_config",
-          "_is_model_field",
-          "fastapi"
-        ],
-        "chars": 44913,
-        "tests_quoted": false
-      },
-      "subtasks": null,
-      "subtask_summary": null,
-      "error": "The patch did NOT apply to the repository -- no test was run.\n5 strategies were tried, strictest first.\nApply log:\n$ git apply --verbose /tmp/fb_cand.patch\n[exit 128] error: corrupt patch at line 28\n$ git apply --verbose --recount /tmp/fb_cand.patch\n[exit 1] Checking patch fastapi/_compat/v1.py...\nHunk #1 succeeded at 164 (offset 37 lines).\nerror: while searching for:\n\n\ndef get_model_fields(model: Type[BaseModel]) -> List[ModelField]:\n    return list(model.__fields__.values())  # type: ignore[at"
+      "error": "The patch did NOT apply to the repository -- no test was run.\n5 strategies were tried, strictest first.\nApply log:\n$ git apply --verbose /tmp/fb_cand.patch\n[exit 128] error: corrupt patch at line 28\n$ git apply --verbose --recount /tmp/fb_cand.patch\n[exit 1] Checking patch fastapi/_compat/main.py...\nerror: while searching for:\n        return None\n\n    return _model_dump(param.default, mode=\"json\")\n-- a/fastapi/_compat/v1.py\n\nerror: patch failed: fastapi/_compat/main.py:107\nerror: fastapi/_compat"
     }
   }
 }

@@ -373,6 +373,26 @@ def _relabel_truncated(evidence, usage):
         "truncated_output")
 
 
+def _pre_oracle_call(model_id, role, max_tokens):
+    """A model bought *before* the first test run, reading the same tree the
+    executor will.
+
+    Returned as a callable rather than executed inline because the repository
+    is only readable inside `_ladder`'s container context. Buying the plan
+    outside it -- which is what these arms used to do -- meant the H2
+    challenger's architect and the grounded contract's locator were the only
+    models in the study working blind, while every rung they were briefing
+    could see the files. Both roles ask in so many words for real paths.
+    """
+    def call(problem, grounding):
+        text, usage, _ = dispatch_model(
+            model_id, _solve_prompt(problem, role, grounding=grounding),
+            max_tokens=max_tokens, problem=problem)
+        return text, usage
+    call.model_id = model_id
+    return call
+
+
 def _spend(acc, usage):
     acc["usd"] += usage["as_run_usd"]
     acc["out"] += usage["output"]
@@ -414,13 +434,25 @@ def _result(passed, evidence, acc, loops, trace=None, ratio=None, report=None,
 
 
 def _ladder(problem, tiers, gate="after_ladder", frontier=FRONTIER,
-            plan="", planner_usd=0.0, acc=None):
+            plan="", planner_usd=0.0, acc=None, planner=None):
     """One escalating repair loop against the containerised oracle.
 
     The gate, the difficulty classifier and the degradation warning are the
     *same* ones the BigCodeBench-Hard routing study used (`src/routing.py`), so
     an `sbp_evidence_gate` row and an `r9_opus_on_evidence` row mean the same
     thing on two datasets with very different oracle costs.
+
+    ``planner`` is a callable ``(problem, grounding) -> (text, usage)`` run
+    once, after the repository has been read and before the first solve. It
+    exists because the arms that buy a model *before* the oracle -- the H2
+    challenger and the grounded-contract locator -- used to call it outside
+    this function, which is outside the container, which meant the one model
+    whose whole job is "name the real files" was the only one that never saw
+    them. `PLANNER_ROLE` says *"Be concrete and name real paths"* to a model
+    holding an issue and nothing else.
+
+    Arms that pass no planner take a byte-identical path: the branch below is
+    skipped, and `tests/test_swebench_pro_planner.py` pins that.
     """
     gate_fn = GATES[gate] if isinstance(gate, str) else gate
     trace = EscalationTrace()
@@ -431,6 +463,10 @@ def _ladder(problem, tiers, gate="after_ladder", frontier=FRONTIER,
         # either way, so this costs a handful of `git show` calls and removes
         # the localisation ceiling the blind prompt has.
         grounding, ground_meta = collect_grounding(env, problem)
+        if planner is not None:
+            plan, p_usage = planner(problem, grounding)
+            _spend(acc, p_usage)
+            ground_meta = dict(ground_meta or {}, planner_grounded=bool(grounding))
         model, think = tiers[0]
         text, usage, _ = dispatch_model(
             model, _solve_prompt(problem, EXECUTOR_ROLE if plan else SOLVER_ROLE,
@@ -544,13 +580,15 @@ def run_sbp_plan_exec(problem, planner_model=OPUS_5_ID,
     Same frontier model as `sbp_cascade`, same three oracle calls, opposite
     timing. It lost on BigCodeBench-Hard and on ClassEval, both of which had a
     free oracle; this is the expensive-oracle rerun of that comparison.
+
+    The architect reads the repository, like every rung it briefs -- see
+    `_pre_oracle_call`. Grounded, its call prices at ~$0.13/task against
+    ~$0.06 blind; the difference buys the one thing `PLANNER_ROLE` asks for and
+    the issue text cannot supply, which is which files actually exist.
     """
-    acc = {"usd": 0.0, "out": 0, "tok": 0}
-    plan, usage, _ = dispatch_model(planner_model, _solve_prompt(problem, PLANNER_ROLE),
-                                    max_tokens=2048, problem=problem)
-    _spend(acc, usage)
     return _ladder(problem, [(executor_model, "low")] * MAX_ORACLE_CALLS,
-                   gate="never", plan=plan, acc=acc)
+                   gate="never",
+                   planner=_pre_oracle_call(planner_model, PLANNER_ROLE, 2048))
 
 
 def gate_patch_health(difficulty, attempt, total_rungs):
@@ -579,18 +617,20 @@ def run_sbp_grounded_contract(problem, locator_model=SONNET_ID,
                               executor_model=GEMINI_37_FLASH_ID,
                               frontier=OPUS_5_ID):
     """Candidate 1: Grounded Micro-Contract Localization Cascade.
-    
+
     Sonnet-5 generates a strict, compact file & interface contract (<150 words)
-    at minimal cost (~$0.0015). Gemini 3.7 Flash executes the grounded diff.
+    from the repository as it stands, then Gemini 3.7 Flash executes the diff.
     Escalates to Opus-5 on broad/stalled test failure evidence.
+
+    "Grounded" was aspirational until the locator was moved inside the
+    container: it was being asked for `TARGET_FILES: Exact repository file
+    paths` while holding only the issue text. Reading the tree prices the
+    locator at ~$0.035/task rather than ~$0.008.
     """
-    acc = {"usd": 0.0, "out": 0, "tok": 0}
-    contract, usage, _ = dispatch_model(
-        locator_model, _solve_prompt(problem, CONTRACT_LOCATOR_ROLE),
-        max_tokens=512, problem=problem)
-    _spend(acc, usage)
     return _ladder(problem, [(executor_model, "low"), (SONNET_ID, None)],
-                   gate="evidence", frontier=frontier, plan=contract, acc=acc)
+                   gate="evidence", frontier=frontier,
+                   planner=_pre_oracle_call(locator_model,
+                                            CONTRACT_LOCATOR_ROLE, 512))
 
 
 @_arm(sj_required=True)

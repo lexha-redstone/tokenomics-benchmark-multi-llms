@@ -64,15 +64,19 @@ constant so the comparison means something.
 |---|---|
 | [`src/config.py`](../src/config.py) | Model IDs, pricing table, prompt roles (solver / advisor / executor / repair / triage) |
 | [`src/client.py`](../src/client.py) | `dispatch_model()` — Vertex AI + Anthropic, retry, thinking budgets, usage accounting |
-| [`src/datasets.py`](../src/datasets.py) | Loaders for BigCodeBench-Hard, WebDev, ClassEval |
+| [`src/datasets.py`](../src/datasets.py) | Loaders for BigCodeBench-Hard, WebDev, ClassEval, FeatureBench, SWE-bench Pro |
 | [`src/straitjacket.py`](../src/straitjacket.py) | The only bridge to `ctx-harness`: capture, digest, bounded retrieval |
-| [`src/evaluator.py`](../src/evaluator.py) | Sandboxed execution, the `Evidence` contract, containment ledger |
-| [`src/architectures.py`](../src/architectures.py) | The variant registry and every pipeline implementation |
+| [`src/evaluator.py`](../src/evaluator.py) | Sandboxed execution, the `Evidence` contract, containment ledger; also the Docker environments (`FeatureBenchEnv`, `SWEBenchProEnv`) and upstream's own graders |
+| [`src/routing.py`](../src/routing.py) | The typed difficulty signal, the escalation `GATES`, and `frontier_is_reachable()` |
+| [`src/architectures.py`](../src/architectures.py) | The variant registry and every BCB/WebDev pipeline |
+| [`src/classeval.py`](../src/classeval.py) · [`src/featurebench.py`](../src/featurebench.py) · [`src/swebench_pro.py`](../src/swebench_pro.py) | The per-dataset arms, one module each |
+| [`src/sweep.py`](../src/sweep.py) · [`src/merge.py`](../src/merge.py) | The shared per-arm run loop; folding a single-arm run back into a sweep |
 | [`src/reporter.py`](../src/reporter.py) | Markdown TCO report + HTML dashboard, indexed report naming |
 | [`run_benchmark.py`](../run_benchmark.py) | The unified CLI entry point |
 
-Per-dataset directories (`bigCodeBench-hard/`, `webdev/`, `classeval/`) hold
-data, results, and historical one-off sweep scripts.
+Per-dataset directories (`bigCodeBench-hard/`, `classeval/`, `swebench_pro/`,
+`featurebench/`, `webdev/`) hold data, results, and historical one-off sweep
+scripts. `swebench_pro/`'s contents are fetched on demand and gitignored.
 
 ---
 

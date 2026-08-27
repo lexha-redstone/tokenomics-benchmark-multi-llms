@@ -8,11 +8,11 @@
     "available": true,
     "ctx_version": "0.35.1",
     "reason": "",
-    "workspace": "/Users/lexha/.cache/tokenomics-sj/ws",
-    "state_home": "/Users/lexha/.cache/tokenomics-sj/state",
+    "workspace": "/home/USER/.cache/tokenomics-sj/ws",
+    "state_home": "/home/USER/.cache/tokenomics-sj/state",
     "raw_cap_chars": 2500,
     "frame_budget": {
-      "sandbox_prog_path": "/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py",
+      "sandbox_prog_path": "/home/USER/.cache/tokenomics-sj/ws/w0/prog.py",
       "frame_chars_used": 95,
       "frame_chars_budget": 160,
       "frame_fits": true
@@ -27,11 +27,11 @@
         "available": true,
         "ctx_version": "0.35.1",
         "reason": "",
-        "workspace": "/Users/lexha/.cache/tokenomics-sj/ws",
-        "state_home": "/Users/lexha/.cache/tokenomics-sj/state",
+        "workspace": "/home/USER/.cache/tokenomics-sj/ws",
+        "state_home": "/home/USER/.cache/tokenomics-sj/state",
         "raw_cap_chars": 2500,
         "frame_budget": {
-          "sandbox_prog_path": "/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py",
+          "sandbox_prog_path": "/home/USER/.cache/tokenomics-sj/ws/w0/prog.py",
           "frame_chars_used": 95,
           "frame_chars_budget": 160,
           "frame_fits": true
@@ -246,7 +246,7 @@
             "n_subtasks": 4,
             "passed_subtasks": 3
           },
-          "error": "======================================================================\nFAIL: test_filter_7 (__main__.AccessGatewayFilterTestFilter.test_filter_7)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 142, in test_filter_7\n    self.assertIsNone(res)\n    ~~~~~~~~~~~~~~~~~^^^^^\nAssertionError: False is not None\n\n======================================================================\nFAI"
+          "error": "======================================================================\nFAIL: test_filter_7 (__main__.AccessGatewayFilterTestFilter.test_filter_7)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 142, in test_filter_7\n    self.assertIsNone(res)\n    ~~~~~~~~~~~~~~~~~^^^^^\nAssertionError: False is not None\n\n======================================================================\nFAI"
         },
         {
           "task_id": "ClassEval_1",
@@ -376,11 +376,11 @@
         "available": true,
         "ctx_version": "0.35.1",
         "reason": "",
-        "workspace": "/Users/lexha/.cache/tokenomics-sj/ws",
-        "state_home": "/Users/lexha/.cache/tokenomics-sj/state",
+        "workspace": "/home/USER/.cache/tokenomics-sj/ws",
+        "state_home": "/home/USER/.cache/tokenomics-sj/state",
         "raw_cap_chars": 2500,
         "frame_budget": {
-          "sandbox_prog_path": "/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py",
+          "sandbox_prog_path": "/home/USER/.cache/tokenomics-sj/ws/w0/prog.py",
           "frame_chars_used": 95,
           "frame_chars_budget": 160,
           "frame_fits": true

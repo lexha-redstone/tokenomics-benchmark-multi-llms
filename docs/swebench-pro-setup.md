@@ -176,8 +176,12 @@ Only some images pulled? Name the rows explicitly:
 python3 run_benchmark.py --dataset swebench-pro --group sbp --tasks @/tmp/ready.txt --report
 ```
 
-The arms are the FeatureBench five, unchanged in shape so the two datasets'
-rows mean the same thing:
+`--group sbp` is **eight** arms. The five below are the ones report 31 ran, and
+they keep FeatureBench's shapes unchanged so the two datasets' rows mean the
+same thing. Three further candidate arms (`sbp_grounded_contract`,
+`sbp_patch_health_router`, `sbp_sonnet_opus_sweetspot`) are also in the group;
+they have only ever run in report 23, at the two-oracle-call budget where their
+escalation branch was unreachable, and have no valid measurement yet.
 
 | Arm | What it is |
 |---|---|

@@ -144,7 +144,23 @@ captured 62,569–128,647 · sent 15,035–36,529 · native baseline 31,205–76
 
 Self-consistency check that catches most accounting bugs: **the arm whose treatment *is* the baseline must report `Δ = +0`.**
 
-Where containment does nothing is equally reportable: a failure whose whole output is a handful of lines shows a delta at or below zero, and a run that only ever floods *stdout* while the untreated path forwards *stderr* buys nothing. Showing only the flattering regime is the overstatement this accounting exists to remove.
+### 5.1 The delta goes negative on repository-scale suites, and that is the receipt working
+
+Same instrumentation, same harness version, SWE-bench Pro N=20 — where a capture is a real repository's test suite rather than a six-assertion sandbox:
+
+```
+captured 110,954–216,114 · sent 16,755–18,357 · native baseline 12,919–16,402
+Δ vs native: −7% to −36%, every arm
+```
+
+**Every arm sent more than the untreated path would have.** Nothing is broken; two facts explain it, and both matter before quoting any containment number:
+
+1. **The baseline is already capped.** `native_payload` is the failing stream tail-truncated to `SJ_RAW_CAP` (2,500 characters by default). So `Δ vs native` answers *"is the digest smaller than a blind 2,500-character tail?"* — **not** *"is the digest smaller than the flood?"* The flood is the `Captured` column, and there it is 110k–216k against a ~17k digest. Quote the right one for the claim being made.
+2. **A repository suite's failing-test census is legitimately bigger than the cap.** Twenty rows produced captures a hundred times the size of BCB-Hard's, and the digest scales with the number of distinct failing identities while a fixed tail does not. The digest bought a complete, addressed census; it cost ~4,600 estimated tokens against the tail that would have shown one screen of one traceback.
+
+The practical rule: **`SJ_RAW_CAP` sets what you are comparing against, so state it beside every delta.** At `SJ_RAW_CAP=0` — the true uncapped flood — these same rows would read as a very large positive. Choosing the cap that makes the number look best, and not saying which one you chose, is precisely the overstatement this accounting exists to remove.
+
+Where containment does nothing is equally reportable: a failure whose whole output is a handful of lines shows a delta at or below zero, and a run that only ever floods *stdout* while the untreated path forwards *stderr* buys nothing. Showing only the flattering regime is the same error as picking the flattering cap.
 
 ---
 
@@ -163,10 +179,11 @@ The classification used here (`src/routing.py`), from the typed graph only:
 
 `broad`/`stalled` is the escalation trigger. On the full BigCodeBench-Hard dataset this gate reached **96% of the frontier model's pass rate for 74% of its spend** — and it did so by escalating **more** often (45% of tasks vs 29%) but **earlier**, skipping an expensive middle rung that was going to fail anyway.
 
-**Two guardrails this needs, or the result is fiction:**
+**Three guardrails this needs, or the result is fiction:**
 
 1. **The fact tier only exists on the in-process backend.** Under a CLI/subprocess backend there is nothing typed to read, every failure classifies as `shallow`, the gate never fires early, and the arm silently degrades into a plain attempt-count ladder. Detect it, warn, and set a `degraded` flag on the affected records — a row that did not test what its name says must not be quotable.
-2. **No fact tier is not the same as an easy failure.** `text/v1` (nothing recognised the output as a test run) is treated as `shallow` here on purpose, but it is a *default*, not evidence. On the N=148 sweep 11 of 148 tasks hit it; audit that count before reading a gate's result.
+2. **No fact tier is not the same as an easy failure.** `text/v1` (nothing recognised the output as a test run) is treated as `shallow` here on purpose, but it is a *default*, not evidence. On the N=148 sweep 11 of 148 tasks hit it; audit that count before reading a gate's result. It is worse on a multi-language split — a pytest row types, a mocha row's JSON reporter blob does not — so a mixed-language evidence-gate sweep is two arms wearing one name. **Run it per language and say which.**
+3. **The gate's *cost* position is not portable, only its *shape* is.** The saving above comes from skipping an expensive middle rung the digest said would fail. On a ladder with no expensive middle rung — where every attempt costs a container test run — the same gate becomes the *most* expensive multi-model arm rather than the cheapest, which is what it did on SWE-bench Pro at N=20. The escalation logic transfers; the dollar conclusion has to be re-derived per ladder.
 
 ---
 
@@ -182,6 +199,15 @@ Two things to get right, both learned the expensive way:
 
 - **Record a stable argv.** A container name carrying a pid (or any per-run token) makes every attempt digest as a *different command*. Record the logical command (`pytest tests/test_x.py`) rather than the literal wrapper invocation.
 - **One container per task, not per attempt.** A repair ladder runs several attempts against the same repository; paying container start-up each time triples the dominant cost and makes the benchmark measure Docker instead of the models. Start once, reset the worktree between attempts, tear down after.
+
+### 7.1 An attempt that never reached the suite has no test evidence — say so
+
+The digest answers *"what failed in this test run?"* On a multi-file-patch task most attempts never produce a test run at all: the candidate diff is rejected by `git apply`, the container did not start, or the graded test files could not be restored. Measured here, **42–56% of attempts on SWE-bench Pro and 77–94% on FeatureBench died at one of those guards before a single test executed.**
+
+Two things follow, and both are about honesty rather than mechanism:
+
+- **Route the repair instruction on *how the attempt died*, not on a single template.** A turn that opens with "your patch was applied and the tests failed" is a false premise when the patch never applied, and the model spends it inventing a code-level explanation for a diff-format problem. Return the applier's own output as the evidence — it names the file, the hunk, and the context lines it searched for and did not find — and say plainly that no test ran. Rejected patch, environment failure and genuine test failure are three different turns.
+- **A pass rate over attempts that mostly died at a guard is not a pass rate.** Print the guard-failure census beside it. Without that column the number reads as "did this architecture solve the task" when it largely measures "can this model emit a diff `git apply` accepts".
 
 ---
 
@@ -230,7 +256,10 @@ Configuration knobs (`docs/straitjacket-implementation.md` §6):
    budget than it actually sends, makes containment look better than it is. The
    receipt reports `Δ vs native`, and the native arm's own delta must be `+0`.
 4. **Containment is not free accuracy.** It removes 100% of triage spend
-   ($0.0000 vs ~$0.0018/repair) and cuts what stays resident by ~52%. It does
+   ($0.0000 vs ~$0.0018/repair) and, on BigCodeBench-Hard, cut what stays
+   resident by ~52% against a 2,500-char tail — a figure that goes *negative* on
+   repository-scale suites (§5.1), so it must be quoted with its dataset and its
+   `SJ_RAW_CAP`, never on its own. It does
    **not** by itself raise pass rates; it lowers the cost of reaching them.
    Claim residency and dollars; do not claim accuracy.
 

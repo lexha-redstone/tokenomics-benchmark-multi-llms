@@ -227,9 +227,17 @@ An evaluator that synthesises a test log rather than executing one still has to
 contain it. `sj.contain_text()` routes such a log through the real profile
 registry by spooling it into the store behind the same `ctx.invocation/v1`
 manifest the executor publishes. Only the inputs are supplied; no selection
-logic is re-implemented. Library backend only. No dataset in the repository
-currently takes this path — every arm executes its candidate for real — so it
-exists for evaluators added later.
+logic is re-implemented. Library backend only.
+
+Every arm executes its candidate for real, so this is not the normal path — it
+is the entry gate for a failure that happened *outside* a capture. `treat_error`
+([`src/evaluator.py`](../src/evaluator.py)) takes it when it is handed a plain
+string rather than an `Evidence` carrying a digest: the birth gate was missed,
+so the text is contained now instead of being keyword-filtered. Pre-execution
+guard failures — a rejected patch, a container that would not start — do **not**
+come through here; `_guard_evidence` builds them as their own bounded digest
+with a typed `reason`, precisely so the router can tell "the suite ran and
+failed" apart from "the suite never ran".
 
 ---
 

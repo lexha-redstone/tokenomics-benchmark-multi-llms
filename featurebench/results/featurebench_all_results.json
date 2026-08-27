@@ -8,11 +8,11 @@
     "available": true,
     "ctx_version": "0.35.1",
     "reason": "",
-    "workspace": "/usr/local/google/home/lexha/.cache/tokenomics-sj/ws",
-    "state_home": "/usr/local/google/home/lexha/.cache/tokenomics-sj/state",
+    "workspace": "/home/USER/.cache/tokenomics-sj/ws",
+    "state_home": "/home/USER/.cache/tokenomics-sj/state",
     "raw_cap_chars": 2500,
     "frame_budget": {
-      "sandbox_prog_path": "/usr/local/google/home/lexha/.cache/tokenomics-sj/ws/w0/prog.py",
+      "sandbox_prog_path": "/home/USER/.cache/tokenomics-sj/ws/w0/prog.py",
       "frame_chars_used": 111,
       "frame_chars_budget": 160,
       "frame_fits": true
@@ -27,11 +27,11 @@
         "available": true,
         "ctx_version": "0.35.1",
         "reason": "",
-        "workspace": "/usr/local/google/home/lexha/.cache/tokenomics-sj/ws",
-        "state_home": "/usr/local/google/home/lexha/.cache/tokenomics-sj/state",
+        "workspace": "/home/USER/.cache/tokenomics-sj/ws",
+        "state_home": "/home/USER/.cache/tokenomics-sj/state",
         "raw_cap_chars": 2500,
         "frame_budget": {
-          "sandbox_prog_path": "/usr/local/google/home/lexha/.cache/tokenomics-sj/ws/w0/prog.py",
+          "sandbox_prog_path": "/home/USER/.cache/tokenomics-sj/ws/w0/prog.py",
           "frame_chars_used": 111,
           "frame_chars_budget": 160,
           "frame_fits": true
@@ -2900,11 +2900,11 @@
         "available": true,
         "ctx_version": "0.35.1",
         "reason": "",
-        "workspace": "/usr/local/google/home/lexha/.cache/tokenomics-sj/ws",
-        "state_home": "/usr/local/google/home/lexha/.cache/tokenomics-sj/state",
+        "workspace": "/home/USER/.cache/tokenomics-sj/ws",
+        "state_home": "/home/USER/.cache/tokenomics-sj/state",
         "raw_cap_chars": 2500,
         "frame_budget": {
-          "sandbox_prog_path": "/usr/local/google/home/lexha/.cache/tokenomics-sj/ws/w0/prog.py",
+          "sandbox_prog_path": "/home/USER/.cache/tokenomics-sj/ws/w0/prog.py",
           "frame_chars_used": 111,
           "frame_chars_budget": 160,
           "frame_fits": true
@@ -5725,11 +5725,11 @@
         "available": true,
         "ctx_version": "0.35.1",
         "reason": "",
-        "workspace": "/usr/local/google/home/lexha/.cache/tokenomics-sj/ws",
-        "state_home": "/usr/local/google/home/lexha/.cache/tokenomics-sj/state",
+        "workspace": "/home/USER/.cache/tokenomics-sj/ws",
+        "state_home": "/home/USER/.cache/tokenomics-sj/state",
         "raw_cap_chars": 2500,
         "frame_budget": {
-          "sandbox_prog_path": "/usr/local/google/home/lexha/.cache/tokenomics-sj/ws/w0/prog.py",
+          "sandbox_prog_path": "/home/USER/.cache/tokenomics-sj/ws/w0/prog.py",
           "frame_chars_used": 111,
           "frame_chars_budget": 160,
           "frame_fits": true

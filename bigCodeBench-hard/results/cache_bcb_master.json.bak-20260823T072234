@@ -367,7 +367,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "lask/app.py\", line 917, in full_dispatch_request\n    rv = self.dispatch_request()\n  File \"/Users/lexha/Documents/work/codes/.venv/lib/python3.13/site-packages/flask/app.py\", line 902, in dispatch_request\n    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^\n  File \"/Users/lexha/Documents/work/codes/.venv/lib/python3.13/site-packages/flask_login/utils.py\", line 290, i"
+      "error": "lask/app.py\", line 917, in full_dispatch_request\n    rv = self.dispatch_request()\n  File \"/home/USER/Documents/work/codes/.venv/lib/python3.13/site-packages/flask/app.py\", line 902, in dispatch_request\n    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^\n  File \"/home/USER/Documents/work/codes/.venv/lib/python3.13/site-packages/flask_login/utils.py\", line 290, i"
     },
     "BigCodeBench/89": {
       "task_id": "BigCodeBench/89",
@@ -509,7 +509,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_cluster_centers (__main__.TestCases.test_cluster_centers)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 64, in test_cluster_centers\n    self.assertTrue(len(centroids) > 0, \"Centroids should be marked in the plot.\")\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+      "error": "======================================================================\nFAIL: test_cluster_centers (__main__.TestCases.test_cluster_centers)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 64, in test_cluster_centers\n    self.assertTrue(len(centroids) > 0, \"Centroids should be marked in the plot.\")\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
     },
     "BigCodeBench/93": {
       "task_id": "BigCodeBench/93",
@@ -610,7 +610,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_values (__main__.TestCases.test_values)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 84, in test_values\n    self.assertAlmostEqual(actual[0], expected[0], places=7, msg=\"DataFrame contents should match the expected output\")\n    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+      "error": "======================================================================\nFAIL: test_values (__main__.TestCases.test_values)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 84, in test_values\n    self.assertAlmostEqual(actual[0], expected[0], places=7, msg=\"DataFrame contents should match the expected output\")\n    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
     },
     "BigCodeBench/99": {
       "task_id": "BigCodeBench/99",
@@ -796,7 +796,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nERROR: test_heatmap_values (__main__.TestCases.test_heatmap_values)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 85, in test_heatmap_values\n    self.assertAlmostEqual(heatmap_data.tolist(), expect, \"DataFrame contents should match the expected output\")\n    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^"
+      "error": "======================================================================\nERROR: test_heatmap_values (__main__.TestCases.test_heatmap_values)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 85, in test_heatmap_values\n    self.assertAlmostEqual(heatmap_data.tolist(), expect, \"DataFrame contents should match the expected output\")\n    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^"
     },
     "BigCodeBench/108": {
       "task_id": "BigCodeBench/108",
@@ -1345,7 +1345,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_open_port (__main__.TestCases.test_open_port)\nTest that an open port is correctly detected.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 1426, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/Users/lexha/.cache/to"
+      "error": "======================================================================\nFAIL: test_open_port (__main__.TestCases.test_open_port)\nTest that an open port is correctly detected.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 1426, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/home/USER/.cache/to"
     },
     "BigCodeBench/161": {
       "task_id": "BigCodeBench/161",
@@ -1632,7 +1632,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_default_parameters (__main__.TestCases.test_default_parameters)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 61, in test_default_parameters\n    self.assertEqual(df_list, expect)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\nAssertionError: Lists differ: ['New[26 chars]9495 -61.92098633948353)', 'Londo"
+      "error": "======================================================================\nFAIL: test_default_parameters (__main__.TestCases.test_default_parameters)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 61, in test_default_parameters\n    self.assertEqual(df_list, expect)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\nAssertionError: Lists differ: ['New[26 chars]9495 -61.92098633948353)', 'Londo"
     },
     "BigCodeBench/199": {
       "task_id": "BigCodeBench/199",
@@ -1837,7 +1837,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "line 1426, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 157, in test_4\n    extracted_files = task_func(MOCK_URL, MOCK_DESTINATION_DIR)\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 34, in task_func\n    os.makedirs(destination_directory)\n    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen os>\", line 218, in makedirs\n  File \"<frozen os>\", line 218, in makedirs\n  File \"<frozen os>\", line 228, in makedirs\nOSErr"
+      "error": "line 1426, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 157, in test_4\n    extracted_files = task_func(MOCK_URL, MOCK_DESTINATION_DIR)\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 34, in task_func\n    os.makedirs(destination_directory)\n    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen os>\", line 218, in makedirs\n  File \"<frozen os>\", line 218, in makedirs\n  File \"<frozen os>\", line 228, in makedirs\nOSErr"
     },
     "BigCodeBench/214": {
       "task_id": "BigCodeBench/214",
@@ -2228,7 +2228,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 'FFT of the signal' != 'FFT of the Signal'\n- FFT of the signal\n?            ^\n+ FFT of the Signal\n?            ^\n\n\n======================================================================\nFAIL: test_case_2 (__main__.TestCases.test_case_2)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 75, in test_case_2\n    self.assertEqual(ax.get_title"
+      "error": "^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 'FFT of the signal' != 'FFT of the Signal'\n- FFT of the signal\n?            ^\n+ FFT of the Signal\n?            ^\n\n\n======================================================================\nFAIL: test_case_2 (__main__.TestCases.test_case_2)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 75, in test_case_2\n    self.assertEqual(ax.get_title"
     },
     "BigCodeBench/273": {
       "task_id": "BigCodeBench/273",
@@ -2697,7 +2697,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "s/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 1426, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 73, in test_process_still_running\n    self.assertEqual(result, [None])\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^\nAssertionError: Lists differ: [<MagicMock name='Popen().returncode' id='4430330720'>] != [None]\n\nFirst differing element 0:\n<MagicMock name='Popen().returncode' id='4430330720'>\nNone\n\n- [<MagicMock n"
+      "error": "s/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 1426, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 73, in test_process_still_running\n    self.assertEqual(result, [None])\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^\nAssertionError: Lists differ: [<MagicMock name='Popen().returncode' id='4430330720'>] != [None]\n\nFirst differing element 0:\n<MagicMock name='Popen().returncode' id='4430330720'>\nNone\n\n- [<MagicMock n"
     },
     "BigCodeBench/326": {
       "task_id": "BigCodeBench/326",
@@ -2861,7 +2861,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_categorical_data (__main__.TestCases.test_categorical_data)\nTest with categorical data for count plot and strip plot\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 83, in test_categorical_data\n    self.assertTrue(len(fig.axes[1].collections) > 0)\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+      "error": "======================================================================\nFAIL: test_categorical_data (__main__.TestCases.test_categorical_data)\nTest with categorical data for count plot and strip plot\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 83, in test_categorical_data\n    self.assertTrue(len(fig.axes[1].collections) > 0)\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
     },
     "BigCodeBench/346": {
       "task_id": "BigCodeBench/346",
@@ -3060,7 +3060,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_value (__main__.TestCases.test_value)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 128, in test_value\n    self.assertEqual(mean_values, [20,30])\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Lists differ: [np.float64(20.0), np.float64(30.0), np.float64(10.0), np.float64(10.0)] != "
+      "error": "======================================================================\nFAIL: test_value (__main__.TestCases.test_value)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 128, in test_value\n    self.assertEqual(mean_values, [20,30])\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Lists differ: [np.float64(20.0), np.float64(30.0), np.float64(10.0), np.float64(10.0)] != "
     },
     "BigCodeBench/367": {
       "task_id": "BigCodeBench/367",
@@ -3306,7 +3306,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_case_1 (__main__.TestCases.test_case_1)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 60, in test_case_1\n    self.assertTrue(all(label in [line.get_label() for line in ax.lines] for label in ['sin', 'cos']))\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+      "error": "======================================================================\nFAIL: test_case_1 (__main__.TestCases.test_case_1)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 60, in test_case_1\n    self.assertTrue(all(label in [line.get_label() for line in ax.lines] for label in ['sin', 'cos']))\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
     },
     "BigCodeBench/401": {
       "task_id": "BigCodeBench/401",
@@ -3503,7 +3503,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "Traceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 90, in <module>\n    from keras.models import Sequential\nModuleNotFoundError: No module named 'keras'"
+      "error": "Traceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 90, in <module>\n    from keras.models import Sequential\nModuleNotFoundError: No module named 'keras'"
     },
     "BigCodeBench/418": {
       "task_id": "BigCodeBench/418",
@@ -3599,7 +3599,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "Traceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 1, in <module>\n    from tensorflow import keras\nModuleNotFoundError: No module named 'tensorflow'"
+      "error": "Traceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 1, in <module>\n    from tensorflow import keras\nModuleNotFoundError: No module named 'tensorflow'"
     },
     "BigCodeBench/424": {
       "task_id": "BigCodeBench/424",
@@ -3700,7 +3700,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "--------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 110, in test_normal_functionality\n    self.assertTrue(np.array_equal(original_img_list, expect_orignal), \"The arrays should be equal\")\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: False is not true : The arrays should be equal\n\n============================================="
+      "error": "--------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 110, in test_normal_functionality\n    self.assertTrue(np.array_equal(original_img_list, expect_orignal), \"The arrays should be equal\")\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: False is not true : The arrays should be equal\n\n============================================="
     },
     "BigCodeBench/443": {
       "task_id": "BigCodeBench/443",
@@ -3802,7 +3802,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "result == manual_results.labels_).all())\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: operands could not be broadcast together with shapes (4,) (12,) \n\n======================================================================\nERROR: test_case_4 (__main__.TestCases.test_case_4)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 105, in test_case_4\n    cluster_res"
+      "error": "result == manual_results.labels_).all())\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: operands could not be broadcast together with shapes (4,) (12,) \n\n======================================================================\nERROR: test_case_4 (__main__.TestCases.test_case_4)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 105, in test_case_4\n    cluster_res"
     },
     "BigCodeBench/445": {
       "task_id": "BigCodeBench/445",
@@ -4130,7 +4130,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py:43: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).\n  dates = [datetime.utcfromtimestamp(t / 1000.0) for t in timestamps]\n======================================================================\nFAIL: test_case_8 (__main__.TestCases.test_case_8)\n----------------------"
+      "error": "/home/USER/.cache/tokenomics-sj/ws/w0/prog.py:43: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).\n  dates = [datetime.utcfromtimestamp(t / 1000.0) for t in timestamps]\n======================================================================\nFAIL: test_case_8 (__main__.TestCases.test_case_8)\n----------------------"
     },
     "BigCodeBench/492": {
       "task_id": "BigCodeBench/492",
@@ -4272,7 +4272,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": " install xlrd.\n\n======================================================================\nERROR: test_file_content (__main__.TestCases.test_file_content)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/Documents/work/codes/.venv/lib/python3.13/site-packages/pandas/compat/_optional.py\", line 135, in import_optional_dependency\n    module = importlib.import_module(name)\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Fra"
+      "error": " install xlrd.\n\n======================================================================\nERROR: test_file_content (__main__.TestCases.test_file_content)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/Documents/work/codes/.venv/lib/python3.13/site-packages/pandas/compat/_optional.py\", line 135, in import_optional_dependency\n    module = importlib.import_module(name)\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Fra"
     },
     "BigCodeBench/502": {
       "task_id": "BigCodeBench/502",
@@ -4414,7 +4414,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py:78: FutureWarning: DataFrame.applymap has been deprecated. Use DataFrame.map instead.\n  all(df.applymap(lambda x: isinstance(x, (int, float)))),\n/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py:94: FutureWarning: DataFrame.applymap has been deprecated. Use DataFrame.map instead.\n  all(df.applymap(lambda x: isinstance(x, (int, float)))),\n/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py:110: FutureWarning: DataFrame.applymap has been deprecated. Use Da"
+      "error": "/home/USER/.cache/tokenomics-sj/ws/w0/prog.py:78: FutureWarning: DataFrame.applymap has been deprecated. Use DataFrame.map instead.\n  all(df.applymap(lambda x: isinstance(x, (int, float)))),\n/home/USER/.cache/tokenomics-sj/ws/w0/prog.py:94: FutureWarning: DataFrame.applymap has been deprecated. Use DataFrame.map instead.\n  all(df.applymap(lambda x: isinstance(x, (int, float)))),\n/home/USER/.cache/tokenomics-sj/ws/w0/prog.py:110: FutureWarning: DataFrame.applymap has been deprecated. Use Da"
     },
     "BigCodeBench/509": {
       "task_id": "BigCodeBench/509",
@@ -4679,7 +4679,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_case_2 (__main__.TestCases.test_case_2)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 91, in test_case_2\n    self.assertEqual(ax.get_ylabel(), \"Count\")\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 'Counts' != 'Count'\n- Counts\n?      -\n+ Count\n\n\n================================"
+      "error": "======================================================================\nFAIL: test_case_2 (__main__.TestCases.test_case_2)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 91, in test_case_2\n    self.assertEqual(ax.get_ylabel(), \"Count\")\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 'Counts' != 'Count'\n- Counts\n?      -\n+ Count\n\n\n================================"
     },
     "BigCodeBench/530": {
       "task_id": "BigCodeBench/530",
@@ -5070,7 +5070,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_case_5 (__main__.TestCases.test_case_5)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 66, in test_case_5\n    self.assertTrue(np.max(np.abs(np.diff(y_data))) <= 2.0 + 1)  # considering max amplitude of sine wave\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: np.F"
+      "error": "======================================================================\nFAIL: test_case_5 (__main__.TestCases.test_case_5)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 66, in test_case_5\n    self.assertTrue(np.max(np.abs(np.diff(y_data))) <= 2.0 + 1)  # considering max amplitude of sine wave\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: np.F"
     },
     "BigCodeBench/579": {
       "task_id": "BigCodeBench/579",
@@ -5355,7 +5355,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "s/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 46, in task_func\n    raise URLError(f\"Failed to fetch the URL: {e}\")\nurllib.error.URLError: <urlopen error Failed to fetch the URL: HTTP Error 403: Forbidden>\n\n======================================================================\nERROR: test_valid_url (__main__.TestCases.test_valid_url)\nTest with a valid URL.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/toke"
+      "error": "s/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 46, in task_func\n    raise URLError(f\"Failed to fetch the URL: {e}\")\nurllib.error.URLError: <urlopen error Failed to fetch the URL: HTTP Error 403: Forbidden>\n\n======================================================================\nERROR: test_valid_url (__main__.TestCases.test_valid_url)\nTest with a valid URL.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/toke"
     },
     "BigCodeBench/592": {
       "task_id": "BigCodeBench/592",
@@ -5721,7 +5721,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_case_1 (__main__.TestCases.test_case_1)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 52, in test_case_1\n    self.assertEqual(len(ax.patches), 0)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^\nAssertionError: 5 != 0\n\n======================================================================\nFAIL: test_ca"
+      "error": "======================================================================\nFAIL: test_case_1 (__main__.TestCases.test_case_1)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 52, in test_case_1\n    self.assertEqual(len(ax.patches), 0)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^\nAssertionError: 5 != 0\n\n======================================================================\nFAIL: test_ca"
     },
     "BigCodeBench/637": {
       "task_id": "BigCodeBench/637",
@@ -5822,7 +5822,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "----------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 64, in test_case_1\n    self.assertEqual(df.shape, (10, 5))\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^\nAssertionError: Tuples differ: (10, 6) != (10, 5)\n\nFirst differing element 1:\n6\n5\n\n- (10, 6)\n?      ^\n\n+ (10, 5)\n?      ^\n\n\n======================================================================\nFAIL: test_case_2 (__main__.TestCases.test_case_2)\n----------------------------------------"
+      "error": "----------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 64, in test_case_1\n    self.assertEqual(df.shape, (10, 5))\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^\nAssertionError: Tuples differ: (10, 6) != (10, 5)\n\nFirst differing element 1:\n6\n5\n\n- (10, 6)\n?      ^\n\n+ (10, 5)\n?      ^\n\n\n======================================================================\nFAIL: test_case_2 (__main__.TestCases.test_case_2)\n----------------------------------------"
     },
     "BigCodeBench/654": {
       "task_id": "BigCodeBench/654",
@@ -5922,7 +5922,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py:53: OptimizeWarning: Covariance of the parameters could not be estimated\n  popt, _ = optimize.curve_fit(exponential_decay, x_data, y_data, p0=(1, 0.1, 1), maxfev=10000)\n/Users/lexha/Documents/work/codes/.venv/lib/python3.13/site-packages/scipy/optimize/_minpack_py.py:498: RuntimeWarning: overflow encountered in matmul\n  cov_x = invR @ invR.T\n======================================================================\nFAIL: test_not_enough_points (__main_"
+      "error": "/home/USER/.cache/tokenomics-sj/ws/w0/prog.py:53: OptimizeWarning: Covariance of the parameters could not be estimated\n  popt, _ = optimize.curve_fit(exponential_decay, x_data, y_data, p0=(1, 0.1, 1), maxfev=10000)\n/home/USER/Documents/work/codes/.venv/lib/python3.13/site-packages/scipy/optimize/_minpack_py.py:498: RuntimeWarning: overflow encountered in matmul\n  cov_x = invR @ invR.T\n======================================================================\nFAIL: test_not_enough_points (__main_"
     },
     "BigCodeBench/655": {
       "task_id": "BigCodeBench/655",
@@ -6023,7 +6023,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py:10: SyntaxWarning: invalid escape sequence '\\W'\n  ALPHANUMERIC = re.compile('[\\W_]+')\n[nltk_data] Error loading stopwords: Security Violation\n[nltk_data]     [pathsec.urlopen]: refusing a proxied fetch of\n[nltk_data]     'https://raw.githubusercontent.com/nltk/nltk_data/gh-\n[nltk_data]     pages/index.xml'. A configured proxy performs the\n[nltk_data]     egress, so NLTK cannot pin the validated IP and SSRF\n[nltk_data]     protection cannot be enfor"
+      "error": "/home/USER/.cache/tokenomics-sj/ws/w0/prog.py:10: SyntaxWarning: invalid escape sequence '\\W'\n  ALPHANUMERIC = re.compile('[\\W_]+')\n[nltk_data] Error loading stopwords: Security Violation\n[nltk_data]     [pathsec.urlopen]: refusing a proxied fetch of\n[nltk_data]     'https://raw.githubusercontent.com/nltk/nltk_data/gh-\n[nltk_data]     pages/index.xml'. A configured proxy performs the\n[nltk_data]     egress, so NLTK cannot pin the validated IP and SSRF\n[nltk_data]     protection cannot be enfor"
     },
     "BigCodeBench/657": {
       "task_id": "BigCodeBench/657",
@@ -6228,7 +6228,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_data_appending (__main__.TestCases.test_data_appending)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 86, in test_data_appending\n    self.assertEqual(final_line_count, initial_line_count + 1)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 21 != 12\n\n=============="
+      "error": "======================================================================\nFAIL: test_data_appending (__main__.TestCases.test_data_appending)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 86, in test_data_appending\n    self.assertEqual(final_line_count, initial_line_count + 1)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 21 != 12\n\n=============="
     },
     "BigCodeBench/723": {
       "task_id": "BigCodeBench/723",
@@ -6327,7 +6327,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nERROR: test_correct_scraping (__main__.TestCases.test_correct_scraping)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 1426, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", lin"
+      "error": "======================================================================\nERROR: test_correct_scraping (__main__.TestCases.test_correct_scraping)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 1426, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", lin"
     },
     "BigCodeBench/752": {
       "task_id": "BigCodeBench/752",
@@ -6469,7 +6469,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nERROR: test_custom_parameters (__main__.TestCases.test_custom_parameters)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 98, in test_custom_parameters\n    self.assertTrue(all(start_year <= dob.year <= end_year for dob in df['Date of Birth']))\n                    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+      "error": "======================================================================\nERROR: test_custom_parameters (__main__.TestCases.test_custom_parameters)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 98, in test_custom_parameters\n    self.assertTrue(all(start_year <= dob.year <= end_year for dob in df['Date of Birth']))\n                    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
     },
     "BigCodeBench/763": {
       "task_id": "BigCodeBench/763",
@@ -6609,7 +6609,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_files_with_content (__main__.TestCases.test_files_with_content)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 63, in test_files_with_content\n    self.assertTrue(copied.startswith(self.target_dir))\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: False is not true\n\n======="
+      "error": "======================================================================\nFAIL: test_files_with_content (__main__.TestCases.test_files_with_content)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 63, in test_files_with_content\n    self.assertTrue(copied.startswith(self.target_dir))\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: False is not true\n\n======="
     },
     "BigCodeBench/771": {
       "task_id": "BigCodeBench/771",
@@ -6709,7 +6709,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_exception_handling (__main__.TestCases.test_exception_handling)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 103, in test_exception_handling\n    with self.assertRaises(IOError):\n         ~~~~~~~~~~~~~~~~~^^^^^^^^^\nAssertionError: OSError not raised\n\n============================================"
+      "error": "======================================================================\nFAIL: test_exception_handling (__main__.TestCases.test_exception_handling)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 103, in test_exception_handling\n    with self.assertRaises(IOError):\n         ~~~~~~~~~~~~~~~~~^^^^^^^^^\nAssertionError: OSError not raised\n\n============================================"
     },
     "BigCodeBench/777": {
       "task_id": "BigCodeBench/777",
@@ -6893,7 +6893,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_archiving_in_nonexistent_directory (__main__.TestCases.test_archiving_in_nonexistent_directory)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 98, in test_archiving_in_nonexistent_directory\n    self.assertFalse(os.path.isfile(archive_path))\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAsse"
+      "error": "======================================================================\nFAIL: test_archiving_in_nonexistent_directory (__main__.TestCases.test_archiving_in_nonexistent_directory)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 98, in test_archiving_in_nonexistent_directory\n    self.assertFalse(os.path.isfile(archive_path))\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAsse"
     },
     "BigCodeBench/800": {
       "task_id": "BigCodeBench/800",
@@ -7180,7 +7180,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py:46: UserWarning: Could not move file 'file1.txt': \n  warnings.warn(f\"Could not move file '{file_name}': {e}\")\n/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py:46: UserWarning: Could not move file 'file2.csv': \n  warnings.warn(f\"Could not move file '{file_name}': {e}\")\n/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py:46: UserWarning: Could not move file 'file3.xlsx': \n  warnings.warn(f\"Could not move file '{file_name}': {e}\")\n/Users/lexha/.cache/token"
+      "error": "/home/USER/.cache/tokenomics-sj/ws/w0/prog.py:46: UserWarning: Could not move file 'file1.txt': \n  warnings.warn(f\"Could not move file '{file_name}': {e}\")\n/home/USER/.cache/tokenomics-sj/ws/w0/prog.py:46: UserWarning: Could not move file 'file2.csv': \n  warnings.warn(f\"Could not move file '{file_name}': {e}\")\n/home/USER/.cache/tokenomics-sj/ws/w0/prog.py:46: UserWarning: Could not move file 'file3.xlsx': \n  warnings.warn(f\"Could not move file '{file_name}': {e}\")\n/home/USER/.cache/token"
     },
     "BigCodeBench/865": {
       "task_id": "BigCodeBench/865",
@@ -7280,7 +7280,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_case_3 (__main__.TestCases.test_case_3)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 105, in test_case_3\n    self.assertTrue(all(result['Normalized Count'].isna()))\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: False is not true\n\n=================================="
+      "error": "======================================================================\nFAIL: test_case_3 (__main__.TestCases.test_case_3)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 105, in test_case_3\n    self.assertTrue(all(result['Normalized Count'].isna()))\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: False is not true\n\n=================================="
     },
     "BigCodeBench/870": {
       "task_id": "BigCodeBench/870",
@@ -7586,7 +7586,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "KeyError: 'Z_score'\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 93, in test_case_4\n    self.assertEqual(outliers3['Z_score'].tolist(), [-0.46136484230149855, -0.42883270598536727, -0.39630056966923594, -0.36376843335310466, -0.3312362970369733, -0.29870416072084205, -0.2661720244047107, -0.2336398880885794, -0.2011077517724481, -0.16857561545631677, 3.1497022887890767])\n  "
+      "error": "KeyError: 'Z_score'\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 93, in test_case_4\n    self.assertEqual(outliers3['Z_score'].tolist(), [-0.46136484230149855, -0.42883270598536727, -0.39630056966923594, -0.36376843335310466, -0.3312362970369733, -0.29870416072084205, -0.2661720244047107, -0.2336398880885794, -0.2011077517724481, -0.16857561545631677, 3.1497022887890767])\n  "
     },
     "BigCodeBench/916": {
       "task_id": "BigCodeBench/916",
@@ -7895,7 +7895,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py:38: FutureWarning: 'M' is deprecated and will be removed in a future version, please use 'ME' instead.\n  dates = pd.date_range(start=start_date, periods=periods, freq=freq)\n/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py:38: FutureWarning: 'M' is deprecated and will be removed in a future version, please use 'ME' instead.\n  dates = pd.date_range(start=start_date, periods=periods, freq=freq)\n/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py:38: Future"
+      "error": "/home/USER/.cache/tokenomics-sj/ws/w0/prog.py:38: FutureWarning: 'M' is deprecated and will be removed in a future version, please use 'ME' instead.\n  dates = pd.date_range(start=start_date, periods=periods, freq=freq)\n/home/USER/.cache/tokenomics-sj/ws/w0/prog.py:38: FutureWarning: 'M' is deprecated and will be removed in a future version, please use 'ME' instead.\n  dates = pd.date_range(start=start_date, periods=periods, freq=freq)\n/home/USER/.cache/tokenomics-sj/ws/w0/prog.py:38: Future"
     },
     "BigCodeBench/952": {
       "task_id": "BigCodeBench/952",
@@ -8037,7 +8037,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_case_3 (__main__.TestCases.test_case_3)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 86, in test_case_3\n    self.assertTrue(\"Hello\" in xtick_labels)\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: False is not true\n\n================================================================="
+      "error": "======================================================================\nFAIL: test_case_3 (__main__.TestCases.test_case_3)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 86, in test_case_3\n    self.assertTrue(\"Hello\" in xtick_labels)\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: False is not true\n\n================================================================="
     },
     "BigCodeBench/963": {
       "task_id": "BigCodeBench/963",
@@ -8201,7 +8201,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_case_9 (__main__.TestCases.test_case_9)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 185, in test_case_9\n    self.assertEqual(num_converted, 1)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^\nAssertionError: 0 != 1\n\n----------------------------------------------------------------------\nRan 9 tests in 0"
+      "error": "======================================================================\nFAIL: test_case_9 (__main__.TestCases.test_case_9)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 185, in test_case_9\n    self.assertEqual(num_converted, 1)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^\nAssertionError: 0 != 1\n\n----------------------------------------------------------------------\nRan 9 tests in 0"
     },
     "BigCodeBench/969": {
       "task_id": "BigCodeBench/969",
@@ -8529,7 +8529,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py:59: DeprecationWarning: Python 3.14 will, by default, filter extracted tar archives and reject files or modify their metadata. Use the filter argument to control this behavior.\n  tar.extractall()\n======================================================================\nFAIL: test_valid_file (__main__.TestCases.test_valid_file)\nTest that a valid file is downloaded, its checksum is validated, and it is extracted.\n----------------------------------------"
+      "error": "/home/USER/.cache/tokenomics-sj/ws/w0/prog.py:59: DeprecationWarning: Python 3.14 will, by default, filter extracted tar archives and reject files or modify their metadata. Use the filter argument to control this behavior.\n  tar.extractall()\n======================================================================\nFAIL: test_valid_file (__main__.TestCases.test_valid_file)\nTest that a valid file is downloaded, its checksum is validated, and it is extracted.\n----------------------------------------"
     },
     "BigCodeBench/999": {
       "task_id": "BigCodeBench/999",
@@ -8833,7 +8833,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_corrupted_zip_file (__main__.TestCases.test_corrupted_zip_file)\nTest a corrupted zip file.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 1426, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/Users/lexha/.cache/tok"
+      "error": "======================================================================\nFAIL: test_corrupted_zip_file (__main__.TestCases.test_corrupted_zip_file)\nTest a corrupted zip file.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 1426, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/home/USER/.cache/tok"
     },
     "BigCodeBench/1013": {
       "task_id": "BigCodeBench/1013",
@@ -9053,7 +9053,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "Traceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 3, in <module>\n    import pytesseract\nModuleNotFoundError: No module named 'pytesseract'"
+      "error": "Traceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 3, in <module>\n    import pytesseract\nModuleNotFoundError: No module named 'pytesseract'"
     },
     "BigCodeBench/1020": {
       "task_id": "BigCodeBench/1020",
@@ -9195,7 +9195,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_no_future_dates (__main__.TestCases.test_no_future_dates)\nTest case where all dates in the CSV file are in the past.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 130, in test_no_future_dates\n    self.assertTrue(df.empty)\n    ~~~~~~~~~~~~~~~^^^^^^^^^^\nAssertionError: False is not true\n\n========"
+      "error": "======================================================================\nFAIL: test_no_future_dates (__main__.TestCases.test_no_future_dates)\nTest case where all dates in the CSV file are in the past.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 130, in test_no_future_dates\n    self.assertTrue(df.empty)\n    ~~~~~~~~~~~~~~~^^^^^^^^^^\nAssertionError: False is not true\n\n========"
     },
     "BigCodeBench/1039": {
       "task_id": "BigCodeBench/1039",
@@ -9376,7 +9376,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "socket_closes_after_operation)\nTest if the socket is properly closed after the operation.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 1426, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 142, in test_socket_closes_after_operation\n    task"
+      "error": "socket_closes_after_operation)\nTest if the socket is properly closed after the operation.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 1426, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 142, in test_socket_closes_after_operation\n    task"
     },
     "BigCodeBench/1053": {
       "task_id": "BigCodeBench/1053",
@@ -9560,7 +9560,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_default_input (__main__.TestCases.test_default_input)\nTest with default inputs for animals and foods.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 69, in test_default_input\n    self.assertEqual(\n    ~~~~~~~~~~~~~~~~^\n        result.shape,\n        ^^^^^^^^^^^^^\n        (10, 7),\n        ^^^^^^^^"
+      "error": "======================================================================\nFAIL: test_default_input (__main__.TestCases.test_default_input)\nTest with default inputs for animals and foods.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 69, in test_default_input\n    self.assertEqual(\n    ~~~~~~~~~~~~~~~~^\n        result.shape,\n        ^^^^^^^^^^^^^\n        (10, 7),\n        ^^^^^^^^"
     },
     "BigCodeBench/1077": {
       "task_id": "BigCodeBench/1077",
@@ -10429,7 +10429,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nERROR: test_heatmap_values (__main__.TestCases.test_heatmap_values)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 73, in test_heatmap_values\n    self.assertAlmostEqual(heatmap_data.tolist(), expect, \"DataFrame contents should match the expected output\")\n    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^"
+      "error": "======================================================================\nERROR: test_heatmap_values (__main__.TestCases.test_heatmap_values)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 73, in test_heatmap_values\n    self.assertAlmostEqual(heatmap_data.tolist(), expect, \"DataFrame contents should match the expected output\")\n    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^"
     },
     "BigCodeBench/108": {
       "task_id": "BigCodeBench/108",
@@ -11118,7 +11118,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_default_parameters (__main__.TestCases.test_default_parameters)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 59, in test_default_parameters\n    self.assertEqual(df_list, expect)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\nAssertionError: Lists differ: ['New[96 chars]5466588)', 'Beijing,POINT (-123.8"
+      "error": "======================================================================\nFAIL: test_default_parameters (__main__.TestCases.test_default_parameters)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 59, in test_default_parameters\n    self.assertEqual(df_list, expect)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\nAssertionError: Lists differ: ['New[96 chars]5466588)', 'Beijing,POINT (-123.8"
     },
     "BigCodeBench/199": {
       "task_id": "BigCodeBench/199",
@@ -12226,7 +12226,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_categorical_data (__main__.TestCases.test_categorical_data)\nTest with categorical data for count plot and strip plot\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 87, in test_categorical_data\n    self.assertTrue(len(fig.axes[1].collections) > 0)\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+      "error": "======================================================================\nFAIL: test_categorical_data (__main__.TestCases.test_categorical_data)\nTest with categorical data for count plot and strip plot\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 87, in test_categorical_data\n    self.assertTrue(len(fig.axes[1].collections) > 0)\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
     },
     "BigCodeBench/346": {
       "task_id": "BigCodeBench/346",
@@ -12726,7 +12726,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "Traceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 3, in <module>\n    from keras.models import Sequential\nModuleNotFoundError: No module named 'keras'"
+      "error": "Traceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 3, in <module>\n    from keras.models import Sequential\nModuleNotFoundError: No module named 'keras'"
     },
     "BigCodeBench/418": {
       "task_id": "BigCodeBench/418",
@@ -12819,7 +12819,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 3\n    The error comes from the *test harness* line `from tensorflow import keras` (prog.py line 149, after the solution ends) \u2014 the tests import `keras` from `tensorflow` directly. Since tensorflow isn't installed, the fallback must also register fake `tensorflow`/`keras` modules in `sys.modules` so that `from tensorflow import keras` works, and `keras.models.Sequential` must be a real class usable with `isinstance`.\n                  "
+      "error": "File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 3\n    The error comes from the *test harness* line `from tensorflow import keras` (prog.py line 149, after the solution ends) \u2014 the tests import `keras` from `tensorflow` directly. Since tensorflow isn't installed, the fallback must also register fake `tensorflow`/`keras` modules in `sys.modules` so that `from tensorflow import keras` works, and `keras.models.Sequential` must be a real class usable with `isinstance`.\n                  "
     },
     "BigCodeBench/424": {
       "task_id": "BigCodeBench/424",
@@ -12920,7 +12920,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_normal_functionality (__main__.TestCases.test_normal_functionality)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 90, in test_normal_functionality\n    self.assertTrue(np.array_equal(original_img_list, expect_orignal), \"The arrays should be equal\")\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+      "error": "======================================================================\nFAIL: test_normal_functionality (__main__.TestCases.test_normal_functionality)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 90, in test_normal_functionality\n    self.assertTrue(np.array_equal(original_img_list, expect_orignal), \"The arrays should be equal\")\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
     },
     "BigCodeBench/443": {
       "task_id": "BigCodeBench/443",
@@ -14148,7 +14148,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_histogram_pdf_overlay (__main__.TestCases.test_histogram_pdf_overlay)\nVerify histogram and PDF line are present in the plot and the number of bins is correct.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 94, in test_histogram_pdf_overlay\n    self.assertEqual(len(ax.patches), expected_bins, \"Nu"
+      "error": "======================================================================\nFAIL: test_histogram_pdf_overlay (__main__.TestCases.test_histogram_pdf_overlay)\nVerify histogram and PDF line are present in the plot and the number of bins is correct.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 94, in test_histogram_pdf_overlay\n    self.assertEqual(len(ax.patches), expected_bins, \"Nu"
     },
     "BigCodeBench/583": {
       "task_id": "BigCodeBench/583",
@@ -14615,7 +14615,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_case_1 (__main__.TestCases.test_case_1)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 56, in test_case_1\n    self.assertEqual(len(ax.patches), 0)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^\nAssertionError: 5 != 0\n\n======================================================================\nFAIL: test_ca"
+      "error": "======================================================================\nFAIL: test_case_1 (__main__.TestCases.test_case_1)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 56, in test_case_1\n    self.assertEqual(len(ax.patches), 0)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^\nAssertionError: 5 != 0\n\n======================================================================\nFAIL: test_ca"
     },
     "BigCodeBench/637": {
       "task_id": "BigCodeBench/637",
@@ -14841,7 +14841,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py:10: SyntaxWarning: invalid escape sequence '\\W'\n  ALPHANUMERIC = re.compile('[\\W_]+')\n[nltk_data] Error loading stopwords: Security Violation\n[nltk_data]     [pathsec.urlopen]: refusing a proxied fetch of\n[nltk_data]     'https://raw.githubusercontent.com/nltk/nltk_data/gh-\n[nltk_data]     pages/index.xml'. A configured proxy performs the\n[nltk_data]     egress, so NLTK cannot pin the validated IP and SSRF\n[nltk_data]     protection cannot be enfor"
+      "error": "/home/USER/.cache/tokenomics-sj/ws/w0/prog.py:10: SyntaxWarning: invalid escape sequence '\\W'\n  ALPHANUMERIC = re.compile('[\\W_]+')\n[nltk_data] Error loading stopwords: Security Violation\n[nltk_data]     [pathsec.urlopen]: refusing a proxied fetch of\n[nltk_data]     'https://raw.githubusercontent.com/nltk/nltk_data/gh-\n[nltk_data]     pages/index.xml'. A configured proxy performs the\n[nltk_data]     egress, so NLTK cannot pin the validated IP and SSRF\n[nltk_data]     protection cannot be enfor"
     },
     "BigCodeBench/657": {
       "task_id": "BigCodeBench/657",
@@ -15109,7 +15109,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_overwrite_existing_csv (__main__.TestCases.test_overwrite_existing_csv)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 1426, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/pr"
+      "error": "======================================================================\nFAIL: test_overwrite_existing_csv (__main__.TestCases.test_overwrite_existing_csv)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 1426, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/pr"
     },
     "BigCodeBench/752": {
       "task_id": "BigCodeBench/752",
@@ -16383,7 +16383,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py:19: FutureWarning: 'M' is deprecated and will be removed in a future version, please use 'ME' instead.\n  sales_dates = pd.date_range(start=start_date, freq=freq, periods=periods)\n/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py:33: FutureWarning: 'M' is deprecated and will be removed in a future version, please use 'ME' instead.\n  future_dates = pd.date_range(start=sales_dates[-1], freq=freq, periods=periods + 1)[1:]\n/Users/lexha/.cache/tokenomics-s"
+      "error": "/home/USER/.cache/tokenomics-sj/ws/w0/prog.py:19: FutureWarning: 'M' is deprecated and will be removed in a future version, please use 'ME' instead.\n  sales_dates = pd.date_range(start=start_date, freq=freq, periods=periods)\n/home/USER/.cache/tokenomics-sj/ws/w0/prog.py:33: FutureWarning: 'M' is deprecated and will be removed in a future version, please use 'ME' instead.\n  future_dates = pd.date_range(start=sales_dates[-1], freq=freq, periods=periods + 1)[1:]\n/home/USER/.cache/tokenomics-s"
     },
     "BigCodeBench/952": {
       "task_id": "BigCodeBench/952",
@@ -16670,7 +16670,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_case_9 (__main__.TestCases.test_case_9)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 182, in test_case_9\n    self.assertEqual(num_converted, 1)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^\nAssertionError: 0 != 1\n\n----------------------------------------------------------------------\nRan 9 tests in 0"
+      "error": "======================================================================\nFAIL: test_case_9 (__main__.TestCases.test_case_9)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 182, in test_case_9\n    self.assertEqual(num_converted, 1)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^\nAssertionError: 0 != 1\n\n----------------------------------------------------------------------\nRan 9 tests in 0"
     },
     "BigCodeBench/969": {
       "task_id": "BigCodeBench/969",
@@ -16812,7 +16812,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_case_6 (__main__.TestCases.test_case_6)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 125, in test_case_6\n    self.assertTrue(creation_datetime <= modification_datetime)\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: False is not true\n\n--------------------------"
+      "error": "======================================================================\nFAIL: test_case_6 (__main__.TestCases.test_case_6)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 125, in test_case_6\n    self.assertTrue(creation_datetime <= modification_datetime)\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: False is not true\n\n--------------------------"
     },
     "BigCodeBench/985": {
       "task_id": "BigCodeBench/985",
@@ -16912,7 +16912,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_case_2 (__main__.TestCases.test_case_2)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 104, in test_case_2\n    with self.assertRaises(ValueError):\n         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^\nAssertionError: ValueError not raised\n\n======================================================================\n"
+      "error": "======================================================================\nFAIL: test_case_2 (__main__.TestCases.test_case_2)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 104, in test_case_2\n    with self.assertRaises(ValueError):\n         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^\nAssertionError: ValueError not raised\n\n======================================================================\n"
     },
     "BigCodeBench/988": {
       "task_id": "BigCodeBench/988",
@@ -18517,7 +18517,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "ackages/flask/app.py\", line 917, in full_dispatch_request\n    rv = self.dispatch_request()\n  File \"/Users/lexha/Documents/work/codes/.venv/lib/python3.13/site-packages/flask/app.py\", line 902, in dispatch_request\n    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^\n  File \"/Users/lexha/Documents/work/codes/.venv/lib/python3.13/site-packages/flask_login/utils.py\", li"
+      "error": "ackages/flask/app.py\", line 917, in full_dispatch_request\n    rv = self.dispatch_request()\n  File \"/home/USER/Documents/work/codes/.venv/lib/python3.13/site-packages/flask/app.py\", line 902, in dispatch_request\n    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^\n  File \"/home/USER/Documents/work/codes/.venv/lib/python3.13/site-packages/flask_login/utils.py\", li"
     },
     "BigCodeBench/89": {
       "task_id": "BigCodeBench/89",
@@ -18700,7 +18700,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_values (__main__.TestCases.test_values)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 92, in test_values\n    self.assertAlmostEqual(actual[0], expected[0], places=7, msg=\"DataFrame contents should match the expected output\")\n    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+      "error": "======================================================================\nFAIL: test_values (__main__.TestCases.test_values)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 92, in test_values\n    self.assertAlmostEqual(actual[0], expected[0], places=7, msg=\"DataFrame contents should match the expected output\")\n    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
     },
     "BigCodeBench/99": {
       "task_id": "BigCodeBench/99",
@@ -18908,7 +18908,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nERROR: test_heatmap_values (__main__.TestCases.test_heatmap_values)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 82, in test_heatmap_values\n    self.assertAlmostEqual(heatmap_data.tolist(), expect, \"DataFrame contents should match the expected output\")\n    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^"
+      "error": "======================================================================\nERROR: test_heatmap_values (__main__.TestCases.test_heatmap_values)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 82, in test_heatmap_values\n    self.assertAlmostEqual(heatmap_data.tolist(), expect, \"DataFrame contents should match the expected output\")\n    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^"
     },
     "BigCodeBench/108": {
       "task_id": "BigCodeBench/108",
@@ -19007,7 +19007,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 113\n    \"\"\"stderr proxy that pins the runner's elapsed-time digits.\"\"\"\n                                        ^\nSyntaxError: unterminated string literal (detected at line 113)"
+      "error": "File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 113\n    \"\"\"stderr proxy that pins the runner's elapsed-time digits.\"\"\"\n                                        ^\nSyntaxError: unterminated string literal (detected at line 113)"
     },
     "BigCodeBench/120": {
       "task_id": "BigCodeBench/120",
@@ -19212,7 +19212,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_output_types (__main__.TestCases.test_output_types)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 81, in test_output_types\n    self.assertEqual(bar_heights, expect, \"DataFrame contents should match the expected output\")\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+      "error": "======================================================================\nFAIL: test_output_types (__main__.TestCases.test_output_types)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 81, in test_output_types\n    self.assertEqual(bar_heights, expect, \"DataFrame contents should match the expected output\")\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
     },
     "BigCodeBench/129": {
       "task_id": "BigCodeBench/129",
@@ -19686,7 +19686,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_default_parameters (__main__.TestCases.test_default_parameters)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 58, in test_default_parameters\n    self.assertEqual(df_list, expect)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\nAssertionError: Lists differ: ['New[26 chars]9495 -61.92098633948353)', 'Londo"
+      "error": "======================================================================\nFAIL: test_default_parameters (__main__.TestCases.test_default_parameters)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 58, in test_default_parameters\n    self.assertEqual(df_list, expect)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\nAssertionError: Lists differ: ['New[26 chars]9495 -61.92098633948353)', 'Londo"
     },
     "BigCodeBench/199": {
       "task_id": "BigCodeBench/199",
@@ -20016,7 +20016,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "ck.py\", line 1426, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 102, in test_empty_list_input\n    task_func([], 2, 5, 'audio.wav')\n    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 69, in task_func\n    raise FileNotFoundError(f\"The audio file {audio_file} does not exist.\")\nFileNotFoundError: The audio file audio.wav does not exist.\n\n============================================="
+      "error": "ck.py\", line 1426, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 102, in test_empty_list_input\n    task_func([], 2, 5, 'audio.wav')\n    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 69, in task_func\n    raise FileNotFoundError(f\"The audio file {audio_file} does not exist.\")\nFileNotFoundError: The audio file audio.wav does not exist.\n\n============================================="
     },
     "BigCodeBench/239": {
       "task_id": "BigCodeBench/239",
@@ -20243,7 +20243,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 'FFT of the signal' != 'FFT of the Signal'\n- FFT of the signal\n?            ^\n+ FFT of the Signal\n?            ^\n\n\n======================================================================\nFAIL: test_case_2 (__main__.TestCases.test_case_2)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 71, in test_case_2\n    self.assertEqual(ax.get_title"
+      "error": "^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 'FFT of the signal' != 'FFT of the Signal'\n- FFT of the signal\n?            ^\n+ FFT of the Signal\n?            ^\n\n\n======================================================================\nFAIL: test_case_2 (__main__.TestCases.test_case_2)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 71, in test_case_2\n    self.assertEqual(ax.get_title"
     },
     "BigCodeBench/273": {
       "task_id": "BigCodeBench/273",
@@ -20428,7 +20428,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "_version'. Did you mean: 'server_version'?\n\n======================================================================\nERROR: test_missing_key_in_json_data (__main__.TestCases.test_missing_key_in_json_data)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 57, in do_POST\n    raise ValueError(\"Missing required fields in JSON data\")\nValueError: Missing required fields in JSON data\n\nDu"
+      "error": "_version'. Did you mean: 'server_version'?\n\n======================================================================\nERROR: test_missing_key_in_json_data (__main__.TestCases.test_missing_key_in_json_data)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 57, in do_POST\n    raise ValueError(\"Missing required fields in JSON data\")\nValueError: Missing required fields in JSON data\n\nDu"
     },
     "BigCodeBench/287": {
       "task_id": "BigCodeBench/287",
@@ -20917,7 +20917,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_categorical_data (__main__.TestCases.test_categorical_data)\nTest with categorical data for count plot and strip plot\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 90, in test_categorical_data\n    self.assertTrue(len(fig.axes[1].collections) > 0)\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+      "error": "======================================================================\nFAIL: test_categorical_data (__main__.TestCases.test_categorical_data)\nTest with categorical data for count plot and strip plot\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 90, in test_categorical_data\n    self.assertTrue(len(fig.axes[1].collections) > 0)\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
     },
     "BigCodeBench/346": {
       "task_id": "BigCodeBench/346",
@@ -21116,7 +21116,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_correct_mean_and_std_values (__main__.TestCases.test_correct_mean_and_std_values)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 100, in test_correct_mean_and_std_values\n    self.assertEqual(result, expected)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^\nAssertionError: {'mean': A    20.0\nB    30.0\ndty"
+      "error": "======================================================================\nFAIL: test_correct_mean_and_std_values (__main__.TestCases.test_correct_mean_and_std_values)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 100, in test_correct_mean_and_std_values\n    self.assertEqual(result, expected)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^\nAssertionError: {'mean': A    20.0\nB    30.0\ndty"
     },
     "BigCodeBench/367": {
       "task_id": "BigCodeBench/367",
@@ -21381,7 +21381,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_case_1 (__main__.TestCases.test_case_1)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 56, in test_case_1\n    self.assertTrue(all(label in [line.get_label() for line in ax.lines] for label in ['sin', 'cos']))\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+      "error": "======================================================================\nFAIL: test_case_1 (__main__.TestCases.test_case_1)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 56, in test_case_1\n    self.assertTrue(all(label in [line.get_label() for line in ax.lines] for label in ['sin', 'cos']))\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
     },
     "BigCodeBench/401": {
       "task_id": "BigCodeBench/401",
@@ -21578,7 +21578,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "Traceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 79, in <module>\n    from keras.models import Sequential\nModuleNotFoundError: No module named 'keras'"
+      "error": "Traceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 79, in <module>\n    from keras.models import Sequential\nModuleNotFoundError: No module named 'keras'"
     },
     "BigCodeBench/418": {
       "task_id": "BigCodeBench/418",
@@ -21671,7 +21671,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "Traceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 1, in <module>\n    from tensorflow import keras\nModuleNotFoundError: No module named 'tensorflow'"
+      "error": "Traceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 1, in <module>\n    from tensorflow import keras\nModuleNotFoundError: No module named 'tensorflow'"
     },
     "BigCodeBench/424": {
       "task_id": "BigCodeBench/424",
@@ -21772,7 +21772,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_normal_functionality (__main__.TestCases.test_normal_functionality)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 112, in test_normal_functionality\n    self.assertTrue(np.array_equal(original_img_list, expect_orignal), \"The arrays should be equal\")\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+      "error": "======================================================================\nFAIL: test_normal_functionality (__main__.TestCases.test_normal_functionality)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 112, in test_normal_functionality\n    self.assertTrue(np.array_equal(original_img_list, expect_orignal), \"The arrays should be equal\")\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^"
     },
     "BigCodeBench/443": {
       "task_id": "BigCodeBench/443",
@@ -21872,7 +21872,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "/Users/lexha/Documents/work/codes/.venv/lib/python3.13/site-packages/sklearn/base.py:1403: ConvergenceWarning: Number of distinct clusters (2) found smaller than n_clusters (3). Possibly due to duplicate points in X.\n  return fit_method(estimator, *args, **kwargs)\n======================================================================\nERROR: test_case_2 (__main__.TestCases.test_case_2)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File"
+      "error": "/home/USER/Documents/work/codes/.venv/lib/python3.13/site-packages/sklearn/base.py:1403: ConvergenceWarning: Number of distinct clusters (2) found smaller than n_clusters (3). Possibly due to duplicate points in X.\n  return fit_method(estimator, *args, **kwargs)\n======================================================================\nERROR: test_case_2 (__main__.TestCases.test_case_2)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File"
     },
     "BigCodeBench/445": {
       "task_id": "BigCodeBench/445",
@@ -22200,7 +22200,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_case_8 (__main__.TestCases.test_case_8)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 134, in test_case_8\n    self.assertTrue(\n    ~~~~~~~~~~~~~~~^\n        any([\"1970\" in label.get_text() for label in ax.get_xticklabels()])\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+      "error": "======================================================================\nFAIL: test_case_8 (__main__.TestCases.test_case_8)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 134, in test_case_8\n    self.assertTrue(\n    ~~~~~~~~~~~~~~~^\n        any([\"1970\" in label.get_text() for label in ax.get_xticklabels()])\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
     },
     "BigCodeBench/492": {
       "task_id": "BigCodeBench/492",
@@ -22361,7 +22361,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": " install xlrd.\n\n======================================================================\nERROR: test_file_content (__main__.TestCases.test_file_content)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/Documents/work/codes/.venv/lib/python3.13/site-packages/pandas/compat/_optional.py\", line 135, in import_optional_dependency\n    module = importlib.import_module(name)\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Fra"
+      "error": " install xlrd.\n\n======================================================================\nERROR: test_file_content (__main__.TestCases.test_file_content)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/Documents/work/codes/.venv/lib/python3.13/site-packages/pandas/compat/_optional.py\", line 135, in import_optional_dependency\n    module = importlib.import_module(name)\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Fra"
     },
     "BigCodeBench/502": {
       "task_id": "BigCodeBench/502",
@@ -23222,7 +23222,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_case_5 (__main__.TestCases.test_case_5)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 67, in test_case_5\n    self.assertTrue(np.max(np.abs(np.diff(y_data))) <= 2.0 + 1)  # considering max amplitude of sine wave\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: np.F"
+      "error": "======================================================================\nFAIL: test_case_5 (__main__.TestCases.test_case_5)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 67, in test_case_5\n    self.assertTrue(np.max(np.abs(np.diff(y_data))) <= 2.0 + 1)  # considering max amplitude of sine wave\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: np.F"
     },
     "BigCodeBench/579": {
       "task_id": "BigCodeBench/579",
@@ -23509,7 +23509,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nERROR: test_dynamic_comparison (__main__.TestCases.test_dynamic_comparison)\nCompare task_func function output with dynamically fetched content.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 117, in test_dynamic_comparison\n    expected_df = self.fetch_and_parse_url(test_url)\n  File \"/Users/lexha/.cache/tok"
+      "error": "======================================================================\nERROR: test_dynamic_comparison (__main__.TestCases.test_dynamic_comparison)\nCompare task_func function output with dynamically fetched content.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 117, in test_dynamic_comparison\n    expected_df = self.fetch_and_parse_url(test_url)\n  File \"/home/USER/.cache/tok"
     },
     "BigCodeBench/592": {
       "task_id": "BigCodeBench/592",
@@ -23649,7 +23649,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "====\nFAIL: test_dataframe_content (__main__.TestCases.test_dataframe_content)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 1426, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 107, in test_dataframe_content\n    mock_plt_show.assert_called("
+      "error": "====\nFAIL: test_dataframe_content (__main__.TestCases.test_dataframe_content)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 1426, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 107, in test_dataframe_content\n    mock_plt_show.assert_called("
     },
     "BigCodeBench/594": {
       "task_id": "BigCodeBench/594",
@@ -23748,7 +23748,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_backup_file_creation (__main__.TestCases.test_backup_file_creation)\nTest that the CSV file is correctly copied to the backup directory.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 120, in test_backup_file_creation\n    mock_copy.assert_called_once_with(FILE_PATH, BACKUP_PATH)\n    ~~~~~~~~~~~~~"
+      "error": "======================================================================\nFAIL: test_backup_file_creation (__main__.TestCases.test_backup_file_creation)\nTest that the CSV file is correctly copied to the backup directory.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 120, in test_backup_file_creation\n    mock_copy.assert_called_once_with(FILE_PATH, BACKUP_PATH)\n    ~~~~~~~~~~~~~"
     },
     "BigCodeBench/618": {
       "task_id": "BigCodeBench/618",
@@ -23888,7 +23888,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_case_1 (__main__.TestCases.test_case_1)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 53, in test_case_1\n    self.assertEqual(len(ax.patches), 0)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^\nAssertionError: 5 != 0\n\n======================================================================\nFAIL: test_ca"
+      "error": "======================================================================\nFAIL: test_case_1 (__main__.TestCases.test_case_1)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 53, in test_case_1\n    self.assertEqual(len(ax.patches), 0)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^\nAssertionError: 5 != 0\n\n======================================================================\nFAIL: test_ca"
     },
     "BigCodeBench/637": {
       "task_id": "BigCodeBench/637",
@@ -24094,7 +24094,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py:10: SyntaxWarning: invalid escape sequence '\\W'\n  ALPHANUMERIC = re.compile('[\\W_]+')\n[nltk_data] Error loading stopwords: Security Violation\n[nltk_data]     [pathsec.urlopen]: refusing a proxied fetch of\n[nltk_data]     'https://raw.githubusercontent.com/nltk/nltk_data/gh-\n[nltk_data]     pages/index.xml'. A configured proxy performs the\n[nltk_data]     egress, so NLTK cannot pin the validated IP and SSRF\n[nltk_data]     protection cannot be enfor"
+      "error": "/home/USER/.cache/tokenomics-sj/ws/w0/prog.py:10: SyntaxWarning: invalid escape sequence '\\W'\n  ALPHANUMERIC = re.compile('[\\W_]+')\n[nltk_data] Error loading stopwords: Security Violation\n[nltk_data]     [pathsec.urlopen]: refusing a proxied fetch of\n[nltk_data]     'https://raw.githubusercontent.com/nltk/nltk_data/gh-\n[nltk_data]     pages/index.xml'. A configured proxy performs the\n[nltk_data]     egress, so NLTK cannot pin the validated IP and SSRF\n[nltk_data]     protection cannot be enfor"
     },
     "BigCodeBench/657": {
       "task_id": "BigCodeBench/657",
@@ -24299,7 +24299,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "============================================================\nERROR: test_file_existence (__main__.TestCases.test_file_existence)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 58, in tearDown\n    os.remove(self.file_path)\n    ~~~~~~~~~^^^^^^^^^^^^^^^^\nFileNotFoundError: [Errno 2] No such file or directory: 'task_func_data/Output.txt'\n\n========================================="
+      "error": "============================================================\nERROR: test_file_existence (__main__.TestCases.test_file_existence)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 58, in tearDown\n    os.remove(self.file_path)\n    ~~~~~~~~~^^^^^^^^^^^^^^^^\nFileNotFoundError: [Errno 2] No such file or directory: 'task_func_data/Output.txt'\n\n========================================="
     },
     "BigCodeBench/723": {
       "task_id": "BigCodeBench/723",
@@ -24398,7 +24398,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_overwrite_existing_csv (__main__.TestCases.test_overwrite_existing_csv)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 1426, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/pr"
+      "error": "======================================================================\nFAIL: test_overwrite_existing_csv (__main__.TestCases.test_overwrite_existing_csv)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 1426, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/pr"
     },
     "BigCodeBench/752": {
       "task_id": "BigCodeBench/752",
@@ -24684,7 +24684,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "test_data'\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 93, in test_mixed_file_types\n    result_files = task_func(self.directory)\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 29, in task_func\n    dir_path.mkdir(parents=True, exist_ok=True)\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.fr"
+      "error": "test_data'\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 93, in test_mixed_file_types\n    result_files = task_func(self.directory)\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 29, in task_func\n    dir_path.mkdir(parents=True, exist_ok=True)\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.fr"
     },
     "BigCodeBench/777": {
       "task_id": "BigCodeBench/777",
@@ -24870,7 +24870,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_archiving_in_nonexistent_directory (__main__.TestCases.test_archiving_in_nonexistent_directory)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 93, in test_archiving_in_nonexistent_directory\n    self.assertFalse(os.path.isfile(archive_path))\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAsse"
+      "error": "======================================================================\nFAIL: test_archiving_in_nonexistent_directory (__main__.TestCases.test_archiving_in_nonexistent_directory)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 93, in test_archiving_in_nonexistent_directory\n    self.assertFalse(os.path.isfile(archive_path))\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAsse"
     },
     "BigCodeBench/800": {
       "task_id": "BigCodeBench/800",
@@ -25157,7 +25157,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py:58: UserWarning: Could not transfer /var/folders/4m/5k_x4jdj2ps4znfd_dnw5jbh01clx4/T/tmpt8583ebf/source_dir/file1.txt (file1.txt): \n  warnings.warn(f\"Could not transfer {file_path} ({file_name}): {e}\")\n/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py:58: UserWarning: Could not transfer /var/folders/4m/5k_x4jdj2ps4znfd_dnw5jbh01clx4/T/tmpt8583ebf/source_dir/file2.csv (file2.csv): \n  warnings.warn(f\"Could not transfer {file_path} ({file_name}): {e}\")\n"
+      "error": "/home/USER/.cache/tokenomics-sj/ws/w0/prog.py:58: UserWarning: Could not transfer /var/folders/4m/5k_x4jdj2ps4znfd_dnw5jbh01clx4/T/tmpt8583ebf/source_dir/file1.txt (file1.txt): \n  warnings.warn(f\"Could not transfer {file_path} ({file_name}): {e}\")\n/home/USER/.cache/tokenomics-sj/ws/w0/prog.py:58: UserWarning: Could not transfer /var/folders/4m/5k_x4jdj2ps4znfd_dnw5jbh01clx4/T/tmpt8583ebf/source_dir/file2.csv (file2.csv): \n  warnings.warn(f\"Could not transfer {file_path} ({file_name}): {e}\")\n"
     },
     "BigCodeBench/865": {
       "task_id": "BigCodeBench/865",
@@ -25647,7 +25647,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 148\n    \"\"\"stderr proxy that pins the runner's elapsed-time digits.\"\"\"\n                                        ^\nSyntaxError: unterminated string literal (detected at line 148)"
+      "error": "File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 148\n    \"\"\"stderr proxy that pins the runner's elapsed-time digits.\"\"\"\n                                        ^\nSyntaxError: unterminated string literal (detected at line 148)"
     },
     "BigCodeBench/928": {
       "task_id": "BigCodeBench/928",
@@ -25866,7 +25866,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 59\n    \"\"\"stderr proxy that pins the runner's elapsed-time digits.\"\"\"\n                                        ^\nSyntaxError: unterminated string literal (detected at line 59)"
+      "error": "File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 59\n    \"\"\"stderr proxy that pins the runner's elapsed-time digits.\"\"\"\n                                        ^\nSyntaxError: unterminated string literal (detected at line 59)"
     },
     "BigCodeBench/952": {
       "task_id": "BigCodeBench/952",
@@ -26030,7 +26030,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_case_3 (__main__.TestCases.test_case_3)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 79, in test_case_3\n    self.assertTrue(\"Hello\" in xtick_labels)\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: False is not true\n\n================================================================="
+      "error": "======================================================================\nFAIL: test_case_3 (__main__.TestCases.test_case_3)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 79, in test_case_3\n    self.assertTrue(\"Hello\" in xtick_labels)\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: False is not true\n\n================================================================="
     },
     "BigCodeBench/963": {
       "task_id": "BigCodeBench/963",
@@ -26192,7 +26192,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 1\n    ```python\n    ^\nSyntaxError: invalid syntax"
+      "error": "File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 1\n    ```python\n    ^\nSyntaxError: invalid syntax"
     },
     "BigCodeBench/969": {
       "task_id": "BigCodeBench/969",
@@ -26912,7 +26912,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py:51: FutureWarning: Passing literal html to 'read_html' is deprecated and will be removed in a future version. To read from a literal string, wrap it in a 'StringIO' object.\n  tables = pd.read_html(content)\n======================================================================\nFAIL: test_database_error (__main__.TestCases.test_database_error)\nTest function behavior when encountering a database error.\n-------------------------------------------------"
+      "error": "/home/USER/.cache/tokenomics-sj/ws/w0/prog.py:51: FutureWarning: Passing literal html to 'read_html' is deprecated and will be removed in a future version. To read from a literal string, wrap it in a 'StringIO' object.\n  tables = pd.read_html(content)\n======================================================================\nFAIL: test_database_error (__main__.TestCases.test_database_error)\nTest function behavior when encountering a database error.\n-------------------------------------------------"
     },
     "BigCodeBench/1019": {
       "task_id": "BigCodeBench/1019",
@@ -27135,7 +27135,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_no_future_dates (__main__.TestCases.test_no_future_dates)\nTest case where all dates in the CSV file are in the past.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 123, in test_no_future_dates\n    self.assertTrue(df.empty)\n    ~~~~~~~~~~~~~~~^^^^^^^^^^\nAssertionError: False is not true\n\n========"
+      "error": "======================================================================\nFAIL: test_no_future_dates (__main__.TestCases.test_no_future_dates)\nTest case where all dates in the CSV file are in the past.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 123, in test_no_future_dates\n    self.assertTrue(df.empty)\n    ~~~~~~~~~~~~~~~^^^^^^^^^^\nAssertionError: False is not true\n\n========"
     },
     "BigCodeBench/1039": {
       "task_id": "BigCodeBench/1039",
@@ -27235,7 +27235,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "orks/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 1426, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 150, in test_exception_handling\n    self.assertTrue(\"Error: Test exception\" in result)\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: False is not true\n\n======================================================================\nFAIL: test_file_found (__main__.TestCases.test_file_foun"
+      "error": "orks/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 1426, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 150, in test_exception_handling\n    self.assertTrue(\"Error: Test exception\" in result)\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: False is not true\n\n======================================================================\nFAIL: test_file_found (__main__.TestCases.test_file_foun"
     },
     "BigCodeBench/1040": {
       "task_id": "BigCodeBench/1040",
@@ -27375,7 +27375,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "st_socket_closes_after_operation)\nTest if the socket is properly closed after the operation.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 1426, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 142, in test_socket_closes_after_operation\n    t"
+      "error": "st_socket_closes_after_operation)\nTest if the socket is properly closed after the operation.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 1426, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 142, in test_socket_closes_after_operation\n    t"
     },
     "BigCodeBench/1053": {
       "task_id": "BigCodeBench/1053",
@@ -27537,7 +27537,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_default_input (__main__.TestCases.test_default_input)\nTest with default inputs for animals and foods.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 92, in test_default_input\n    self.assertEqual(\n    ~~~~~~~~~~~~~~~~^\n        result.shape,\n        ^^^^^^^^^^^^^\n        (10, 7),\n        ^^^^^^^^"
+      "error": "======================================================================\nFAIL: test_default_input (__main__.TestCases.test_default_input)\nTest with default inputs for animals and foods.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 92, in test_default_input\n    self.assertEqual(\n    ~~~~~~~~~~~~~~~~^\n        result.shape,\n        ^^^^^^^^^^^^^\n        (10, 7),\n        ^^^^^^^^"
     },
     "BigCodeBench/1077": {
       "task_id": "BigCodeBench/1077",
@@ -28198,7 +28198,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "lask/app.py\", line 917, in full_dispatch_request\n    rv = self.dispatch_request()\n  File \"/Users/lexha/Documents/work/codes/.venv/lib/python3.13/site-packages/flask/app.py\", line 902, in dispatch_request\n    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^\n  File \"/Users/lexha/Documents/work/codes/.venv/lib/python3.13/site-packages/flask_login/utils.py\", line 290, i"
+      "error": "lask/app.py\", line 917, in full_dispatch_request\n    rv = self.dispatch_request()\n  File \"/home/USER/Documents/work/codes/.venv/lib/python3.13/site-packages/flask/app.py\", line 902, in dispatch_request\n    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^\n  File \"/home/USER/Documents/work/codes/.venv/lib/python3.13/site-packages/flask_login/utils.py\", line 290, i"
     },
     "BigCodeBench/89": {
       "task_id": "BigCodeBench/89",
@@ -28381,7 +28381,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_values (__main__.TestCases.test_values)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 94, in test_values\n    self.assertAlmostEqual(actual[0], expected[0], places=7, msg=\"DataFrame contents should match the expected output\")\n    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+      "error": "======================================================================\nFAIL: test_values (__main__.TestCases.test_values)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 94, in test_values\n    self.assertAlmostEqual(actual[0], expected[0], places=7, msg=\"DataFrame contents should match the expected output\")\n    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
     },
     "BigCodeBench/99": {
       "task_id": "BigCodeBench/99",
@@ -28587,7 +28587,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "odes/.venv/lib/python3.13/site-packages/pandas/core/internals/construction.py\", line 420, in _check_values_indices_shape_match\n    raise ValueError(f\"Shape of passed values is {passed}, indices imply {implied}\")\nValueError: Shape of passed values is (506, 22), indices imply (506, 14)\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 79, in test_heatmap_values\n    ax = task_func("
+      "error": "odes/.venv/lib/python3.13/site-packages/pandas/core/internals/construction.py\", line 420, in _check_values_indices_shape_match\n    raise ValueError(f\"Shape of passed values is {passed}, indices imply {implied}\")\nValueError: Shape of passed values is (506, 22), indices imply (506, 14)\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 79, in test_heatmap_values\n    ax = task_func("
     },
     "BigCodeBench/108": {
       "task_id": "BigCodeBench/108",
@@ -28686,7 +28686,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 120\n    \"\"\"stderr proxy that pins the runner's elapsed-time digits.\"\"\"\n                                        ^\nSyntaxError: unterminated string literal (detected at line 120)"
+      "error": "File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 120\n    \"\"\"stderr proxy that pins the runner's elapsed-time digits.\"\"\"\n                                        ^\nSyntaxError: unterminated string literal (detected at line 120)"
     },
     "BigCodeBench/120": {
       "task_id": "BigCodeBench/120",
@@ -28888,7 +28888,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_output_types (__main__.TestCases.test_output_types)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 78, in test_output_types\n    self.assertEqual(bar_heights, expect, \"DataFrame contents should match the expected output\")\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+      "error": "======================================================================\nFAIL: test_output_types (__main__.TestCases.test_output_types)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 78, in test_output_types\n    self.assertEqual(bar_heights, expect, \"DataFrame contents should match the expected output\")\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
     },
     "BigCodeBench/129": {
       "task_id": "BigCodeBench/129",
@@ -29342,7 +29342,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_default_parameters (__main__.TestCases.test_default_parameters)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 56, in test_default_parameters\n    self.assertEqual(df_list, expect)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\nAssertionError: Lists differ: ['New[26 chars]9495 -61.92098633948353)', 'Londo"
+      "error": "======================================================================\nFAIL: test_default_parameters (__main__.TestCases.test_default_parameters)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 56, in test_default_parameters\n    self.assertEqual(df_list, expect)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\nAssertionError: Lists differ: ['New[26 chars]9495 -61.92098633948353)', 'Londo"
     },
     "BigCodeBench/199": {
       "task_id": "BigCodeBench/199",
@@ -29708,7 +29708,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "13/unittest/mock.py\", line 1426, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 88, in test_empty_list_input\n    task_func([], 2, 5, 'audio.wav')\n    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 62, in task_func\n    raise FileNotFoundError(f\"Audio file '{audio_file}' does not exist.\")\nFileNotFoundError: Audio file 'audio.wav' does not exist.\n\n===================================="
+      "error": "13/unittest/mock.py\", line 1426, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 88, in test_empty_list_input\n    task_func([], 2, 5, 'audio.wav')\n    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 62, in task_func\n    raise FileNotFoundError(f\"Audio file '{audio_file}' does not exist.\")\nFileNotFoundError: Audio file 'audio.wav' does not exist.\n\n===================================="
     },
     "BigCodeBench/239": {
       "task_id": "BigCodeBench/239",
@@ -29913,7 +29913,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 'FFT of the signal' != 'FFT of the Signal'\n- FFT of the signal\n?            ^\n+ FFT of the Signal\n?            ^\n\n\n======================================================================\nFAIL: test_case_2 (__main__.TestCases.test_case_2)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 71, in test_case_2\n    self.assertEqual(ax.get_title"
+      "error": "^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 'FFT of the signal' != 'FFT of the Signal'\n- FFT of the signal\n?            ^\n+ FFT of the Signal\n?            ^\n\n\n======================================================================\nFAIL: test_case_2 (__main__.TestCases.test_case_2)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 71, in test_case_2\n    self.assertEqual(ax.get_title"
     },
     "BigCodeBench/273": {
       "task_id": "BigCodeBench/273",
@@ -30546,7 +30546,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_categorical_data (__main__.TestCases.test_categorical_data)\nTest with categorical data for count plot and strip plot\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 78, in test_categorical_data\n    self.assertTrue(len(fig.axes[1].collections) > 0)\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+      "error": "======================================================================\nFAIL: test_categorical_data (__main__.TestCases.test_categorical_data)\nTest with categorical data for count plot and strip plot\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 78, in test_categorical_data\n    self.assertTrue(len(fig.axes[1].collections) > 0)\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
     },
     "BigCodeBench/346": {
       "task_id": "BigCodeBench/346",
@@ -30746,7 +30746,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_correct_mean_and_std_values (__main__.TestCases.test_correct_mean_and_std_values)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 109, in test_correct_mean_and_std_values\n    self.assertEqual(result, expected)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^\nAssertionError: {'A': {'mean': np.float64(20.0),"
+      "error": "======================================================================\nFAIL: test_correct_mean_and_std_values (__main__.TestCases.test_correct_mean_and_std_values)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 109, in test_correct_mean_and_std_values\n    self.assertEqual(result, expected)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^\nAssertionError: {'A': {'mean': np.float64(20.0),"
     },
     "BigCodeBench/367": {
       "task_id": "BigCodeBench/367",
@@ -31053,7 +31053,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_case_1 (__main__.TestCases.test_case_1)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 57, in test_case_1\n    self.assertTrue(all(label in [line.get_label() for line in ax.lines] for label in ['sin', 'cos']))\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+      "error": "======================================================================\nFAIL: test_case_1 (__main__.TestCases.test_case_1)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 57, in test_case_1\n    self.assertTrue(all(label in [line.get_label() for line in ax.lines] for label in ['sin', 'cos']))\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
     },
     "BigCodeBench/401": {
       "task_id": "BigCodeBench/401",
@@ -31228,7 +31228,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "Traceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 119, in <module>\n    from keras.models import Sequential\nModuleNotFoundError: No module named 'keras'"
+      "error": "Traceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 119, in <module>\n    from keras.models import Sequential\nModuleNotFoundError: No module named 'keras'"
     },
     "BigCodeBench/418": {
       "task_id": "BigCodeBench/418",
@@ -31321,7 +31321,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "Traceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 4, in <module>\n    from tensorflow import keras\nModuleNotFoundError: No module named 'tensorflow'"
+      "error": "Traceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 4, in <module>\n    from tensorflow import keras\nModuleNotFoundError: No module named 'tensorflow'"
     },
     "BigCodeBench/424": {
       "task_id": "BigCodeBench/424",
@@ -31422,7 +31422,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_normal_functionality (__main__.TestCases.test_normal_functionality)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 117, in test_normal_functionality\n    self.assertTrue(np.array_equal(original_img_list, expect_orignal), \"The arrays should be equal\")\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+      "error": "======================================================================\nFAIL: test_normal_functionality (__main__.TestCases.test_normal_functionality)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 117, in test_normal_functionality\n    self.assertTrue(np.array_equal(original_img_list, expect_orignal), \"The arrays should be equal\")\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^"
     },
     "BigCodeBench/443": {
       "task_id": "BigCodeBench/443",
@@ -31520,7 +31520,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "/Users/lexha/Documents/work/codes/.venv/lib/python3.13/site-packages/sklearn/base.py:1403: ConvergenceWarning: Number of distinct clusters (2) found smaller than n_clusters (3). Possibly due to duplicate points in X.\n  return fit_method(estimator, *args, **kwargs)\n======================================================================\nERROR: test_case_2 (__main__.TestCases.test_case_2)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File"
+      "error": "/home/USER/Documents/work/codes/.venv/lib/python3.13/site-packages/sklearn/base.py:1403: ConvergenceWarning: Number of distinct clusters (2) found smaller than n_clusters (3). Possibly due to duplicate points in X.\n  return fit_method(estimator, *args, **kwargs)\n======================================================================\nERROR: test_case_2 (__main__.TestCases.test_case_2)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File"
     },
     "BigCodeBench/445": {
       "task_id": "BigCodeBench/445",
@@ -31949,7 +31949,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": " install xlrd.\n\n======================================================================\nERROR: test_file_content (__main__.TestCases.test_file_content)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/Documents/work/codes/.venv/lib/python3.13/site-packages/pandas/compat/_optional.py\", line 135, in import_optional_dependency\n    module = importlib.import_module(name)\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Fra"
+      "error": " install xlrd.\n\n======================================================================\nERROR: test_file_content (__main__.TestCases.test_file_content)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/Documents/work/codes/.venv/lib/python3.13/site-packages/pandas/compat/_optional.py\", line 135, in import_optional_dependency\n    module = importlib.import_module(name)\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Fra"
     },
     "BigCodeBench/502": {
       "task_id": "BigCodeBench/502",
@@ -32630,7 +32630,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_incorrect_data_format (__main__.TestCases.test_incorrect_data_format)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 79, in test_incorrect_data_format\n    with self.assertRaises(ValueError, msg=\"Function should raise ValueError for data from multiple years.\"):\n         ~~~~~~~~~~~~~~~~~^^^^^^^^^"
+      "error": "======================================================================\nFAIL: test_incorrect_data_format (__main__.TestCases.test_incorrect_data_format)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 79, in test_incorrect_data_format\n    with self.assertRaises(ValueError, msg=\"Function should raise ValueError for data from multiple years.\"):\n         ~~~~~~~~~~~~~~~~~^^^^^^^^^"
     },
     "BigCodeBench/567": {
       "task_id": "BigCodeBench/567",
@@ -32829,7 +32829,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_case_5 (__main__.TestCases.test_case_5)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 66, in test_case_5\n    self.assertTrue(np.max(np.abs(np.diff(y_data))) <= 2.0 + 1)  # considering max amplitude of sine wave\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: np.F"
+      "error": "======================================================================\nFAIL: test_case_5 (__main__.TestCases.test_case_5)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 66, in test_case_5\n    self.assertTrue(np.max(np.abs(np.diff(y_data))) <= 2.0 + 1)  # considering max amplitude of sine wave\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: np.F"
     },
     "BigCodeBench/579": {
       "task_id": "BigCodeBench/579",
@@ -33256,7 +33256,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py:64: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown\n  plt.show()\n======================================================================\nFAIL: test_empty_dataframe_on_zero_hours (__main__.TestCases.test_empty_dataframe_on_zero_hours)\nCheck for empty DataFrame on zero hours input.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.13"
+      "error": "/home/USER/.cache/tokenomics-sj/ws/w0/prog.py:64: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown\n  plt.show()\n======================================================================\nFAIL: test_empty_dataframe_on_zero_hours (__main__.TestCases.test_empty_dataframe_on_zero_hours)\nCheck for empty DataFrame on zero hours input.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.13"
     },
     "BigCodeBench/594": {
       "task_id": "BigCodeBench/594",
@@ -33355,7 +33355,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_backup_file_creation (__main__.TestCases.test_backup_file_creation)\nTest that the CSV file is correctly copied to the backup directory.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 116, in test_backup_file_creation\n    mock_copy.assert_called_once_with(FILE_PATH, BACKUP_PATH)\n    ~~~~~~~~~~~~~"
+      "error": "======================================================================\nFAIL: test_backup_file_creation (__main__.TestCases.test_backup_file_creation)\nTest that the CSV file is correctly copied to the backup directory.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 116, in test_backup_file_creation\n    mock_copy.assert_called_once_with(FILE_PATH, BACKUP_PATH)\n    ~~~~~~~~~~~~~"
     },
     "BigCodeBench/618": {
       "task_id": "BigCodeBench/618",
@@ -33685,7 +33685,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py:10: SyntaxWarning: invalid escape sequence '\\W'\n  ALPHANUMERIC = re.compile('[\\W_]+')\n[nltk_data] Error loading stopwords: Security Violation\n[nltk_data]     [pathsec.urlopen]: refusing a proxied fetch of\n[nltk_data]     'https://raw.githubusercontent.com/nltk/nltk_data/gh-\n[nltk_data]     pages/index.xml'. A configured proxy performs the\n[nltk_data]     egress, so NLTK cannot pin the validated IP and SSRF\n[nltk_data]     protection cannot be enfor"
+      "error": "/home/USER/.cache/tokenomics-sj/ws/w0/prog.py:10: SyntaxWarning: invalid escape sequence '\\W'\n  ALPHANUMERIC = re.compile('[\\W_]+')\n[nltk_data] Error loading stopwords: Security Violation\n[nltk_data]     [pathsec.urlopen]: refusing a proxied fetch of\n[nltk_data]     'https://raw.githubusercontent.com/nltk/nltk_data/gh-\n[nltk_data]     pages/index.xml'. A configured proxy performs the\n[nltk_data]     egress, so NLTK cannot pin the validated IP and SSRF\n[nltk_data]     protection cannot be enfor"
     },
     "BigCodeBench/657": {
       "task_id": "BigCodeBench/657",
@@ -33890,7 +33890,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "============================================================\nERROR: test_file_existence (__main__.TestCases.test_file_existence)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 61, in tearDown\n    os.remove(self.file_path)\n    ~~~~~~~~~^^^^^^^^^^^^^^^^\nFileNotFoundError: [Errno 2] No such file or directory: 'task_func_data/Output.txt'\n\n========================================="
+      "error": "============================================================\nERROR: test_file_existence (__main__.TestCases.test_file_existence)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 61, in tearDown\n    os.remove(self.file_path)\n    ~~~~~~~~~^^^^^^^^^^^^^^^^\nFileNotFoundError: [Errno 2] No such file or directory: 'task_func_data/Output.txt'\n\n========================================="
     },
     "BigCodeBench/723": {
       "task_id": "BigCodeBench/723",
@@ -33990,7 +33990,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_no_table (__main__.TestCases.test_no_table)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 1426, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 81, in test_no_"
+      "error": "======================================================================\nFAIL: test_no_table (__main__.TestCases.test_no_table)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 1426, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 81, in test_no_"
     },
     "BigCodeBench/752": {
       "task_id": "BigCodeBench/752",
@@ -34318,7 +34318,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_file_creation_and_content (__main__.TestCases.test_file_creation_and_content)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 73, in test_file_creation_and_content\n    mock_file.assert_any_call(expected_path, \"w\")\n    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/pyth"
+      "error": "======================================================================\nFAIL: test_file_creation_and_content (__main__.TestCases.test_file_creation_and_content)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 73, in test_file_creation_and_content\n    mock_file.assert_any_call(expected_path, \"w\")\n    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/pyth"
     },
     "BigCodeBench/777": {
       "task_id": "BigCodeBench/777",
@@ -34728,7 +34728,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py:49: UserWarning: Could not transfer /var/folders/4m/5k_x4jdj2ps4znfd_dnw5jbh01clx4/T/tmpx8mdfhng/source_dir/file1.txt: \n  warnings.warn(f\"Could not transfer {file_path}: {e}\")\n/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py:49: UserWarning: Could not transfer /var/folders/4m/5k_x4jdj2ps4znfd_dnw5jbh01clx4/T/tmpx8mdfhng/source_dir/file2.csv: \n  warnings.warn(f\"Could not transfer {file_path}: {e}\")\n/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py:49: "
+      "error": "/home/USER/.cache/tokenomics-sj/ws/w0/prog.py:49: UserWarning: Could not transfer /var/folders/4m/5k_x4jdj2ps4znfd_dnw5jbh01clx4/T/tmpx8mdfhng/source_dir/file1.txt: \n  warnings.warn(f\"Could not transfer {file_path}: {e}\")\n/home/USER/.cache/tokenomics-sj/ws/w0/prog.py:49: UserWarning: Could not transfer /var/folders/4m/5k_x4jdj2ps4znfd_dnw5jbh01clx4/T/tmpx8mdfhng/source_dir/file2.csv: \n  warnings.warn(f\"Could not transfer {file_path}: {e}\")\n/home/USER/.cache/tokenomics-sj/ws/w0/prog.py:49: "
     },
     "BigCodeBench/865": {
       "task_id": "BigCodeBench/865",
@@ -35238,7 +35238,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "ihood optimization failed to \"\n======================================================================\nERROR: test_case_2 (__main__.TestCases.test_case_2)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 112, in test_case_2\n    self.assertAlmostEqual(lines[0].get_ydata().tolist(), [200, 201, 202, 203, 204, 205, 206])\n    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+      "error": "ihood optimization failed to \"\n======================================================================\nERROR: test_case_2 (__main__.TestCases.test_case_2)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 112, in test_case_2\n    self.assertAlmostEqual(lines[0].get_ydata().tolist(), [200, 201, 202, 203, 204, 205, 206])\n    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
     },
     "BigCodeBench/928": {
       "task_id": "BigCodeBench/928",
@@ -35459,7 +35459,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 1\n    ```python\n    ^\nSyntaxError: invalid syntax"
+      "error": "File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 1\n    ```python\n    ^\nSyntaxError: invalid syntax"
     },
     "BigCodeBench/952": {
       "task_id": "BigCodeBench/952",
@@ -35623,7 +35623,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_case_3 (__main__.TestCases.test_case_3)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 73, in test_case_3\n    self.assertTrue(\"Hello\" in xtick_labels)\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: False is not true\n\n================================================================="
+      "error": "======================================================================\nFAIL: test_case_3 (__main__.TestCases.test_case_3)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 73, in test_case_3\n    self.assertTrue(\"Hello\" in xtick_labels)\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: False is not true\n\n================================================================="
     },
     "BigCodeBench/963": {
       "task_id": "BigCodeBench/963",
@@ -35784,7 +35784,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_case_9 (__main__.TestCases.test_case_9)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 171, in test_case_9\n    self.assertEqual(num_converted, 1)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^\nAssertionError: 0 != 1\n\n----------------------------------------------------------------------\nRan 9 tests in 0"
+      "error": "======================================================================\nFAIL: test_case_9 (__main__.TestCases.test_case_9)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 171, in test_case_9\n    self.assertEqual(num_converted, 1)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^\nAssertionError: 0 != 1\n\n----------------------------------------------------------------------\nRan 9 tests in 0"
     },
     "BigCodeBench/969": {
       "task_id": "BigCodeBench/969",
@@ -36727,7 +36727,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_no_future_dates (__main__.TestCases.test_no_future_dates)\nTest case where all dates in the CSV file are in the past.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 122, in test_no_future_dates\n    self.assertTrue(df.empty)\n    ~~~~~~~~~~~~~~~^^^^^^^^^^\nAssertionError: False is not true\n\n========"
+      "error": "======================================================================\nFAIL: test_no_future_dates (__main__.TestCases.test_no_future_dates)\nTest case where all dates in the CSV file are in the past.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 122, in test_no_future_dates\n    self.assertTrue(df.empty)\n    ~~~~~~~~~~~~~~~^^^^^^^^^^\nAssertionError: False is not true\n\n========"
     },
     "BigCodeBench/1039": {
       "task_id": "BigCodeBench/1039",
@@ -36827,7 +36827,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 1426, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 131, in test_file_not_found\n    self.assertEqual(result, \"File not found\")\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: \"module 'ssl' has no attribute 'wrap_socket'\" != 'File not found'\n- module 'ssl' has no attribute 'wrap_socket'\n+ File not found\n\n\n================"
+      "error": "13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 1426, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 131, in test_file_not_found\n    self.assertEqual(result, \"File not found\")\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: \"module 'ssl' has no attribute 'wrap_socket'\" != 'File not found'\n- module 'ssl' has no attribute 'wrap_socket'\n+ File not found\n\n\n================"
     },
     "BigCodeBench/1040": {
       "task_id": "BigCodeBench/1040",
@@ -36967,7 +36967,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "oses_after_operation)\nTest if the socket is properly closed after the operation.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 1426, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 141, in test_socket_closes_after_operation\n    task_func(cli"
+      "error": "oses_after_operation)\nTest if the socket is properly closed after the operation.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 1426, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 141, in test_socket_closes_after_operation\n    task_func(cli"
     },
     "BigCodeBench/1053": {
       "task_id": "BigCodeBench/1053",
@@ -37129,7 +37129,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_default_input (__main__.TestCases.test_default_input)\nTest with default inputs for animals and foods.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 88, in test_default_input\n    self.assertEqual(\n    ~~~~~~~~~~~~~~~~^\n        result.shape,\n        ^^^^^^^^^^^^^\n        (10, 7),\n        ^^^^^^^^"
+      "error": "======================================================================\nFAIL: test_default_input (__main__.TestCases.test_default_input)\nTest with default inputs for animals and foods.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 88, in test_default_input\n    self.assertEqual(\n    ~~~~~~~~~~~~~~~~^\n        result.shape,\n        ^^^^^^^^^^^^^\n        (10, 7),\n        ^^^^^^^^"
     },
     "BigCodeBench/1077": {
       "task_id": "BigCodeBench/1077",
@@ -37897,7 +37897,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_cluster_centers (__main__.TestCases.test_cluster_centers)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 69, in test_cluster_centers\n    self.assertTrue(len(centroids) > 0, \"Centroids should be marked in the plot.\")\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+      "error": "======================================================================\nFAIL: test_cluster_centers (__main__.TestCases.test_cluster_centers)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 69, in test_cluster_centers\n    self.assertTrue(len(centroids) > 0, \"Centroids should be marked in the plot.\")\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
     },
     "BigCodeBench/93": {
       "task_id": "BigCodeBench/93",
@@ -37998,7 +37998,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_values (__main__.TestCases.test_values)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 88, in test_values\n    self.assertAlmostEqual(actual[0], expected[0], places=7, msg=\"DataFrame contents should match the expected output\")\n    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+      "error": "======================================================================\nFAIL: test_values (__main__.TestCases.test_values)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 88, in test_values\n    self.assertAlmostEqual(actual[0], expected[0], places=7, msg=\"DataFrame contents should match the expected output\")\n    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
     },
     "BigCodeBench/99": {
       "task_id": "BigCodeBench/99",
@@ -38206,7 +38206,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nERROR: test_heatmap_values (__main__.TestCases.test_heatmap_values)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 82, in test_heatmap_values\n    self.assertAlmostEqual(heatmap_data.tolist(), expect, \"DataFrame contents should match the expected output\")\n    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^"
+      "error": "======================================================================\nERROR: test_heatmap_values (__main__.TestCases.test_heatmap_values)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 82, in test_heatmap_values\n    self.assertAlmostEqual(heatmap_data.tolist(), expect, \"DataFrame contents should match the expected output\")\n    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^"
     },
     "BigCodeBench/108": {
       "task_id": "BigCodeBench/108",
@@ -38512,7 +38512,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_output_types (__main__.TestCases.test_output_types)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 82, in test_output_types\n    self.assertEqual(bar_heights, expect, \"DataFrame contents should match the expected output\")\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+      "error": "======================================================================\nFAIL: test_output_types (__main__.TestCases.test_output_types)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 82, in test_output_types\n    self.assertEqual(bar_heights, expect, \"DataFrame contents should match the expected output\")\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
     },
     "BigCodeBench/129": {
       "task_id": "BigCodeBench/129",
@@ -38982,7 +38982,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_default_parameters (__main__.TestCases.test_default_parameters)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 57, in test_default_parameters\n    self.assertEqual(df_list, expect)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\nAssertionError: Lists differ: ['New[96 chars]5466588)', 'Beijing,POINT (-123.8"
+      "error": "======================================================================\nFAIL: test_default_parameters (__main__.TestCases.test_default_parameters)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 57, in test_default_parameters\n    self.assertEqual(df_list, expect)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\nAssertionError: Lists differ: ['New[96 chars]5466588)', 'Beijing,POINT (-123.8"
     },
     "BigCodeBench/199": {
       "task_id": "BigCodeBench/199",
@@ -39309,7 +39309,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "Traceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 4, in <module>\n    import librosa\nModuleNotFoundError: No module named 'librosa'"
+      "error": "Traceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 4, in <module>\n    import librosa\nModuleNotFoundError: No module named 'librosa'"
     },
     "BigCodeBench/239": {
       "task_id": "BigCodeBench/239",
@@ -39473,7 +39473,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "__main__.TestCases.test_case_1)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 63, in test_case_1\n    self.assertTrue('Original' in [line.get_label() for line in ax.lines])\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: False is not true\n\n======================================================================\nFAIL: test_case_2 (__mai"
+      "error": "__main__.TestCases.test_case_1)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 63, in test_case_1\n    self.assertTrue('Original' in [line.get_label() for line in ax.lines])\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: False is not true\n\n======================================================================\nFAIL: test_case_2 (__mai"
     },
     "BigCodeBench/267": {
       "task_id": "BigCodeBench/267",
@@ -39574,7 +39574,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 'FFT of the signal' != 'FFT of the Signal'\n- FFT of the signal\n?            ^\n+ FFT of the Signal\n?            ^\n\n\n======================================================================\nFAIL: test_case_2 (__main__.TestCases.test_case_2)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 76, in test_case_2\n    self.assertEqual(ax.get_title"
+      "error": "^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 'FFT of the signal' != 'FFT of the Signal'\n- FFT of the signal\n?            ^\n+ FFT of the Signal\n?            ^\n\n\n======================================================================\nFAIL: test_case_2 (__main__.TestCases.test_case_2)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 76, in test_case_2\n    self.assertEqual(ax.get_title"
     },
     "BigCodeBench/273": {
       "task_id": "BigCodeBench/273",
@@ -39964,7 +39964,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_case_3 (__main__.TestCases.test_case_3)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 120, in test_case_3\n    self.assertNotIn(\"content\", moved_files)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 'content' unexpectedly found in {'content': ['test_file1_20260823040036.txt']}\n\n---"
+      "error": "======================================================================\nFAIL: test_case_3 (__main__.TestCases.test_case_3)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 120, in test_case_3\n    self.assertNotIn(\"content\", moved_files)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 'content' unexpectedly found in {'content': ['test_file1_20260823040036.txt']}\n\n---"
     },
     "BigCodeBench/324": {
       "task_id": "BigCodeBench/324",
@@ -40229,7 +40229,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_categorical_data (__main__.TestCases.test_categorical_data)\nTest with categorical data for count plot and strip plot\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 81, in test_categorical_data\n    self.assertTrue(len(fig.axes[1].collections) > 0)\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+      "error": "======================================================================\nFAIL: test_categorical_data (__main__.TestCases.test_categorical_data)\nTest with categorical data for count plot and strip plot\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 81, in test_categorical_data\n    self.assertTrue(len(fig.axes[1].collections) > 0)\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
     },
     "BigCodeBench/346": {
       "task_id": "BigCodeBench/346",
@@ -40429,7 +40429,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_value (__main__.TestCases.test_value)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 125, in test_value\n    self.assertEqual(mean_values, [20,30])\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Lists differ: [np.float64(20.0), np.float64(30.0), np.float64(10.0), np.float64(10.0)] != "
+      "error": "======================================================================\nFAIL: test_value (__main__.TestCases.test_value)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 125, in test_value\n    self.assertEqual(mean_values, [20,30])\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Lists differ: [np.float64(20.0), np.float64(30.0), np.float64(10.0), np.float64(10.0)] != "
     },
     "BigCodeBench/367": {
       "task_id": "BigCodeBench/367",
@@ -40895,7 +40895,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "Traceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 2, in <module>\n    from keras.layers import Dense\nModuleNotFoundError: No module named 'keras'"
+      "error": "Traceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 2, in <module>\n    from keras.layers import Dense\nModuleNotFoundError: No module named 'keras'"
     },
     "BigCodeBench/418": {
       "task_id": "BigCodeBench/418",
@@ -40991,7 +40991,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nERROR: test_model_output_shape (__main__.TestCases.test_model_output_shape)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 159, in test_model_output_shape\n    self.assertEqual(model.output_shape, (None, 1), \"The model's output shape should have one dimension for binary classification.\")\n                   "
+      "error": "======================================================================\nERROR: test_model_output_shape (__main__.TestCases.test_model_output_shape)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 159, in test_model_output_shape\n    self.assertEqual(model.output_shape, (None, 1), \"The model's output shape should have one dimension for binary classification.\")\n                   "
     },
     "BigCodeBench/424": {
       "task_id": "BigCodeBench/424",
@@ -41092,7 +41092,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_normal_functionality (__main__.TestCases.test_normal_functionality)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 111, in test_normal_functionality\n    self.assertTrue(np.array_equal(original_img_list, expect_orignal), \"The arrays should be equal\")\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+      "error": "======================================================================\nFAIL: test_normal_functionality (__main__.TestCases.test_normal_functionality)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 111, in test_normal_functionality\n    self.assertTrue(np.array_equal(original_img_list, expect_orignal), \"The arrays should be equal\")\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^"
     },
     "BigCodeBench/443": {
       "task_id": "BigCodeBench/443",
@@ -41193,7 +41193,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "/Users/lexha/Documents/work/codes/.venv/lib/python3.13/site-packages/sklearn/base.py:1403: ConvergenceWarning: Number of distinct clusters (2) found smaller than n_clusters (3). Possibly due to duplicate points in X.\n  return fit_method(estimator, *args, **kwargs)\n======================================================================\nERROR: test_case_2 (__main__.TestCases.test_case_2)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File"
+      "error": "/home/USER/Documents/work/codes/.venv/lib/python3.13/site-packages/sklearn/base.py:1403: ConvergenceWarning: Number of distinct clusters (2) found smaller than n_clusters (3). Possibly due to duplicate points in X.\n  return fit_method(estimator, *args, **kwargs)\n======================================================================\nERROR: test_case_2 (__main__.TestCases.test_case_2)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File"
     },
     "BigCodeBench/445": {
       "task_id": "BigCodeBench/445",
@@ -41644,7 +41644,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": " install xlrd.\n\n======================================================================\nERROR: test_file_content (__main__.TestCases.test_file_content)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/Documents/work/codes/.venv/lib/python3.13/site-packages/pandas/compat/_optional.py\", line 135, in import_optional_dependency\n    module = importlib.import_module(name)\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Fra"
+      "error": " install xlrd.\n\n======================================================================\nERROR: test_file_content (__main__.TestCases.test_file_content)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/Documents/work/codes/.venv/lib/python3.13/site-packages/pandas/compat/_optional.py\", line 135, in import_optional_dependency\n    module = importlib.import_module(name)\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Fra"
     },
     "BigCodeBench/502": {
       "task_id": "BigCodeBench/502",
@@ -42779,7 +42779,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nERROR: test_dynamic_comparison (__main__.TestCases.test_dynamic_comparison)\nCompare task_func function output with dynamically fetched content.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 119, in test_dynamic_comparison\n    expected_df = self.fetch_and_parse_url(test_url)\n  File \"/Users/lexha/.cache/tok"
+      "error": "======================================================================\nERROR: test_dynamic_comparison (__main__.TestCases.test_dynamic_comparison)\nCompare task_func function output with dynamically fetched content.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 119, in test_dynamic_comparison\n    expected_df = self.fetch_and_parse_url(test_url)\n  File \"/home/USER/.cache/tok"
     },
     "BigCodeBench/592": {
       "task_id": "BigCodeBench/592",
@@ -42919,7 +42919,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "====\nFAIL: test_dataframe_content (__main__.TestCases.test_dataframe_content)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 1426, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 102, in test_dataframe_content\n    mock_plt_show.assert_called("
+      "error": "====\nFAIL: test_dataframe_content (__main__.TestCases.test_dataframe_content)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/unittest/mock.py\", line 1426, in patched\n    return func(*newargs, **newkeywargs)\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 102, in test_dataframe_content\n    mock_plt_show.assert_called("
     },
     "BigCodeBench/594": {
       "task_id": "BigCodeBench/594",
@@ -43018,7 +43018,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_backup_file_creation (__main__.TestCases.test_backup_file_creation)\nTest that the CSV file is correctly copied to the backup directory.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 118, in test_backup_file_creation\n    mock_copy.assert_called_once_with(FILE_PATH, BACKUP_PATH)\n    ~~~~~~~~~~~~~"
+      "error": "======================================================================\nFAIL: test_backup_file_creation (__main__.TestCases.test_backup_file_creation)\nTest that the CSV file is correctly copied to the backup directory.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 118, in test_backup_file_creation\n    mock_copy.assert_called_once_with(FILE_PATH, BACKUP_PATH)\n    ~~~~~~~~~~~~~"
     },
     "BigCodeBench/618": {
       "task_id": "BigCodeBench/618",
@@ -44615,7 +44615,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "  forecast1, ax1 = task_func(df1)\n                     ~~~~~~~~~^^^^^\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 36, in task_func\n    raise NotImplementedError('incomplete')\nNotImplementedError: incomplete\n\n======================================================================\nERROR: test_case_2 (__main__.TestCases.test_case_2)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws"
+      "error": "  forecast1, ax1 = task_func(df1)\n                     ~~~~~~~~~^^^^^\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 36, in task_func\n    raise NotImplementedError('incomplete')\nNotImplementedError: incomplete\n\n======================================================================\nERROR: test_case_2 (__main__.TestCases.test_case_2)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws"
     },
     "BigCodeBench/928": {
       "task_id": "BigCodeBench/928",
@@ -45088,7 +45088,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_case_6 (__main__.TestCases.test_case_6)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 124, in test_case_6\n    self.assertTrue(creation_datetime <= modification_datetime)\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: False is not true\n\n--------------------------"
+      "error": "======================================================================\nFAIL: test_case_6 (__main__.TestCases.test_case_6)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 124, in test_case_6\n    self.assertTrue(creation_datetime <= modification_datetime)\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: False is not true\n\n--------------------------"
     },
     "BigCodeBench/985": {
       "task_id": "BigCodeBench/985",
@@ -45739,7 +45739,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "Traceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 3, in <module>\n    import pytesseract\nModuleNotFoundError: No module named 'pytesseract'"
+      "error": "Traceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 3, in <module>\n    import pytesseract\nModuleNotFoundError: No module named 'pytesseract'"
     },
     "BigCodeBench/1020": {
       "task_id": "BigCodeBench/1020",
@@ -46272,7 +46272,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "-------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 64, in test_common_scenario\n    common_words, _ = task_func(text)\n                      ~~~~~~~~~^^^^^^\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 29, in task_func\n    raise NotImplementedError('incomplete')\nNotImplementedError: incomplete\n\n======================================================================\nERROR: test_empty_text (__main__.TestCases.t"
+      "error": "-------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 64, in test_common_scenario\n    common_words, _ = task_func(text)\n                      ~~~~~~~~~^^^^^^\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 29, in task_func\n    raise NotImplementedError('incomplete')\nNotImplementedError: incomplete\n\n======================================================================\nERROR: test_empty_text (__main__.TestCases.t"
     },
     "BigCodeBench/1124": {
       "task_id": "BigCodeBench/1124",
@@ -47037,7 +47037,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py:42: SyntaxWarning: invalid escape sequence '\\s'\n  raw_df = pd.read_csv(data_url, sep=\"\\s+\", skiprows=22, header=None)\n======================================================================\nERROR: test_heatmap_values (__main__.TestCases.test_heatmap_values)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 81, in test_heatmap_values"
+      "error": "/home/USER/.cache/tokenomics-sj/ws/w0/prog.py:42: SyntaxWarning: invalid escape sequence '\\s'\n  raw_df = pd.read_csv(data_url, sep=\"\\s+\", skiprows=22, header=None)\n======================================================================\nERROR: test_heatmap_values (__main__.TestCases.test_heatmap_values)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 81, in test_heatmap_values"
     },
     "BigCodeBench/108": {
       "task_id": "BigCodeBench/108",
@@ -47714,7 +47714,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_default_parameters (__main__.TestCases.test_default_parameters)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 57, in test_default_parameters\n    self.assertEqual(df_list, expect)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\nAssertionError: Lists differ: ['New[96 chars]5466588)', 'Beijing,POINT (-123.8"
+      "error": "======================================================================\nFAIL: test_default_parameters (__main__.TestCases.test_default_parameters)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 57, in test_default_parameters\n    self.assertEqual(df_list, expect)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\nAssertionError: Lists differ: ['New[96 chars]5466588)', 'Beijing,POINT (-123.8"
     },
     "BigCodeBench/199": {
       "task_id": "BigCodeBench/199",
@@ -47971,7 +47971,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "Traceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 4, in <module>\n    import librosa\nModuleNotFoundError: No module named 'librosa'"
+      "error": "Traceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 4, in <module>\n    import librosa\nModuleNotFoundError: No module named 'librosa'"
     },
     "BigCodeBench/239": {
       "task_id": "BigCodeBench/239",
@@ -49146,7 +49146,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "Traceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 3, in <module>\n    from keras.models import Sequential\nModuleNotFoundError: No module named 'keras'"
+      "error": "Traceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 3, in <module>\n    from keras.models import Sequential\nModuleNotFoundError: No module named 'keras'"
     },
     "BigCodeBench/418": {
       "task_id": "BigCodeBench/418",
@@ -49239,7 +49239,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "Traceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 1, in <module>\n    from tensorflow import keras\nModuleNotFoundError: No module named 'tensorflow'"
+      "error": "Traceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 1, in <module>\n    from tensorflow import keras\nModuleNotFoundError: No module named 'tensorflow'"
     },
     "BigCodeBench/424": {
       "task_id": "BigCodeBench/424",
@@ -49608,7 +49608,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "cs-sj/ws/w0/prog.py\", line 42, in task_func\n    raise NotImplementedError('incomplete')\nNotImplementedError: incomplete\n\n======================================================================\nERROR: test_case_6 (__main__.TestCases.test_case_6)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 85, in test_case_6\n    df, _ = task_func(N=0, CATEGORIES=[])\n            ~~~~~~~~~^^^^^"
+      "error": "cs-sj/ws/w0/prog.py\", line 42, in task_func\n    raise NotImplementedError('incomplete')\nNotImplementedError: incomplete\n\n======================================================================\nERROR: test_case_6 (__main__.TestCases.test_case_6)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 85, in test_case_6\n    df, _ = task_func(N=0, CATEGORIES=[])\n            ~~~~~~~~~^^^^^"
     },
     "BigCodeBench/486": {
       "task_id": "BigCodeBench/486",
@@ -49791,7 +49791,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "w0/prog.py\", line 38, in task_func\n    raise NotImplementedError('incomplete')\nNotImplementedError: incomplete\n\n======================================================================\nERROR: test_file_content (__main__.TestCases.test_file_content)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 71, in test_file_content\n    file_path = task_func(json_str, 'test_content.xls')\n  F"
+      "error": "w0/prog.py\", line 38, in task_func\n    raise NotImplementedError('incomplete')\nNotImplementedError: incomplete\n\n======================================================================\nERROR: test_file_content (__main__.TestCases.test_file_content)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 71, in test_file_content\n    file_path = task_func(json_str, 'test_content.xls')\n  F"
     },
     "BigCodeBench/502": {
       "task_id": "BigCodeBench/502",
@@ -50305,7 +50305,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "rs/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 34, in task_func\n    raise NotImplementedError('incomplete')\nNotImplementedError: incomplete\n\n======================================================================\nERROR: test_both_lists_empty (__main__.TestCases.test_both_lists_empty)\nTest with both 'a' and 'b' lists empty.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 53,"
+      "error": "rs/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 34, in task_func\n    raise NotImplementedError('incomplete')\nNotImplementedError: incomplete\n\n======================================================================\nERROR: test_both_lists_empty (__main__.TestCases.test_both_lists_empty)\nTest with both 'a' and 'b' lists empty.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 53,"
     },
     "BigCodeBench/560": {
       "task_id": "BigCodeBench/560",
@@ -50759,7 +50759,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "Error(f\"Error fetching URL {url}: {e}\")\nurllib.error.URLError: <urlopen error Error fetching URL https://en.wikibooks.org/wiki/Main_Page: HTTP Error 403: Forbidden>\n\n======================================================================\nERROR: test_valid_url (__main__.TestCases.test_valid_url)\nTest with a valid URL.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 44, in task_f"
+      "error": "Error(f\"Error fetching URL {url}: {e}\")\nurllib.error.URLError: <urlopen error Error fetching URL https://en.wikibooks.org/wiki/Main_Page: HTTP Error 403: Forbidden>\n\n======================================================================\nERROR: test_valid_url (__main__.TestCases.test_valid_url)\nTest with a valid URL.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 44, in task_f"
     },
     "BigCodeBench/592": {
       "task_id": "BigCodeBench/592",
@@ -52892,7 +52892,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_case_6 (__main__.TestCases.test_case_6)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 124, in test_case_6\n    self.assertTrue(creation_datetime <= modification_datetime)\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: False is not true\n\n--------------------------"
+      "error": "======================================================================\nFAIL: test_case_6 (__main__.TestCases.test_case_6)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 124, in test_case_6\n    self.assertTrue(creation_datetime <= modification_datetime)\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: False is not true\n\n--------------------------"
     },
     "BigCodeBench/985": {
       "task_id": "BigCodeBench/985",
@@ -53521,7 +53521,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "Traceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 3, in <module>\n    import pytesseract\nModuleNotFoundError: No module named 'pytesseract'"
+      "error": "Traceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 3, in <module>\n    import pytesseract\nModuleNotFoundError: No module named 'pytesseract'"
     },
     "BigCodeBench/1020": {
       "task_id": "BigCodeBench/1020",
@@ -54704,7 +54704,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py:42: SyntaxWarning: invalid escape sequence '\\s'\n  raw_df = pd.read_csv(data_url, sep=\"\\s+\", skiprows=22, header=None)"
+      "error": "/home/USER/.cache/tokenomics-sj/ws/w0/prog.py:42: SyntaxWarning: invalid escape sequence '\\s'\n  raw_df = pd.read_csv(data_url, sep=\"\\s+\", skiprows=22, header=None)"
     },
     "BigCodeBench/108": {
       "task_id": "BigCodeBench/108",
@@ -55402,7 +55402,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_default_parameters (__main__.TestCases.test_default_parameters)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 57, in test_default_parameters\n    self.assertEqual(df_list, expect)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\nAssertionError: Lists differ: ['New[96 chars]5466588)', 'Beijing,POINT (-123.8"
+      "error": "======================================================================\nFAIL: test_default_parameters (__main__.TestCases.test_default_parameters)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 57, in test_default_parameters\n    self.assertEqual(df_list, expect)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\nAssertionError: Lists differ: ['New[96 chars]5466588)', 'Beijing,POINT (-123.8"
     },
     "BigCodeBench/199": {
       "task_id": "BigCodeBench/199",
@@ -55681,7 +55681,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "Traceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 4, in <module>\n    import librosa\nModuleNotFoundError: No module named 'librosa'"
+      "error": "Traceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 4, in <module>\n    import librosa\nModuleNotFoundError: No module named 'librosa'"
     },
     "BigCodeBench/239": {
       "task_id": "BigCodeBench/239",
@@ -56745,7 +56745,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "Traceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 3, in <module>\n    from keras.models import Sequential\nModuleNotFoundError: No module named 'keras'"
+      "error": "Traceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 3, in <module>\n    from keras.models import Sequential\nModuleNotFoundError: No module named 'keras'"
     },
     "BigCodeBench/418": {
       "task_id": "BigCodeBench/418",
@@ -56838,7 +56838,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "Traceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 1, in <module>\n    from tensorflow import keras\nModuleNotFoundError: No module named 'tensorflow'"
+      "error": "Traceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 1, in <module>\n    from tensorflow import keras\nModuleNotFoundError: No module named 'tensorflow'"
     },
     "BigCodeBench/424": {
       "task_id": "BigCodeBench/424",
@@ -57062,7 +57062,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "l last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 109, in test_exception_raised_when_dirs_do_not_exist\n    task_func(self.src_dir.name, self.dest_dir.name, 'txt')\n    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 44, in task_func\n    raise NotImplementedError('incomplete')\nNotImplementedError: incomplete\n\n======================================================================\nERROR: test_move_no_files ("
+      "error": "l last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 109, in test_exception_raised_when_dirs_do_not_exist\n    task_func(self.src_dir.name, self.dest_dir.name, 'txt')\n    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 44, in task_func\n    raise NotImplementedError('incomplete')\nNotImplementedError: incomplete\n\n======================================================================\nERROR: test_move_no_files ("
     },
     "BigCodeBench/458": {
       "task_id": "BigCodeBench/458",
@@ -57308,7 +57308,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "nes>...\n        seed=self.default_seed,\n    )\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 37, in task_func\n    raise NotImplementedError('incomplete')\nNotImplementedError: incomplete\n\n======================================================================\nERROR: test_case_3 (__main__.TestCases.test_case_3)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 78, i"
+      "error": "nes>...\n        seed=self.default_seed,\n    )\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 37, in task_func\n    raise NotImplementedError('incomplete')\nNotImplementedError: incomplete\n\n======================================================================\nERROR: test_case_3 (__main__.TestCases.test_case_3)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 78, i"
     },
     "BigCodeBench/492": {
       "task_id": "BigCodeBench/492",
@@ -57450,7 +57450,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "w0/prog.py\", line 38, in task_func\n    raise NotImplementedError('incomplete')\nNotImplementedError: incomplete\n\n======================================================================\nERROR: test_file_content (__main__.TestCases.test_file_content)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 71, in test_file_content\n    file_path = task_func(json_str, 'test_content.xls')\n  F"
+      "error": "w0/prog.py\", line 38, in task_func\n    raise NotImplementedError('incomplete')\nNotImplementedError: incomplete\n\n======================================================================\nERROR: test_file_content (__main__.TestCases.test_file_content)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 71, in test_file_content\n    file_path = task_func(json_str, 'test_content.xls')\n  F"
     },
     "BigCodeBench/502": {
       "task_id": "BigCodeBench/502",
@@ -58358,7 +58358,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "Error(f\"Error fetching URL {url}: {e}\")\nurllib.error.URLError: <urlopen error Error fetching URL https://en.wikibooks.org/wiki/Main_Page: HTTP Error 403: Forbidden>\n\n======================================================================\nERROR: test_valid_url (__main__.TestCases.test_valid_url)\nTest with a valid URL.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 44, in task_f"
+      "error": "Error(f\"Error fetching URL {url}: {e}\")\nurllib.error.URLError: <urlopen error Error fetching URL https://en.wikibooks.org/wiki/Main_Page: HTTP Error 403: Forbidden>\n\n======================================================================\nERROR: test_valid_url (__main__.TestCases.test_valid_url)\nTest with a valid URL.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 44, in task_f"
     },
     "BigCodeBench/592": {
       "task_id": "BigCodeBench/592",
@@ -60057,7 +60057,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "  forecast1, ax1 = task_func(df1)\n                     ~~~~~~~~~^^^^^\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 36, in task_func\n    raise NotImplementedError('incomplete')\nNotImplementedError: incomplete\n\n======================================================================\nERROR: test_case_2 (__main__.TestCases.test_case_2)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws"
+      "error": "  forecast1, ax1 = task_func(df1)\n                     ~~~~~~~~~^^^^^\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 36, in task_func\n    raise NotImplementedError('incomplete')\nNotImplementedError: incomplete\n\n======================================================================\nERROR: test_case_2 (__main__.TestCases.test_case_2)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws"
     },
     "BigCodeBench/928": {
       "task_id": "BigCodeBench/928",
@@ -60530,7 +60530,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "======================================================================\nFAIL: test_case_6 (__main__.TestCases.test_case_6)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 124, in test_case_6\n    self.assertTrue(creation_datetime <= modification_datetime)\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: False is not true\n\n--------------------------"
+      "error": "======================================================================\nFAIL: test_case_6 (__main__.TestCases.test_case_6)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 124, in test_case_6\n    self.assertTrue(creation_datetime <= modification_datetime)\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: False is not true\n\n--------------------------"
     },
     "BigCodeBench/985": {
       "task_id": "BigCodeBench/985",
@@ -61181,7 +61181,7 @@
         "frontier_rung": null,
         "solved_at": null
       },
-      "error": "Traceback (most recent call last):\n  File \"/Users/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 3, in <module>\n    import pytesseract\nModuleNotFoundError: No module named 'pytesseract'"
+      "error": "Traceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 3, in <module>\n    import pytesseract\nModuleNotFoundError: No module named 'pytesseract'"
     },
     "BigCodeBench/1020": {
       "task_id": "BigCodeBench/1020",

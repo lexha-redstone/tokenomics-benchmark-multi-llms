@@ -75,6 +75,51 @@ NOTES = {
            "so F4 and F5 ran the IDENTICAL ladder and its section 3 'cheapest per "
            "solved' claim is a coin flip (Fisher p = 0.27). Audit: "
            "[docs/featurebench-n48-lessons.md](../docs/featurebench-n48-lessons.md)."),
+    "21": ("2026-08-25", "SWE-bench Pro", "N=50",
+           "First live sweep on the real containerised harness, arms S0a-S3. "
+           "**Do not rank these rows.** It ran at `SBP_MAX_ORACLE_CALLS = 2`, "
+           "and `_ladder` evaluates its gate once per repair turn -- so at a "
+           "2-call budget against a 2-entry ladder no gate can answer "
+           "'escalate' and the frontier rung is unreachable for every arm that "
+           "names one (the same defect report 22 has). The arms also cover "
+           "different task counts (40, 47, 49, 50), so they were not scored "
+           "over one task set. Superseded by 29-31, which run at 3 calls with "
+           "`routing.frontier_is_reachable` asserted over the registry."),
+    "23": ("2026-08-25", "SWE-bench Pro", "N=50",
+           "Three candidate architectures (S4 grounded contract, S5 "
+           "patch-health router, S6 sonnet/opus sweetspot) against the same "
+           "split. All three resolved 0. **Do not rank these rows** -- same "
+           "2-oracle-call defect as 21, same unequal denominators (37, 44, 50)."),
+    "24": ("2026-08-25", "FeatureBench", "N=2",
+           "Smoke run of the repository-grounded arm (F7) against its blind "
+           "twin (F1). Neither resolved; the run was to prove the grounding "
+           "path executes, not to compare arms."),
+    "25": ("2026-08-25", "SWE-bench Pro", "N=2",
+           "Single-arm smoke (S0b) on the first build with "
+           "`SBP_MAX_ORACLE_CALLS = 3` and the guard-aware repair roles."),
+    "26": ("2026-08-25", "SWE-bench Pro", "N=2",
+           "Repeat of 25 after the reporter gained the ungraded-attempt "
+           "warning; kept because it is the first report that prints it."),
+    "27": ("2026-08-26", "SWE-bench Pro", "N=2",
+           "Evidence-gate smoke (S2). First SWE-bench Pro record in which the "
+           "frontier rung was actually invoked."),
+    "28": ("2026-08-26", "FeatureBench", "N=2",
+           "Repeat of 24 after `$/solved` stopped printing `$0.0000` for an arm "
+           "that solved nothing."),
+    "29": ("2026-08-26", "SWE-bench Pro", "N=10",
+           "First SWE-bench Pro sweep whose frontier rung is reachable, three "
+           "arms. S2 evidence gate 5/10, S0b sonnet solo 4/10, S1 cascade "
+           "3/10. Ten rows decides nothing; it sized the N=20 run."),
+    "30": ("2026-08-26", "SWE-bench Pro", "N=20",
+           "The N=20 sweep without the H2 challenger. Superseded by 31, which "
+           "is the same three arms plus S3 -- read 31 instead."),
+    "31": ("2026-08-27", "SWE-bench Pro", "N=20",
+           "**The current SWE-bench Pro result.** Four arms, python only, 3 "
+           "oracle calls each: S2 evidence gate 8/20, S0b sonnet solo 6/20, S1 "
+           "cascade 6/20, S3 plan-execute 5/20. The ranking matches BCB-Hard's, "
+           "but nothing here is significant (every pairwise Fisher p >= 0.50) "
+           "and 42-56% of attempts never reached the test suite. Directional "
+           "only -- see README section 1."),
 }
 
 # Indices whose reports are gone, and why. Printed under the table so a gap in
@@ -204,6 +249,13 @@ def write_index(apply_changes):
                   "missing number is a report that was withdrawn:", ""]
         for idx in sorted(WITHDRAWN):
             lines.append(f"- **{idx}** — {WITHDRAWN[idx]}")
+        lines += [
+            "",
+            "SWE-bench Pro was later **re-adopted** on the terms 07–09 failed: "
+            "upstream's own image, restore command, run script and parser decide "
+            "every verdict ([`src/evaluator.py`](../src/evaluator.py)). Reports 21 "
+            "onward are that harness. Nothing from 07–09 was carried forward.",
+        ]
 
     lines += [
         "",

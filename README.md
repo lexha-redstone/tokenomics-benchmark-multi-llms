@@ -12,7 +12,105 @@ It benchmarks multi-LLM collaboration architectures (cascades, advisor/executor
 splits, escalation ladders) against single frontier models on real software
 engineering tasks, holding everything constant except one variable: how failing
 test output is delivered to the repair turn. Models run live on Google Cloud
-Vertex AI (Gemini) and Anthropic (Claude).
+Vertex AI (Gemini) and Anthropic (Claude). Every sweep that carries a finding
+here is a live API run priced from its own usage records, with zero simulated
+tasks — the runner refuses rather than fabricating when a call fails, and stamps
+any deliberately simulated call so it stays visible. The one pre-2026-08 report
+that predates that policy is flagged as such in
+[§1's caveats](#caveats-worth-stating-plainly).
+
+---
+
+## TL;DR — five things this repository measured
+
+1. **Gate the frontier model on *evidence*, not on a failure counter.** Reading
+   the harness's typed failure digest and escalating when it says `broad` or
+   `stalled` reached **96% of a frontier-only pass rate for 74% of its spend**
+   (BigCodeBench-Hard, all 148 tasks).
+2. **Turning a cheap model's thinking budget up is the most expensive mistake
+   on the board.** `gemini-3.7-flash` at `medium` cost **33% more than
+   `claude-opus-5` and solved 14 fewer tasks**. Escalate the *model*, not the
+   *thinking level*.
+3. **A cheap ladder in front of a frontier model bought nothing** at a
+   three-attempt budget — identical pass rate, identical cost per solved task.
+   The saving people expect from "reserve the expensive model" did not appear.
+4. **Sorting sub-tasks by labelled difficulty before anything runs lost to a
+   flat, cheap control** on both accuracy and cost (ClassEval, 91 classes).
+   Spend committed against a prior loses to spend committed against an oracle
+   that already executed.
+5. **`$/solved` is not a model property.** `claude-sonnet-5` was the *cheapest*
+   arm per solved task on BigCodeBench-Hard and the *most expensive* on
+   FeatureBench. Re-derive it per dataset; never transplant it.
+
+The mechanism behind all five is one sentence: **a test run you already paid for
+is a free, exact routing signal — use it, and stop buying rungs it says will
+fail.**
+
+Claims 1–4 are recomputable offline from checked-in raw records — the analyzer
+for each is named beside it in [§1](#1-key-takeaways--best-setting). Three of
+the five are negative results.
+
+**The scope limit, stated once and meant:** every load-bearing number here was
+measured where running the tests is **free, instant and exact** — the regime
+that most favours "escalate on failure". Where retry costs a container run there
+is a direction and no result yet
+([§1](#what-swe-bench-pro-says-so-far-directional)). The full caveat list is
+[here](#caveats-worth-stating-plainly), and it is worth reading before quoting
+any row.
+
+---
+
+## The datasets, and what each one is for
+
+Four datasets, chosen so that each can *falsify* what the previous one
+suggested rather than agree with it.
+
+| Dataset | A task is… | Graded by | Oracle cost | Why it is here | Status |
+|---|---|---|---|---|---|
+| **BigCodeBench-Hard** (148 rows, ships in-repo) | one Python function body, ~305-token prompt, ~6 unit tests | local sandbox, `pass`/`fail` | **free**, milliseconds | The main sweep. Nothing to decompose and a free exact oracle — the regime that most favours *fail → escalate* | ✅ complete dataset swept, 11 arms |
+| **ClassEval** (100 classes, 92 scorable here) | a class of ~4 methods, each with its own test class and a labelled dependency tier | local sandbox, per method **and** per class | **free** | Adopted to *break* the BCB-Hard result: it has genuine sub-tasks of unequal, dataset-labelled difficulty | ✅ 91 classes, 9 arms |
+| **SWE-bench Pro** (731 rows, 4 languages) | a real multi-file patch to a real repository | **upstream's own** image, restore command, run script and parser | **expensive** — a container test run per attempt | The first gradable test of H2: does escalation still win when the routing signal stops being free? | ⚠️ N=20 python only — directional, not significant |
+| **FeatureBench** (100-row fast split) | a multi-file feature inside the repository's container | pytest inside the container, after a locally rebuilt test tree | **expensive** | Adopted for H2 first; its rows are only scorable when a local `test_patch` applies, which failed for *every* arm on most rows | ❌ N=48 ran but is **confounded** — do not rank its arms |
+| WebDev | a BigCodeBench-Hard row filtered by web/networking imports | same as BCB-Hard | free | **Not an independent dataset** — see the caveat in §1 | — a subset, not a fifth observation |
+
+**BigCodeBench-Hard and ClassEval are the two genuinely independent
+observations here.** They were picked to disagree — one function with one
+verdict, versus a class of independently-scored methods with labelled per-method
+difficulty. They did not disagree.
+
+---
+
+## Quickstart
+
+```bash
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+gcloud auth application-default login
+export GCP_PROJECT="your-gcp-project-id" GCP_LOCATION="global"
+```
+
+```bash
+python3 -m src.straitjacket          # verify the harness before spending anything
+```
+
+```bash
+# Smoke test: 5 tasks, one cheap variant. ~$0.02. Confirms credentials end to end.
+python3 run_benchmark.py --dataset bcb --n 5 --variants single_flash_lite --report
+```
+
+```bash
+# Reproduce the headline table from checked-in raw records -- no API calls, no cost.
+python3 tools/analyze_router_study.py     # BCB-Hard N=148  (the routing result)
+python3 tools/analyze_classeval.py        # ClassEval N=91  (the sub-task result)
+python3 tools/analyze_patterns.py         # BCB-Hard N=100  (the pattern families)
+```
+
+Full setup is [§2](#2-setup); every dataset's exact commands are
+[§3](#3-run-a-benchmark). BigCodeBench-Hard needs nothing but credentials;
+ClassEval needs a `pip install` plus a preflight; SWE-bench Pro and FeatureBench
+need Docker and tens of GB of disk.
+
+---
 
 **New here? Read in this order.**
 
@@ -21,28 +119,25 @@ Vertex AI (Gemini) and Anthropic (Claude).
 | 1 | [Key takeaways & best setting](#1-key-takeaways--best-setting) — **start here**: the N=148 full-dataset routing result, and the two negative findings inside it |
 | 2 | [Why cascades suit BigCodeBench-Hard](#why-the-cascade-shape-suits-this-dataset) — which architecture pattern wins, and the mechanism behind it |
 | 3 | [What ClassEval was run to falsify](#what-classeval-was-run-to-falsify) — the same question on a dataset built to give the other answer |
-| 4 | [Run a benchmark](#3-run-a-benchmark) — exact files and commands |
-| 5 | [Routing study](docs/routing-study.md) — the full N=148 design and its §5 result |
-| 6 | [Pipeline architecture](docs/pipeline-architecture.md) — how a task flows through the system |
-| 7 | [Straitjacket implementation](docs/straitjacket-implementation.md) — what it is, and how it differs from upstream |
-| 8 | [Report index](reports/README.md) — every sweep, in execution order |
-| 9 | [Dataset selection for pattern tests](docs/pattern-dataset-selection.md) — where a non-cascade pattern could win, which datasets can show it, and the ClassEval verdict |
-| 10 | [FeatureBench setup](docs/featurebench-setup.md) — the Docker-backed dataset that tests H2, and how to stand it up on Linux |
-| 10b | [FeatureBench N=48 lessons](docs/featurebench-n48-lessons.md) — **the run happened, and it did not settle H2**: what a confounded sweep looks like, and the six rules it produced |
-| 11 | [SWE-bench Pro setup](docs/swebench-pro-setup.md) — the same H2 study on 731 rows whose grading is the benchmark's own, and why it replaced FeatureBench |
+| 4 | [What SWE-bench Pro says so far](#what-swe-bench-pro-says-so-far-directional) — the same question again, where the oracle costs money |
+| 5 | [Run a benchmark](#3-run-a-benchmark) — exact files and commands |
+| 6 | [Routing study](docs/routing-study.md) — the full N=148 design and its §5 result |
+| 7 | [Pipeline architecture](docs/pipeline-architecture.md) — how a task flows through the system |
+| 8 | [Straitjacket implementation](docs/straitjacket-implementation.md) — what it is, and how it differs from upstream |
+| 9 | [Report index](reports/README.md) — every sweep, in execution order, with the defective ones labelled |
+| 10 | [Dataset selection for pattern tests](docs/pattern-dataset-selection.md) — where a non-cascade pattern could win, which datasets can show it, and the ClassEval verdict |
+| 11 | [SWE-bench Pro setup](docs/swebench-pro-setup.md) — the Docker-backed dataset whose grading is the benchmark's own |
+| 12 | [FeatureBench setup](docs/featurebench-setup.md) + [N=48 lessons](docs/featurebench-n48-lessons.md) — **the run happened, and it did not settle H2**: what a confounded sweep looks like, and the six rules it produced |
 
-**Three sweeps carry the findings**, all live API, all with the contained digest
-on every repair turn:
+**Which sweeps carry which claim:**
 
-| Sweep | Scope | Question it answers |
-|---|---|---|
-| **BCB-Hard N=148** ([report 19](reports/19_bcb-hard_straitjacket_n148.md)) | the **complete** dataset, 11 arms | how should a frontier model be *gated* behind cheap ones? |
-| **BCB-Hard N=100** ([report 12](reports/12_bcb-hard_straitjacket_n100.md)) | 100-task slice, 7 arms | which *pattern family* wins — cascade, plan-execute, or collaboration? |
-| **ClassEval N=91** ([report 17](reports/17_classeval_opus5_n91.md)) | 91 of 92 scorable classes, 9 arms | does routing *sub-tasks* by labelled difficulty pay? |
-
-BCB-Hard and ClassEval were chosen to disagree — one is a single function with
-one verdict, the other a class of ~4 independently-scored methods with labelled
-per-method difficulty. They did not disagree.
+| Sweep | Scope | Question it answers | Weight |
+|---|---|---|---|
+| **BCB-Hard N=148** ([report 19](reports/19_bcb-hard_straitjacket_n148.md)) | the **complete** dataset, 11 arms | how should a frontier model be *gated* behind cheap ones? | load-bearing |
+| **BCB-Hard N=100** ([report 12](reports/12_bcb-hard_straitjacket_n100.md)) | 100-task slice, 7 arms | which *pattern family* wins — cascade, plan-execute, or collaboration? | load-bearing |
+| **ClassEval N=91** ([report 17](reports/17_classeval_opus5_n91.md)) | 91 of 92 scorable classes, 9 arms | does routing *sub-tasks* by labelled difficulty pay? | load-bearing |
+| **SWE-bench Pro N=20** ([report 31](reports/31_swebench-pro_straitjacket_n20.md)) | 20 python rows, 4 arms | does any of it survive an oracle that costs money? | **directional only** — nothing significant |
+| FeatureBench N=48 ([20](reports/20_featurebench_straitjacket_n48.md), [22](reports/22_featurebench_straitjacket_n48.md)) | 48 rows, 8 arms | (same question) | **confounded — do not rank** |
 
 ---
 
@@ -321,7 +416,9 @@ matched-or-better accuracy, and there is no reading of the table that produces
 one.
 
 **The control is the harsher half.** `ce_route_flat` runs the identical
-per-method loop with *every* method sent to the cheapest model. It lands one
+per-method loop with *every* method written by the cheapest model — same repair
+policy, same call counts, same prompts; the only difference from the hypothesis
+arm is the one function that picks the model. It lands one
 class *above* the routed arm — 66/91 to 65/91 — at **34% lower cost per solved
 task**, spending $0.67 less in total. So whatever
 writing a class method-by-method is worth here, sorting those methods by
@@ -361,6 +458,57 @@ mechanism: *fail → escalate* routes on an oracle that has already executed,
 while difficulty routing and front-loaded planning both commit spend against a
 prior. Opus-5 remains the accuracy ceiling on both slices (76% and 88%), and on
 both it is the most expensive thing per solved task.
+
+### What SWE-bench Pro says so far (directional)
+
+Both results above were measured where failing is **free**. SWE-bench Pro is the
+first dataset here whose oracle costs real money and real minutes — an attempt
+applies a patch inside the repository's own container and runs that
+repository's suite through upstream's own run script and parser. That makes
+**H2** testable:
+
+> **H2.** As the oracle gets more expensive, the cascade's advantage shrinks,
+> because *fail → escalate* stops being a free routing signal and
+> front-loaded planning finally pays.
+
+**20 python rows, four arms, three container test runs each**
+([report 31](reports/31_swebench-pro_straitjacket_n20.md)):
+
+| Arm | Resolved | Total cost | $ / solved | Attempts that reached the suite |
+|---|---|---|---|---|
+| `sbp_evidence_gate` — escalate on the digest (`r9` shape) | **8/20 (40%)** | $7.82 | $0.977 | 22/53 (42%) |
+| `sbp_single_sonnet` — `claude-sonnet-5` × 3 | 6/20 (30%) | **$3.40** | **$0.566** | 28/50 (56%) |
+| `sbp_cascade` — escalate on the failure count (`r6` shape) | 6/20 (30%) | $7.12 | $1.187 | 22/50 (44%) |
+| `sbp_plan_exec` — **the H2 challenger**: Opus plans, flash implements | 5/20 (25%) | $5.52 | $1.104 | 11/52 (21%) |
+
+**The ranking is the one BCB-Hard predicted** — evidence gate above cascade
+above plan-and-execute — and the H2 challenger is last. That is the whole of the
+good news.
+
+**Nothing here is significant.** Every pairwise Fisher exact test is p ≥ 0.50
+(the widest gap, 8/20 vs 5/20, is p = 0.50), and the 95% CIs run 22–61% for the
+best arm and 11–47% for the worst. Twenty rows cannot separate four arms this
+close. **These rows do not belong in a table with the N=148 rows**, and this
+section is written to be quoted as a *direction*, not a result.
+
+**Two things it does establish, both about measurement rather than routing:**
+
+- **The cost position inverted exactly as predicted.** With no expensive middle
+  rung to skip, the evidence gate stopped being the cheap arm and became the
+  most expensive multi-model arm on the board — $0.977/solved against sonnet
+  solo's $0.566. The [tokenomics-architect skill](.agents/skills/tokenomics-architect/SKILL.md)
+  §6 wrote that inversion down as a prediction before the run; it held. The open
+  question is whether the extra resolved tasks are worth it, and N=20 cannot say.
+- **The dominant failure is still the patch, not the routing.** 42–56% of
+  attempts died at `apply_failed` before any test ran, and `sbp_plan_exec`
+  reached the suite on only 21% of its attempts. An arm's pass rate here is
+  partly a measure of whether it can emit a diff `git apply` accepts. Read the
+  attempt-diagnostics column in the report before reading the pass rate.
+
+**H2 is therefore still open**, and the honest scope of everything above it is
+unchanged: *evidence-gated escalation is the default **where retry is cheap**.*
+What would close it is the same sweep at N ≥ 100 on one language, with the
+apply-failure rate driven down first — the arms and the harness already exist.
 
 ### Caveats worth stating plainly
 
@@ -407,16 +555,29 @@ both it is the most expensive thing per solved task.
   subset rather than testing a new one. Any claim leaning on BCB-Hard *and*
   WebDev is leaning on one dataset twice. BigCodeBench-Hard and ClassEval are the
   two genuinely independent observations here.
-- **SWE-bench Pro was deleted from this repository, and its three reports
-  (indices 07–09) with it.** It was never executed: a candidate patch was scored
-  by substring-matching it against the canonical patch's first added lines, and
-  the local dataset file had empty `FAIL_TO_PASS`/`PASS_TO_PASS`. Every number it
-  ever produced was a canonical-patch similarity proxy printed in a column
-  labelled "pass rate" — which is worse than no dataset, so it was removed rather
-  than annotated. The full account is in
-  [docs/pattern-dataset-selection.md §3](docs/pattern-dataset-selection.md).
-  Re-adopting it means running the real containerised harness; the arms already
-  exist.
+- **SWE-bench Pro was deleted once, then re-adopted on different terms.** The
+  first version was never executed: a candidate patch was scored by
+  substring-matching it against the canonical patch's first added lines, and the
+  local dataset file had empty `FAIL_TO_PASS`/`PASS_TO_PASS`. Every number it
+  produced was a canonical-patch similarity proxy printed in a column labelled
+  "pass rate", so the dataset, its arms and its three reports (indices 07–09)
+  were removed rather than annotated
+  ([docs/pattern-dataset-selection.md §3](docs/pattern-dataset-selection.md)).
+  **The current SWE-bench Pro path is a different implementation**: upstream's
+  own per-instance image, restore command, `run_script.sh` and `parser.py` decide
+  every verdict ([`src/evaluator.py`](src/evaluator.py)), and nothing from the
+  deleted version was carried forward. Reports 21 onward are that harness. When
+  reading anything written before 2026-08-25 about "no executed multi-file-patch
+  dataset", it refers to the deleted version.
+- **SWE-bench Pro reports 21 and 23 must not be ranked either.** They ran at
+  `SBP_MAX_ORACLE_CALLS = 2`. Each gate is evaluated once per repair turn and
+  compares the attempt index against a two-entry ladder, so at a two-call budget
+  no gate can answer "escalate" and the frontier rung is unreachable code for
+  every arm that names one — the same structural defect as FeatureBench report
+  22. Their arms also cover different task counts (37–50), so they were never
+  scored over one task set. `routing.frontier_is_reachable` is now asserted over
+  the registry, and reports 29–31 run at three calls. Read
+  [report 31](reports/31_swebench-pro_straitjacket_n20.md), not 21 or 23.
 - **FeatureBench N=48 is a confounded sweep, not a third finding.** Both reports
   are complete and live, and every defect below is visible in their own records:
   the oracle budget differs across arms (3 calls vs 2), four arms were replayed
@@ -452,22 +613,36 @@ both it is the most expensive thing per solved task.
   makes two boxes measure different task sets while reporting comparable-looking
   pass rates.
 
-**What is still untested.** Both datasets carrying findings here run their tests
-in a sandbox for $0, so *escalate on failure rather than plan in advance* has
-only ever been measured where the failure signal is free, instant and exact —
-the regime that most favours it. The open question is what happens when retry is
-expensive or the oracle is partial.
+**What is still untested.** Both datasets carrying *load-bearing* findings here
+— BigCodeBench-Hard and ClassEval — run their tests in a sandbox for $0, so
+*escalate on failure rather than plan in advance* has only ever been
+**established** where the failure signal is free, instant and exact: the regime
+that most favours it. The open question is what happens when retry is expensive
+or the oracle is partial.
 [Dataset selection for pattern tests §7](docs/pattern-dataset-selection.md)
 ranks the candidates and named one — **FeatureBench's fast split** — as the run
 that would settle it.
 
-**That run has now happened, and it did not settle it.** At N=48 the diff-
-application step, not the routing policy, determined almost every outcome, and
-the arms did not share an oracle budget — so the expensive-oracle regime remains
-unmeasured. Six conditions on the rerun are derived in
-[docs/featurebench-n48-lessons.md §8](docs/featurebench-n48-lessons.md), starting
-with: return the `git apply` output as evidence, hold one oracle budget and assert
-it, and refuse to tabulate any row whose distinguishing branch never fired.
+**That run has happened twice, and H2 is still open.**
+
+1. **FeatureBench N=48 did not settle it.** The diff-application step, not the
+   routing policy, determined almost every outcome, and the arms did not share
+   an oracle budget. Six conditions on the rerun are derived in
+   [docs/featurebench-n48-lessons.md §8](docs/featurebench-n48-lessons.md),
+   starting with: return the `git apply` output as evidence, hold one oracle
+   budget and assert it, and refuse to tabulate any row whose distinguishing
+   branch never fired.
+2. **SWE-bench Pro N=20 did not settle it either, for a better reason.** Those
+   six conditions are met — one oracle budget, asserted reachable; the apply log
+   returned as evidence; upstream's own grading — and the arms ranked exactly as
+   the cheap-oracle result predicts, with the H2 challenger last. But at twenty
+   rows every pairwise gap is p ≥ 0.50, and 42–56% of attempts still died before
+   a test ran. See [§1](#what-swe-bench-pro-says-so-far-directional).
+
+So the scope limit stands as written: **evidence-gated escalation is the default
+where retry is cheap**, and the expensive-oracle regime has a direction but no
+result. Closing it means the same SWE-bench Pro sweep at N ≥ 100 on one
+language, with the apply-failure rate driven down first.
 
 ---
 
@@ -640,7 +815,7 @@ python3 tools/analyze_classeval.py
 | `ce_single_lite` / `ce_single_flash` / `ce_single_sonnet` | one model writes the whole class, then repairs it | 62% / 77% / 73% |
 | `ce_cascade` | **the shape to beat** — whole-class escalation, Lite → 3.7 low → 3.7 medium | **80%**, $0.0371/solved |
 | `ce_plan_exec` | planner writes per-method contracts, a cheap executor writes the class | 77%, $0.0266/solved |
-| `ce_route_flat` | **the control** — per-method generation, every method to the same model | 73%, **$0.0210/solved** |
+| `ce_route_flat` | **the control** — per-method generation, every method written by the same cheap model (repair still steps one rung up, as in every arm) | 73%, **$0.0210/solved** |
 | `ce_route_by_tier` | **the hypothesis** — each method routed by its labelled difficulty tier | 71%, $0.0317/solved |
 | `ce_plan_route` | contracts *and* difficulty routing | 71%, $0.0410/solved |
 | `ce_single_opus` | the frontier baseline — **not** in `--group classeval`; see below | **88%**, $0.0464/solved |
@@ -685,15 +860,112 @@ The equivalent one-off through the master runner, which does **not** merge:
 python3 run_benchmark.py --dataset classeval --variants ce_single_opus --n 91
 ```
 
-### FeatureBench — the expensive-oracle experiment
+### SWE-bench Pro — the expensive-oracle experiment
 
-Every result above was measured where failing is **free**: BCB-Hard and
-ClassEval run their tests in a sandbox for $0 in milliseconds, which is exactly
-the regime that most favours *fail → escalate*. FeatureBench is the first
-dataset here whose oracle costs — an attempt applies a diff inside the
-repository's own container and runs pytest, ~57 s on gold. That makes **H2**
-testable: does escalation still beat front-loaded planning when the routing
-signal stops being free?
+Every result in §1's first two sections was measured where failing is **free**:
+BCB-Hard and ClassEval run their tests in a sandbox for $0 in milliseconds,
+which is exactly the regime that most favours *fail → escalate*. **SWE-bench Pro
+is where that stops being true**, and it is the only dataset here that has
+produced gradable rows in that regime. An attempt applies a patch inside the
+repository's own container and runs the repository's real suite. That makes
+**H2** testable: does escalation still beat front-loaded planning when the
+routing signal stops being free?
+
+Upstream decides every verdict — it ships the image, the git command that
+restores the graded tests, the per-instance script that runs the suite, and the
+parser that reads its output, and [`src/evaluator.py`](src/evaluator.py) calls
+all four rather than reimplementing any of them. 731 rows, four languages (go
+280 · python 266 · js 165 · ts 20), frontier agents resolve roughly 20–40%.
+
+**This is what FeatureBench was adopted for, and could not deliver.** A
+FeatureBench row is only scorable when the repository's own `test_patch` applies
+to the image it ships with, and the harness has to rebuild the graded tree
+itself; when that fails it fails for *every* arm, which is a missing measurement
+rather than a hard task. SWE-bench Pro removes that step instead of working
+around it.
+
+**It needs Docker and disk**: one image per instance, 0.5–4.2 GB compressed
+over a 14-row sample, median 1.1 GB. Upstream publishes linux/amd64 only, so an
+arm64 host runs every container under emulation. Prerequisites, the per-attempt
+contract and troubleshooting:
+**[docs/swebench-pro-setup.md](docs/swebench-pro-setup.md)**. Modal is *not*
+required — the local-Docker path is the one mirrored here.
+
+```bash
+python3 tools/swebench_pro_preflight.py --list                     # what the split holds
+python3 tools/swebench_pro_preflight.py --languages python --n 20 --pull
+python3 tools/swebench_pro_preflight.py --ready --ready-out ids.txt
+python3 tools/swebench_pro_preflight.py --languages python --gold 3
+python3 tools/swebench_pro_preflight.py --gold 0 --write           # quarantine what gold fails
+```
+
+```bash
+# Smoke: two rows, the recommended shape and the shape it has to beat.
+python3 run_benchmark.py --dataset swebench-pro --n 2 \
+    --variants sbp_evidence_gate,sbp_cascade --no-cache
+
+# The comparison. `--group sbp` is eight arms; one language at a time -- see below.
+SBP_LANGUAGES=python python3 run_benchmark.py --dataset swebench-pro \
+    --group sbp --n 20 --report --no-cache
+```
+
+**This is the sweep behind [report 31](reports/31_swebench-pro_straitjacket_n20.md)**
+(run with the first five arms below). What it found, and why it is directional
+rather than a result, is in
+[§1](#what-swe-bench-pro-says-so-far-directional).
+
+| Arm | In `--group sbp` | What it is |
+|---|---|---|
+| `sbp_single_flash` / `sbp_single_sonnet` | ✅ | one model writes the patch and repairs it twice |
+| `sbp_cascade` | ✅ | flash → sonnet → opus, escalate whenever a rung fails — the `r6` shape |
+| `sbp_evidence_gate` | ✅ | **the recommended shape** — same tiers, escalate when the digest reads `broad`/`stalled` (`r9`, the N=148 winner) |
+| `sbp_plan_exec` | ✅ | **the H2 challenger** — `claude-opus-5` plans *before* any test runs, then flash implements and repairs |
+| `sbp_grounded_contract` | ✅ | Sonnet locates the files and writes a contract, flash executes, opus catches the escalation |
+| `sbp_patch_health_router` | ✅ | gate on how healthy the *patch* looks, not just on the test digest |
+| `sbp_sonnet_opus_sweetspot` | ✅ | Sonnet drafts, the evidence gate decides, Opus repairs |
+| `sbp_single_opus` | ❌ opt-in | the frontier baseline — excluded so it cannot silently reprice a default sweep |
+
+`sbp_grounded_contract`, `sbp_patch_health_router` and `sbp_sonnet_opus_sweetspot`
+have only ever run in [report 23](reports/23_swe-bench-pro-candidates_straitjacket_n50.md),
+at the two-oracle-call budget where their escalation branch was unreachable — all
+three resolved 0. **There is no valid measurement of them yet**, and report 31
+did not include them.
+
+Every arm makes **exactly 3 oracle calls** — three container test runs, the
+resource H2 says is scarce — and `sbp_plan_exec`'s extra planning call shows up
+in dollars where it belongs. Three is not a preference: `_ladder` evaluates its
+gate once per repair turn against a two-entry ladder, so at a budget of two no
+gate can ever answer "escalate". `routing.frontier_is_reachable` asserts this
+over the registry, and reports 21 and 23 are what happens without it.
+
+Regenerate the chart from the raw records:
+
+```bash
+python3 visualization/generate_swebench_pro_n20_chart.py
+```
+
+![SWE-bench Pro N=20 cost vs. performance](visualization/swebench_pro_n20_scatter_plot.png)
+
+**One caveat that changes what a number means.** The straitjacket digest's typed
+fact tier is profile-detected from test output, and this split spans four
+languages: a Python row's pytest output types, a mocha row's JSON reporter blob
+does not (and sets `routing.degraded`). A mixed-language `sbp_evidence_gate`
+sweep is two arms wearing one name. Run it per language and say which.
+
+### FeatureBench — superseded, and kept as a worked example of a bad sweep
+
+> **Read this section only if you are reviving FeatureBench or studying how a
+> sweep goes wrong.** It was the *first* dataset adopted here with an expensive
+> oracle — an attempt applies a diff inside the repository's own container and
+> runs pytest, ~57 s on gold — but its N=48 sweep is confounded, and
+> **SWE-bench Pro replaced it above** for the H2 study. Nothing below should be
+> quoted as a result.
+
+FeatureBench asks the same H2 question as SWE-bench Pro: does escalation still
+beat front-loaded planning when the routing signal stops being free? The
+difference is who decides the verdict. A FeatureBench row is graded by a test
+tree *this repository* rebuilds from a local `test_patch`, and when that rebuild
+fails it fails for every arm at once.
 
 **It needs Docker, a lot of disk, and a preflight.** The images are per
 *instance* rather than per repository and the one measured directly is 10.2 GB
@@ -719,7 +991,8 @@ python3 tools/featurebench_preflight.py --write      # run gold, quarantine what
 python3 run_benchmark.py --dataset featurebench --n 2 \
     --variants fb_evidence_gate,fb_cascade --no-cache
 
-# The comparison. Five arms. Start small -- see the cost table in the setup doc.
+# The comparison. `--group featurebench` is eight arms (the two grounded arms
+# and the opus baseline are opt-in). Start small -- see the setup doc's cost table.
 python3 run_benchmark.py --dataset featurebench --group featurebench \
     --n 20 --report --no-cache
 ```
@@ -731,7 +1004,7 @@ python3 run_benchmark.py --dataset featurebench --group featurebench \
 | `fb_evidence_gate` | **the recommended shape** — same tiers, escalate when the digest reads `broad`/`stalled` (`r9`, the N=148 winner) |
 | `fb_plan_exec` | **the H2 challenger** — `claude-opus-5` plans *before* any test runs, then flash implements and repairs |
 | `fb_diff_contract` | strict unified-diff contract — added after the first sweep showed that most failures never reached a test |
-| `fb_diff_aware_gate` | same, plus escalation on a stalled patch format — **its gate is unreachable at the current oracle budget; see the lessons doc** |
+| `fb_diff_aware_gate` | same, plus escalation on a stalled patch format. Its gate was *unreachable* in [report 22](reports/22_featurebench_straitjacket_n48.md) at `MAX_ORACLE_CALLS = 2` — it is reachable at the current default of 3, and `unreachable_frontier_arms()` now refuses a registry where it is not |
 | `fb_spec_deconstruct` | extract a file/interface manifest first, then synthesise the diff against it |
 | `fb_grounded` | **the fix for the real defect** — same ladder as `fb_cascade`, but the files it must patch are quoted from the row's own container first |
 | `fb_grounded_gate` | the same grounding under the `r9` evidence gate, so routing and grounding are measured separately |
@@ -807,62 +1080,6 @@ Regenerate the chart from the raw records:
 python3 visualization/generate_featurebench_n48_chart.py
 ```
 
-### SWE-bench Pro
-
-The same H2 question as FeatureBench, on rows that are actually gradable.
-A FeatureBench row is only scorable when the repository's own `test_patch`
-applies to the image it ships with, and the harness has to rebuild the graded
-tree itself; when that fails it fails for *every* arm, which is a missing
-measurement rather than a hard task. SWE-bench Pro removes that step instead of
-working around it — upstream ships the image, the git command that restores the
-graded tests, the per-instance script that runs the suite, and the parser that
-reads its output, and [`src/evaluator.py`](src/evaluator.py) calls all four
-rather than reimplementing any of them. 731 rows, four languages (go 280 ·
-python 266 · js 165 · ts 20), frontier agents resolve roughly 20–40%.
-
-**It needs Docker and disk**: one image per instance, 0.5–4.2 GB compressed
-over a 14-row sample, median 1.1 GB. Upstream publishes linux/amd64 only, so an
-arm64 host runs every container under emulation. Prerequisites, the per-attempt
-contract and troubleshooting:
-**[docs/swebench-pro-setup.md](docs/swebench-pro-setup.md)**. Modal is *not*
-required — the local-Docker path is the one mirrored here.
-
-```bash
-python3 tools/swebench_pro_preflight.py --list                     # what the split holds
-python3 tools/swebench_pro_preflight.py --languages python --n 20 --pull
-python3 tools/swebench_pro_preflight.py --ready --ready-out ids.txt
-python3 tools/swebench_pro_preflight.py --languages python --gold 3
-python3 tools/swebench_pro_preflight.py --gold 0 --write           # quarantine what gold fails
-```
-
-```bash
-# Smoke: two rows, the recommended shape and the shape it has to beat.
-python3 run_benchmark.py --dataset swebench-pro --n 2 \
-    --variants sbp_evidence_gate,sbp_cascade --no-cache
-
-# The comparison. Five arms, one language at a time -- see the caveat below.
-SBP_LANGUAGES=python python3 run_benchmark.py --dataset swebench-pro \
-    --group sbp --n 20 --report --no-cache
-```
-
-| Arm | What it is |
-|---|---|
-| `sbp_single_flash` / `sbp_single_sonnet` | one model writes the patch and repairs it twice |
-| `sbp_cascade` | flash → sonnet → opus, escalate whenever a rung fails — the `r6` shape |
-| `sbp_evidence_gate` | **the recommended shape** — same tiers, escalate when the digest reads `broad`/`stalled` (`r9`, the N=148 winner) |
-| `sbp_plan_exec` | **the H2 challenger** — `claude-opus-5` plans *before* any test runs, then flash implements and repairs |
-| `sbp_single_opus` | the frontier baseline — **not** in `--group sbp`; opt-in |
-
-Every arm makes **exactly 3 oracle calls** — three container test runs, the
-resource H2 says is scarce — and `sbp_plan_exec`'s extra planning call shows up
-in dollars where it belongs.
-
-**One caveat that changes what a number means.** The straitjacket digest's typed
-fact tier is profile-detected from test output, and this split spans four
-languages: a Python row's pytest output types, a mocha row's JSON reporter blob
-does not (and sets `routing.degraded`). A mixed-language `sbp_evidence_gate`
-sweep is two arms wearing one name. Run it per language and say which.
-
 ### WebDev
 
 ```bash
@@ -880,7 +1097,7 @@ reading a result there as confirmation of a BCB-Hard result.
 | `--dataset` / `-d` | `bcb`, `webdev`, `classeval`, `featurebench`, `swebench-pro` | which benchmark (default `bcb`) |
 | `--n` | integer | number of tasks |
 | `--variants` / `-v` | comma-separated ids | exactly which architectures to run |
-| `--group` / `-g` | `all`, `single`, `combo`, `straitjacket`, `nextgen`, `ablation`, `router`, `classeval`, `featurebench`, `sbp` | a preset family instead of explicit ids |
+| `--group` / `-g` | `all`, `single`, `combo`, `straitjacket`, `nextgen`, `ablation`, `router`, `classeval`, `featurebench`, `fb_grounded`, `sbp`, `sbp_candidates` | a preset family instead of explicit ids |
 | `--no-cache` | flag | ignore cached task results and re-run live |
 | `--report` / `-r` | flag | emit the markdown report and HTML dashboard |
 | `--out` / `-o` | path | override the consolidated JSON path |
@@ -955,20 +1172,24 @@ python3 tools/index_reports.py --apply     # adopt new reports, refresh reports/
 │
 ├── visualization/                   # ← charts, each regenerable from the raw result JSON
 │   ├── generate_bcb_n148_chart.py   #   BCB-Hard N=148 cost vs. accuracy scatter
+│   ├── plot_classeval_n91_scatter.py
 │   ├── generate_featurebench_n48_chart.py
-│   └── plot_classeval_n91_scatter.py
+│   └── generate_swebench_pro_n20_chart.py
 │
 ├── tests/                           # contract tests for the straitjacket bridge
 ├── tools/                           # analysis (analyze_patterns / analyze_classeval /
 │                                    #   analyze_router_study), ClassEval preflight + nltk
 │                                    #   data fetch, report indexing, cache audit, resume
 │
-├── bigCodeBench-hard/               # dataset 1: Python function completion  (N=100 swept)
+├── bigCodeBench-hard/               # dataset 1: Python function completion (N=148 swept)
+│     data/ ships in the repo -- no download step
 ├── classeval/                       # dataset 2: class generation, scored per method (N=91 swept)
 │     data/ also holds quarantine-<split>.json, written by the preflight
-├── featurebench/                    # dataset 3: multi-file features, containerised oracle (H2)
-├── swebench_pro/                    # dataset 4: 731 rows, upstream's own grading (H2), gitignored caches
-│     data/ also holds quarantine-<split>.json, written by the preflight
+├── swebench_pro/                    # dataset 3: 731 rows, upstream's own grading (H2, N=20 swept)
+│     data/, run_scripts/ and results/ are FETCHED ON DEMAND and gitignored --
+│     ~24 MB of JSONL plus upstream's per-instance scripts, neither of them source
+├── featurebench/                    # dataset 4: multi-file features, containerised oracle
+│     N=48 ran but is confounded -- superseded by swebench_pro for the H2 study
 ├── webdev/                          # a library-filtered BCB-Hard subset, not an independent dataset
 │     each: data/  results/  + historical sweep scripts
 │
@@ -1022,7 +1243,12 @@ Routing matrix derived from the sweeps in `reports/`:
 | B — a class or module of several methods | Whole-class cascade: `3.5-lite` → `3.7-flash (low)` → `3.7-flash (med)` | ClassEval N=91 — 80% at $0.0371/solved |
 | C — accuracy is the only constraint | `claude-opus-5` alone, three rungs | 84.5% (BCB-Hard N=148) / 88% (ClassEval); a Gemini ladder in front of it adds nothing |
 | D — large CI/CD regression batch, cost-led | Per-method or per-task loop on one cheap model | ClassEval N=91 — `ce_route_flat`, 73% at $0.0210/solved |
-| E — enterprise repo bug / multi-file git patch | *Unvalidated here.* No executed multi-file-patch dataset remains in this repository | — |
+| E — enterprise repo bug / multi-file git patch | **Provisional**: the same evidence gate as class A, and *not* a front-loaded planner | SWE-bench Pro N=20 — the gate ranks first (40%) and the planner last (25%), but every gap is p ≥ 0.50. Directional, [see §1](#what-swe-bench-pro-says-so-far-directional) |
+
+These letters are the README's own, matched to the datasets that were run. The
+skill file uses its own class letters for a wider set of task shapes — read
+[its §3](.agents/skills/tokenomics-architect/SKILL.md) for that mapping rather
+than assuming the letters line up.
 
 Four rules the sweeps license:
 

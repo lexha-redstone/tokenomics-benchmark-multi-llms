@@ -95,8 +95,20 @@ reports (indices 07–09) were **deleted** rather than annotated. Re-adopting
 SWE-bench Pro means running the real containerised harness, not writing another
 arm.
 
-So the honest starting position is: **this repo has one working dataset, and it
-is the one that favours cascades.**
+> **It was re-adopted on exactly those terms, on 2026-08-25.** Nothing from the
+> deleted version was carried forward. The current path drives Docker directly
+> and lets upstream decide every verdict — its per-instance image, the
+> `git checkout` that restores the graded tests, `run_script.sh`, and
+> `parser.py` ([`src/evaluator.py`](../src/evaluator.py)). Setup:
+> [swebench-pro-setup.md](swebench-pro-setup.md). First valid result:
+> [report 31](../reports/31_swebench-pro_straitjacket_n20.md), N=20, directional
+> only. Reports 21 and 23 are earlier and defective for a different reason —
+> a two-oracle-call budget made every escalation branch unreachable.
+
+So the honest starting position **at the time this section was written** was:
+this repo has one working dataset, and it is the one that favours cascades.
+It now has three that executed — BCB-Hard, ClassEval and SWE-bench Pro — and
+the third has only a directional result.
 
 ## 4. Shortlist
 
@@ -379,6 +391,19 @@ it.
 |---|---|---|---|
 | **1** | **FeatureBench, fast split (100 instances)** | The only candidate that adds P4 *without* the oracle-visibility conflict: it is test-driven by construction, so feeding test output to a repair turn is the intended mode rather than leakage. Docker mandatory but only **18 prebuilt images** for the fast split, no GPU, 57.2 s/instance on gold. Frontier range is wide enough to measure against — Opus 4.7 at 46.7% resolved on the lite split, GPT-5.5 at 26.7% — and its **Passed Rate** metric gives a continuous gradient even where cheap rungs resolve ~0. Cost breakdown in [§7.5](#75-what-adopting-featurebench-actually-costs) | **Yes — this is the one that must be run** |
 | **2** | **SWE-bench Pro, real harness** | Structurally the closest thing to the production case the repo is advising about, and the arms already exist | Only after §7.2 is decided in writing. Otherwise it produces a number that looks like a SWE-bench score and is not one — which is how the mock version went wrong in the first place |
+
+> **This ranking has been overtaken by what actually happened.** FeatureBench
+> (rank 1) ran and could not be ranked; SWE-bench Pro (rank 2) was adopted
+> instead and produced the only valid expensive-oracle rows in the repository.
+> The reason is the one §7.2 is about: FeatureBench's verdict depends on a test
+> tree *this repository* rebuilds from a local `test_patch`, and when that
+> rebuild fails it fails for every arm — a missing measurement dressed as a hard
+> task. SWE-bench Pro deletes that step rather than working around it. §7.2's
+> condition was met by writing the verifier contract down explicitly:
+> [swebench-pro-setup.md](swebench-pro-setup.md) states what each attempt is
+> given and what decides its verdict, and every report says the arms are
+> with-test-feedback rather than leaderboard rows. **Read rank 1 and 2 as
+> swapped.**
 | **3** | **SWE-Lancer** | Difficulty labelled *in money* ($50–$32,000), plus managerial tasks that evaluate the planner role in isolation — the cleanest available test of the half of H1 that ClassEval could only test indirectly | Worth it if access is straightforward; it is the best P2 on the list |
 | **—** | **Commit0** | Was ranked as the strongest P1/P4. Its published numbers are contaminated by an unsquashed git history, and the corrected drop was 31 points on one model | **Deprioritised**, unless run purely self-referentially with no comparison to any leaderboard |
 | **—** | **TPS-Bench / DevEval / CoderEval** | Good labels, but TPS-Bench is tool scheduling rather than code generation, and DevEval/CoderEval have weak P3 | Not needed — ClassEval already covers the labelled-difficulty question they would re-ask |

@@ -1,10 +1,22 @@
 # FeatureBench on Linux — setup and first run
 
-> **What this dataset is for.** It is the only benchmark in this repository with
-> an *expensive* oracle. BCB-Hard and ClassEval run their tests in a sandbox for
-> $0 in milliseconds; a FeatureBench attempt applies a diff inside the
-> repository's own container and runs pytest, which upstream measures at 57.2 s
-> on gold patches. That is the P4 property
+> **Status, before anything else.** FeatureBench **ran at N=48 and the sweep is
+> confounded** — its rows belong in no comparison table. The audit is
+> [featurebench-n48-lessons.md](featurebench-n48-lessons.md). For the H2 study
+> it has since been **superseded by SWE-bench Pro**, whose rows are gradable by
+> upstream's own harness rather than by a test tree this repository has to
+> rebuild ([swebench-pro-setup.md §1](swebench-pro-setup.md)). This document is
+> still the correct setup guide for FeatureBench, and the rerun conditions in
+> the lessons doc still stand — it is simply no longer the dataset that answers
+> H2 first.
+
+---
+
+> **What this dataset is for.** It was the first benchmark in this repository
+> with an *expensive* oracle. BCB-Hard and ClassEval run their tests in a
+> sandbox for $0 in milliseconds; a FeatureBench attempt applies a diff inside
+> the repository's own container and runs pytest, which upstream measures at
+> 57.2 s on gold patches. That is the P4 property
 > [§7 of the dataset survey](pattern-dataset-selection.md) says is missing
 > everywhere else, and it is what makes **H2** testable:
 >
@@ -272,7 +284,8 @@ to blame on the environment — they are reported as `SKIP` and left in.
 python3 run_benchmark.py --dataset featurebench --n 2 \
     --variants fb_evidence_gate,fb_cascade --no-cache
 
-# The comparison. Five arms.
+# The comparison. `--group featurebench` is EIGHT arms; the five in the table
+# below are the original set, and F4-F6 were added after the first sweep.
 python3 run_benchmark.py --dataset featurebench --group featurebench \
     --n 20 --report --no-cache
 ```
@@ -285,6 +298,15 @@ python3 run_benchmark.py --dataset featurebench --group featurebench \
 | `fb_evidence_gate` | same tiers, escalate when the digest reads `broad`/`stalled` | **the recommended shape** — `r9`, 96% of frontier accuracy for 74% of frontier spend at N=148 |
 | `fb_plan_exec` | **opus-5 plans first**, flash implements and repairs | **the H2 challenger** |
 | `fb_single_opus` | `claude-opus-5` × 3 | the ceiling. **Not** in `--group featurebench`; opt-in, see below |
+
+Three more arms are in `--group featurebench`, added after the first sweep
+showed that most failures never reached a test at all: `fb_diff_contract`
+(strict unified-diff contract), `fb_diff_aware_gate` (the same, escalating on a
+stalled patch format) and `fb_spec_deconstruct` (extract a file/interface
+manifest first). Two further arms, `fb_grounded` and `fb_grounded_gate`, quote
+the files to be patched from the row's own container; they sit in their own
+category (`--group fb_grounded`) so their extra input tokens cannot silently
+reprice a default sweep.
 
 Two design choices are deliberate and worth knowing before reading a result:
 

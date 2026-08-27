@@ -8,11 +8,11 @@
     "available": true,
     "ctx_version": "0.35.1",
     "reason": "",
-    "workspace": "/usr/local/google/home/lexha/.cache/tokenomics-sj/ws",
-    "state_home": "/usr/local/google/home/lexha/.cache/tokenomics-sj/state",
+    "workspace": "/home/USER/.cache/tokenomics-sj/ws",
+    "state_home": "/home/USER/.cache/tokenomics-sj/state",
     "raw_cap_chars": 2500,
     "frame_budget": {
-      "sandbox_prog_path": "/usr/local/google/home/lexha/.cache/tokenomics-sj/ws/w0/prog.py",
+      "sandbox_prog_path": "/home/USER/.cache/tokenomics-sj/ws/w0/prog.py",
       "frame_chars_used": 111,
       "frame_chars_budget": 160,
       "frame_fits": true
@@ -27,11 +27,11 @@
         "available": true,
         "ctx_version": "0.35.1",
         "reason": "",
-        "workspace": "/usr/local/google/home/lexha/.cache/tokenomics-sj/ws",
-        "state_home": "/usr/local/google/home/lexha/.cache/tokenomics-sj/state",
+        "workspace": "/home/USER/.cache/tokenomics-sj/ws",
+        "state_home": "/home/USER/.cache/tokenomics-sj/state",
         "raw_cap_chars": 2500,
         "frame_budget": {
-          "sandbox_prog_path": "/usr/local/google/home/lexha/.cache/tokenomics-sj/ws/w0/prog.py",
+          "sandbox_prog_path": "/home/USER/.cache/tokenomics-sj/ws/w0/prog.py",
           "frame_chars_used": 111,
           "frame_chars_budget": 160,
           "frame_fits": true
@@ -2628,7 +2628,7 @@
             "n_subtasks": 5,
             "passed_subtasks": 4
           },
-          "error": "======================================================================\nFAIL: test_count_all_3 (__main__.CombinationCalculatorTestCountAll.test_count_all_3)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/usr/local/google/home/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 130, in test_count_all_3\n    self.assertEqual(CombinationCalculator.count_all(65), False)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAsse"
+          "error": "======================================================================\nFAIL: test_count_all_3 (__main__.CombinationCalculatorTestCountAll.test_count_all_3)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 130, in test_count_all_3\n    self.assertEqual(CombinationCalculator.count_all(65), False)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAsse"
         },
         {
           "task_id": "ClassEval_24",
@@ -3847,7 +3847,7 @@
             "n_subtasks": 5,
             "passed_subtasks": 4
           },
-          "error": "======================================================================\nFAIL: test_clear_inbox_2 (__main__.EmailClientTestClearInbox.test_clear_inbox_2)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/usr/local/google/home/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 251, in test_clear_inbox_2\n    self.assertEqual(receiver.inbox, [{'size': 10},{'size': 20},{'size': 15}])\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+          "error": "======================================================================\nFAIL: test_clear_inbox_2 (__main__.EmailClientTestClearInbox.test_clear_inbox_2)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 251, in test_clear_inbox_2\n    self.assertEqual(receiver.inbox, [{'size': 10},{'size': 20},{'size': 15}])\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
         },
         {
           "task_id": "ClassEval_37",
@@ -4047,7 +4047,7 @@
             "n_subtasks": 3,
             "passed_subtasks": 2
           },
-          "error": "e \"/usr/local/google/home/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 434, in test_process_excel_data_5\n    self.assertEqual(processed_data, expected_processed_data)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Lists differ: [('Na[46 chars]SA', '25'), ('Alice', 30, 'CANADA', '30'), ('B[23 chars]35')] != [('Na[46 chars]SA', 25), ('Alice', 30, 'CANADA', 30), ('Bob',[17 chars] 35)]\n\nFirst differing element 1:\n('John', 25, 'USA', '25')\n('John', 25, 'USA', 25)\n\n  "
+          "error": "e \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 434, in test_process_excel_data_5\n    self.assertEqual(processed_data, expected_processed_data)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Lists differ: [('Na[46 chars]SA', '25'), ('Alice', 30, 'CANADA', '30'), ('B[23 chars]35')] != [('Na[46 chars]SA', 25), ('Alice', 30, 'CANADA', 30), ('Bob',[17 chars] 35)]\n\nFirst differing element 1:\n('John', 25, 'USA', '25')\n('John', 25, 'USA', 25)\n\n  "
         },
         {
           "task_id": "ClassEval_39",
@@ -4291,7 +4291,7 @@
             "n_subtasks": 3,
             "passed_subtasks": 2
           },
-          "error": "^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 2437.4235 != 647.6999999999999\n\n======================================================================\nFAIL: test_calculate_calorie_intake_3 (__main__.FitnessTrackerTestCaculateCalorieIntake.test_calculate_calorie_intake_3)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/usr/local/google/home/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 141, in test_calculate_calorie_intake_3\n    self."
+          "error": "^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 2437.4235 != 647.6999999999999\n\n======================================================================\nFAIL: test_calculate_calorie_intake_3 (__main__.FitnessTrackerTestCaculateCalorieIntake.test_calculate_calorie_intake_3)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 141, in test_calculate_calorie_intake_3\n    self."
         },
         {
           "task_id": "ClassEval_41",
@@ -4922,7 +4922,7 @@
             "n_subtasks": 2,
             "passed_subtasks": 0
           },
-          "error": "--------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/usr/local/google/home/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 166, in test_interpolate_2d_2\n    self.assertEqual(\n    ~~~~~~~~~~~~~~~~^\n        interpolation.interpolate_2d([1, 2, 3], [1, 2, 3], [[1, 2, 3], [4, 5, 6], [7, 8, 9]], [1.5, 2.5], [3, 4]),\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n        [4.5]"
+          "error": "--------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 166, in test_interpolate_2d_2\n    self.assertEqual(\n    ~~~~~~~~~~~~~~~~^\n        interpolation.interpolate_2d([1, 2, 3], [1, 2, 3], [[1, 2, 3], [4, 5, 6], [7, 8, 9]], [1.5, 2.5], [3, 4]),\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n        [4.5]"
         },
         {
           "task_id": "ClassEval_47",
@@ -6086,7 +6086,7 @@
             "n_subtasks": 8,
             "passed_subtasks": 6
           },
-          "error": "======================================================================\nFAIL: test_play_3 (__main__.MusicPlayerTestPlay.test_play_3)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/usr/local/google/home/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 236, in test_play_3\n    self.assertEqual(musicPlayer.play(),False)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: None != False\n\n======================================"
+          "error": "======================================================================\nFAIL: test_play_3 (__main__.MusicPlayerTestPlay.test_play_3)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 236, in test_play_3\n    self.assertEqual(musicPlayer.play(),False)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: None != False\n\n======================================"
         },
         {
           "task_id": "ClassEval_62",
@@ -6189,7 +6189,7 @@
             "n_subtasks": 3,
             "passed_subtasks": 2
           },
-          "error": "======================================================================\nFAIL: test_remove_stop_words_5 (__main__.NLPDataProcessorTestRemove.test_remove_stop_words_5)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/usr/local/google/home/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 91, in test_remove_stop_words_5\n    self.assertEqual(words_list, expected_words_list)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionE"
+          "error": "======================================================================\nFAIL: test_remove_stop_words_5 (__main__.NLPDataProcessorTestRemove.test_remove_stop_words_5)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 91, in test_remove_stop_words_5\n    self.assertEqual(words_list, expected_words_list)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionE"
         },
         {
           "task_id": "ClassEval_63",
@@ -6624,7 +6624,7 @@
             "n_subtasks": 2,
             "passed_subtasks": 1
           },
-          "error": "======================================================================\nFAIL: test_replace_11 (__main__.NumericEntityUnescaperTestReplace.test_replace_11)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/usr/local/google/home/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 140, in test_replace_11\n    self.assertEqual(res, \"\")\n    ~~~~~~~~~~~~~~~~^^^^^^^^^\nAssertionError: 'c1d;BC' != ''\n- c1d;BC\n\n\n==================================="
+          "error": "======================================================================\nFAIL: test_replace_11 (__main__.NumericEntityUnescaperTestReplace.test_replace_11)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 140, in test_replace_11\n    self.assertEqual(res, \"\")\n    ~~~~~~~~~~~~~~~~^^^^^^^^^\nAssertionError: 'c1d;BC' != ''\n- c1d;BC\n\n\n==================================="
         },
         {
           "task_id": "ClassEval_67",
@@ -7773,7 +7773,7 @@
             "n_subtasks": 4,
             "passed_subtasks": 0
           },
-          "error": "to 4 positional arguments but 5 were given\n\n======================================================================\nERROR: test_eat_food_2 (__main__.SnakeTestEatFood.test_eat_food_2)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/usr/local/google/home/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 238, in test_eat_food_2\n    snake = Snake(100, 100, 1, (51, 51))\nTypeError: Snake.__init__() takes from 1 to 4 positional arguments b"
+          "error": "to 4 positional arguments but 5 were given\n\n======================================================================\nERROR: test_eat_food_2 (__main__.SnakeTestEatFood.test_eat_food_2)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 238, in test_eat_food_2\n    snake = Snake(100, 100, 1, (51, 51))\nTypeError: Snake.__init__() takes from 1 to 4 positional arguments b"
         },
         {
           "task_id": "ClassEval_78",
@@ -9266,7 +9266,7 @@
             "n_subtasks": 4,
             "passed_subtasks": 3
           },
-          "error": "======================================================================\nFAIL: test_answer_2 (__main__.TwentyFourPointGameTestAnswer.test_answer_2)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/usr/local/google/home/lexha/.cache/tokenomics-sj/ws/w0/prog.py\", line 126, in test_answer_2\n    self.assertTrue(result)\n    ~~~~~~~~~~~~~~~^^^^^^^^\nAssertionError: False is not true\n\n--------------------------------------------------------"
+          "error": "======================================================================\nFAIL: test_answer_2 (__main__.TwentyFourPointGameTestAnswer.test_answer_2)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/USER/.cache/tokenomics-sj/ws/w0/prog.py\", line 126, in test_answer_2\n    self.assertTrue(result)\n    ~~~~~~~~~~~~~~~^^^^^^^^\nAssertionError: False is not true\n\n--------------------------------------------------------"
         },
         {
           "task_id": "ClassEval_90",
